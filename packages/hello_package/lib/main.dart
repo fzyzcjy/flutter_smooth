@@ -196,8 +196,9 @@ class RenderSecondTreeAdapter extends RenderBox {
   RenderSecondTreeAdapter({
     required int parentBuildCount,
     // RenderBox? child,
-  })  : _parentBuildCount = parentBuildCount;
-        // super(child);
+  }) : _parentBuildCount = parentBuildCount;
+
+  // super(child);
 
   int get parentBuildCount => _parentBuildCount;
   int _parentBuildCount;
@@ -244,20 +245,35 @@ class RenderSecondTreeAdapter extends RenderBox {
 
     // super.paint(context, offset);
     // return;
-    //
-    // {
-    //   final recorder = PictureRecorder();
-    //   final canvas = Canvas(recorder);
-    //   final rect = Rect.fromLTWH(0, 0, 500, 500);
-    //   canvas.drawRect(Rect.fromLTWH(0, 0, 50, 50.0 * parentBuildCount),
-    //       Paint()..color = Colors.green);
-    //   final pictureLayer = PictureLayer(rect);
-    //   pictureLayer.picture = recorder.endRecording();
-    //   final wrapperLayer = OffsetLayer();
-    //   wrapperLayer.append(pictureLayer);
-    //   context.pushLayer(wrapperLayer, (context, offset) { }, offset);
-    //   return;
-    // }
+
+    // context.canvas.drawRect(Rect.fromLTWH(0, 0, 50, 50.0 * parentBuildCount),
+    //     Paint()..color = Colors.green);
+    // return;
+
+    context.pushLayer(
+      OpacityLayer(alpha: 100),
+      (context, offset) {
+        context.canvas.drawRect(
+            Rect.fromLTWH(0, 0, 50, 50.0 * parentBuildCount),
+            Paint()..color = Colors.green);
+      },
+      offset,
+    );
+    return;
+
+    {
+      final recorder = PictureRecorder();
+      final canvas = Canvas(recorder);
+      final rect = Rect.fromLTWH(0, 0, 200, 200);
+      canvas.drawRect(Rect.fromLTWH(0, 0, 50, 50.0 * parentBuildCount),
+          Paint()..color = Colors.green);
+      final pictureLayer = PictureLayer(rect);
+      pictureLayer.picture = recorder.endRecording();
+      final wrapperLayer = OffsetLayer();
+      wrapperLayer.append(pictureLayer);
+      context.pushLayer(wrapperLayer, (context, offset) {}, offset);
+      return;
+    }
 
     // // ref: RenderOpacity
     //
