@@ -239,6 +239,10 @@ class RenderSecondTreeAdapter extends RenderBox {
     size = Size(200, 200);
   }
 
+  // TODO correct?
+  @override
+  bool get alwaysNeedsCompositing => true;
+
   @override
   void paint(PaintingContext context, Offset offset) {
     print('$runtimeType.paint called');
@@ -250,16 +254,29 @@ class RenderSecondTreeAdapter extends RenderBox {
     //     Paint()..color = Colors.green);
     // return;
 
-    context.pushLayer(
-      OpacityLayer(alpha: 100),
-      (context, offset) {
-        context.canvas.drawRect(
-            Rect.fromLTWH(0, 0, 50, 50.0 * parentBuildCount),
-            Paint()..color = Colors.green);
-      },
-      offset,
-    );
-    return;
+    // context.pushLayer(
+    //   OpacityLayer(alpha: 100),
+    //   (context, offset) {
+    //     context.canvas.drawRect(
+    //         Rect.fromLTWH(0, 0, 50, 50.0 * parentBuildCount),
+    //         Paint()..color = Colors.green);
+    //   },
+    //   offset,
+    // );
+    // return;
+
+    // context.addLayer(PerformanceOverlayLayer(
+    //   overlayRect: Rect.fromLTWH(offset.dx, offset.dy, size.width, size.height),
+    //   optionsMask: 1 <<
+    //           PerformanceOverlayOption.displayRasterizerStatistics.index |
+    //       1 << PerformanceOverlayOption.visualizeRasterizerStatistics.index |
+    //       1 << PerformanceOverlayOption.displayEngineStatistics.index |
+    //       1 << PerformanceOverlayOption.visualizeEngineStatistics.index,
+    //   rasterizerThreshold: 0,
+    //   checkerboardRasterCacheImages: true,
+    //   checkerboardOffscreenLayers: true,
+    // ));
+    // return;
 
     {
       final recorder = PictureRecorder();
@@ -271,7 +288,10 @@ class RenderSecondTreeAdapter extends RenderBox {
       pictureLayer.picture = recorder.endRecording();
       final wrapperLayer = OffsetLayer();
       wrapperLayer.append(pictureLayer);
-      context.pushLayer(wrapperLayer, (context, offset) {}, offset);
+
+      // NOTE addLayer vs pushLayer
+      context.addLayer(wrapperLayer);
+
       return;
     }
 
