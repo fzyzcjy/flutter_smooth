@@ -243,24 +243,24 @@ class RenderSecondTreeAdapter extends RenderBox {
   @override
   bool get alwaysNeedsCompositing => true;
 
-  static final staticPseudoRootLayerHandle = () {
-    final recorder = PictureRecorder();
-    final canvas = Canvas(recorder);
-    final rect = Rect.fromLTWH(0, 0, 200, 200);
-    canvas.drawRect(
-        Rect.fromLTWH(0, 0, 50, 100), Paint()..color = Colors.green);
-    final pictureLayer = PictureLayer(rect);
-    pictureLayer.picture = recorder.endRecording();
-    final wrapperLayer = OffsetLayer();
-    wrapperLayer.append(pictureLayer);
-
-    final pseudoRootLayer = TransformLayer(transform: Matrix4.identity());
-    pseudoRootLayer.append(wrapperLayer);
-
-    pseudoRootLayer.attach(secondTreePack.rootView);
-
-    return LayerHandle(pseudoRootLayer);
-  }();
+  // static final staticPseudoRootLayerHandle = () {
+  //   final recorder = PictureRecorder();
+  //   final canvas = Canvas(recorder);
+  //   final rect = Rect.fromLTWH(0, 0, 200, 200);
+  //   canvas.drawRect(
+  //       Rect.fromLTWH(0, 0, 50, 100), Paint()..color = Colors.green);
+  //   final pictureLayer = PictureLayer(rect);
+  //   pictureLayer.picture = recorder.endRecording();
+  //   final wrapperLayer = OffsetLayer();
+  //   wrapperLayer.append(pictureLayer);
+  //
+  //   final pseudoRootLayer = TransformLayer(transform: Matrix4.identity());
+  //   pseudoRootLayer.append(wrapperLayer);
+  //
+  //   pseudoRootLayer.attach(secondTreePack.rootView);
+  //
+  //   return LayerHandle(pseudoRootLayer);
+  // }();
 
   @override
   void paint(PaintingContext context, Offset offset) {
@@ -317,24 +317,28 @@ class RenderSecondTreeAdapter extends RenderBox {
     //   return;
     // }
 
-    {
-      if (staticPseudoRootLayerHandle.layer!.attached) {
-        print('pseudoRootLayer.detach');
-        staticPseudoRootLayerHandle.layer!.detach();
-      }
-
-      // print('staticPseudoRootLayer=${staticPseudoRootLayer.toStringDeep()}');
-
-      context.addLayer(staticPseudoRootLayerHandle.layer!);
-
-      return;
-    }
+    // {
+    //   if (staticPseudoRootLayerHandle.layer!.attached) {
+    //     print('pseudoRootLayer.detach');
+    //     staticPseudoRootLayerHandle.layer!.detach();
+    //   }
+    //
+    //   print('before addLayer staticPseudoRootLayer=${staticPseudoRootLayerHandle.layer!.toStringDeep()}');
+    //
+    //   context.addLayer(staticPseudoRootLayerHandle.layer!);
+    //
+    //   print('after addLayer staticPseudoRootLayer=${staticPseudoRootLayerHandle.layer!.toStringDeep()}');
+    //
+    //   return;
+    // }
 
     // ref: RenderOpacity
 
     // TODO this makes "second tree root layer" be *removed* from its original
     //      parent. shall we move it back later? o/w can be slow!
     final secondTreeRootLayer = secondTreePack.rootView.layer!;
+
+    print('just start secondTreeRootLayer=${secondTreeRootLayer.toStringDeep()}');
 
     // HACK!!!
     if (secondTreeRootLayer.attached) {
@@ -343,12 +347,15 @@ class RenderSecondTreeAdapter extends RenderBox {
       secondTreeRootLayer.detach();
     }
 
-    print('$runtimeType.paint pushLayer');
+    print('before addLayer secondTreeRootLayer=${secondTreeRootLayer.toStringDeep()}');
+
+    print('$runtimeType.paint addLayer');
     // NOTE addLayer, not pushLayer!!!
     context.addLayer(secondTreeRootLayer);
     // context.pushLayer(secondTreeRootLayer, (context, offset) {}, offset);
 
     print('secondTreeRootLayer.attached=${secondTreeRootLayer.attached}');
+    print('after addLayer secondTreeRootLayer=${secondTreeRootLayer.toStringDeep()}');
 
     // TODO paint child
   }
