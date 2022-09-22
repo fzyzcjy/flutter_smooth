@@ -53,7 +53,11 @@ class _MyAppState extends State<MyApp> {
         Text('A$buildCount', style: TextStyle(fontSize: 30)),
         Container(
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.orange, width: 10)),
+            border: Border.all(
+              color: Colors.orange[(buildCount % 8 + 1) * 100]!,
+              width: 10,
+            ),
+          ),
           width: 300,
           height: 300,
           // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
@@ -63,7 +67,14 @@ class _MyAppState extends State<MyApp> {
           child: RepaintBoundary(
             child: AdapterInMainTreeWidget(
               parentBuildCount: buildCount,
-              child: DrawCircleWidget(parentBuildCount: buildCount),
+              // child: DrawCircleWidget(parentBuildCount: buildCount),
+              child: Center(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  color: Colors.pink[(buildCount % 8 + 1) * 100],
+                ),
+              ),
             ),
           ),
         ),
