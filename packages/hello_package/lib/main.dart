@@ -103,10 +103,9 @@ class MyRender extends RenderProxyBox {
     // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
     final recorder = PictureRecorder();
     final canvas = Canvas(recorder);
-    final rect = Rect.fromLTWH(0, 0, 300, 300);
-    final paint = Paint()
-      ..color = Colors.primaries[parentBuildCount % Colors.primaries.length];
-    canvas.drawCircle(Offset(150, 150), 100, paint);
+    final rect = Rect.fromLTWH(0, 0, 500, 500);
+    canvas.drawRect(Rect.fromLTWH(100, 100, 50, 50.0 * parentBuildCount),
+        Paint()..color = Colors.green);
     final pictureLayer = PictureLayer(rect);
     pictureLayer.picture = recorder.endRecording();
     final rootLayer = OffsetLayer();
