@@ -117,6 +117,9 @@ class MyRender extends RenderProxyBox {
     // final scene = rootLayer.buildScene(builder);
 
     final binding = WidgetsFlutterBinding.ensureInitialized();
+
+    preemptModifyLayerTree(binding);
+
     // why this layer? from RenderView.compositeFrame
     final scene = binding.renderView.layer!.buildScene(builder);
 
@@ -126,5 +129,14 @@ class MyRender extends RenderProxyBox {
     scene.dispose();
 
     print('$runtimeType pseudoPreemptRender end');
+  }
+
+  void preemptModifyLayerTree(WidgetsBinding binding) {
+    // hack, just want to prove we can change something (preemptModifyLayerTree)
+    // inside the preemptRender
+    final rootLayer = binding.renderView.layer! as TransformLayer;
+    rootLayer.transform =
+        rootLayer.transform!.multiplied(Matrix4.translationValues(0, 50, 0));
+    print('preemptModifyLayerTree rootLayer=$rootLayer (after)');
   }
 }
