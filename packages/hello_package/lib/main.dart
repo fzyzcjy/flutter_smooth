@@ -49,10 +49,10 @@ class _MyAppState extends State<MyApp> {
         Text('A$buildCount', style: TextStyle(fontSize: 30)),
         SecondTreeAdapterWidget(
           parentBuildCount: buildCount,
-          child: Container(
-            color: Colors.pink.shade100,
-            child: Text('child-inside-SecondTreeAdapter$buildCount'),
-          ),
+          // child: Container(
+          //   color: Colors.pink.shade100,
+          //   child: Text('child-inside-SecondTreeAdapter$buildCount'),
+          // ),
         ),
         Text('B$buildCount', style: TextStyle(fontSize: 30)),
         WindowRenderWhenLayoutWidget(parentBuildCount: buildCount),
@@ -172,13 +172,13 @@ class WindowRenderWhenLayoutRender extends RenderProxyBox {
   }
 }
 
-class SecondTreeAdapterWidget extends SingleChildRenderObjectWidget {
+class SecondTreeAdapterWidget extends LeafRenderObjectWidget {
   final int parentBuildCount;
 
   const SecondTreeAdapterWidget({
     super.key,
     required this.parentBuildCount,
-    super.child,
+    // super.child,
   });
 
   @override
@@ -192,12 +192,12 @@ class SecondTreeAdapterWidget extends SingleChildRenderObjectWidget {
   }
 }
 
-class RenderSecondTreeAdapter extends RenderProxyBox {
+class RenderSecondTreeAdapter extends RenderBox {
   RenderSecondTreeAdapter({
     required int parentBuildCount,
-    RenderBox? child,
-  })  : _parentBuildCount = parentBuildCount,
-        super(child);
+    // RenderBox? child,
+  })  : _parentBuildCount = parentBuildCount;
+        // super(child);
 
   int get parentBuildCount => _parentBuildCount;
   int _parentBuildCount;
@@ -233,8 +233,14 @@ class RenderSecondTreeAdapter extends RenderProxyBox {
   }
 
   @override
+  void performLayout() {
+    print('$runtimeType.performLayout called');
+    size = Size(200, 200);
+  }
+
+  @override
   void paint(PaintingContext context, Offset offset) {
-    print('$runtimeType.paint called (child=$child)');
+    print('$runtimeType.paint called');
 
     // super.paint(context, offset);
     // return;
@@ -253,23 +259,23 @@ class RenderSecondTreeAdapter extends RenderProxyBox {
     //   return;
     // }
 
-    // ref: RenderOpacity
-
-    // TODO this makes "second tree root layer" be *removed* from its original
-    //      parent. shall we move it back later? o/w can be slow!
-    final secondTreeRootLayer = secondTreePack.rootView.layer!;
-
-    // HACK!!!
-    // if (secondTreeRootLayer.attached) {
-    //   print('$runtimeType.paint detach the secondTreeRootLayer');
-    //   // TODO attach again later?
-    //   secondTreeRootLayer.detach();
-    // }
-
-    print('$runtimeType.paint pushLayer');
-    context.pushLayer(secondTreeRootLayer, (context, offset) {}, offset);
-
-    assert(secondTreeRootLayer.attached);
+    // // ref: RenderOpacity
+    //
+    // // TODO this makes "second tree root layer" be *removed* from its original
+    // //      parent. shall we move it back later? o/w can be slow!
+    // final secondTreeRootLayer = secondTreePack.rootView.layer!;
+    //
+    // // HACK!!!
+    // // if (secondTreeRootLayer.attached) {
+    // //   print('$runtimeType.paint detach the secondTreeRootLayer');
+    // //   // TODO attach again later?
+    // //   secondTreeRootLayer.detach();
+    // // }
+    //
+    // print('$runtimeType.paint pushLayer');
+    // context.pushLayer(secondTreeRootLayer, (context, offset) {}, offset);
+    //
+    // assert(secondTreeRootLayer.attached);
 
     // TODO paint child
   }
