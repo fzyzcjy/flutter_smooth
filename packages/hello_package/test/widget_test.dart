@@ -83,7 +83,7 @@ class RenderSecondTreeAdapter extends RenderShiftedBox {
 
 class SecondTreePack {
   late final PipelineOwner pipelineOwner;
-  late final MeasurementView rootView;
+  late final SecondTreeRootView rootView;
   late final BuildOwner buildOwner;
   late final RenderObjectToWidgetElement<RenderBox> element;
 
@@ -92,7 +92,7 @@ class SecondTreePack {
 
   SecondTreePack() {
     pipelineOwner = PipelineOwner();
-    rootView = pipelineOwner.rootNode = MeasurementView();
+    rootView = pipelineOwner.rootNode = SecondTreeRootView();
     buildOwner = BuildOwner(
       focusManager: FocusManager(),
       onBuildScheduled: () =>
@@ -118,7 +118,7 @@ class SecondTreePack {
   }
 }
 
-class MeasurementView extends RenderBox
+class SecondTreeRootView extends RenderBox
     with RenderObjectWithChildMixin<RenderBox> {
   @override
   void performLayout() {
