@@ -272,14 +272,14 @@ class SecondTreePack {
   }
 }
 
-class SecondTreeRootView extends RenderBox
+class SecondTreeRootView extends RenderObject
     with RenderObjectWithChildMixin<RenderBox> {
   @override
   void performLayout() {
     print('$runtimeType performLayout');
     assert(child != null);
     child!.layout(const BoxConstraints(), parentUsesSize: true);
-    size = child!.size;
+    // size = child!.size;
   }
 
   @override
@@ -301,4 +301,19 @@ class SecondTreeRootView extends RenderBox
   // ref: RenderView
   @override
   bool get isRepaintBoundary => true;
+
+  // TODO is this paint bounds correct?
+  // hack: just give non-sense value
+  @override
+  Rect get paintBounds => Offset.zero & Size(500, 500);
+
+  // ref: RenderView
+  @override
+  void performResize() {
+    assert(false);
+  }
+
+  // hack: just give non-sense value
+  @override
+  Rect get semanticBounds => paintBounds;
 }
