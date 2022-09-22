@@ -11,7 +11,11 @@ void main() {
 
     final pipelineOwner = PipelineOwner();
     final rootView = pipelineOwner.rootNode = MeasurementView();
-    final buildOwner = BuildOwner(focusManager: FocusManager());
+    final buildOwner = BuildOwner(
+      focusManager: FocusManager(),
+      onBuildScheduled: () =>
+          print('second tree BuildOwner.onBuildScheduled called'),
+    );
 
     var secondTreeWidgetBuildTime = 0;
     final secondTreeWidget = StatefulBuilder(builder: (_, setState) {
