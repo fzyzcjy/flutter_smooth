@@ -47,15 +47,23 @@ class _MyAppState extends State<MyApp> {
     return Column(
       children: [
         Text('A$buildCount', style: TextStyle(fontSize: 30)),
-        // hack: [SecondTreeAdapterWidget] does not respect "offset" in paint
-        // now, so we add a RepaintBoundary to let offset==0
-        RepaintBoundary(
-          child: SecondTreeAdapterWidget(
-            parentBuildCount: buildCount,
-            // child: Container(
-            //   color: Colors.pink.shade100,
-            //   child: Text('child-inside-SecondTreeAdapter$buildCount'),
-            // ),
+        Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.orange, width: 10)),
+          width: 300,
+          height: 300,
+          // hack: [SecondTreeAdapterWidget] does not respect "offset" in paint
+          // now, so we add a RepaintBoundary to let offset==0
+          // hack: [SecondTreeAdapterWidget] does not respect "offset" in paint
+          // now, so we add a RepaintBoundary to let offset==0
+          child: RepaintBoundary(
+            child: SecondTreeAdapterWidget(
+              parentBuildCount: buildCount,
+              // child: Container(
+              //   color: Colors.pink.shade100,
+              //   child: Text('child-inside-SecondTreeAdapter$buildCount'),
+              // ),
+            ),
           ),
         ),
         Text('B$buildCount', style: TextStyle(fontSize: 30)),
@@ -240,7 +248,7 @@ class RenderSecondTreeAdapter extends RenderBox {
   @override
   void performLayout() {
     print('$runtimeType.performLayout called');
-    size = Size(200, 200);
+    size = constraints.biggest;
   }
 
   // TODO correct?
@@ -403,8 +411,7 @@ class SecondTreePack {
       return Container(
         width: 50 * innerStatefulBuilderBuildCount.toDouble(),
         height: 100,
-        color: Colors.primaries[
-            innerStatefulBuilderBuildCount % Colors.primaries.length],
+        color: Colors.blue[(innerStatefulBuilderBuildCount * 100) % 800 + 100],
         // child:
         //     DrawCircleWidget(parentBuildCount: innerStatefulBuilderBuildCount),
       );
