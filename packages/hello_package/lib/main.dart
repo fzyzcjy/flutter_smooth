@@ -247,6 +247,8 @@ class SecondTreePack {
           print('second tree BuildOwner.onBuildScheduled called'),
     );
 
+    rootView.prepareInitialFrame();
+
     final secondTreeWidget = StatefulBuilder(builder: (_, setState) {
       print(
           'secondTreeWidget(StatefulBuilder).builder called ($innerStatefulBuilderBuildCount)');
@@ -282,4 +284,21 @@ class SecondTreeRootView extends RenderBox
 
   @override
   void debugAssertDoesMeetConstraints() => true;
+
+  void prepareInitialFrame() {
+    // ref: RenderView
+    scheduleInitialLayout();
+    scheduleInitialPaint(_updateMatricesAndCreateNewRootLayer());
+  }
+
+  // ref: RenderView
+  TransformLayer _updateMatricesAndCreateNewRootLayer() {
+    final rootLayer = TransformLayer(transform: Matrix4.identity());
+    rootLayer.attach(this);
+    return rootLayer;
+  }
+
+  // ref: RenderView
+  @override
+  bool get isRepaintBoundary => true;
 }
