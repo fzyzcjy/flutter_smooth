@@ -249,6 +249,10 @@ class RenderSecondTreeAdapter extends RenderBox {
   void performLayout() {
     print('$runtimeType.performLayout called');
     size = constraints.biggest;
+
+    // NOTE
+    secondTreePack.rootView.configuration =
+        SecondTreeRootViewConfiguration(size: size);
   }
 
   // TODO correct?
@@ -392,7 +396,9 @@ class SecondTreePack {
 
   SecondTreePack() {
     pipelineOwner = PipelineOwner();
-    rootView = pipelineOwner.rootNode = SecondTreeRootView();
+    rootView = pipelineOwner.rootNode = SecondTreeRootView(
+      configuration: SecondTreeRootViewConfiguration(size: Size.zero),
+    );
     buildOwner = BuildOwner(
       focusManager: FocusManager(),
       onBuildScheduled: () =>
@@ -425,14 +431,67 @@ class SecondTreePack {
   }
 }
 
+// ref: [ViewConfiguration]
+class SecondTreeRootViewConfiguration {
+  const SecondTreeRootViewConfiguration({
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  bool operator ==(Object other) {
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is ViewConfiguration && other.size == size;
+  }
+
+  @override
+  int get hashCode => size.hashCode;
+
+  @override
+  String toString() => '$size';
+}
+
 class SecondTreeRootView extends RenderObject
     with RenderObjectWithChildMixin<RenderBox> {
+  SecondTreeRootView({
+    RenderBox? child,
+    required SecondTreeRootViewConfiguration configuration,
+  }) : _configuration = configuration {
+    this.child = child;
+  }
+
+  // NOTE ref [RenderView.size]
+  /// The current layout size of the view.
+  Size get size => _size;
+  Size _size = Size.zero;
+
+  // NOTE ref [RenderView.configuration] which has size and some other things
+  /// The constraints used for the root layout.
+  SecondTreeRootViewConfiguration get configuration => _configuration;
+  SecondTreeRootViewConfiguration _configuration;
+
+  set configuration(SecondTreeRootViewConfiguration value) {
+    if (configuration == value) {
+      return;
+    }
+    print(
+        '$runtimeType set configuration(i.e. size) $_configuration -> $value');
+    _configuration = value;
+    markNeedsLayout();
+  }
+
   @override
   void performLayout() {
-    print('$runtimeType performLayout');
+    print(
+        '$runtimeType performLayout configuration.size=${configuration.size}');
+
+    _size = configuration.size;
+
     assert(child != null);
-    child!.layout(const BoxConstraints(), parentUsesSize: true);
-    // size = child!.size;
+    child!.layout(BoxConstraints.tight(_size));
   }
 
   // ref RenderView
@@ -476,10 +535,9 @@ class SecondTreeRootView extends RenderObject
   @override
   bool get isRepaintBoundary => true;
 
-  // TODO is this paint bounds correct?
-  // hack: just give non-sense value
+  // ref: RenderView
   @override
-  Rect get paintBounds => Offset.zero & Size(500, 500);
+  Rect get paintBounds => Offset.zero & size;
 
   // ref: RenderView
   @override
@@ -487,7 +545,7 @@ class SecondTreeRootView extends RenderObject
     assert(false);
   }
 
-  // hack: just give non-sense value
+  // hack: just give non-sense value, this is prototype
   @override
   Rect get semanticBounds => paintBounds;
 }
