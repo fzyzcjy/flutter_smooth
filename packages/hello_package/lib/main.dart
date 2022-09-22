@@ -52,16 +52,16 @@ class _MyAppState extends State<MyApp> {
               border: Border.all(color: Colors.orange, width: 10)),
           width: 300,
           height: 300,
-          // hack: [SecondTreeAdapterWidget] does not respect "offset" in paint
+          // hack: [ParentIsMainChildIsSecondTreeWidget] does not respect "offset" in paint
           // now, so we add a RepaintBoundary to let offset==0
-          // hack: [SecondTreeAdapterWidget] does not respect "offset" in paint
+          // hack: [ParentIsMainChildIsSecondTreeWidget] does not respect "offset" in paint
           // now, so we add a RepaintBoundary to let offset==0
           child: RepaintBoundary(
-            child: SecondTreeAdapterWidget(
+            child: ParentIsMainChildIsSecondTreeWidget(
               parentBuildCount: buildCount,
               // child: Container(
               //   color: Colors.pink.shade100,
-              //   child: Text('child-inside-SecondTreeAdapter$buildCount'),
+              //   child: Text('child-inside-ParentIsMainChildIsSecondTree$buildCount'),
               // ),
             ),
           ),
@@ -184,28 +184,29 @@ class WindowRenderWhenLayoutRender extends RenderProxyBox {
   }
 }
 
-class SecondTreeAdapterWidget extends LeafRenderObjectWidget {
+class ParentIsMainChildIsSecondTreeWidget extends LeafRenderObjectWidget {
   final int parentBuildCount;
 
-  const SecondTreeAdapterWidget({
+  const ParentIsMainChildIsSecondTreeWidget({
     super.key,
     required this.parentBuildCount,
     // super.child,
   });
 
   @override
-  RenderSecondTreeAdapter createRenderObject(BuildContext context) =>
-      RenderSecondTreeAdapter(parentBuildCount: parentBuildCount);
+  RenderParentIsMainChildIsSecondTree createRenderObject(
+          BuildContext context) =>
+      RenderParentIsMainChildIsSecondTree(parentBuildCount: parentBuildCount);
 
   @override
   void updateRenderObject(
-      BuildContext context, RenderSecondTreeAdapter renderObject) {
+      BuildContext context, RenderParentIsMainChildIsSecondTree renderObject) {
     renderObject.parentBuildCount = parentBuildCount;
   }
 }
 
-class RenderSecondTreeAdapter extends RenderBox {
-  RenderSecondTreeAdapter({
+class RenderParentIsMainChildIsSecondTree extends RenderBox {
+  RenderParentIsMainChildIsSecondTree({
     required int parentBuildCount,
     // RenderBox? child,
   }) : _parentBuildCount = parentBuildCount;
@@ -223,7 +224,7 @@ class RenderSecondTreeAdapter extends RenderBox {
   }
 
   // should not be singleton, but we are prototyping so only one such guy
-  static RenderSecondTreeAdapter? instance;
+  static RenderParentIsMainChildIsSecondTree? instance;
 
   @override
   void attach(covariant PipelineOwner owner) {
