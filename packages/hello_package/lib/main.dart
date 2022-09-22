@@ -47,36 +47,44 @@ class _MyAppState extends State<MyApp> {
     return Column(
       children: [
         Text('A$buildCount', style: TextStyle(fontSize: 30)),
+        SecondTreeAdapterWidget(
+          child: Container(
+            color: Colors.pink.shade100,
+            child: Text('child-inside-SecondTreeAdapter$buildCount'),
+          ),
+        ),
         Text('B$buildCount', style: TextStyle(fontSize: 30)),
-        MyWidget(parentBuildCount: buildCount),
+        WindowRenderWhenLayoutWidget(parentBuildCount: buildCount),
         Text('C$buildCount', style: TextStyle(fontSize: 30)),
       ],
     );
   }
 }
 
-class MyWidget extends SingleChildRenderObjectWidget {
+class WindowRenderWhenLayoutWidget extends SingleChildRenderObjectWidget {
   final int parentBuildCount;
 
-  const MyWidget({
+  const WindowRenderWhenLayoutWidget({
     super.key,
     required this.parentBuildCount,
     super.child,
   });
 
   @override
-  MyRender createRenderObject(BuildContext context) => MyRender(
-    parentBuildCount: parentBuildCount,
-  );
+  WindowRenderWhenLayoutRender createRenderObject(BuildContext context) =>
+      WindowRenderWhenLayoutRender(
+        parentBuildCount: parentBuildCount,
+      );
 
   @override
-  void updateRenderObject(BuildContext context, MyRender renderObject) {
+  void updateRenderObject(
+      BuildContext context, WindowRenderWhenLayoutRender renderObject) {
     renderObject.parentBuildCount = parentBuildCount;
   }
 }
 
-class MyRender extends RenderProxyBox {
-  MyRender({
+class WindowRenderWhenLayoutRender extends RenderProxyBox {
+  WindowRenderWhenLayoutRender({
     required int parentBuildCount,
     RenderBox? child,
   })  : _parentBuildCount = parentBuildCount,
@@ -141,7 +149,84 @@ class MyRender extends RenderProxyBox {
     rootLayer.transform =
         rootLayer.transform!.multiplied(Matrix4.translationValues(0, 50, 0));
     print('preemptModifyLayerTree rootLayer=$rootLayer (after)');
+
+    refreshSecondTree();
   }
+
+  void refreshSecondTree() {
+    print('$runtimeType refreshSecondTree start');
+    secondTreePack.innerStatefulBuilderSetState(() {});
+
+    // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
+    // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
+    secondTreePack.buildOwner.buildScope(secondTreePack.element);
+    secondTreePack.pipelineOwner.flushLayout();
+    secondTreePack.pipelineOwner.flushCompositingBits();
+    secondTreePack.pipelineOwner.flushPaint();
+    // renderView.compositeFrame(); // this sends the bits to the GPU
+    // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
+    secondTreePack.buildOwner.finalizeTree();
+
+    print('$runtimeType refreshSecondTree end');
+  }
+}
+
+class SecondTreeAdapterWidget extends SingleChildRenderObjectWidget {
+  const SecondTreeAdapterWidget({
+    super.key,
+    super.child,
+  });
+
+  @override
+  RenderSecondTreeAdapter createRenderObject(BuildContext context) =>
+      RenderSecondTreeAdapter();
+
+  @override
+  void updateRenderObject(
+      BuildContext context, RenderSecondTreeAdapter renderObject) {}
+}
+
+class RenderSecondTreeAdapter extends RenderProxyBox {
+  RenderSecondTreeAdapter({
+    RenderBox? child,
+  }) : super(child);
+
+  // should not be singleton, but we are prototyping so only one such guy
+  static RenderSecondTreeAdapter? instance;
+
+  @override
+  void attach(covariant PipelineOwner owner) {
+    super.attach(owner);
+    assert(instance == null);
+    instance = this;
+  }
+
+  @override
+  void detach() {
+    assert(instance == this);
+    instance == null;
+    super.detach();
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    // ref: RenderOpacity
+
+    // TODO this makes "second tree root layer" be *removed* from its original
+    //      parent. shall we move it back later? o/w can be slow!
+    final secondTreeRootLayer = secondTreePack.rootView.layer;
+    if (secondTreeRootLayer != null) {
+      print('$runtimeType.paint call pushLayer');
+      context.pushLayer(secondTreeRootLayer, (context, offset) {}, offset);
+    } else {
+      print(
+          '$runtimeType.paint SKIP pushLayer, since secondTreeRootLayer==null');
+    }
+
+    // TODO paint child
+  }
+
+// TODO handle layout!
 }
 
 class SecondTreePack {
@@ -169,8 +254,12 @@ class SecondTreePack {
       innerStatefulBuilderSetState = setState;
       innerStatefulBuilderBuildCount++;
 
-      return SizedBox(
-          width: innerStatefulBuilderBuildCount.toDouble(), height: 10);
+      return Container(
+        width: 100 * innerStatefulBuilderBuildCount.toDouble(),
+        height: 100,
+        color: Colors.primaries[
+            innerStatefulBuilderBuildCount % Colors.primaries.length],
+      );
     });
 
     element = RenderObjectToWidgetAdapter<RenderBox>(
@@ -185,6 +274,7 @@ class SecondTreeRootView extends RenderBox
     with RenderObjectWithChildMixin<RenderBox> {
   @override
   void performLayout() {
+    print('$runtimeType performLayout');
     assert(child != null);
     child!.layout(const BoxConstraints(), parentUsesSize: true);
     size = child!.size;

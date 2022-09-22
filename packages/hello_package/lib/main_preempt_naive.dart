@@ -45,35 +45,35 @@ class _MyAppState extends State<MyApp> {
       children: [
         Text('A$buildCount', style: TextStyle(fontSize: 30)),
         Text('B$buildCount', style: TextStyle(fontSize: 30)),
-        MyWidget(parentBuildCount: buildCount),
+        WindowRenderWhenLayoutWidget(parentBuildCount: buildCount),
         Text('C$buildCount', style: TextStyle(fontSize: 30)),
       ],
     );
   }
 }
 
-class MyWidget extends SingleChildRenderObjectWidget {
+class WindowRenderWhenLayoutWidget extends SingleChildRenderObjectWidget {
   final int parentBuildCount;
 
-  const MyWidget({
+  const WindowRenderWhenLayoutWidget({
     super.key,
     required this.parentBuildCount,
     super.child,
   });
 
   @override
-  MyRender createRenderObject(BuildContext context) => MyRender(
+  WindowRenderWhenLayoutRender createRenderObject(BuildContext context) => WindowRenderWhenLayoutRender(
         parentBuildCount: parentBuildCount,
       );
 
   @override
-  void updateRenderObject(BuildContext context, MyRender renderObject) {
+  void updateRenderObject(BuildContext context, WindowRenderWhenLayoutRender renderObject) {
     renderObject.parentBuildCount = parentBuildCount;
   }
 }
 
-class MyRender extends RenderProxyBox {
-  MyRender({
+class WindowRenderWhenLayoutRender extends RenderProxyBox {
+  WindowRenderWhenLayoutRender({
     required int parentBuildCount,
     RenderBox? child,
   })  : _parentBuildCount = parentBuildCount,
