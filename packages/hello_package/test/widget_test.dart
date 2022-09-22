@@ -18,15 +18,12 @@ void main() {
     );
 
     var secondTreeWidgetBuildTime = 0;
+    late StateSetter secondTreeSetState;
     final secondTreeWidget = StatefulBuilder(builder: (_, setState) {
       print(
           'secondTreeWidget(StatefulBuilder).builder called ($secondTreeWidgetBuildTime)');
 
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        print('secondTreeWidget.setState');
-        setState(() {});
-      });
-
+      secondTreeSetState = setState;
       secondTreeWidgetBuildTime++;
 
       return SizedBox(width: secondTreeWidgetBuildTime.toDouble(), height: 10);
@@ -53,6 +50,8 @@ void main() {
           for (var iter = 0; iter < 3; ++iter) {
             print(
                 'mainTree(StatefulBuilder).builder, run second tree pipeline iter=#$iter');
+
+            secondTreeSetState(() {});
 
             // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
             // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
