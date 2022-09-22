@@ -37,10 +37,6 @@ void main() {
 
     print('before pumpWidget');
     rootView.scheduleInitialLayout();
-    // TODO has more steps?
-    pipelineOwner.flushLayout();
-    buildOwner.finalizeTree();
-    print('rootView.size=${rootView.size}');
 
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
@@ -54,8 +50,14 @@ void main() {
             print(
                 'mainTree(StatefulBuilder).builder, run second tree pipeline iter=#$iter');
 
-            // TODO has more steps?
+            // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
+            // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
+            buildOwner.buildScope(element);
             pipelineOwner.flushLayout();
+            pipelineOwner.flushCompositingBits();
+            pipelineOwner.flushPaint();
+            // renderView.compositeFrame(); // this sends the bits to the GPU
+            // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
             buildOwner.finalizeTree();
             print('rootView.size=${rootView.size}');
           }
