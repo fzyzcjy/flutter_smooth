@@ -394,12 +394,12 @@ class SecondTreePack {
       innerStatefulBuilderBuildCount++;
 
       return Container(
-        width: 100 * innerStatefulBuilderBuildCount.toDouble(),
+        width: 50 * innerStatefulBuilderBuildCount.toDouble(),
         height: 100,
         color: Colors.primaries[
             innerStatefulBuilderBuildCount % Colors.primaries.length],
-        child:
-            DrawCircleWidget(parentBuildCount: innerStatefulBuilderBuildCount),
+        // child:
+        //     DrawCircleWidget(parentBuildCount: innerStatefulBuilderBuildCount),
       );
     });
 
