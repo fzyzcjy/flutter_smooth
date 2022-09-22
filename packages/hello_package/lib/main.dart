@@ -47,12 +47,16 @@ class _MyAppState extends State<MyApp> {
     return Column(
       children: [
         Text('A$buildCount', style: TextStyle(fontSize: 30)),
-        SecondTreeAdapterWidget(
-          parentBuildCount: buildCount,
-          // child: Container(
-          //   color: Colors.pink.shade100,
-          //   child: Text('child-inside-SecondTreeAdapter$buildCount'),
-          // ),
+        // hack: [SecondTreeAdapterWidget] does not respect "offset" in paint
+        // now, so we add a RepaintBoundary to let offset==0
+        RepaintBoundary(
+          child: SecondTreeAdapterWidget(
+            parentBuildCount: buildCount,
+            // child: Container(
+            //   color: Colors.pink.shade100,
+            //   child: Text('child-inside-SecondTreeAdapter$buildCount'),
+            // ),
+          ),
         ),
         Text('B$buildCount', style: TextStyle(fontSize: 30)),
         WindowRenderWhenLayoutWidget(parentBuildCount: buildCount),
@@ -264,6 +268,9 @@ class RenderSecondTreeAdapter extends RenderBox {
 
   @override
   void paint(PaintingContext context, Offset offset) {
+    assert(offset == Offset.zero,
+        '$runtimeType prototype has not deal with offset yet');
+
     print('$runtimeType.paint called');
 
     // super.paint(context, offset);
