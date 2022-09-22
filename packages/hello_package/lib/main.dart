@@ -243,6 +243,25 @@ class RenderSecondTreeAdapter extends RenderBox {
   @override
   bool get alwaysNeedsCompositing => true;
 
+  static final staticPseudoRootLayerHandle = () {
+    final recorder = PictureRecorder();
+    final canvas = Canvas(recorder);
+    final rect = Rect.fromLTWH(0, 0, 200, 200);
+    canvas.drawRect(
+        Rect.fromLTWH(0, 0, 50, 100), Paint()..color = Colors.green);
+    final pictureLayer = PictureLayer(rect);
+    pictureLayer.picture = recorder.endRecording();
+    final wrapperLayer = OffsetLayer();
+    wrapperLayer.append(pictureLayer);
+
+    final pseudoRootLayer = TransformLayer(transform: Matrix4.identity());
+    pseudoRootLayer.append(wrapperLayer);
+
+    pseudoRootLayer.attach(secondTreePack.rootView);
+
+    return LayerHandle(pseudoRootLayer);
+  }();
+
   @override
   void paint(PaintingContext context, Offset offset) {
     print('$runtimeType.paint called');
@@ -297,6 +316,19 @@ class RenderSecondTreeAdapter extends RenderBox {
     //
     //   return;
     // }
+
+    {
+      if (staticPseudoRootLayerHandle.layer!.attached) {
+        print('pseudoRootLayer.detach');
+        staticPseudoRootLayerHandle.layer!.detach();
+      }
+
+      // print('staticPseudoRootLayer=${staticPseudoRootLayer.toStringDeep()}');
+
+      context.addLayer(staticPseudoRootLayerHandle.layer!);
+
+      return;
+    }
 
     // ref: RenderOpacity
 
