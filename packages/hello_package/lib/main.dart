@@ -253,7 +253,7 @@ class RenderAdapterInMainTree extends RenderBox
 
     // NOTE
     secondTreePack.rootView.configuration =
-        SecondTreeRootViewConfiguration(size: size);
+        SecondTreeRootViewConfiguration(size: constraints.biggest);
 
     print('$runtimeType.performLayout child.layout start');
     child!.layout(constraints);
