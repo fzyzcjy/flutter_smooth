@@ -101,17 +101,24 @@ class MyRender extends RenderProxyBox {
     print('$runtimeType pseudoPreemptRender start');
 
     // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
-    final recorder = PictureRecorder();
-    final canvas = Canvas(recorder);
-    final rect = Rect.fromLTWH(0, 0, 500, 500);
-    canvas.drawRect(Rect.fromLTWH(100, 100, 50, 50.0 * parentBuildCount),
-        Paint()..color = Colors.green);
-    final pictureLayer = PictureLayer(rect);
-    pictureLayer.picture = recorder.endRecording();
-    final rootLayer = OffsetLayer();
-    rootLayer.append(pictureLayer);
+    // ref: RenderView.compositeFrame
+
     final builder = SceneBuilder();
-    final scene = rootLayer.buildScene(builder);
+
+    // final recorder = PictureRecorder();
+    // final canvas = Canvas(recorder);
+    // final rect = Rect.fromLTWH(0, 0, 500, 500);
+    // canvas.drawRect(Rect.fromLTWH(100, 100, 50, 50.0 * parentBuildCount),
+    //     Paint()..color = Colors.green);
+    // final pictureLayer = PictureLayer(rect);
+    // pictureLayer.picture = recorder.endRecording();
+    // final rootLayer = OffsetLayer();
+    // rootLayer.append(pictureLayer);
+    // final scene = rootLayer.buildScene(builder);
+
+    final binding = WidgetsFlutterBinding.ensureInitialized();
+    // why this layer? from RenderView.compositeFrame
+    final scene = binding.renderView.layer!.buildScene(builder);
 
     print('call window.render');
     window.render(scene);
