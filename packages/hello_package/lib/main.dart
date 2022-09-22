@@ -214,14 +214,17 @@ class RenderSecondTreeAdapter extends RenderProxyBox {
 
     // TODO this makes "second tree root layer" be *removed* from its original
     //      parent. shall we move it back later? o/w can be slow!
-    final secondTreeRootLayer = secondTreePack.rootView.layer;
-    if (secondTreeRootLayer != null) {
-      print('$runtimeType.paint call pushLayer');
-      context.pushLayer(secondTreeRootLayer, (context, offset) {}, offset);
-    } else {
-      print(
-          '$runtimeType.paint SKIP pushLayer, since secondTreeRootLayer==null');
+    final secondTreeRootLayer = secondTreePack.rootView.layer!;
+
+    // HACK!!!
+    if (secondTreeRootLayer.attached) {
+      print('$runtimeType.paint detach the secondTreeRootLayer');
+      // TODO attach again later?
+      secondTreeRootLayer.detach();
     }
+
+    print('$runtimeType.paint pushLayer');
+    context.pushLayer(secondTreeRootLayer, (context, offset) {}, offset);
 
     // TODO paint child
   }
