@@ -278,40 +278,45 @@ class RenderSecondTreeAdapter extends RenderBox {
     // ));
     // return;
 
-    {
-      final recorder = PictureRecorder();
-      final canvas = Canvas(recorder);
-      final rect = Rect.fromLTWH(0, 0, 200, 200);
-      canvas.drawRect(Rect.fromLTWH(0, 0, 50, 50.0 * parentBuildCount),
-          Paint()..color = Colors.green);
-      final pictureLayer = PictureLayer(rect);
-      pictureLayer.picture = recorder.endRecording();
-      final wrapperLayer = OffsetLayer();
-      wrapperLayer.append(pictureLayer);
+    // {
+    //   final recorder = PictureRecorder();
+    //   final canvas = Canvas(recorder);
+    //   final rect = Rect.fromLTWH(0, 0, 200, 200);
+    //   canvas.drawRect(Rect.fromLTWH(0, 0, 50, 50.0 * parentBuildCount),
+    //       Paint()..color = Colors.green);
+    //   final pictureLayer = PictureLayer(rect);
+    //   pictureLayer.picture = recorder.endRecording();
+    //   final wrapperLayer = OffsetLayer();
+    //   wrapperLayer.append(pictureLayer);
+    //
+    //   // NOTE addLayer vs pushLayer
+    //   context.addLayer(wrapperLayer);
+    //
+    //   print('pictureLayer.attached=${pictureLayer.attached} '
+    //       'wrapperLayer.attached=${wrapperLayer.attached}');
+    //
+    //   return;
+    // }
 
-      // NOTE addLayer vs pushLayer
-      context.addLayer(wrapperLayer);
+    // ref: RenderOpacity
 
-      return;
+    // TODO this makes "second tree root layer" be *removed* from its original
+    //      parent. shall we move it back later? o/w can be slow!
+    final secondTreeRootLayer = secondTreePack.rootView.layer!;
+
+    // HACK!!!
+    if (secondTreeRootLayer.attached) {
+      print('$runtimeType.paint detach the secondTreeRootLayer');
+      // TODO attach again later?
+      secondTreeRootLayer.detach();
     }
 
-    // // ref: RenderOpacity
-    //
-    // // TODO this makes "second tree root layer" be *removed* from its original
-    // //      parent. shall we move it back later? o/w can be slow!
-    // final secondTreeRootLayer = secondTreePack.rootView.layer!;
-    //
-    // // HACK!!!
-    // // if (secondTreeRootLayer.attached) {
-    // //   print('$runtimeType.paint detach the secondTreeRootLayer');
-    // //   // TODO attach again later?
-    // //   secondTreeRootLayer.detach();
-    // // }
-    //
-    // print('$runtimeType.paint pushLayer');
+    print('$runtimeType.paint pushLayer');
+    // NOTE addLayer, not pushLayer!!!
+    context.addLayer(secondTreeRootLayer);
     // context.pushLayer(secondTreeRootLayer, (context, offset) {}, offset);
-    //
-    // assert(secondTreeRootLayer.attached);
+
+    print('secondTreeRootLayer.attached=${secondTreeRootLayer.attached}');
 
     // TODO paint child
   }
