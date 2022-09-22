@@ -48,6 +48,7 @@ class _MyAppState extends State<MyApp> {
       children: [
         Text('A$buildCount', style: TextStyle(fontSize: 30)),
         SecondTreeAdapterWidget(
+          parentBuildCount: buildCount,
           child: Container(
             color: Colors.pink.shade100,
             child: Text('child-inside-SecondTreeAdapter$buildCount'),
@@ -172,24 +173,41 @@ class WindowRenderWhenLayoutRender extends RenderProxyBox {
 }
 
 class SecondTreeAdapterWidget extends SingleChildRenderObjectWidget {
+  final int parentBuildCount;
+
   const SecondTreeAdapterWidget({
     super.key,
+    required this.parentBuildCount,
     super.child,
   });
 
   @override
   RenderSecondTreeAdapter createRenderObject(BuildContext context) =>
-      RenderSecondTreeAdapter();
+      RenderSecondTreeAdapter(parentBuildCount: parentBuildCount);
 
   @override
   void updateRenderObject(
-      BuildContext context, RenderSecondTreeAdapter renderObject) {}
+      BuildContext context, RenderSecondTreeAdapter renderObject) {
+    renderObject.parentBuildCount = parentBuildCount;
+  }
 }
 
 class RenderSecondTreeAdapter extends RenderProxyBox {
   RenderSecondTreeAdapter({
+    required int parentBuildCount,
     RenderBox? child,
-  }) : super(child);
+  })  : _parentBuildCount = parentBuildCount,
+        super(child);
+
+  int get parentBuildCount => _parentBuildCount;
+  int _parentBuildCount;
+
+  set parentBuildCount(int value) {
+    if (_parentBuildCount == value) return;
+    _parentBuildCount = value;
+    print('$runtimeType markNeedsLayout because parentBuildCount changes');
+    markNeedsLayout();
+  }
 
   // should not be singleton, but we are prototyping so only one such guy
   static RenderSecondTreeAdapter? instance;
@@ -209,7 +227,15 @@ class RenderSecondTreeAdapter extends RenderProxyBox {
   }
 
   @override
+  void layout(Constraints constraints, {bool parentUsesSize = false}) {
+    print('$runtimeType.layout called');
+    super.layout(constraints, parentUsesSize: parentUsesSize);
+  }
+
+  @override
   void paint(PaintingContext context, Offset offset) {
+    print('$runtimeType.paint called (child=$child)');
+
     // ref: RenderOpacity
 
     // TODO this makes "second tree root layer" be *removed* from its original
