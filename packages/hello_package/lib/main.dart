@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, prefer_const_constructors
+// ignore_for_file: avoid_print, prefer_const_constructors, invalid_use_of_protected_member
 
 import 'dart:ui';
 
@@ -8,9 +8,13 @@ import 'package:flutter/scheduler.dart';
 
 final secondTreePack = SecondTreePack();
 
+// since prototype, only one [RenderAdapterInSecondTree], so do like this
+final mainSubTreeLayerHandle = LayerHandle(OffsetLayer());
+
 void main() {
   debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
   secondTreePack; // touch it
+  mainSubTreeLayerHandle; // touch it
   runApp(const MyApp());
 }
 
@@ -52,17 +56,14 @@ class _MyAppState extends State<MyApp> {
               border: Border.all(color: Colors.orange, width: 10)),
           width: 300,
           height: 300,
-          // hack: [ParentIsMainChildIsSecondTreeWidget] does not respect "offset" in paint
+          // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
           // now, so we add a RepaintBoundary to let offset==0
-          // hack: [ParentIsMainChildIsSecondTreeWidget] does not respect "offset" in paint
+          // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
           // now, so we add a RepaintBoundary to let offset==0
           child: RepaintBoundary(
-            child: ParentIsMainChildIsSecondTreeWidget(
+            child: AdapterInMainTreeWidget(
               parentBuildCount: buildCount,
-              // child: Container(
-              //   color: Colors.pink.shade100,
-              //   child: Text('child-inside-ParentIsMainChildIsSecondTree$buildCount'),
-              // ),
+              child: DrawCircleWidget(parentBuildCount: buildCount),
             ),
           ),
         ),
@@ -184,29 +185,29 @@ class WindowRenderWhenLayoutRender extends RenderProxyBox {
   }
 }
 
-class ParentIsMainChildIsSecondTreeWidget extends LeafRenderObjectWidget {
+class AdapterInMainTreeWidget extends SingleChildRenderObjectWidget {
   final int parentBuildCount;
 
-  const ParentIsMainChildIsSecondTreeWidget({
+  const AdapterInMainTreeWidget({
     super.key,
     required this.parentBuildCount,
-    // super.child,
+    super.child,
   });
 
   @override
-  RenderParentIsMainChildIsSecondTree createRenderObject(
-          BuildContext context) =>
-      RenderParentIsMainChildIsSecondTree(parentBuildCount: parentBuildCount);
+  RenderAdapterInMainTree createRenderObject(BuildContext context) =>
+      RenderAdapterInMainTree(parentBuildCount: parentBuildCount);
 
   @override
   void updateRenderObject(
-      BuildContext context, RenderParentIsMainChildIsSecondTree renderObject) {
+      BuildContext context, RenderAdapterInMainTree renderObject) {
     renderObject.parentBuildCount = parentBuildCount;
   }
 }
 
-class RenderParentIsMainChildIsSecondTree extends RenderBox {
-  RenderParentIsMainChildIsSecondTree({
+class RenderAdapterInMainTree extends RenderBox
+    with RenderObjectWithChildMixin<RenderBox> {
+  RenderAdapterInMainTree({
     required int parentBuildCount,
     // RenderBox? child,
   }) : _parentBuildCount = parentBuildCount;
@@ -224,7 +225,7 @@ class RenderParentIsMainChildIsSecondTree extends RenderBox {
   }
 
   // should not be singleton, but we are prototyping so only one such guy
-  static RenderParentIsMainChildIsSecondTree? instance;
+  static RenderAdapterInMainTree? instance;
 
   @override
   void attach(covariant PipelineOwner owner) {
@@ -248,12 +249,17 @@ class RenderParentIsMainChildIsSecondTree extends RenderBox {
 
   @override
   void performLayout() {
-    print('$runtimeType.performLayout called');
-    size = constraints.biggest;
+    print('$runtimeType.performLayout start');
 
     // NOTE
     secondTreePack.rootView.configuration =
         SecondTreeRootViewConfiguration(size: size);
+
+    print('$runtimeType.performLayout child.layout start');
+    child!.layout(constraints);
+    print('$runtimeType.performLayout child.layout end');
+
+    size = constraints.biggest;
   }
 
   // TODO correct?
@@ -380,10 +386,99 @@ class RenderParentIsMainChildIsSecondTree extends RenderBox {
     print(
         'after addLayer secondTreeRootLayer=${secondTreeRootLayer.toStringDeep()}');
 
-    // TODO paint child
+    // ================== paint those child in main tree ===================
+
+    // NOTE do *not* have any relation w/ self's PaintingContext, as we will not paint there
+    {
+      // ref: [PaintingContext.pushLayer]
+      if (mainSubTreeLayerHandle.layer!.hasChildren) {
+        mainSubTreeLayerHandle.layer!.removeAllChildren();
+      }
+      final childContext = PaintingContext(
+          mainSubTreeLayerHandle.layer!, context.estimatedBounds);
+      child!.paint(childContext, Offset.zero);
+      childContext.stopRecordingIfNeeded();
+    }
+
+    // =====================================================================
   }
 
 // TODO handle layout!
+}
+
+class AdapterInSecondTreeWidget extends SingleChildRenderObjectWidget {
+  final int parentBuildCount;
+
+  const AdapterInSecondTreeWidget({
+    super.key,
+    required this.parentBuildCount,
+    super.child,
+  });
+
+  @override
+  RenderAdapterInSecondTree createRenderObject(BuildContext context) =>
+      RenderAdapterInSecondTree(parentBuildCount: parentBuildCount);
+
+  @override
+  void updateRenderObject(
+      BuildContext context, RenderAdapterInSecondTree renderObject) {
+    renderObject.parentBuildCount = parentBuildCount;
+  }
+}
+
+class RenderAdapterInSecondTree extends RenderBox {
+  RenderAdapterInSecondTree({
+    required int parentBuildCount,
+  }) : _parentBuildCount = parentBuildCount;
+
+  int get parentBuildCount => _parentBuildCount;
+  int _parentBuildCount;
+
+  set parentBuildCount(int value) {
+    if (_parentBuildCount == value) return;
+    _parentBuildCount = value;
+    print('$runtimeType markNeedsLayout because parentBuildCount changes');
+    markNeedsLayout();
+  }
+
+  // should not be singleton, but we are prototyping so only one such guy
+  static RenderAdapterInSecondTree? instance;
+
+  @override
+  void attach(covariant PipelineOwner owner) {
+    super.attach(owner);
+    assert(instance == null);
+    instance = this;
+  }
+
+  @override
+  void detach() {
+    assert(instance == this);
+    instance == null;
+    super.detach();
+  }
+
+  @override
+  void layout(Constraints constraints, {bool parentUsesSize = false}) {
+    print('$runtimeType.layout called');
+    super.layout(constraints, parentUsesSize: parentUsesSize);
+  }
+
+  @override
+  void performLayout() {
+    print('$runtimeType.performLayout called');
+    size = constraints.biggest;
+  }
+
+  // TODO correct?
+  @override
+  bool get alwaysNeedsCompositing => true;
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    print('$runtimeType paint');
+    context.addLayer(mainSubTreeLayerHandle.layer!);
+  }
 }
 
 class SecondTreePack {
@@ -419,8 +514,9 @@ class SecondTreePack {
         width: 50 * innerStatefulBuilderBuildCount.toDouble(),
         height: 100,
         color: Colors.blue[(innerStatefulBuilderBuildCount * 100) % 800 + 100],
-        // child:
-        //     DrawCircleWidget(parentBuildCount: innerStatefulBuilderBuildCount),
+        child: AdapterInSecondTreeWidget(
+          parentBuildCount: innerStatefulBuilderBuildCount,
+        ),
       );
     });
 
