@@ -424,8 +424,22 @@ class SecondTreeRootView extends RenderObject
   // ref RenderView
   @override
   void paint(PaintingContext context, Offset offset) {
-    print('$runtimeType paint');
-    context.paintChild(child!, offset);
+    // NOTE we have to temporarily remove debugActiveLayout
+    // b/c [SecondTreeRootView.paint] is called inside [preemptRender]
+    // which is inside main tree's build/layout.
+    // thus, if not set it to null we will see error
+    // https://github.com/fzyzcjy/yplusplus/issues/5783#issuecomment-1254974511
+    // In short, this is b/c [debugActiveLayout] is global variable instead
+    // of per-tree variable
+    final oldDebugActiveLayout = RenderObject.debugActiveLayout;
+    RenderObject.debugActiveLayout = null;
+    try {
+      print('$runtimeType paint child start');
+      context.paintChild(child!, offset);
+      print('$runtimeType paint child end');
+    } finally {
+      RenderObject.debugActiveLayout = oldDebugActiveLayout;
+    }
   }
 
   @override
