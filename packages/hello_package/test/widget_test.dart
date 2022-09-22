@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -9,23 +9,58 @@ void main() {
   testWidgets('forest', (tester) async {
     debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
 
+    final pipelineOwner = PipelineOwner();
+    final rootView = pipelineOwner.rootNode = MeasurementView();
+    final buildOwner = BuildOwner(focusManager: FocusManager());
+
+    var secondTreeWidgetBuildTime = 0;
+    final secondTreeWidget = StatefulBuilder(builder: (_, setState) {
+      print(
+          'secondTreeWidget(StatefulBuilder).builder called ($secondTreeWidgetBuildTime)');
+
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        print('secondTreeWidget.setState');
+        setState(() {});
+      });
+
+      secondTreeWidgetBuildTime++;
+
+      return SizedBox(width: secondTreeWidgetBuildTime.toDouble(), height: 10);
+    });
+
+    // ignore: unused_local_variable
+    final element = RenderObjectToWidgetAdapter<RenderBox>(
+      container: rootView,
+      debugShortDescription: '[root]',
+      child: secondTreeWidget,
+    ).attachToRenderTree(buildOwner);
+
+    print('before pumpWidget');
+    rootView.scheduleInitialLayout();
+    // TODO has more steps?
+    pipelineOwner.flushLayout();
+    buildOwner.finalizeTree();
+    print('rootView.size=${rootView.size}');
+
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
         body: StatefulBuilder(builder: (_, setState) {
-          // deliberately do it *inside* a build!
-          final size = measureWidget(const SizedBox(width: 640, height: 480));
-          print('call measureWidget and get size=$size');
-
-          // even do it twice!
-          final size2 = measureWidget(const SizedBox(width: 123, height: 456));
-          print('call measureWidget and get size2=$size2');
-
           SchedulerBinding.instance.addPostFrameCallback((_) {
-            print('deliberately setState');
+            print('mainTree(StatefulBuilder).setState');
             setState(() {});
           });
 
-          return Text('$size');
+          for (var iter = 0; iter < 3; ++iter) {
+            print(
+                'mainTree(StatefulBuilder).builder, run second tree pipeline iter=#$iter');
+
+            // TODO has more steps?
+            pipelineOwner.flushLayout();
+            buildOwner.finalizeTree();
+            print('rootView.size=${rootView.size}');
+          }
+
+          return SizedBox(width: 20, height: 20);
         }),
       ),
     ));
@@ -36,27 +71,6 @@ void main() {
 
     debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
   });
-}
-
-Size measureWidget(Widget widget) {
-  final PipelineOwner pipelineOwner = PipelineOwner();
-  final MeasurementView rootView = pipelineOwner.rootNode = MeasurementView();
-  final BuildOwner buildOwner = BuildOwner(focusManager: FocusManager());
-  final RenderObjectToWidgetElement<RenderBox> element =
-  RenderObjectToWidgetAdapter<RenderBox>(
-    container: rootView,
-    debugShortDescription: '[root]',
-    child: widget,
-  ).attachToRenderTree(buildOwner);
-  try {
-    rootView.scheduleInitialLayout();
-    pipelineOwner.flushLayout();
-    return rootView.size;
-  } finally {
-    // Clean up.
-    element.update(RenderObjectToWidgetAdapter<RenderBox>(container: rootView));
-    buildOwner.finalizeTree();
-  }
 }
 
 class MeasurementView extends RenderBox
