@@ -338,7 +338,8 @@ class RenderSecondTreeAdapter extends RenderBox {
     //      parent. shall we move it back later? o/w can be slow!
     final secondTreeRootLayer = secondTreePack.rootView.layer!;
 
-    print('just start secondTreeRootLayer=${secondTreeRootLayer.toStringDeep()}');
+    // print(
+    //     'just start secondTreeRootLayer=${secondTreeRootLayer.toStringDeep()}');
 
     // HACK!!!
     if (secondTreeRootLayer.attached) {
@@ -347,7 +348,8 @@ class RenderSecondTreeAdapter extends RenderBox {
       secondTreeRootLayer.detach();
     }
 
-    print('before addLayer secondTreeRootLayer=${secondTreeRootLayer.toStringDeep()}');
+    // print(
+    //     'before addLayer secondTreeRootLayer=${secondTreeRootLayer.toStringDeep()}');
 
     print('$runtimeType.paint addLayer');
     // NOTE addLayer, not pushLayer!!!
@@ -355,7 +357,8 @@ class RenderSecondTreeAdapter extends RenderBox {
     // context.pushLayer(secondTreeRootLayer, (context, offset) {}, offset);
 
     print('secondTreeRootLayer.attached=${secondTreeRootLayer.attached}');
-    print('after addLayer secondTreeRootLayer=${secondTreeRootLayer.toStringDeep()}');
+    print(
+        'after addLayer secondTreeRootLayer=${secondTreeRootLayer.toStringDeep()}');
 
     // TODO paint child
   }
@@ -395,6 +398,8 @@ class SecondTreePack {
         height: 100,
         color: Colors.primaries[
             innerStatefulBuilderBuildCount % Colors.primaries.length],
+        child:
+            DrawCircleWidget(parentBuildCount: innerStatefulBuilderBuildCount),
       );
     });
 
@@ -450,4 +455,59 @@ class SecondTreeRootView extends RenderObject
   // hack: just give non-sense value
   @override
   Rect get semanticBounds => paintBounds;
+}
+
+class DrawCircleWidget extends LeafRenderObjectWidget {
+  final int parentBuildCount;
+
+  const DrawCircleWidget({
+    super.key,
+    required this.parentBuildCount,
+  });
+
+  @override
+  RenderDrawCircle createRenderObject(BuildContext context) => RenderDrawCircle(
+        parentBuildCount: parentBuildCount,
+      );
+
+  @override
+  void updateRenderObject(BuildContext context, RenderDrawCircle renderObject) {
+    renderObject.parentBuildCount = parentBuildCount;
+  }
+}
+
+class RenderDrawCircle extends RenderProxyBox {
+  RenderDrawCircle({
+    required int parentBuildCount,
+    RenderBox? child,
+  })  : _parentBuildCount = parentBuildCount,
+        super(child);
+
+  int get parentBuildCount => _parentBuildCount;
+  int _parentBuildCount;
+
+  set parentBuildCount(int value) {
+    if (_parentBuildCount == value) return;
+    _parentBuildCount = value;
+    print('$runtimeType markNeedsLayout because parentBuildCount changes');
+    markNeedsLayout();
+  }
+
+  @override
+  void layout(Constraints constraints, {bool parentUsesSize = false}) {
+    print('$runtimeType performLayout');
+    super.layout(constraints, parentUsesSize: parentUsesSize);
+  }
+
+  @override
+  void performLayout() {
+    size = constraints.biggest;
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    print('$runtimeType paint');
+    context.canvas
+        .drawCircle(Offset(50, 50), 100, Paint()..color = Colors.cyan);
+  }
 }
