@@ -236,6 +236,23 @@ class RenderSecondTreeAdapter extends RenderProxyBox {
   void paint(PaintingContext context, Offset offset) {
     print('$runtimeType.paint called (child=$child)');
 
+    // super.paint(context, offset);
+    // return;
+    //
+    // {
+    //   final recorder = PictureRecorder();
+    //   final canvas = Canvas(recorder);
+    //   final rect = Rect.fromLTWH(0, 0, 500, 500);
+    //   canvas.drawRect(Rect.fromLTWH(0, 0, 50, 50.0 * parentBuildCount),
+    //       Paint()..color = Colors.green);
+    //   final pictureLayer = PictureLayer(rect);
+    //   pictureLayer.picture = recorder.endRecording();
+    //   final wrapperLayer = OffsetLayer();
+    //   wrapperLayer.append(pictureLayer);
+    //   context.pushLayer(wrapperLayer, (context, offset) { }, offset);
+    //   return;
+    // }
+
     // ref: RenderOpacity
 
     // TODO this makes "second tree root layer" be *removed* from its original
@@ -243,14 +260,16 @@ class RenderSecondTreeAdapter extends RenderProxyBox {
     final secondTreeRootLayer = secondTreePack.rootView.layer!;
 
     // HACK!!!
-    if (secondTreeRootLayer.attached) {
-      print('$runtimeType.paint detach the secondTreeRootLayer');
-      // TODO attach again later?
-      secondTreeRootLayer.detach();
-    }
+    // if (secondTreeRootLayer.attached) {
+    //   print('$runtimeType.paint detach the secondTreeRootLayer');
+    //   // TODO attach again later?
+    //   secondTreeRootLayer.detach();
+    // }
 
     print('$runtimeType.paint pushLayer');
     context.pushLayer(secondTreeRootLayer, (context, offset) {}, offset);
+
+    assert(secondTreeRootLayer.attached);
 
     // TODO paint child
   }
