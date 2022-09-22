@@ -421,6 +421,13 @@ class SecondTreeRootView extends RenderObject
     // size = child!.size;
   }
 
+  // ref RenderView
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    print('$runtimeType paint');
+    context.paintChild(child!, offset);
+  }
+
   @override
   void debugAssertDoesMeetConstraints() => true;
 
