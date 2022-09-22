@@ -116,6 +116,8 @@ class MyRender extends RenderProxyBox {
     print('call window.render');
     window.render(scene);
 
+    scene.dispose();
+
     print('$runtimeType pseudoPreemptRender end');
   }
 }
