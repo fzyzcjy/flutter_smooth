@@ -35,9 +35,12 @@ class _PreemptBuilderState extends State<PreemptBuilder> {
       (pack) => Builder(
         builder: (context) => widget.builder(
           context,
-          AdapterInAuxiliaryTreeWidget(
-            pack: pack,
-            dummy: dummy++,
+          // hack, since AdapterInAuxiliaryTreeWidget not deal with offset yet
+          RepaintBoundary(
+            child: AdapterInAuxiliaryTreeWidget(
+              pack: pack,
+              dummy: dummy++,
+            ),
           ),
         ),
       ),
