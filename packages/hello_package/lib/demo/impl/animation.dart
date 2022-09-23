@@ -160,7 +160,7 @@ class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
           counter.inc();
           animation.init();
           final ratio = animation.computeRatio();
-          // print('$runtimeType PreemptBuilder.builder called ratio=$ratio');
+          print('$runtimeType PreemptBuilder.builder called ratio=$ratio');
 
           if (ratio < 1) {
             SchedulerBinding.instance.addPostFrameCallback((_) {

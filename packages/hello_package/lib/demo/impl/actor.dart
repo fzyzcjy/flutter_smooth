@@ -10,6 +10,13 @@ import 'package:hello_package/demo/impl/auxiliary_tree.dart';
 class Actor {
   static final instance = Actor._();
 
+  final stopwatch = () {
+    final s = Stopwatch();
+    print('stopwatch frequency=${s.frequency}');
+    s.start();
+    return s;
+  }();
+
   Actor._();
 
   var lastPreemptTimeUs = 0;
@@ -50,7 +57,7 @@ class Actor {
     final binding = WidgetsFlutterBinding.ensureInitialized();
     final scene = binding.renderView.layer!.buildScene(builder);
 
-    print('call window.render');
+    print('call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
     window.render(scene);
 
     scene.dispose();

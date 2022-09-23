@@ -26,8 +26,8 @@ class AuxiliaryTreePack {
     );
     buildOwner = BuildOwner(
       focusManager: FocusManager(),
-      onBuildScheduled: () =>
-          print('second tree BuildOwner.onBuildScheduled called'),
+      // onBuildScheduled: () =>
+      //     print('second tree BuildOwner.onBuildScheduled called'),
     );
 
     rootView.prepareInitialFrame();
