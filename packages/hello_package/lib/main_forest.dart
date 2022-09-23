@@ -63,8 +63,6 @@ class _MyAppState extends State<MyApp> {
           height: 300,
           // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
           // now, so we add a RepaintBoundary to let offset==0
-          // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
-          // now, so we add a RepaintBoundary to let offset==0
           child: RepaintBoundary(
             child: AdapterInMainTreeWidget(
               parentBuildCount: buildCount,

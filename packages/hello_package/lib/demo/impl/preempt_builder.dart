@@ -64,10 +64,14 @@ class _PreemptBuilderState extends State<PreemptBuilder> {
       setState(() {});
     });
 
-    return AdapterInMainTreeWidget(
-      pack: pack,
-      dummy: dummy,
-      child: widget.child,
+    // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
+    // now, so we add a RepaintBoundary to let offset==0
+    return RepaintBoundary(
+      child: AdapterInMainTreeWidget(
+        pack: pack,
+        dummy: dummy,
+        child: widget.child,
+      ),
     );
   }
 }
