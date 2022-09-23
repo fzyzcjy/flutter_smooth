@@ -73,9 +73,17 @@ class _EnterPageAnimationSlowByAnimationState
 
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _offsetAnimation,
-      child: widget.child,
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Stack(
+        children: [
+          SlideTransition(
+            position: _offsetAnimation,
+            child: widget.child,
+          ),
+          const Center(child: Counter()),
+        ],
+      ),
     );
   }
 }
@@ -117,6 +125,7 @@ class _EnterPageAnimationSlowByBuilderState
             width: constraints.maxWidth,
             child: widget.child,
           ),
+          const Center(child: Counter()),
         ],
       );
     });
@@ -164,14 +173,15 @@ class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
                   width: constraints.maxWidth,
                   child: child,
                 ),
-                Center(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    color: Colors
-                        .primaries[ratio.hashCode % Colors.primaries.length],
-                  ),
-                ),
+                const Center(child: Counter()),
+                // Center(
+                //   child: Container(
+                //     width: 100,
+                //     height: 100,
+                //     color: Colors
+                //         .primaries[ratio.hashCode % Colors.primaries.length],
+                //   ),
+                // ),
               ],
             ),
           );
@@ -194,5 +204,26 @@ class _SimpleAnimation {
   double computeRatio() {
     return DateTime.now().difference(initialTime!).inMicroseconds /
         _kDuration.inMicroseconds;
+  }
+}
+
+class Counter extends StatefulWidget {
+  const Counter({Key? key}) : super(key: key);
+
+  @override
+  State<Counter> createState() => _CounterState();
+}
+
+class _CounterState extends State<Counter> {
+  var buildCount = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    buildCount++;
+    SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    return Text(
+      '${buildCount.toString().padRight(10)} ${DateTime.now()}',
+      style: const TextStyle(fontSize: 30, color: Colors.black),
+    );
   }
 }
