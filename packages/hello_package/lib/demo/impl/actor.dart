@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member, avoid_print
 
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -11,13 +12,20 @@ class Actor {
 
   Actor._();
 
+  var lastPreemptTimeUs = 0;
+
   void maybePreemptRender() {
     // TODO how much time?
-    const kThresh = Duration(milliseconds: 14);
+    const kThresh = 14 * 1000;
 
-    final deltaTime = DateTime.now()
-        .difference(SchedulerBinding.instance.currentFrameStartTime!);
+    final now = DateTime.now().microsecondsSinceEpoch;
+    var currentFrameStartTimeUs =
+        SchedulerBinding.instance.currentFrameStartTimeUs!;
+    final deltaTime = now - max(lastPreemptTimeUs, currentFrameStartTimeUs);
     if (deltaTime > kThresh) {
+      print('$runtimeType maybePreemptRender say yes '
+          'now=$now currentFrameStartTimeUs=$currentFrameStartTimeUs lastPreemptTimeUs=$lastPreemptTimeUs');
+      lastPreemptTimeUs = now;
       preemptRender();
     }
   }
