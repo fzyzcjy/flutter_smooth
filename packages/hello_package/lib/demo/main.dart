@@ -15,8 +15,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var secondPageVisible = false;
-  var fastMode = true;
+  Mode? mode;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +25,7 @@ class _MyAppState extends State<MyApp> {
         children: [
           _buildFirstPage(),
           EnterPageAnimation(
-            visible: secondPageVisible,
-            fastMode: fastMode,
+            mode: mode,
             child: _buildSecondPage(),
           ),
         ],
@@ -43,13 +41,10 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              for (final targetFastMode in [true, false])
+              for (final targetMode in Mode.values)
                 TextButton(
-                  onPressed: () => setState(() {
-                    fastMode = targetFastMode;
-                    secondPageVisible = true;
-                  }),
-                  child: Text('Enter (${targetFastMode ? "Fast" : "Slow"})'),
+                  onPressed: () => setState(() => mode = targetMode),
+                  child: Text('mode=${targetMode.name}'),
                 ),
             ],
           ),
@@ -64,7 +59,7 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('SecondPage'),
           leading: IconButton(
-            onPressed: () => setState(() => secondPageVisible = false),
+            onPressed: () => setState(() => mode = null),
             icon: const Icon(Icons.arrow_back_ios),
           ),
         ),
