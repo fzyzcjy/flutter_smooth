@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, avoid_print
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 void main() {
+  print('==================== Dart main() start =======================');
+  debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
   runApp(MyApp());
 }
 
