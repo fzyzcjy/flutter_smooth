@@ -5,11 +5,13 @@ const _kCurve = Curves.linear;
 
 class EnterPageAnimation extends StatelessWidget {
   final bool visible;
+  final bool fastMode;
   final Widget child;
 
   const EnterPageAnimation({
     super.key,
     required this.visible,
+    required this.fastMode,
     required this.child,
   });
 
@@ -17,7 +19,9 @@ class EnterPageAnimation extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!visible) return const SizedBox.shrink();
 
-    return _EnterPageAnimationSlow(child: child);
+    return fastMode
+        ? _EnterPageAnimationFast(child: child)
+        : _EnterPageAnimationSlow(child: child);
   }
 }
 
@@ -35,9 +39,9 @@ class _EnterPageAnimationSlowState extends State<_EnterPageAnimationSlow>
     with SingleTickerProviderStateMixin {
   late final _controller =
       AnimationController(duration: _kDuration, vsync: this);
-  late final _offsetAnimation = Tween<Offset>(
-          begin: const Offset(1, 0), end: const Offset(0, 0))
-      .animate(CurvedAnimation(parent: _controller, curve: _kCurve));
+  late final _offsetAnimation =
+      Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0))
+          .animate(CurvedAnimation(parent: _controller, curve: _kCurve));
 
   @override
   void initState() {
@@ -53,10 +57,24 @@ class _EnterPageAnimationSlowState extends State<_EnterPageAnimationSlow>
 
   @override
   Widget build(BuildContext context) {
-    print('hi ${_offsetAnimation.value}');
     return SlideTransition(
       position: _offsetAnimation,
       child: widget.child,
     );
+  }
+}
+
+class _EnterPageAnimationFast extends StatefulWidget {
+  const _EnterPageAnimationFast({Key? key}) : super(key: key);
+
+  @override
+  State<_EnterPageAnimationFast> createState() =>
+      _EnterPageAnimationFastState();
+}
+
+class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
+  @override
+  Widget build(BuildContext context) {
+    return TODO;
   }
 }

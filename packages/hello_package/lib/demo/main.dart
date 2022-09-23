@@ -16,6 +16,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var secondPageVisible = false;
+  var fastMode = true;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,7 @@ class _MyAppState extends State<MyApp> {
           _buildFirstPage(),
           EnterPageAnimation(
             visible: secondPageVisible,
+            fastMode: fastMode,
             child: _buildSecondPage(),
           ),
         ],
@@ -38,9 +40,18 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(title: const Text('Preempt for 60FPS')),
         body: Center(
-          child: TextButton(
-            onPressed: () => setState(() => secondPageVisible = true),
-            child: const Text('Enter second page'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final targetFastMode in [true, false])
+                TextButton(
+                  onPressed: () => setState(() {
+                    fastMode = targetFastMode;
+                    secondPageVisible = true;
+                  }),
+                  child: Text('Enter (${targetFastMode ? "Fast" : "Slow"})'),
+                ),
+            ],
           ),
         ),
       ),
