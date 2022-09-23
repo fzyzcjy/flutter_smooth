@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hello_package/demo/impl/preempt_builder.dart';
 
-const _kDuration = Duration(milliseconds: 1000);
+const _kDuration = Duration(milliseconds: 300);
+// const _kDuration = Duration(milliseconds: 1000);
 // const _kDuration = Duration(milliseconds: 5000);
 
 enum Mode {
