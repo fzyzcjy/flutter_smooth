@@ -21,8 +21,6 @@ class PreemptBuilder extends StatefulWidget {
 }
 
 class _PreemptBuilderState extends State<PreemptBuilder> {
-  // hacky, just for prototype
-  late StateSetter auxiliaryTreeWidgetSetState;
   var dummy = 0;
 
   late final AuxiliaryTreePack pack;
@@ -33,28 +31,22 @@ class _PreemptBuilderState extends State<PreemptBuilder> {
     print('${describeIdentity(this)} initState');
 
     pack = AuxiliaryTreePack(
-      StatefulBuilder(builder: (context, setState) {
-        auxiliaryTreeWidgetSetState = setState;
-        return widget.builder(
+      Builder(
+        builder: (context) => widget.builder(
           context,
           AdapterInAuxiliaryTreeWidget(
             pack: pack,
             dummy: dummy++,
           ),
-        );
-      }),
+        ),
+      ),
     );
-  }
-
-  @override
-  void didUpdateWidget(covariant PreemptBuilder oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    auxiliaryTreeWidgetSetState(() {});
   }
 
   @override
   void dispose() {
     print('${describeIdentity(this)} dispose');
+    pack.dispose();
     super.dispose();
   }
 

@@ -14,6 +14,11 @@ class AuxiliaryTreePack {
   // since prototype, only one [RenderAdapterInSecondTree], so do like this
   final mainSubTreeLayerHandle = LayerHandle(OffsetLayer());
 
+  late StateSetter innerStatefulBuilderSetState;
+
+  // hack, use singleton just for prototype
+  static AuxiliaryTreePack? instance;
+
   AuxiliaryTreePack(Widget widget) {
     pipelineOwner = PipelineOwner();
     rootView = pipelineOwner.rootNode = AuxiliaryTreeRootView(
@@ -27,11 +32,24 @@ class AuxiliaryTreePack {
 
     rootView.prepareInitialFrame();
 
+    final wrappedWidget = StatefulBuilder(builder: (_, setState) {
+      innerStatefulBuilderSetState = setState;
+      return widget;
+    });
+
     element = RenderObjectToWidgetAdapter<RenderBox>(
       container: rootView,
       debugShortDescription: '[root]',
-      child: widget,
+      child: wrappedWidget,
     ).attachToRenderTree(buildOwner);
+
+    assert(instance == null);
+    instance = this;
+  }
+
+  void dispose() {
+    assert(instance == this);
+    instance = null;
   }
 }
 
