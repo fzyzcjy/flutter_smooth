@@ -1,59 +1,52 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, avoid_print, unnecessary_import
+// ignore_for_file: avoid_print
 
-import 'dart:ui';
+import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 
+void beginFrame(Duration timeStamp) {
+  final double devicePixelRatio = ui.window.devicePixelRatio;
+  final ui.Size logicalSize = ui.window.physicalSize / devicePixelRatio;
+
+  final ui.ParagraphBuilder paragraphBuilder = ui.ParagraphBuilder(
+    ui.ParagraphStyle(textDirection: ui.TextDirection.ltr),
+  )..addText('Hello, world.');
+  final ui.Paragraph paragraph = paragraphBuilder.build()
+    ..layout(ui.ParagraphConstraints(width: logicalSize.width));
+
+  final ui.Rect physicalBounds =
+      ui.Offset.zero & (logicalSize * devicePixelRatio);
+  final ui.PictureRecorder recorder = ui.PictureRecorder();
+  final ui.Canvas canvas = ui.Canvas(recorder, physicalBounds);
+  canvas.scale(devicePixelRatio, devicePixelRatio);
+  canvas.drawParagraph(
+      paragraph,
+      ui.Offset(
+        (logicalSize.width - paragraph.maxIntrinsicWidth) / 2.0,
+        (logicalSize.height - paragraph.height) / 2.0,
+      ));
+  final ui.Picture picture = recorder.endRecording();
+
+  final ui.SceneBuilder sceneBuilder = ui.SceneBuilder()
+    // TODO(abarth): We should be able to add a picture without pushing a
+    // container layer first.
+    ..pushClipRect(physicalBounds)
+    ..addPicture(ui.Offset.zero, picture)
+    ..pop();
+
+  ui.window.render(sceneBuilder.build());
+}
+
+// This function is the primary entry point to your application. The engine
+// calls main() as soon as it has loaded your code.
 void main() {
   print('==================== Dart main() start =======================');
   debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
 
-  // runApp(MyApp());
-
-  // https://book.flutterchina.club/chapter14/paint.html#_14-5-1-flutter-%E7%BB%98%E5%88%B6%E5%8E%9F%E7%90%86
-  final builder = SceneBuilder();
-  final recorder = PictureRecorder();
-  final canvas = Canvas(recorder);
-  final rect = Rect.fromLTWH(0, 0, 500, 500);
-  canvas.drawRect(
-      Rect.fromLTWH(100, 100, 200, 200), Paint()..color = Colors.green);
-  final pictureLayer = PictureLayer(rect);
-  pictureLayer.picture = recorder.endRecording();
-  final rootLayer = OffsetLayer();
-  rootLayer.append(pictureLayer);
-  final scene = rootLayer.buildScene(builder);
-
-  print('call window.render start');
-  window.render(scene);
-  print('call window.render end');
+  // The engine calls onBeginFrame whenever it wants us to produce a frame.
+  ui.PlatformDispatcher.instance.onBeginFrame = beginFrame;
+  // Here we kick off the whole process by asking the engine to schedule a new
+  // frame. The engine will eventually call onBeginFrame when it is time for us
+  // to actually produce the frame.
+  ui.PlatformDispatcher.instance.scheduleFrame();
 }
-
-// class MyApp extends StatefulWidget {
-//   MyApp({Key? key}) : super(key: key);
-//
-//   @override
-//   State<MyApp> createState() => _MyAppState();
-// }
-//
-// class _MyAppState extends State<MyApp> {
-//   var buildCount = 0;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     buildCount++;
-//     print('$runtimeType.build ($buildCount)');
-//
-//     if (buildCount < 5) {
-//       Future.delayed(Duration(seconds: 1), () {
-//         print('$runtimeType.setState after a second');
-//         setState(() {});
-//       });
-//     }
-//
-//     return Container(
-//       color: Colors.green[(1 + buildCount % 8) * 100],
-//     );
-//   }
-// }
