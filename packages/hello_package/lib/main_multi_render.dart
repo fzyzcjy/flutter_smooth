@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, prefer_const_constructors
 
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -29,6 +30,8 @@ void beginFrame(Duration timeStamp) {
   print('call first window.render start');
   window.render(firstScene);
   print('call first window.render end');
+
+  sleep(Duration(milliseconds: 200));
 
   final secondScene = buildScene(Colors.blue[(1 + frameCount % 8) * 100]!);
   print('call second window.render start');
