@@ -164,16 +164,19 @@ class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
           final ratio = DateTime.now().difference(initialTime!).inMicroseconds /
               _kDuration.inMicroseconds;
 
-          return Stack(
-            children: [
-              Positioned(
-                left: constraints.maxWidth * max(0, 1 - ratio),
-                top: 0,
-                bottom: 0,
-                width: constraints.maxWidth,
-                child: child,
-              ),
-            ],
+          return Directionality(
+            textDirection: TextDirection.ltr,
+            child: Stack(
+              children: [
+                Positioned(
+                  left: constraints.maxWidth * max(0, 1 - ratio),
+                  top: 0,
+                  bottom: 0,
+                  width: constraints.maxWidth,
+                  child: child,
+                ),
+              ],
+            ),
           );
         },
         // NOTE: this one extra frame lag is *avoidable*.

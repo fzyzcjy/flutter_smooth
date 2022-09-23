@@ -19,7 +19,7 @@ class AuxiliaryTreePack {
   // hack, use singleton just for prototype
   static AuxiliaryTreePack? instance;
 
-  AuxiliaryTreePack(Widget widget) {
+  AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
     pipelineOwner = PipelineOwner();
     rootView = pipelineOwner.rootNode = AuxiliaryTreeRootView(
       configuration: AuxiliaryTreeRootViewConfiguration(size: Size.zero),
@@ -34,7 +34,7 @@ class AuxiliaryTreePack {
 
     final wrappedWidget = StatefulBuilder(builder: (_, setState) {
       innerStatefulBuilderSetState = setState;
-      return widget;
+      return widget(this);
     });
 
     element = RenderObjectToWidgetAdapter<RenderBox>(

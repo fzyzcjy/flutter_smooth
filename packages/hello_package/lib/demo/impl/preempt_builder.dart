@@ -31,7 +31,7 @@ class _PreemptBuilderState extends State<PreemptBuilder> {
     print('${describeIdentity(this)} initState');
 
     pack = AuxiliaryTreePack(
-      Builder(
+        (pack) => Builder(
         builder: (context) => widget.builder(
           context,
           AdapterInAuxiliaryTreeWidget(
