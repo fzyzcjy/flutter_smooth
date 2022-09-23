@@ -157,7 +157,13 @@ class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
             textDirection: TextDirection.ltr,
             child: Stack(
               children: [
-                child,
+                Positioned(
+                  left: constraints.maxWidth * max(0, 1 - ratio),
+                  top: 0,
+                  bottom: 0,
+                  width: constraints.maxWidth,
+                  child: child,
+                ),
                 Center(
                   child: Container(
                     width: 100,
@@ -165,21 +171,6 @@ class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
                     color: Colors
                         .primaries[ratio.hashCode % Colors.primaries.length],
                   ),
-                ),
-              ],
-            ),
-          );
-
-          return Directionality(
-            textDirection: TextDirection.ltr,
-            child: Stack(
-              children: [
-                Positioned(
-                  left: constraints.maxWidth * max(0, 1 - ratio),
-                  top: 0,
-                  bottom: 0,
-                  width: constraints.maxWidth,
-                  child: child,
                 ),
               ],
             ),
