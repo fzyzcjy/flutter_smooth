@@ -54,30 +54,11 @@ class Actor {
   }
 
   void preemptModifyLayerTree() {
-    refreshAuxiliaryTree();
-  }
-
-  void refreshAuxiliaryTree() {
-    print('$runtimeType refreshAuxiliaryTree start');
-
     final pack = AuxiliaryTreePack.instance;
     if (pack == null) {
-      print('$runtimeType refreshAuxiliaryTree pack==null thus skip');
+      print('$runtimeType preemptModifyLayerTree pack==null thus skip');
       return;
     }
-
-    pack.innerStatefulBuilderSetState(() {});
-
-    // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
-    // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
-    pack.buildOwner.buildScope(pack.element);
-    pack.pipelineOwner.flushLayout();
-    pack.pipelineOwner.flushCompositingBits();
-    pack.pipelineOwner.flushPaint();
-    // renderView.compositeFrame(); // this sends the bits to the GPU
-    // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
-    pack.buildOwner.finalizeTree();
-
-    print('$runtimeType refreshAuxiliaryTree end');
+    pack.runPipeline();
   }
 }

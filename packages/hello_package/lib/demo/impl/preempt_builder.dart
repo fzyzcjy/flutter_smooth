@@ -2,6 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'adapter.dart';
 import 'auxiliary_tree.dart';
@@ -31,7 +32,7 @@ class _PreemptBuilderState extends State<PreemptBuilder> {
     print('${describeIdentity(this)} initState');
 
     pack = AuxiliaryTreePack(
-        (pack) => Builder(
+      (pack) => Builder(
         builder: (context) => widget.builder(
           context,
           AdapterInAuxiliaryTreeWidget(
@@ -52,6 +53,17 @@ class _PreemptBuilderState extends State<PreemptBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    // hack, just for prototype
+    print('$runtimeType call pack.runPipeline');
+    pack.runPipeline();
+
+    // hack, have not deal with "only refresh main tree when aux tree is dirty",
+    // so let's blindly refresh everything
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      print('$runtimeType addPostFrameCallback call setState');
+      setState(() {});
+    });
+
     return AdapterInMainTreeWidget(
       pack: pack,
       dummy: dummy,

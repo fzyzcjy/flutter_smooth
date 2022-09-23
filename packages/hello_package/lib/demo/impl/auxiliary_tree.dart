@@ -47,6 +47,24 @@ class AuxiliaryTreePack {
     instance = this;
   }
 
+  void runPipeline() {
+    print('$runtimeType runPipeline start');
+
+    innerStatefulBuilderSetState(() {});
+
+    // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
+    // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
+    buildOwner.buildScope(element);
+    pipelineOwner.flushLayout();
+    pipelineOwner.flushCompositingBits();
+    pipelineOwner.flushPaint();
+    // renderView.compositeFrame(); // this sends the bits to the GPU
+    // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
+    buildOwner.finalizeTree();
+
+    print('$runtimeType runPipeline end');
+  }
+
   void dispose() {
     assert(instance == this);
     instance = null;
