@@ -16,7 +16,8 @@ class Actor {
 
   void maybePreemptRender() {
     // TODO how much time?
-    const kThresh = 14 * 1000;
+    // const kThresh = 14 * 1000;
+    const kThresh = 100 * 1000;
 
     final now = DateTime.now().microsecondsSinceEpoch;
     var currentFrameStartTimeUs =

@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hello_package/demo/impl/preempt_builder.dart';
 
-const _kDuration = Duration(milliseconds: 1000);
+// const _kDuration = Duration(milliseconds: 1000);
+const _kDuration = Duration(milliseconds: 5000);
 
 enum Mode {
   slowByAnimation,
@@ -92,10 +93,7 @@ class _EnterPageAnimationSlowByBuilder extends StatefulWidget {
 class _EnterPageAnimationSlowByBuilderState
     extends State<_EnterPageAnimationSlowByBuilder> {
   var firstFrame = true;
-
-  // hacky, just b/c it is prototype
-  // TODO use vsync, duration, etc
-  DateTime? initialTime;
+  final animation = _SimpleAnimation();
 
   @override
   void initState() {
@@ -108,12 +106,15 @@ class _EnterPageAnimationSlowByBuilderState
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (_, constraints) {
-      initialTime ??= DateTime.now();
-      final ratio = DateTime.now().difference(initialTime!).inMicroseconds /
-          _kDuration.inMicroseconds;
+      animation.init();
+      final ratio = animation.computeRatio();
 
       if (ratio < 1) {
-        SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          print(
+              '$runtimeType.build addPostFrameCallback callback call setState');
+          setState(() {});
+        });
       }
 
       return Stack(
@@ -144,10 +145,7 @@ class _EnterPageAnimationFast extends StatefulWidget {
 class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
   // hacky, just b/c it is prototype
   var firstFrame = true;
-
-  // hacky, just b/c it is prototype
-  // TODO use vsync, duration, etc
-  DateTime? initialTime;
+  final animation = _SimpleAnimation();
 
   @override
   void initState() {
@@ -162,11 +160,17 @@ class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
     return LayoutBuilder(
       builder: (_, constraints) => PreemptBuilder(
         builder: (_, child) {
-          initialTime ??= DateTime.now();
-          final ratio = DateTime.now().difference(initialTime!).inMicroseconds /
-              _kDuration.inMicroseconds;
-
+          animation.init();
+          final ratio = animation.computeRatio();
           print('$runtimeType PreemptBuilder.builder called ratio=$ratio');
+
+          if (ratio < 1) {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              print(
+                  '$runtimeType.build addPostFrameCallback callback call setState');
+              setState(() {});
+            });
+          }
 
           return Directionality(
             textDirection: TextDirection.ltr,
@@ -189,5 +193,20 @@ class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
         child: firstFrame ? Container() : widget.child,
       ),
     );
+  }
+}
+
+// hacky, just b/c it is prototype
+// TODO use vsync, duration, etc
+class _SimpleAnimation {
+  DateTime? initialTime;
+
+  void init() {
+    initialTime ??= DateTime.now();
+  }
+
+  double computeRatio() {
+    return DateTime.now().difference(initialTime!).inMicroseconds /
+        _kDuration.inMicroseconds;
   }
 }
