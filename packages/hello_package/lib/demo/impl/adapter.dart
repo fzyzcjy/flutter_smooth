@@ -52,6 +52,12 @@ class RenderAdapterInMainTree extends RenderBox
   }
 
   @override
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
+    // ref: RenderProxyBox
+    return child?.hitTest(result, position: position) ?? false;
+  }
+
+  @override
   void layout(Constraints constraints, {bool parentUsesSize = false}) {
     print('$runtimeType.layout called');
     super.layout(constraints, parentUsesSize: parentUsesSize);
