@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, prefer_const_constructors, invalid_use_of_protected_member
 
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -129,6 +130,11 @@ class WindowRenderWhenLayoutRender extends RenderProxyBox {
   void performLayout() {
     // unconditionally call this, as an experiment
     pseudoPreemptRender();
+
+    // TODO use a real workload
+    print('deliberately sleep, simulate slow work (start)');
+    sleep(const Duration(milliseconds: 300));
+    print('deliberately sleep, simulate slow work (end)');
 
     super.performLayout();
   }
@@ -521,12 +527,20 @@ class SecondTreePack {
       innerStatefulBuilderSetState = setState;
       innerStatefulBuilderBuildCount++;
 
-      return Container(
-        width: 50 * innerStatefulBuilderBuildCount.toDouble(),
-        height: 100,
-        color: Colors.blue[(innerStatefulBuilderBuildCount * 100) % 800 + 100],
-        child: AdapterInSecondTreeWidget(
-          parentBuildCount: innerStatefulBuilderBuildCount,
+      return Directionality(
+        textDirection: TextDirection.ltr,
+        child: Container(
+          width: 50 * innerStatefulBuilderBuildCount.toDouble(),
+          height: 100,
+          color: Colors.blue[(innerStatefulBuilderBuildCount * 100) % 800 + 100],
+          child: Stack(
+            children: [
+              AdapterInSecondTreeWidget(
+                parentBuildCount: innerStatefulBuilderBuildCount,
+              ),
+              Text('SecondTree$innerStatefulBuilderBuildCount'),
+            ],
+          ),
         ),
       );
     });
