@@ -102,7 +102,8 @@ class ComplexWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const N = 30;
+    // const N = 30;
+    const N = 60; // make it big to see jank clearly
     // const N = 1000; // for debug
 
     // @dnfield's suggestion - a lot of text
