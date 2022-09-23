@@ -192,6 +192,9 @@ class RenderAdapterInAuxiliaryTree extends RenderBox {
 
   @override
   void paint(PaintingContext context, Offset offset) {
+    assert(offset == Offset.zero,
+        '$runtimeType prototype has not deal with offset yet');
+   
     print('$runtimeType paint');
     context.addLayer(pack.mainSubTreeLayerHandle.layer!);
   }
