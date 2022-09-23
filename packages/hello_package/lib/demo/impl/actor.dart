@@ -15,6 +15,11 @@ class Actor {
   var lastPreemptTimeUs = 0;
 
   void maybePreemptRender() {
+    if (AuxiliaryTreePack.instance == null) {
+      // means this experiment is NOT enabled.
+      return;
+    }
+
     // TODO how much time?
     const kThresh = 14 * 1000;
     // const kThresh = 100 * 1000;
@@ -54,11 +59,6 @@ class Actor {
   }
 
   void preemptModifyLayerTree() {
-    final pack = AuxiliaryTreePack.instance;
-    if (pack == null) {
-      // print('$runtimeType preemptModifyLayerTree pack==null thus skip');
-      return;
-    }
-    pack.runPipeline();
+    AuxiliaryTreePack.instance!.runPipeline();
   }
 }

@@ -53,6 +53,7 @@ class _EnterPageAnimationSlowByAnimation extends StatefulWidget {
 class _EnterPageAnimationSlowByAnimationState
     extends State<_EnterPageAnimationSlowByAnimation>
     with SingleTickerProviderStateMixin {
+  final counter = Counter();
   late final _controller =
       AnimationController(duration: _kDuration, vsync: this);
   late final _offsetAnimation =
@@ -73,6 +74,8 @@ class _EnterPageAnimationSlowByAnimationState
 
   @override
   Widget build(BuildContext context) {
+    counter.inc();
+
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Stack(
@@ -81,7 +84,7 @@ class _EnterPageAnimationSlowByAnimationState
             position: _offsetAnimation,
             child: widget.child,
           ),
-          const Center(child: Counter()),
+          Center(child: counter.build()),
         ],
       ),
     );
@@ -100,11 +103,13 @@ class _EnterPageAnimationSlowByBuilder extends StatefulWidget {
 
 class _EnterPageAnimationSlowByBuilderState
     extends State<_EnterPageAnimationSlowByBuilder> {
+  final counter = Counter();
   final animation = _SimpleAnimation();
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (_, constraints) {
+      counter.inc();
       animation.init();
       final ratio = animation.computeRatio();
 
@@ -125,7 +130,7 @@ class _EnterPageAnimationSlowByBuilderState
             width: constraints.maxWidth,
             child: widget.child,
           ),
-          const Center(child: Counter()),
+          Center(child: counter.build()),
         ],
       );
     });
@@ -143,6 +148,7 @@ class _EnterPageAnimationFast extends StatefulWidget {
 }
 
 class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
+  final counter = Counter();
   final animation = _SimpleAnimation();
 
   @override
@@ -150,6 +156,7 @@ class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
     return LayoutBuilder(
       builder: (_, constraints) => PreemptBuilder(
         builder: (_, child) {
+          counter.inc();
           animation.init();
           final ratio = animation.computeRatio();
           // print('$runtimeType PreemptBuilder.builder called ratio=$ratio');
@@ -173,7 +180,7 @@ class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
                   width: constraints.maxWidth,
                   child: child,
                 ),
-                const Center(child: Counter()),
+                Center(child: counter.build()),
                 // Center(
                 //   child: Container(
                 //     width: 100,
@@ -207,23 +214,13 @@ class _SimpleAnimation {
   }
 }
 
-class Counter extends StatefulWidget {
-  const Counter({Key? key}) : super(key: key);
+class Counter {
+  var count = 0;
 
-  @override
-  State<Counter> createState() => _CounterState();
-}
+  void inc() => count++;
 
-class _CounterState extends State<Counter> {
-  var buildCount = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    buildCount++;
-    SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
-    return Text(
-      '${buildCount.toString().padRight(10)} ${DateTime.now()}',
+  Widget build() => Text(
+      '${count.toString().padRight(10)} ${DateTime.now()}',
       style: const TextStyle(fontSize: 30, color: Colors.black),
     );
-  }
 }
