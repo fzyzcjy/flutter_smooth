@@ -57,12 +57,33 @@ class AuxiliaryTreePack {
     buildOwner.buildScope(element);
     pipelineOwner.flushLayout();
     pipelineOwner.flushCompositingBits();
-    pipelineOwner.flushPaint();
+    temporarilyRemoveDebugActiveLayout(() {
+      pipelineOwner.flushPaint();
+    });
     // renderView.compositeFrame(); // this sends the bits to the GPU
     // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
     buildOwner.finalizeTree();
 
     print('$runtimeType runPipeline end');
+  }
+
+  void temporarilyRemoveDebugActiveLayout(VoidCallback f) {
+    // NOTE we have to temporarily remove debugActiveLayout
+    // b/c [SecondTreeRootView.paint] is called inside [preemptRender]
+    // which is inside main tree's build/layout.
+    // thus, if not set it to null we will see error
+    // https://github.com/fzyzcjy/yplusplus/issues/5783#issuecomment-1254974511
+    // In short, this is b/c [debugActiveLayout] is global variable instead
+    // of per-tree variable
+    // and also
+    // https://github.com/fzyzcjy/yplusplus/issues/5793#issuecomment-1256095858
+    final oldDebugActiveLayout = RenderObject.debugActiveLayout;
+    RenderObject.debugActiveLayout = null;
+    try {
+      f();
+    } finally {
+      RenderObject.debugActiveLayout = oldDebugActiveLayout;
+    }
   }
 
   void dispose() {
