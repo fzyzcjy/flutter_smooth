@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hello_package/demo/impl/animation.dart';
+import 'package:hello_package/demo/impl/preempt_point.dart';
 
 void main() {
   debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
@@ -84,22 +85,26 @@ class ComplexWidget extends StatelessWidget {
           children: List<Widget>.generate(30, (int index) {
             return SizedBox(
               height: 24,
-              child: ListTile(
-                dense: true,
-                visualDensity: VisualDensity.compact,
-                leading: SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircleAvatar(
-                    child: Text('G$index'),
+              // NOTE hack, in real world should auto have preempt point
+              // but in prototype we do it by hand
+              child: PreemptPoint(
+                child: ListTile(
+                  dense: true,
+                  visualDensity: VisualDensity.compact,
+                  leading: SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircleAvatar(
+                      child: Text('G$index'),
+                    ),
                   ),
+                  title: Text(
+                    'Foo contact from $index-th local contact' * 5,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 5),
+                  ),
+                  subtitle: Text('+91 88888 8800$index'),
                 ),
-                title: Text(
-                  'Foo contact from $index-th local contact' * 5,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 5),
-                ),
-                subtitle: Text('+91 88888 8800$index'),
               ),
             );
           }),

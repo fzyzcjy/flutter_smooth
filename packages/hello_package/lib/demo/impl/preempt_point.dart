@@ -8,12 +8,10 @@ import 'package:hello_package/demo/impl/actor.dart';
 // However, in real api, it should be done in RenderObject.layout, i.e. automatically
 // without human intervention
 class PreemptPoint extends StatelessWidget {
-  final int dummy;
   final Widget child;
 
   const PreemptPoint({
     super.key,
-    required this.dummy,
     required this.child,
   });
 
@@ -21,7 +19,7 @@ class PreemptPoint extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BuildPreemptPointWidget(
       child: _LayoutPreemptPointWidget(
-        dummy: dummy,
+        dummy: 0,
         child: child,
       ),
     );
