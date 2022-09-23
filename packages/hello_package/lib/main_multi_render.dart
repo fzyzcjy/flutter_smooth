@@ -7,26 +7,33 @@ import 'package:flutter/scheduler.dart';
 
 var frameCount = 0;
 
-void beginFrame(Duration timeStamp) {
-  frameCount++;
-  print('onBeginFrame start ($frameCount)');
-
+Scene buildScene(Color color) {
   // https://book.flutterchina.club/chapter14/paint.html#_14-5-1-flutter-%E7%BB%98%E5%88%B6%E5%8E%9F%E7%90%86
   final builder = SceneBuilder();
   final recorder = PictureRecorder();
   final canvas = Canvas(recorder);
   final rect = Rect.fromLTWH(0, 0, 500, 500);
-  canvas.drawRect(Rect.fromLTWH(100, 100, 200, 200),
-      Paint()..color = Colors.green[(1 + frameCount % 8) * 100]!);
+  canvas.drawRect(Rect.fromLTWH(100, 100, 200, 200), Paint()..color = color);
   final pictureLayer = PictureLayer(rect);
   pictureLayer.picture = recorder.endRecording();
   final rootLayer = OffsetLayer();
   rootLayer.append(pictureLayer);
-  final scene = rootLayer.buildScene(builder);
+  return rootLayer.buildScene(builder);
+}
 
-  print('call window.render start');
-  window.render(scene);
-  print('call window.render end');
+void beginFrame(Duration timeStamp) {
+  frameCount++;
+  print('onBeginFrame start ($frameCount)');
+
+  final firstScene = buildScene(Colors.green[(1 + frameCount % 8) * 100]!);
+  print('call first window.render start');
+  window.render(firstScene);
+  print('call first window.render end');
+
+  final secondScene = buildScene(Colors.blue[(1 + frameCount % 8) * 100]!);
+  print('call second window.render start');
+  window.render(secondScene);
+  print('call second window.render end');
 
   Future.delayed(const Duration(seconds: 1), () {
     if (frameCount < 5) {
