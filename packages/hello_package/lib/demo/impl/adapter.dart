@@ -47,7 +47,7 @@ class RenderAdapterInMainTree extends RenderBox
   set dummy(int value) {
     if (_dummy == value) return;
     _dummy = value;
-    print('$runtimeType markNeedsLayout because dummy changes');
+    // print('$runtimeType markNeedsLayout because dummy changes');
     markNeedsLayout();
   }
 
@@ -59,21 +59,21 @@ class RenderAdapterInMainTree extends RenderBox
 
   @override
   void layout(Constraints constraints, {bool parentUsesSize = false}) {
-    print('$runtimeType.layout called');
+    // print('$runtimeType.layout called');
     super.layout(constraints, parentUsesSize: parentUsesSize);
   }
 
   @override
   void performLayout() {
-    print('$runtimeType.performLayout start');
+    // print('$runtimeType.performLayout start');
 
     // NOTE
     pack.rootView.configuration =
         AuxiliaryTreeRootViewConfiguration(size: constraints.biggest);
 
-    print('$runtimeType.performLayout child.layout start');
+    // print('$runtimeType.performLayout child.layout start');
     child!.layout(constraints);
-    print('$runtimeType.performLayout child.layout end');
+    // print('$runtimeType.performLayout child.layout end');
 
     size = constraints.biggest;
   }
@@ -87,7 +87,7 @@ class RenderAdapterInMainTree extends RenderBox
     assert(offset == Offset.zero,
         '$runtimeType prototype has not deal with offset yet');
 
-    print('$runtimeType.paint called');
+    // print('$runtimeType.paint called');
 
     // ref: RenderOpacity
 
@@ -100,7 +100,7 @@ class RenderAdapterInMainTree extends RenderBox
 
     // HACK!!!
     if (auxiliaryTreeRootLayer.attached) {
-      print('$runtimeType.paint detach the auxiliaryTreeRootLayer');
+      // print('$runtimeType.paint detach the auxiliaryTreeRootLayer');
       // TODO attach again later?
       auxiliaryTreeRootLayer.detach();
     }
@@ -108,14 +108,14 @@ class RenderAdapterInMainTree extends RenderBox
     // print(
     //     'before addLayer auxiliaryTreeRootLayer=${auxiliaryTreeRootLayer.toStringDeep()}');
 
-    print('$runtimeType.paint addLayer');
+    // print('$runtimeType.paint addLayer');
     // NOTE addLayer, not pushLayer!!!
     context.addLayer(auxiliaryTreeRootLayer);
     // context.pushLayer(auxiliaryTreeRootLayer, (context, offset) {}, offset);
 
-    print('auxiliaryTreeRootLayer.attached=${auxiliaryTreeRootLayer.attached}');
-    debugPrint(
-        'after addLayer auxiliaryTreeRootLayer=${auxiliaryTreeRootLayer.toStringDeep()}');
+    // print('auxiliaryTreeRootLayer.attached=${auxiliaryTreeRootLayer.attached}');
+    // debugPrint(
+    //     'after addLayer auxiliaryTreeRootLayer=${auxiliaryTreeRootLayer.toStringDeep()}');
 
     // ================== paint those child in main tree ===================
 
@@ -176,19 +176,19 @@ class RenderAdapterInAuxiliaryTree extends RenderBox {
   set dummy(int value) {
     if (_dummy == value) return;
     _dummy = value;
-    print('$runtimeType markNeedsLayout because dummy changes');
+    // print('$runtimeType markNeedsLayout because dummy changes');
     markNeedsLayout();
   }
 
   @override
   void layout(Constraints constraints, {bool parentUsesSize = false}) {
-    print('$runtimeType.layout called');
+    // print('$runtimeType.layout called');
     super.layout(constraints, parentUsesSize: parentUsesSize);
   }
 
   @override
   void performLayout() {
-    print('$runtimeType.performLayout called');
+    // print('$runtimeType.performLayout called');
     size = constraints.biggest;
   }
 
@@ -201,7 +201,7 @@ class RenderAdapterInAuxiliaryTree extends RenderBox {
     assert(offset == Offset.zero,
         '$runtimeType prototype has not deal with offset yet');
 
-    print('$runtimeType paint');
+    // print('$runtimeType paint');
     context.addLayer(pack.mainSubTreeLayerHandle.layer!);
   }
 }

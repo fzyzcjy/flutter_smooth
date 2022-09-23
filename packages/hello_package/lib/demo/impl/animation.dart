@@ -102,8 +102,8 @@ class _EnterPageAnimationSlowByBuilderState
 
       if (ratio < 1) {
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          print(
-              '$runtimeType.build addPostFrameCallback callback call setState');
+          // print(
+          //     '$runtimeType.build addPostFrameCallback callback call setState');
           setState(() {});
         });
       }
@@ -143,12 +143,12 @@ class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
         builder: (_, child) {
           animation.init();
           final ratio = animation.computeRatio();
-          print('$runtimeType PreemptBuilder.builder called ratio=$ratio');
+          // print('$runtimeType PreemptBuilder.builder called ratio=$ratio');
 
           if (ratio < 1) {
             SchedulerBinding.instance.addPostFrameCallback((_) {
-              print(
-                  '$runtimeType.build addPostFrameCallback callback call setState');
+              // print(
+              //     '$runtimeType.build addPostFrameCallback callback call setState');
               setState(() {});
             });
           }

@@ -48,7 +48,7 @@ class AuxiliaryTreePack {
   }
 
   void runPipeline() {
-    print('$runtimeType runPipeline start');
+    // print('$runtimeType runPipeline start');
 
     innerStatefulBuilderSetState(() {});
 
@@ -64,7 +64,7 @@ class AuxiliaryTreePack {
     // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
     buildOwner.finalizeTree();
 
-    print('$runtimeType runPipeline end');
+    // print('$runtimeType runPipeline end');
   }
 
   void temporarilyRemoveDebugActiveLayout(VoidCallback f) {
@@ -138,16 +138,16 @@ class AuxiliaryTreeRootView extends RenderObject
     if (configuration == value) {
       return;
     }
-    print(
-        '$runtimeType set configuration(i.e. size) $_configuration -> $value');
+    // print(
+    //     '$runtimeType set configuration(i.e. size) $_configuration -> $value');
     _configuration = value;
     markNeedsLayout();
   }
 
   @override
   void performLayout() {
-    print(
-        '$runtimeType performLayout configuration.size=${configuration.size}');
+    // print(
+    //     '$runtimeType performLayout configuration.size=${configuration.size}');
 
     _size = configuration.size;
 
@@ -168,9 +168,9 @@ class AuxiliaryTreeRootView extends RenderObject
     final oldDebugActiveLayout = RenderObject.debugActiveLayout;
     RenderObject.debugActiveLayout = null;
     try {
-      print('$runtimeType paint child start');
+      // print('$runtimeType paint child start');
       context.paintChild(child!, offset);
-      print('$runtimeType paint child end');
+      // print('$runtimeType paint child end');
     } finally {
       RenderObject.debugActiveLayout = oldDebugActiveLayout;
     }

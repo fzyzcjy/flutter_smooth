@@ -24,15 +24,15 @@ class Actor {
         SchedulerBinding.instance.currentFrameStartTimeUs!;
     final deltaTime = now - max(lastPreemptTimeUs, currentFrameStartTimeUs);
     if (deltaTime > kThresh) {
-      print('$runtimeType maybePreemptRender say yes '
-          'now=$now currentFrameStartTimeUs=$currentFrameStartTimeUs lastPreemptTimeUs=$lastPreemptTimeUs');
+      // print('$runtimeType maybePreemptRender say yes '
+      //     'now=$now currentFrameStartTimeUs=$currentFrameStartTimeUs lastPreemptTimeUs=$lastPreemptTimeUs');
       lastPreemptTimeUs = now;
       preemptRender();
     }
   }
 
   void preemptRender() {
-    print('$runtimeType preemptRender start');
+    // print('$runtimeType preemptRender start');
 
     // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
     // ref: RenderView.compositeFrame
@@ -50,13 +50,13 @@ class Actor {
 
     scene.dispose();
 
-    print('$runtimeType preemptRender end');
+    // print('$runtimeType preemptRender end');
   }
 
   void preemptModifyLayerTree() {
     final pack = AuxiliaryTreePack.instance;
     if (pack == null) {
-      print('$runtimeType preemptModifyLayerTree pack==null thus skip');
+      // print('$runtimeType preemptModifyLayerTree pack==null thus skip');
       return;
     }
     pack.runPipeline();

@@ -29,7 +29,7 @@ class _PreemptBuilderState extends State<PreemptBuilder> {
   @override
   void initState() {
     super.initState();
-    print('${describeIdentity(this)} initState');
+    // print('${describeIdentity(this)} initState');
 
     pack = AuxiliaryTreePack(
       (pack) => Builder(
@@ -49,7 +49,7 @@ class _PreemptBuilderState extends State<PreemptBuilder> {
 
   @override
   void dispose() {
-    print('${describeIdentity(this)} dispose');
+    // print('${describeIdentity(this)} dispose');
     pack.dispose();
     super.dispose();
   }
@@ -57,13 +57,13 @@ class _PreemptBuilderState extends State<PreemptBuilder> {
   @override
   Widget build(BuildContext context) {
     // hack, just for prototype
-    print('$runtimeType call pack.runPipeline');
+    // print('$runtimeType call pack.runPipeline');
     pack.runPipeline();
 
     // hack, have not deal with "only refresh main tree when aux tree is dirty",
     // so let's blindly refresh everything
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      print('$runtimeType addPostFrameCallback call setState');
+      // print('$runtimeType addPostFrameCallback call setState');
       setState(() {});
     });
 

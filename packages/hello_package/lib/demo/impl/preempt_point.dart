@@ -72,7 +72,7 @@ class _RenderLayoutPreemptPoint extends RenderProxyBox {
   set dummy(int value) {
     if (_dummy == value) return;
     _dummy = value;
-    print('$runtimeType markNeedsLayout because dummy changes');
+    // print('$runtimeType markNeedsLayout because dummy changes');
     markNeedsLayout();
   }
 
