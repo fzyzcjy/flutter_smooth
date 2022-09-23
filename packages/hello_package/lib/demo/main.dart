@@ -75,6 +75,9 @@ class ComplexWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const N = 30;
+    // const N = 1000; // for debug
+
     // @dnfield's suggestion - a lot of text
     // https://github.com/flutter/flutter/issues/101227#issuecomment-1247641562
     return Material(
@@ -82,7 +85,7 @@ class ComplexWidget extends StatelessWidget {
         alignment: Alignment.topCenter,
         maxHeight: double.infinity,
         child: Column(
-          children: List<Widget>.generate(30, (int index) {
+          children: List<Widget>.generate(N, (int index) {
             return SizedBox(
               height: 24,
               // NOTE hack, in real world should auto have preempt point

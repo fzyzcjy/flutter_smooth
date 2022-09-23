@@ -108,7 +108,7 @@ class RenderAdapterInMainTree extends RenderBox
     // context.pushLayer(auxiliaryTreeRootLayer, (context, offset) {}, offset);
 
     print('auxiliaryTreeRootLayer.attached=${auxiliaryTreeRootLayer.attached}');
-    print(
+    debugPrint(
         'after addLayer auxiliaryTreeRootLayer=${auxiliaryTreeRootLayer.toStringDeep()}');
 
     // ================== paint those child in main tree ===================
@@ -194,7 +194,7 @@ class RenderAdapterInAuxiliaryTree extends RenderBox {
   void paint(PaintingContext context, Offset offset) {
     assert(offset == Offset.zero,
         '$runtimeType prototype has not deal with offset yet');
-   
+
     print('$runtimeType paint');
     context.addLayer(pack.mainSubTreeLayerHandle.layer!);
   }
