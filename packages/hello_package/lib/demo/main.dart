@@ -14,21 +14,48 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  var secondPageVisible = false;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Preempt for 60FPS')),
-        body: _buildBody(),
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Stack(
+        children: [
+          _buildFirstPage(),
+          if (secondPageVisible) _buildSecondPage(),
+        ],
       ),
     );
   }
 
-  Widget _buildBody() {
-    // TODO
-    // TODO_when_to_trigger_preempt - not triggered yet!
+  Widget _buildFirstPage() {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Preempt for 60FPS')),
+        body: Center(
+          child: TextButton(
+            onPressed: () => setState(() => secondPageVisible = true),
+            child: const Text('Enter second page'),
+          ),
+        ),
+      ),
+    );
+  }
 
-    return const Text('TODO give a transtion animation');
+  Widget _buildSecondPage() {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('SecondPage'),
+          leading: IconButton(
+            onPressed: () => setState(() => secondPageVisible = false),
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
+        ),
+        body: const ComplexWidget(),
+      ),
+    );
   }
 }
 
