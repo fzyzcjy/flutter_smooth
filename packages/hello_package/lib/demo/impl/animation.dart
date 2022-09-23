@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -163,6 +165,8 @@ class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
           initialTime ??= DateTime.now();
           final ratio = DateTime.now().difference(initialTime!).inMicroseconds /
               _kDuration.inMicroseconds;
+
+          print('$runtimeType PreemptBuilder.builder called ratio=$ratio');
 
           return Directionality(
             textDirection: TextDirection.ltr,
