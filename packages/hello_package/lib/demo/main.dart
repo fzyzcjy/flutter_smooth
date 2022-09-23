@@ -27,7 +27,9 @@ class _MyAppState extends State<MyApp> {
           _buildFirstPage(),
           EnterPageAnimation(
             mode: mode,
-            child: _buildSecondPage(),
+            child: SecondPage(
+              onTapBack: () => setState(() => mode = null),
+            ),
           ),
         ],
       ),
@@ -53,18 +55,43 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+}
 
-  Widget _buildSecondPage() {
+class SecondPage extends StatefulWidget {
+  final VoidCallback onTapBack;
+
+  const SecondPage({super.key, required this.onTapBack});
+
+  @override
+  State<SecondPage> createState() => _SecondPageState();
+}
+
+class _SecondPageState extends State<SecondPage> {
+  var firstFrame = true;
+
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      setState(() => firstFrame = false);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: const Text('SecondPage'),
           leading: IconButton(
-            onPressed: () => setState(() => mode = null),
+            onPressed: widget.onTapBack,
             icon: const Icon(Icons.arrow_back_ios),
           ),
         ),
-        body: const ComplexWidget(),
+        // NOTE: this one extra frame lag is *avoidable*.
+        // Since this is a prototype, I do not bother to initialize the aux tree pack
+        // in a fancier way.
+        body: firstFrame ? Container() : const ComplexWidget(),
       ),
     );
   }

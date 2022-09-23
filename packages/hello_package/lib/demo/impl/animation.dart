@@ -92,16 +92,7 @@ class _EnterPageAnimationSlowByBuilder extends StatefulWidget {
 
 class _EnterPageAnimationSlowByBuilderState
     extends State<_EnterPageAnimationSlowByBuilder> {
-  var firstFrame = true;
   final animation = _SimpleAnimation();
-
-  @override
-  void initState() {
-    super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      setState(() => firstFrame = false);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +115,7 @@ class _EnterPageAnimationSlowByBuilderState
             top: 0,
             bottom: 0,
             width: constraints.maxWidth,
-            child: firstFrame ? Container() : widget.child,
+            child: widget.child,
           ),
         ],
       );
@@ -143,17 +134,7 @@ class _EnterPageAnimationFast extends StatefulWidget {
 }
 
 class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
-  // hacky, just b/c it is prototype
-  var firstFrame = true;
   final animation = _SimpleAnimation();
-
-  @override
-  void initState() {
-    super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      setState(() => firstFrame = false);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,10 +185,7 @@ class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
             ),
           );
         },
-        // NOTE: this one extra frame lag is *avoidable*.
-        // Since this is a prototype, I do not bother to initialize the aux tree pack
-        // in a fancier way.
-        child: firstFrame ? Container() : widget.child,
+        child: widget.child,
       ),
     );
   }
