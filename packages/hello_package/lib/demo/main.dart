@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hello_package/demo/impl/animation.dart';
 
 void main() {
   debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
@@ -23,7 +24,10 @@ class _MyAppState extends State<MyApp> {
       child: Stack(
         children: [
           _buildFirstPage(),
-          if (secondPageVisible) _buildSecondPage(),
+          EnterPageAnimation(
+            visible: secondPageVisible,
+            child: _buildSecondPage(),
+          ),
         ],
       ),
     );
