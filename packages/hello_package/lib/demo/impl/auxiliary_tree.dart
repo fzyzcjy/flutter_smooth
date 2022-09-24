@@ -15,6 +15,7 @@ class AuxiliaryTreePack {
 
   // since prototype, only one [RenderAdapterInSecondTree], so do like this
   final mainSubTreeLayerHandle = LayerHandle(OffsetLayer());
+  final tickerRegistry = TickerRegistry();
 
   late StateSetter innerStatefulBuilderSetState;
 
@@ -34,10 +35,13 @@ class AuxiliaryTreePack {
 
     rootView.prepareInitialFrame();
 
-    final wrappedWidget = StatefulBuilder(builder: (_, setState) {
-      innerStatefulBuilderSetState = setState;
-      return widget(this);
-    });
+    final wrappedWidget = TickerRegistryInheritedWidget(
+      registry: tickerRegistry,
+      child: StatefulBuilder(builder: (_, setState) {
+        innerStatefulBuilderSetState = setState;
+        return widget(this);
+      }),
+    );
 
     element = RenderObjectToWidgetAdapter<RenderBox>(
       container: rootView,
@@ -54,6 +58,7 @@ class AuxiliaryTreePack {
       // print('$runtimeType runPipeline start');
 
       innerStatefulBuilderSetState(() {});
+      callExtraTickerTick();
 
       // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
       // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
@@ -69,6 +74,14 @@ class AuxiliaryTreePack {
 
       // print('$runtimeType runPipeline end');
     });
+  }
+
+  /// #5814
+  void callExtraTickerTick() {
+    final now = DateTime.now();
+    for(final ticker in tickerRegistry.tickers) {
+      ticker.extraTick(now);
+    }
   }
 
   void temporarilyRemoveDebugActiveLayout(VoidCallback f) {
