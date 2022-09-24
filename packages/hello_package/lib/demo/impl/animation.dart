@@ -13,7 +13,8 @@ const _kDuration = Duration(milliseconds: 300);
 enum Mode {
   slowByAnimation,
   slowByBuilder,
-  fast,
+  fastByAnimation,
+  fastByBuilder,
 }
 
 class EnterPageAnimation extends StatelessWidget {
@@ -35,8 +36,10 @@ class EnterPageAnimation extends StatelessWidget {
         return _EnterPageAnimationSlowByAnimation(child: child);
       case Mode.slowByBuilder:
         return _EnterPageAnimationSlowByBuilder(child: child);
-      case Mode.fast:
-        return _EnterPageAnimationFast(child: child);
+      case Mode.fastByAnimation:
+        return _EnterPageAnimationFastByAnimation(child: child);
+      case Mode.fastByBuilder:
+        return _EnterPageAnimationFastByBuilder(child: child);
     }
   }
 }
@@ -138,17 +141,86 @@ class _EnterPageAnimationSlowByBuilderState
   }
 }
 
-class _EnterPageAnimationFast extends StatefulWidget {
+class _EnterPageAnimationFastByAnimation extends StatefulWidget {
   final Widget child;
 
-  const _EnterPageAnimationFast({required this.child});
+  const _EnterPageAnimationFastByAnimation({required this.child});
 
   @override
-  State<_EnterPageAnimationFast> createState() =>
-      _EnterPageAnimationFastState();
+  State<_EnterPageAnimationFastByAnimation> createState() =>
+      _EnterPageAnimationFastByAnimationState();
 }
 
-class _EnterPageAnimationFastState extends State<_EnterPageAnimationFast> {
+class _EnterPageAnimationFastByAnimationState
+    extends State<_EnterPageAnimationFastByAnimation> {
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (_, constraints) => PreemptBuilder(
+        builder: (_, child) =>
+            _EnterPageAnimationFastByAnimationInner(child: child),
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+class _EnterPageAnimationFastByAnimationInner extends StatefulWidget {
+  final Widget child;
+
+  const _EnterPageAnimationFastByAnimationInner({Key? key, required this.child})
+      : super(key: key);
+
+  @override
+  State<_EnterPageAnimationFastByAnimationInner> createState() =>
+      _EnterPageAnimationFastByAnimationInnerState();
+}
+
+class _EnterPageAnimationFastByAnimationInnerState
+    extends State<_EnterPageAnimationFastByAnimationInner>
+    with SingleTickerProviderStateMixin {
+  late final _controller =
+      AnimationController(duration: _kDuration, vsync: this);
+  late final _offsetAnimation =
+      Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0))
+          .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: SlideTransition(
+        position: _offsetAnimation,
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+class _EnterPageAnimationFastByBuilder extends StatefulWidget {
+  final Widget child;
+
+  const _EnterPageAnimationFastByBuilder({required this.child});
+
+  @override
+  State<_EnterPageAnimationFastByBuilder> createState() =>
+      _EnterPageAnimationFastByBuilderState();
+}
+
+class _EnterPageAnimationFastByBuilderState
+    extends State<_EnterPageAnimationFastByBuilder> {
   final counter = Counter();
   final animation = _SimpleAnimation();
 
@@ -221,7 +293,7 @@ class Counter {
   void inc() => count++;
 
   Widget build() => Text(
-      '${count.toString().padRight(10)} ${DateTime.now()}',
-      style: const TextStyle(fontSize: 30, color: Colors.black),
-    );
+        '${count.toString().padRight(10)} ${DateTime.now()}',
+        style: const TextStyle(fontSize: 30, color: Colors.black),
+      );
 }
