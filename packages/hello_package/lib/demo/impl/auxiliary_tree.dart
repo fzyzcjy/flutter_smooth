@@ -19,7 +19,7 @@ class AuxiliaryTreePack {
   final mainSubTreeLayerHandle = LayerHandle(OffsetLayer());
   final tickerRegistry = TickerRegistry();
 
-  late StateSetter innerStatefulBuilderSetState;
+  // late StateSetter innerStatefulBuilderSetState;
 
   // hack, use singleton just for prototype
   static AuxiliaryTreePack? instance;
@@ -39,10 +39,11 @@ class AuxiliaryTreePack {
 
     final wrappedWidget = TickerRegistryInheritedWidget(
       registry: tickerRegistry,
-      child: StatefulBuilder(builder: (_, setState) {
-        innerStatefulBuilderSetState = setState;
-        return widget(this);
-      }),
+      child: widget(this),
+      // child: StatefulBuilder(builder: (_, setState) {
+      //   innerStatefulBuilderSetState = setState;
+      //   return widget(this);
+      // }),
     );
 
     element = RenderObjectToWidgetAdapter<RenderBox>(
@@ -59,7 +60,7 @@ class AuxiliaryTreePack {
     Timeline.timeSync('AuxTree.RunPipeline', () {
       print('$runtimeType runPipeline start debugReason=$debugReason');
 
-      innerStatefulBuilderSetState(() {});
+      // innerStatefulBuilderSetState(() {});
       callExtraTickerTick();
 
       // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
