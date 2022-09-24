@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print, prefer_const_constructors, invalid_use_of_protected_member
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -48,23 +50,25 @@ class AuxiliaryTreePack {
   }
 
   void runPipeline() {
-    // print('$runtimeType runPipeline start');
+    Timeline.timeSync('AuxTree.RunPipeline', () {
+      // print('$runtimeType runPipeline start');
 
-    innerStatefulBuilderSetState(() {});
+      innerStatefulBuilderSetState(() {});
 
-    // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
-    // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
-    buildOwner.buildScope(element);
-    pipelineOwner.flushLayout();
-    pipelineOwner.flushCompositingBits();
-    temporarilyRemoveDebugActiveLayout(() {
-      pipelineOwner.flushPaint();
+      // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
+      // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
+      buildOwner.buildScope(element);
+      pipelineOwner.flushLayout();
+      pipelineOwner.flushCompositingBits();
+      temporarilyRemoveDebugActiveLayout(() {
+        pipelineOwner.flushPaint();
+      });
+      // renderView.compositeFrame(); // this sends the bits to the GPU
+      // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
+      buildOwner.finalizeTree();
+
+      // print('$runtimeType runPipeline end');
     });
-    // renderView.compositeFrame(); // this sends the bits to the GPU
-    // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
-    buildOwner.finalizeTree();
-
-    // print('$runtimeType runPipeline end');
   }
 
   void temporarilyRemoveDebugActiveLayout(VoidCallback f) {

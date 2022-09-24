@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member, avoid_print
 
+import 'dart:developer';
 import 'dart:math';
 import 'dart:ui';
 
@@ -44,23 +45,28 @@ class Actor {
   }
 
   void preemptRender() {
-    // print('$runtimeType preemptRender start');
+    Timeline.timeSync('PreemptRender', () {
+      // print('$runtimeType preemptRender start');
 
-    // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
-    // ref: RenderView.compositeFrame
+      // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
+      // ref: RenderView.compositeFrame
 
-    final builder = SceneBuilder();
+      final builder = SceneBuilder();
 
-    preemptModifyLayerTree();
+      preemptModifyLayerTree();
 
-    // why this layer - from RenderView.compositeFrame
-    final binding = WidgetsFlutterBinding.ensureInitialized();
-    final scene = binding.renderView.layer!.buildScene(builder);
+      // why this layer - from RenderView.compositeFrame
+      final binding = WidgetsFlutterBinding.ensureInitialized();
+      final scene = binding.renderView.layer!.buildScene(builder);
 
-    print('call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
-    window.render(scene);
+      Timeline.timeSync('window.render', () {
+        print(
+            'call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
+        window.render(scene);
+      });
 
-    scene.dispose();
+      scene.dispose();
+    });
 
     // print('$runtimeType preemptRender end');
   }
