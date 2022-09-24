@@ -1,8 +1,11 @@
 // ignore_for_file: avoid_print, prefer_const_constructors, invalid_use_of_protected_member
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import 'animation.dart';
 import 'auxiliary_tree.dart';
 
 class AdapterInMainTreeWidget extends SingleChildRenderObjectWidget {
@@ -105,9 +108,9 @@ class RenderAdapterInMainTree extends RenderBox
       auxiliaryTreeRootLayer.detach();
     }
 
-    debugPrint('$runtimeType.paint before addLayer');
-    debugPrint('pack.rootView.layer=${pack.rootView.layer?.toStringDeep()}');
-    debugPrint(
+    printWrapped('$runtimeType.paint before addLayer');
+    printWrapped('pack.rootView.layer=${pack.rootView.layer?.toStringDeep()}');
+    printWrapped(
         'pack.element.renderObject=${pack.element.renderObject.toStringDeep()}');
 
     // print('$runtimeType.paint addLayer');
@@ -116,7 +119,7 @@ class RenderAdapterInMainTree extends RenderBox
     // context.pushLayer(auxiliaryTreeRootLayer, (context, offset) {}, offset);
 
     // print('auxiliaryTreeRootLayer.attached=${auxiliaryTreeRootLayer.attached}');
-    // debugPrint(
+    // printWrapped(
     //     'after addLayer auxiliaryTreeRootLayer=${auxiliaryTreeRootLayer.toStringDeep()}');
 
     // ================== paint those child in main tree ===================
@@ -203,11 +206,27 @@ class RenderAdapterInAuxiliaryTree extends RenderBox {
     assert(offset == Offset.zero,
         '$runtimeType prototype has not deal with offset yet');
 
-    debugPrint('$runtimeType.paint before addLayer');
-    debugPrint(
+    printWrapped('$runtimeType.paint before addLayer');
+    printWrapped(
         'pack.mainSubTreeLayerHandle.layer=${pack.mainSubTreeLayerHandle.layer?.toStringDeep()}');
 
     // print('$runtimeType paint');
-    context.addLayer(pack.mainSubTreeLayerHandle.layer!);
+
+    // TODO
+    // context.addLayer(pack.mainSubTreeLayerHandle.layer!);
+    context.addLayer(_simpleLayer.layer!);
   }
 }
+
+final _simpleLayer = () {
+  final recorder = PictureRecorder();
+  final canvas = Canvas(recorder);
+  final rect = Rect.fromLTWH(0, 0, 200, 200);
+  canvas.drawRect(Rect.fromLTWH(0, 0, 50, 100), Paint()..color = Colors.red);
+  final pictureLayer = PictureLayer(rect);
+  pictureLayer.picture = recorder.endRecording();
+  final wrapperLayer = OffsetLayer();
+  wrapperLayer.append(pictureLayer);
+
+  return LayerHandle(wrapperLayer);
+}();

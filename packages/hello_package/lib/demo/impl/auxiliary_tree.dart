@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'adapter.dart';
+import 'animation.dart';
 
 class AuxiliaryTreePack {
   late final PipelineOwner pipelineOwner;
@@ -73,9 +74,9 @@ class AuxiliaryTreePack {
       // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
       buildOwner.finalizeTree();
 
-      debugPrint('$runtimeType.runPipeline end');
-      debugPrint('pack.rootView.layer=${rootView.layer?.toStringDeep()}');
-      debugPrint(
+      printWrapped('$runtimeType.runPipeline end');
+      printWrapped('pack.rootView.layer=${rootView.layer?.toStringDeep()}');
+      printWrapped(
           'pack.element.renderObject=${element.renderObject.toStringDeep()}');
 
       // print('$runtimeType runPipeline end');
@@ -180,6 +181,11 @@ class AuxiliaryTreeRootView extends RenderObject
     //     '$runtimeType performLayout configuration.size=${configuration.size}');
 
     _size = configuration.size;
+
+    // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952047
+    if (_size == Size.zero) {
+      print('WARN: $runtimeType.size is zero, then the subtree may be weird');
+    }
 
     assert(child != null);
     child!.layout(BoxConstraints.tight(_size));

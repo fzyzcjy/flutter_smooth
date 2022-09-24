@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hello_package/demo/impl/preempt_builder.dart';
 
@@ -171,7 +172,13 @@ class _EnterPageAnimationFastByAnimationState
           child: Stack(
             children: [
               child,
-              Positioned.fill(child: Container(color: Colors.green)),
+              const Positioned.fill(
+                child: Hello(
+                  child: RepaintBoundary(
+                    child: ColoredBox(color: Colors.green),
+                  ),
+                ),
+              ),
             ],
           ),
         );
@@ -180,6 +187,18 @@ class _EnterPageAnimationFastByAnimationState
     );
   }
 }
+
+class Hello extends SingleChildRenderObjectWidget {
+  const Hello({super.key, super.child});
+
+  @override
+  RenderHello createRenderObject(BuildContext context) => RenderHello();
+
+  @override
+  void updateRenderObject(BuildContext context, RenderHello renderObject) {}
+}
+
+class RenderHello extends RenderProxyBox {}
 
 class _EnterPageAnimationFastByAnimationInner extends StatefulWidget {
   final Widget child;
@@ -343,3 +362,5 @@ const invertColorFilter = ColorFilter.matrix(<double>[
   1,
   0
 ]);
+
+void printWrapped(String text) => RegExp('.{1,800}').allMatches(text).map((m) => m.group(0)).forEach(print);
