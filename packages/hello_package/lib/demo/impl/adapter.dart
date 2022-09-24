@@ -74,6 +74,11 @@ class RenderAdapterInMainTree extends RenderBox
     pack.rootView.configuration =
         AuxiliaryTreeRootViewConfiguration(size: constraints.biggest);
 
+    // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952866
+    // NOTE need to be *after* setting pack.rootView.configuration
+    // hack, just for prototype
+    pack.runPipeline(debugReason: '$runtimeType.performLayout');
+
     // print('$runtimeType.performLayout child.layout start');
     child!.layout(constraints);
     // print('$runtimeType.performLayout child.layout end');
@@ -108,10 +113,10 @@ class RenderAdapterInMainTree extends RenderBox
       auxiliaryTreeRootLayer.detach();
     }
 
-    printWrapped('$runtimeType.paint before addLayer');
-    printWrapped('pack.rootView.layer=${pack.rootView.layer?.toStringDeep()}');
-    printWrapped(
-        'pack.element.renderObject=${pack.element.renderObject.toStringDeep()}');
+    // printWrapped('$runtimeType.paint before addLayer');
+    // printWrapped('pack.rootView.layer=${pack.rootView.layer?.toStringDeep()}');
+    // printWrapped(
+    //     'pack.element.renderObject=${pack.element.renderObject.toStringDeep()}');
 
     // print('$runtimeType.paint addLayer');
     // NOTE addLayer, not pushLayer!!!
@@ -206,9 +211,9 @@ class RenderAdapterInAuxiliaryTree extends RenderBox {
     assert(offset == Offset.zero,
         '$runtimeType prototype has not deal with offset yet');
 
-    printWrapped('$runtimeType.paint before addLayer');
-    printWrapped(
-        'pack.mainSubTreeLayerHandle.layer=${pack.mainSubTreeLayerHandle.layer?.toStringDeep()}');
+    // printWrapped('$runtimeType.paint before addLayer');
+    // printWrapped(
+    //     'pack.mainSubTreeLayerHandle.layer=${pack.mainSubTreeLayerHandle.layer?.toStringDeep()}');
 
     // print('$runtimeType paint');
 

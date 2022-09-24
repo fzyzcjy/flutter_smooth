@@ -56,9 +56,10 @@ class _PreemptBuilderState extends State<PreemptBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    // hack, just for prototype
-    // print('$runtimeType call pack.runPipeline');
-    pack.runPipeline(debugReason: '$runtimeType.build');
+    // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952866
+    // // hack, just for prototype
+    // // print('$runtimeType call pack.runPipeline');
+    // pack.runPipeline(debugReason: '$runtimeType.build');
 
     // hack, have not deal with "only refresh main tree when aux tree is dirty",
     // so let's blindly refresh everything
@@ -72,7 +73,7 @@ class _PreemptBuilderState extends State<PreemptBuilder> {
     return RepaintBoundary(
       child: AdapterInMainTreeWidget(
         pack: pack,
-        dummy: dummy,
+        dummy: dummy++,
         child: widget.child,
       ),
     );

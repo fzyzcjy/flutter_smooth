@@ -74,10 +74,10 @@ class AuxiliaryTreePack {
       // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
       buildOwner.finalizeTree();
 
-      printWrapped('$runtimeType.runPipeline end');
-      printWrapped('pack.rootView.layer=${rootView.layer?.toStringDeep()}');
-      printWrapped(
-          'pack.element.renderObject=${element.renderObject.toStringDeep()}');
+      // printWrapped('$runtimeType.runPipeline end');
+      // printWrapped('pack.rootView.layer=${rootView.layer?.toStringDeep()}');
+      // printWrapped(
+      //     'pack.element.renderObject=${element.renderObject.toStringDeep()}');
 
       // print('$runtimeType runPipeline end');
     });
