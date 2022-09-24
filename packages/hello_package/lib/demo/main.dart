@@ -17,6 +17,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Mode? mode;
+  var debug = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,12 @@ class _MyAppState extends State<MyApp> {
               onTapBack: () => setState(() => mode = null),
             ),
           ),
+          if (debug)
+            const Center(
+              child: RepaintBoundary(
+                child: DebugSmallAnimation(),
+              ),
+            )
         ],
       ),
     );
@@ -49,6 +56,10 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () => setState(() => mode = targetMode),
                   child: Text('mode=${targetMode.name}'),
                 ),
+              TextButton(
+                onPressed: () => setState(() => debug = !debug),
+                child: const Text('debug'),
+              ),
             ],
           ),
         ),
@@ -141,6 +152,27 @@ class ComplexWidget extends StatelessWidget {
           }),
         ),
       ),
+    );
+  }
+}
+
+class DebugSmallAnimation extends StatefulWidget {
+  const DebugSmallAnimation({Key? key}) : super(key: key);
+
+  @override
+  State<DebugSmallAnimation> createState() => _DebugSmallAnimationState();
+}
+
+class _DebugSmallAnimationState extends State<DebugSmallAnimation> {
+  var count = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    count++;
+    SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    return Text(
+      '${count.toString().padRight(10)} ${DateTime.now()}',
+      style: const TextStyle(fontSize: 30, color: Colors.black),
     );
   }
 }
