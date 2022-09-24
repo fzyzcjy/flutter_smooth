@@ -88,7 +88,7 @@ class AuxiliaryTreePack {
     print('$runtimeType callExtraTickerTick tickers=${tickerRegistry.tickers}');
 
     for(final ticker in tickerRegistry.tickers) {
-      ticker.extraTick(timeStamp);
+      ticker.maybeExtraTick(timeStamp);
     }
   }
 
