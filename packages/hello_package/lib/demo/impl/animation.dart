@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hello_package/demo/impl/preempt_builder.dart';
@@ -185,20 +186,27 @@ class _EnterPageAnimationFastByAnimationInnerState
       Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0))
           .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
 
+  _EnterPageAnimationFastByAnimationInnerState() {
+    print('${describeIdentity(this)} constructor');
+  }
+
   @override
   void initState() {
     super.initState();
+    print('${describeIdentity(this)} initState');
     _controller.forward();
   }
 
   @override
   void dispose() {
+    print('${describeIdentity(this)} dispose');
     _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    print('${describeIdentity(this)} build');
     return Directionality(
       textDirection: TextDirection.ltr,
       child: SlideTransition(

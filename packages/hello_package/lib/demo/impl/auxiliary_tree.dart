@@ -78,6 +78,7 @@ class AuxiliaryTreePack {
 
   /// #5814
   void callExtraTickerTick() {
+    print('$runtimeType callExtraTickerTick tickers=${tickerRegistry.tickers}');
     final now = DateTime.now();
     for(final ticker in tickerRegistry.tickers) {
       ticker.extraTick(now);
