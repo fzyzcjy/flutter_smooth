@@ -91,7 +91,7 @@ class AuxiliaryTreePack {
             microseconds: now.microsecondsSinceEpoch -
                 SchedulerBinding.instance.currentFrameStartTimeUs!);
 
-    print('$runtimeType callExtraTickerTick tickers=${tickerRegistry.tickers}');
+    // print('$runtimeType callExtraTickerTick tickers=${tickerRegistry.tickers}');
 
     for (final ticker in tickerRegistry.tickers) {
       ticker.maybeExtraTick(timeStamp);
