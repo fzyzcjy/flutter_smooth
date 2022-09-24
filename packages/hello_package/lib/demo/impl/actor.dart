@@ -22,6 +22,13 @@ class Actor {
 
   var lastPreemptTimeUs = 0;
 
+  final _times = <Duration>[];
+
+  void debugPrintStat() {
+    print(
+        'PreemptRender times=[${_times.map((d) => d.inMicroseconds / 1000).toList().join(', ')}]');
+  }
+
   void maybePreemptRender() {
     if (AuxiliaryTreePack.instance == null) {
       // means this experiment is NOT enabled.
@@ -45,6 +52,7 @@ class Actor {
   }
 
   void preemptRender() {
+    final start = DateTime.now();
     Timeline.timeSync('PreemptRender', () {
       // print('$runtimeType preemptRender start');
 
@@ -67,11 +75,13 @@ class Actor {
 
       scene.dispose();
     });
+    _times.add(DateTime.now().difference(start));
 
     // print('$runtimeType preemptRender end');
   }
 
   void preemptModifyLayerTree() {
-    AuxiliaryTreePack.instance!.runPipeline(debugReason: 'preemptModifyLayerTree');
+    AuxiliaryTreePack.instance!
+        .runPipeline(debugReason: 'preemptModifyLayerTree');
   }
 }
