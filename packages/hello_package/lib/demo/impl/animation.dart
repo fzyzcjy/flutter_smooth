@@ -156,9 +156,26 @@ class _EnterPageAnimationFastByAnimationState
     extends State<_EnterPageAnimationFastByAnimation> {
   @override
   Widget build(BuildContext context) {
+    print('$runtimeType.build called');
     return PreemptBuilder(
-      builder: (_, child) =>
-          _EnterPageAnimationFastByAnimationInner(child: child),
+      // builder: (_, child) =>
+      //     _EnterPageAnimationFastByAnimationInner(child: child),
+      builder: (_, child) {
+        print('$runtimeType.PreemptBuilder.builder callback called');
+        // return ColorFiltered(
+        //   colorFilter: invertColorFilter,
+        //   child: child,
+        // );
+        return Directionality(
+          textDirection: TextDirection.ltr,
+          child: Stack(
+            children: [
+              child,
+              Positioned.fill(child: Container(color: Colors.green)),
+            ],
+          ),
+        );
+      },
       child: widget.child,
     );
   }
@@ -303,3 +320,26 @@ class Counter {
         style: const TextStyle(fontSize: 30, color: Colors.black),
       );
 }
+
+const invertColorFilter = ColorFilter.matrix(<double>[
+  -1,
+  0,
+  0,
+  0,
+  255,
+  0,
+  -1,
+  0,
+  0,
+  255,
+  0,
+  0,
+  -1,
+  0,
+  255,
+  0,
+  0,
+  0,
+  1,
+  0
+]);

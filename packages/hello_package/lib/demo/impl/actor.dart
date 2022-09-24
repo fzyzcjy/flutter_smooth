@@ -72,6 +72,6 @@ class Actor {
   }
 
   void preemptModifyLayerTree() {
-    AuxiliaryTreePack.instance!.runPipeline();
+    AuxiliaryTreePack.instance!.runPipeline(debugReason: 'preemptModifyLayerTree');
   }
 }

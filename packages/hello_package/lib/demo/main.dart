@@ -1,3 +1,7 @@
+// ignore_for_file: avoid_print
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hello_package/demo/impl/animation.dart';
@@ -18,6 +22,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Mode? mode;
   var debug = false;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _dummyWaiter();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -176,3 +186,14 @@ class _DebugSmallAnimationState extends State<DebugSmallAnimation> {
     );
   }
 }
+
+// void _dummyWaiter() {
+//   SchedulerBinding.instance.addPostFrameCallback((_) {
+//     print('dummyWaiter start');
+//     sleep(const Duration(seconds: 3));
+//     print('dummyWaiter end');
+//
+//     _dummyWaiter();
+//   });
+// }
+//

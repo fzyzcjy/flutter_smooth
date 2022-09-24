@@ -54,9 +54,9 @@ class AuxiliaryTreePack {
     instance = this;
   }
 
-  void runPipeline() {
+  void runPipeline({required String debugReason}) {
     Timeline.timeSync('AuxTree.RunPipeline', () {
-      // print('$runtimeType runPipeline start');
+      print('$runtimeType runPipeline start debugReason=$debugReason');
 
       innerStatefulBuilderSetState(() {});
       callExtraTickerTick();
@@ -73,6 +73,11 @@ class AuxiliaryTreePack {
       // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
       buildOwner.finalizeTree();
 
+      debugPrint('$runtimeType.runPipeline end');
+      debugPrint('pack.rootView.layer=${rootView.layer?.toStringDeep()}');
+      debugPrint(
+          'pack.element.renderObject=${element.renderObject.toStringDeep()}');
+
       // print('$runtimeType runPipeline end');
     });
   }
@@ -87,7 +92,7 @@ class AuxiliaryTreePack {
 
     print('$runtimeType callExtraTickerTick tickers=${tickerRegistry.tickers}');
 
-    for(final ticker in tickerRegistry.tickers) {
+    for (final ticker in tickerRegistry.tickers) {
       ticker.maybeExtraTick(timeStamp);
     }
   }

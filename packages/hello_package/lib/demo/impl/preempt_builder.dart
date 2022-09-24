@@ -58,7 +58,7 @@ class _PreemptBuilderState extends State<PreemptBuilder> {
   Widget build(BuildContext context) {
     // hack, just for prototype
     // print('$runtimeType call pack.runPipeline');
-    pack.runPipeline();
+    pack.runPipeline(debugReason: '$runtimeType.build');
 
     // hack, have not deal with "only refresh main tree when aux tree is dirty",
     // so let's blindly refresh everything

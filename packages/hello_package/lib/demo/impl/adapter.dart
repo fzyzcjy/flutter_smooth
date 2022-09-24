@@ -100,13 +100,15 @@ class RenderAdapterInMainTree extends RenderBox
 
     // HACK!!!
     if (auxiliaryTreeRootLayer.attached) {
-      // print('$runtimeType.paint detach the auxiliaryTreeRootLayer');
+      print('$runtimeType.paint detach the auxiliaryTreeRootLayer');
       // TODO attach again later?
       auxiliaryTreeRootLayer.detach();
     }
 
-    // print(
-    //     'before addLayer auxiliaryTreeRootLayer=${auxiliaryTreeRootLayer.toStringDeep()}');
+    debugPrint('$runtimeType.paint before addLayer');
+    debugPrint('pack.rootView.layer=${pack.rootView.layer?.toStringDeep()}');
+    debugPrint(
+        'pack.element.renderObject=${pack.element.renderObject.toStringDeep()}');
 
     // print('$runtimeType.paint addLayer');
     // NOTE addLayer, not pushLayer!!!
@@ -200,6 +202,10 @@ class RenderAdapterInAuxiliaryTree extends RenderBox {
   void paint(PaintingContext context, Offset offset) {
     assert(offset == Offset.zero,
         '$runtimeType prototype has not deal with offset yet');
+
+    debugPrint('$runtimeType.paint before addLayer');
+    debugPrint(
+        'pack.mainSubTreeLayerHandle.layer=${pack.mainSubTreeLayerHandle.layer?.toStringDeep()}');
 
     // print('$runtimeType paint');
     context.addLayer(pack.mainSubTreeLayerHandle.layer!);
