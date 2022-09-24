@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'adapter.dart';
 
@@ -78,10 +79,16 @@ class AuxiliaryTreePack {
 
   /// #5814
   void callExtraTickerTick() {
-    print('$runtimeType callExtraTickerTick tickers=${tickerRegistry.tickers}');
     final now = DateTime.now();
+    final timeStamp = SchedulerBinding.instance.currentFrameTimeStamp +
+        Duration(
+            microseconds: now.microsecondsSinceEpoch -
+                SchedulerBinding.instance.currentFrameStartTimeUs!);
+
+    print('$runtimeType callExtraTickerTick tickers=${tickerRegistry.tickers}');
+
     for(final ticker in tickerRegistry.tickers) {
-      ticker.extraTick(now);
+      ticker.extraTick(timeStamp);
     }
   }
 
