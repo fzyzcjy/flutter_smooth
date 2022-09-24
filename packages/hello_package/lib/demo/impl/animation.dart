@@ -156,12 +156,10 @@ class _EnterPageAnimationFastByAnimationState
     extends State<_EnterPageAnimationFastByAnimation> {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (_, constraints) => PreemptBuilder(
-        builder: (_, child) =>
-            _EnterPageAnimationFastByAnimationInner(child: child),
-        child: widget.child,
-      ),
+    return PreemptBuilder(
+      builder: (_, child) =>
+          _EnterPageAnimationFastByAnimationInner(child: child),
+      child: widget.child,
     );
   }
 }
