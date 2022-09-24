@@ -217,21 +217,20 @@ class RenderAdapterInAuxiliaryTree extends RenderBox {
 
     // print('$runtimeType paint');
 
-    // TODO
-    // context.addLayer(pack.mainSubTreeLayerHandle.layer!);
-    context.addLayer(_simpleLayer.layer!);
+    context.addLayer(pack.mainSubTreeLayerHandle.layer!);
+    // context.addLayer(_simpleLayer.layer!);
   }
 }
 
-final _simpleLayer = () {
-  final recorder = PictureRecorder();
-  final canvas = Canvas(recorder);
-  final rect = Rect.fromLTWH(0, 0, 200, 200);
-  canvas.drawRect(Rect.fromLTWH(0, 0, 50, 100), Paint()..color = Colors.red);
-  final pictureLayer = PictureLayer(rect);
-  pictureLayer.picture = recorder.endRecording();
-  final wrapperLayer = OffsetLayer();
-  wrapperLayer.append(pictureLayer);
-
-  return LayerHandle(wrapperLayer);
-}();
+// final _simpleLayer = () {
+//   final recorder = PictureRecorder();
+//   final canvas = Canvas(recorder);
+//   final rect = Rect.fromLTWH(0, 0, 200, 200);
+//   canvas.drawRect(Rect.fromLTWH(0, 0, 50, 100), Paint()..color = Colors.red);
+//   final pictureLayer = PictureLayer(rect);
+//   pictureLayer.picture = recorder.endRecording();
+//   final wrapperLayer = OffsetLayer();
+//   wrapperLayer.append(pictureLayer);
+//
+//   return LayerHandle(wrapperLayer);
+// }();

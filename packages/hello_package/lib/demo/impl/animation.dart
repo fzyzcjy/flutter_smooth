@@ -159,30 +159,30 @@ class _EnterPageAnimationFastByAnimationState
   Widget build(BuildContext context) {
     print('$runtimeType.build called');
     return PreemptBuilder(
-      // builder: (_, child) =>
-      //     _EnterPageAnimationFastByAnimationInner(child: child),
-      builder: (_, child) {
-        print('$runtimeType.PreemptBuilder.builder callback called');
-        // return ColorFiltered(
-        //   colorFilter: invertColorFilter,
-        //   child: child,
-        // );
-        return Directionality(
-          textDirection: TextDirection.ltr,
-          child: Stack(
-            children: [
-              child,
-              const Positioned.fill(
-                child: Hello(
-                  child: RepaintBoundary(
-                    child: ColoredBox(color: Colors.green),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (_, child) =>
+          _EnterPageAnimationFastByAnimationInner(child: child),
+      // builder: (_, child) {
+      //   print('$runtimeType.PreemptBuilder.builder callback called');
+      //   // return ColorFiltered(
+      //   //   colorFilter: invertColorFilter,
+      //   //   child: child,
+      //   // );
+      //   return Directionality(
+      //     textDirection: TextDirection.ltr,
+      //     child: Stack(
+      //       children: [
+      //         child,
+      //         const Positioned.fill(
+      //           child: Hello(
+      //             child: RepaintBoundary(
+      //               child: ColoredBox(color: Colors.green),
+      //             ),
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //   );
+      // },
       child: widget.child,
     );
   }
@@ -340,27 +340,27 @@ class Counter {
       );
 }
 
-const invertColorFilter = ColorFilter.matrix(<double>[
-  -1,
-  0,
-  0,
-  0,
-  255,
-  0,
-  -1,
-  0,
-  0,
-  255,
-  0,
-  0,
-  -1,
-  0,
-  255,
-  0,
-  0,
-  0,
-  1,
-  0
-]);
+// const invertColorFilter = ColorFilter.matrix(<double>[
+//   -1,
+//   0,
+//   0,
+//   0,
+//   255,
+//   0,
+//   -1,
+//   0,
+//   0,
+//   255,
+//   0,
+//   0,
+//   -1,
+//   0,
+//   255,
+//   0,
+//   0,
+//   0,
+//   1,
+//   0
+// ]);
 
 void printWrapped(String text) => RegExp('.{1,800}').allMatches(text).map((m) => m.group(0)).forEach(print);
