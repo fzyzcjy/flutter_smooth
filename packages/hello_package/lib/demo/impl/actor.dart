@@ -39,10 +39,6 @@ class Actor {
     const kThresh = 14 * 1000;
     // const kThresh = 100 * 1000;
 
-    final binding = WidgetsFlutterBinding.ensureInitialized();
-    final lastVsyncInfo = binding.platformDispatcher.lastVsyncInfo();
-    print('read lastVsyncInfo=$lastVsyncInfo');
-
     final now = DateTime.now().microsecondsSinceEpoch;
     var currentFrameStartTimeUs =
         SchedulerBinding.instance.currentFrameStartTimeUs!;
@@ -56,9 +52,14 @@ class Actor {
   }
 
   void preemptRender() {
+    final binding = WidgetsFlutterBinding.ensureInitialized();
     final start = DateTime.now();
     Timeline.timeSync('PreemptRender', () {
       // print('$runtimeType preemptRender start');
+
+      // NOTE this read may take some time
+      final lastVsyncInfo = binding.platformDispatcher.lastVsyncInfo();
+      print('preemptRender lastVsyncInfo=$lastVsyncInfo now=${DateTime.now()}');
 
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
@@ -68,7 +69,6 @@ class Actor {
       preemptModifyLayerTree();
 
       // why this layer - from RenderView.compositeFrame
-      final binding = WidgetsFlutterBinding.ensureInitialized();
       final scene = binding.renderView.layer!.buildScene(builder);
 
       Timeline.timeSync('window.render', () {
