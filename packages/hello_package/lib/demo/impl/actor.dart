@@ -39,6 +39,10 @@ class Actor {
     const kThresh = 14 * 1000;
     // const kThresh = 100 * 1000;
 
+    final binding = WidgetsFlutterBinding.ensureInitialized();
+    final lastVsyncInfo = binding.platformDispatcher.lastVsyncInfo();
+    print('read lastVsyncInfo=$lastVsyncInfo');
+
     final now = DateTime.now().microsecondsSinceEpoch;
     var currentFrameStartTimeUs =
         SchedulerBinding.instance.currentFrameStartTimeUs!;
