@@ -74,6 +74,10 @@ class Actor {
       });
 
       scene.dispose();
+
+      // #5822
+      // TODO should we put it here?
+      binding.platformDispatcher.preemptRequestVsync();
     });
     _times.add(DateTime.now().difference(start));
 
