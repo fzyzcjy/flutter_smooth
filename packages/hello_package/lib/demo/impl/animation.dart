@@ -157,7 +157,7 @@ class _EnterPageAnimationFastByAnimationState
     extends State<_EnterPageAnimationFastByAnimation> {
   @override
   Widget build(BuildContext context) {
-    print('$runtimeType.build called');
+    // print('$runtimeType.build called');
     return PreemptBuilder(
       builder: (_, child) =>
           _EnterPageAnimationFastByAnimationInner(child: child),
@@ -270,7 +270,7 @@ class _EnterPageAnimationFastByBuilderState
           counter.inc();
           animation.init();
           final ratio = animation.computeRatio();
-          print('$runtimeType PreemptBuilder.builder called ratio=$ratio');
+          // print('$runtimeType PreemptBuilder.builder called ratio=$ratio');
 
           if (ratio < 1) {
             SchedulerBinding.instance.addPostFrameCallback((_) {

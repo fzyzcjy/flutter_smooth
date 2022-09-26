@@ -126,12 +126,12 @@ class Actor {
           lastVsyncInfo.vsyncTargetTimeRaw.inMicroseconds +
               (shouldShiftOneFrameForInterestVsyncTarget ? _kOneFrameUs : 0);
 
-      print('preemptRender '
-          'lastVsyncInfo=$lastVsyncInfo '
-          'currentFrameTimeStamp=${binding.currentFrameTimeStamp} '
-          'now=$now '
-          'shouldShiftOneFrameForInterestVsyncTarget=$shouldShiftOneFrameForInterestVsyncTarget '
-          'set-interestVsyncTargetTimeByLastPreemptRender=$interestVsyncTargetTimeByLastPreemptRender');
+      // print('preemptRender '
+      //     'lastVsyncInfo=$lastVsyncInfo '
+      //     'currentFrameTimeStamp=${binding.currentFrameTimeStamp} '
+      //     'now=$now '
+      //     'shouldShiftOneFrameForInterestVsyncTarget=$shouldShiftOneFrameForInterestVsyncTarget '
+      //     'set-interestVsyncTargetTimeByLastPreemptRender=$interestVsyncTargetTimeByLastPreemptRender');
 
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
