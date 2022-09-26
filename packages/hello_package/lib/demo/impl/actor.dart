@@ -23,6 +23,7 @@ class Actor {
   // var lastPreemptTimeUs = 0;
 
   AdjustedLastVsyncInfo? lastVsyncInfoWhenPreviousPreemptRender;
+  var _maybePreemptRenderCallCount = 0;
 
   final _times = <Duration>[];
 
@@ -36,6 +37,8 @@ class Actor {
       // means this experiment is NOT enabled.
       return;
     }
+
+    _maybePreemptRenderCallCount++;
 
     if (_shouldAct()) {
       preemptRender();
@@ -91,7 +94,9 @@ class Actor {
       print('shouldAct=true '
           'nowDateTime=${DateTime.fromMicrosecondsSinceEpoch(nowDateTimeUs)} '
           'interestNextVsyncTargetDateTimeUs=${DateTime.fromMicrosecondsSinceEpoch(interestNextVsyncTargetDateTimeUs)} '
-          'interestVsyncTargetDateTimeUs=${DateTime.fromMicrosecondsSinceEpoch(interestVsyncTargetDateTimeUs)}');
+          'interestVsyncTargetDateTimeUs=${DateTime.fromMicrosecondsSinceEpoch(interestVsyncTargetDateTimeUs)} '
+          'interestVsyncTargetTime=$interestVsyncTargetTime '
+          'maybePreemptRenderCallCount=$_maybePreemptRenderCallCount');
     }
 
     return ans;
