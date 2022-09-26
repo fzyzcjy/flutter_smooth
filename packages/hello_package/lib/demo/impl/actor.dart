@@ -69,9 +69,11 @@ class Actor {
     // TODO things below can also be cached
 
     // look at source code, that timestamp is indeed VsyncTargetTime
-    final lastJankFrameVsyncTargetTime = binding.currentSystemFrameTimeStamp.inMicroseconds;
+    final lastJankFrameVsyncTargetTime =
+        binding.currentSystemFrameTimeStamp.inMicroseconds;
     final lastPreemptFrameVsyncTargetTime =
-        lastVsyncInfoWhenPreviousPreemptRender!.vsyncTargetTimeRaw.inMicroseconds;
+        lastVsyncInfoWhenPreviousPreemptRender!
+            .vsyncTargetTimeRaw.inMicroseconds;
 
     final interestVsyncTargetTime =
         max(lastJankFrameVsyncTargetTime, lastPreemptFrameVsyncTargetTime);
@@ -80,7 +82,15 @@ class Actor {
 
     final nowDateTimeUs = DateTime.now().microsecondsSinceEpoch;
 
-    return nowDateTimeUs > interestVsyncTargetDateTimeUs - kThreshUs;
+    final ans = nowDateTimeUs > interestVsyncTargetDateTimeUs - kThreshUs;
+
+    if (ans) {
+      print('shouldAct=true '
+          'nowDateTime=${DateTime.fromMicrosecondsSinceEpoch(nowDateTimeUs)} '
+          'interestVsyncTargetDateTimeUs=${DateTime.fromMicrosecondsSinceEpoch(interestVsyncTargetDateTimeUs)}');
+    }
+
+    return ans;
   }
 
   void preemptRender() {
