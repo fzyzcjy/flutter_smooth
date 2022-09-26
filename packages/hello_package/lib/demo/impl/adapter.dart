@@ -68,6 +68,7 @@ class RenderAdapterInMainTree extends RenderBox
 
   @override
   void performLayout() {
+    final binding = WidgetsFlutterBinding.ensureInitialized();
     // print('$runtimeType.performLayout start');
 
     // NOTE
@@ -77,7 +78,9 @@ class RenderAdapterInMainTree extends RenderBox
     // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952866
     // NOTE need to be *after* setting pack.rootView.configuration
     // hack, just for prototype
-    pack.runPipeline(debugReason: '$runtimeType.performLayout');
+    final lastVsyncInfo = binding.lastVsyncInfo();
+    pack.runPipeline(lastVsyncInfo.vsyncTargetTimeAdjusted,
+        debugReason: '$runtimeType.performLayout');
 
     // print('$runtimeType.performLayout child.layout start');
     child!.layout(constraints);

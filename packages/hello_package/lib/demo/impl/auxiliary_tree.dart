@@ -56,12 +56,12 @@ class AuxiliaryTreePack {
     instance = this;
   }
 
-  void runPipeline({required String debugReason}) {
+  void runPipeline(Duration timeStamp, {required String debugReason}) {
     Timeline.timeSync('AuxTree.RunPipeline', () {
       print('$runtimeType runPipeline start debugReason=$debugReason');
 
       // innerStatefulBuilderSetState(() {});
-      callExtraTickerTick();
+      callExtraTickerTick(timeStamp);
 
       // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
       // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
@@ -85,12 +85,13 @@ class AuxiliaryTreePack {
   }
 
   /// #5814
-  void callExtraTickerTick() {
-    final now = DateTime.now();
-    final timeStamp = SchedulerBinding.instance.currentFrameTimeStamp +
-        Duration(
-            microseconds: now.microsecondsSinceEpoch -
-                SchedulerBinding.instance.currentFrameStartTimeUs!);
+  void callExtraTickerTick(Duration timeStamp) {
+    // #5821
+    // final now = DateTime.now();
+    // final timeStamp = SchedulerBinding.instance.currentFrameTimeStamp +
+    //     Duration(
+    //         microseconds: now.microsecondsSinceEpoch -
+    //             SchedulerBinding.instance.currentFrameStartTimeUs!);
 
     // print('$runtimeType callExtraTickerTick tickers=${tickerRegistry.tickers}');
 

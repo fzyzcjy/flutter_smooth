@@ -67,7 +67,7 @@ class Actor {
 
       final builder = SceneBuilder();
 
-      preemptModifyLayerTree();
+      preemptModifyLayerTree(lastVsyncInfo.vsyncTargetTimeAdjusted);
 
       // why this layer - from RenderView.compositeFrame
       final scene = binding.renderView.layer!.buildScene(builder);
@@ -89,8 +89,8 @@ class Actor {
     // print('$runtimeType preemptRender end');
   }
 
-  void preemptModifyLayerTree() {
+  void preemptModifyLayerTree(Duration timeStamp) {
     AuxiliaryTreePack.instance!
-        .runPipeline(debugReason: 'preemptModifyLayerTree');
+        .runPipeline(timeStamp, debugReason: 'preemptModifyLayerTree');
   }
 }
