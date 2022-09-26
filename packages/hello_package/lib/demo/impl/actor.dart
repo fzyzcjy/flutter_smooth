@@ -59,7 +59,8 @@ class Actor {
 
       // NOTE this read may take some time
       final lastVsyncInfo = binding.lastVsyncInfo();
-      print('preemptRender lastVsyncInfo=$lastVsyncInfo now=${DateTime.now()}');
+      print(
+          'preemptRender lastVsyncInfo=$lastVsyncInfo currentFrameTimeStamp=${binding.currentFrameTimeStamp} now=${DateTime.now()}');
 
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
