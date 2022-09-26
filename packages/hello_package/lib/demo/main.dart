@@ -106,19 +106,23 @@ class _SecondPageState extends State<SecondPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('SecondPage'),
-          leading: IconButton(
-            onPressed: widget.onTapBack,
-            icon: const Icon(Icons.arrow_back_ios),
+    // do not let semantics confuse the metrics. b/c we are having a huge
+    // amount of text in this demo, while in realworld never has that
+    return ExcludeSemantics(
+      child: MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('SecondPage'),
+            leading: IconButton(
+              onPressed: widget.onTapBack,
+              icon: const Icon(Icons.arrow_back_ios),
+            ),
           ),
+          // NOTE: this one extra frame lag is *avoidable*.
+          // Since this is a prototype, I do not bother to initialize the aux tree pack
+          // in a fancier way.
+          body: firstFrame ? Container() : const ComplexWidget(),
         ),
-        // NOTE: this one extra frame lag is *avoidable*.
-        // Since this is a prototype, I do not bother to initialize the aux tree pack
-        // in a fancier way.
-        body: firstFrame ? Container() : const ComplexWidget(),
       ),
     );
   }
@@ -130,8 +134,12 @@ class ComplexWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // const N = 30;
-    const N = 60; // make it big to see jank clearly
+    // const N = 60; // make it big to see jank clearly
+    const N = 150; // make it big to see jank clearly
     // const N = 1000; // for debug
+
+    // const textRepeat = 5;
+    const textRepeat = 1;
 
     // @dnfield's suggestion - a lot of text
     // https://github.com/flutter/flutter/issues/101227#issuecomment-1247641562
@@ -142,7 +150,7 @@ class ComplexWidget extends StatelessWidget {
         child: Column(
           children: List<Widget>.generate(N, (int index) {
             return SizedBox(
-              height: 24,
+              height: 12,
               // NOTE hack, in real world should auto have preempt point
               // but in prototype we do it by hand
               child: PreemptPoint(
@@ -157,7 +165,7 @@ class ComplexWidget extends StatelessWidget {
                     ),
                   ),
                   title: Text(
-                    'Foo contact from $index-th local contact' * 5,
+                    'Foo contact from $index-th local contact' * textRepeat,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontSize: 5),
                   ),
