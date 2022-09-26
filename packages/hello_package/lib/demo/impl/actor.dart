@@ -58,7 +58,7 @@ class Actor {
       // print('$runtimeType preemptRender start');
 
       // NOTE this read may take some time
-      final lastVsyncInfo = binding.platformDispatcher.lastVsyncInfo();
+      final lastVsyncInfo = binding.lastVsyncInfo();
       print('preemptRender lastVsyncInfo=$lastVsyncInfo now=${DateTime.now()}');
 
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
