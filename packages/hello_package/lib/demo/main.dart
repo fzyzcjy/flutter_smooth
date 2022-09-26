@@ -42,6 +42,7 @@ class _MyAppState extends State<MyApp> {
           EnterPageAnimation(
             mode: mode,
             child: SecondPage(
+              mode: mode,
               onTapBack: () {
                 setState(() => mode = null);
                 Actor.instance.debugPrintStat();
@@ -84,10 +85,13 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
+var pageLoadTimesOfMode = <Mode, List<Duration>>{};
+
 class SecondPage extends StatefulWidget {
+  final Mode? mode;
   final VoidCallback onTapBack;
 
-  const SecondPage({super.key, required this.onTapBack});
+  const SecondPage({super.key, required this.mode, required this.onTapBack});
 
   @override
   State<SecondPage> createState() => _SecondPageState();
@@ -95,12 +99,24 @@ class SecondPage extends StatefulWidget {
 
 class _SecondPageState extends State<SecondPage> {
   var firstFrame = true;
+  late final DateTime initStateTime;
 
   @override
   void initState() {
     super.initState();
+    initStateTime = DateTime.now();
+
     SchedulerBinding.instance.addPostFrameCallback((_) {
       setState(() => firstFrame = false);
+
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        final now = DateTime.now();
+        final loadTime = now.difference(initStateTime);
+        (pageLoadTimesOfMode[widget.mode!] ??= []).add(loadTime);
+        print('SecondPage render this-time-loadTime=$loadTime '
+            'slow_all=${pageLoadTimesOfMode[Mode.slowByAnimation]?.map((e) => e.inMicroseconds / 1000).toList()}; '
+            'fast_all=${pageLoadTimesOfMode[Mode.fastByAnimation]?.map((e) => e.inMicroseconds / 1000).toList()}');
+      });
     });
   }
 
