@@ -95,12 +95,12 @@ class Actor {
 
     final ans = nowDateTimeUs > interestVsyncTargetDateTimeUs - kThreshUs;
 
-    if (ans) {
-      print('shouldAct=true '
-          'now=${DateTime.fromMicrosecondsSinceEpoch(nowDateTimeUs)} '
-          'interestVsyncTargetDateTimeUs=${DateTime.fromMicrosecondsSinceEpoch(interestVsyncTargetDateTimeUs)} '
-          'maybePreemptRenderCallCount=$_maybePreemptRenderCallCount');
-    }
+    // if (ans) {
+    //   print('shouldAct=true '
+    //       'now=${DateTime.fromMicrosecondsSinceEpoch(nowDateTimeUs)} '
+    //       'interestVsyncTargetDateTimeUs=${DateTime.fromMicrosecondsSinceEpoch(interestVsyncTargetDateTimeUs)} '
+    //       'maybePreemptRenderCallCount=$_maybePreemptRenderCallCount');
+    // }
 
     return ans;
   }
@@ -144,8 +144,8 @@ class Actor {
       final scene = binding.renderView.layer!.buildScene(builder);
 
       Timeline.timeSync('window.render', () {
-        print(
-            'call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
+        // print(
+        //     'call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
         window.render(scene);
       });
 
