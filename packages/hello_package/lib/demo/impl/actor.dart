@@ -22,7 +22,8 @@ class Actor {
 
   // var lastPreemptTimeUs = 0;
 
-  AdjustedLastVsyncInfo? lastVsyncInfoWhenPreviousPreemptRender;
+  int? diffDateTimeTimePoint;
+  var interestVsyncTargetTimeByLastPreemptRender = 0;
   var _maybePreemptRenderCallCount = 0;
 
   final _times = <Duration>[];
@@ -67,40 +68,44 @@ class Actor {
     // this threshold is not sensitive. see design doc.
     const kThreshUs = 2 * 1000;
 
-    lastVsyncInfoWhenPreviousPreemptRender ??= binding.lastVsyncInfo();
+    diffDateTimeTimePoint ??= binding.lastVsyncInfo().diffDateTimeTimePoint;
 
     // TODO things below can also be cached
 
     // look at source code, that timestamp is indeed VsyncTargetTime
     final lastJankFrameVsyncTargetTime =
         binding.currentSystemFrameTimeStamp.inMicroseconds;
-    final lastPreemptFrameVsyncTargetTime =
-        lastVsyncInfoWhenPreviousPreemptRender!
-            .vsyncTargetTimeRaw.inMicroseconds;
+    // final lastPreemptFrameVsyncTargetTime =
+    //     lastVsyncInfoWhenPreviousPreemptRender!
+    //         .vsyncTargetTimeRaw.inMicroseconds;
+    // final interestVsyncTargetTime =
+    //     max(lastJankFrameVsyncTargetTime, lastPreemptFrameVsyncTargetTime);
+    // final interestVsyncTargetDateTimeUs = interestVsyncTargetTime +
+    //     lastVsyncInfoWhenPreviousPreemptRender!.diffDateTimeTimePoint;
+    // final interestNextVsyncTargetDateTimeUs =
+    //     interestVsyncTargetDateTimeUs + 1000000 ~/ 60;
 
-    final interestVsyncTargetTime =
-        max(lastJankFrameVsyncTargetTime, lastPreemptFrameVsyncTargetTime);
-    final interestVsyncTargetDateTimeUs = interestVsyncTargetTime +
-        lastVsyncInfoWhenPreviousPreemptRender!.diffDateTimeTimePoint;
+    final interestVsyncTargetTime = max(lastJankFrameVsyncTargetTime,
+        interestVsyncTargetTimeByLastPreemptRender);
 
-    final interestNextVsyncTargetDateTimeUs =
-        interestVsyncTargetDateTimeUs + 1000000 ~/ 60;
+    final interestVsyncTargetDateTimeUs =
+        interestVsyncTargetTime + diffDateTimeTimePoint!;
 
     final nowDateTimeUs = DateTime.now().microsecondsSinceEpoch;
 
-    final ans = nowDateTimeUs > interestNextVsyncTargetDateTimeUs - kThreshUs;
+    final ans = nowDateTimeUs > interestVsyncTargetDateTimeUs - kThreshUs;
 
     if (ans) {
       print('shouldAct=true '
-          'nowDateTime=${DateTime.fromMicrosecondsSinceEpoch(nowDateTimeUs)} '
-          'interestNextVsyncTargetDateTimeUs=${DateTime.fromMicrosecondsSinceEpoch(interestNextVsyncTargetDateTimeUs)} '
+          'now=${DateTime.fromMicrosecondsSinceEpoch(nowDateTimeUs)} '
           'interestVsyncTargetDateTimeUs=${DateTime.fromMicrosecondsSinceEpoch(interestVsyncTargetDateTimeUs)} '
-          'interestVsyncTargetTime=$interestVsyncTargetTime '
           'maybePreemptRenderCallCount=$_maybePreemptRenderCallCount');
     }
 
     return ans;
   }
+
+  static const _kOneFrameUs = 1000000 ~/ 60;
 
   void preemptRender() {
     final binding = WidgetsFlutterBinding.ensureInitialized();
@@ -110,10 +115,23 @@ class Actor {
 
       // NOTE this read may take some time
       final lastVsyncInfo = binding.lastVsyncInfo();
-      print(
-          'preemptRender lastVsyncInfo=$lastVsyncInfo currentFrameTimeStamp=${binding.currentFrameTimeStamp} now=${DateTime.now()}');
+      final now = DateTime.now();
 
-      lastVsyncInfoWhenPreviousPreemptRender = lastVsyncInfo;
+      final shouldShiftOneFrameForInterestVsyncTarget =
+          now.difference(lastVsyncInfo.vsyncTargetDateTime) >
+              const Duration(milliseconds: -4);
+
+      diffDateTimeTimePoint = lastVsyncInfo.diffDateTimeTimePoint;
+      interestVsyncTargetTimeByLastPreemptRender =
+          lastVsyncInfo.vsyncTargetTimeRaw.inMicroseconds +
+              (shouldShiftOneFrameForInterestVsyncTarget ? _kOneFrameUs : 0);
+
+      print('preemptRender '
+          'lastVsyncInfo=$lastVsyncInfo '
+          'currentFrameTimeStamp=${binding.currentFrameTimeStamp} '
+          'now=$now '
+          'shouldShiftOneFrameForInterestVsyncTarget=$shouldShiftOneFrameForInterestVsyncTarget '
+          'set-interestVsyncTargetTimeByLastPreemptRender=$interestVsyncTargetTimeByLastPreemptRender');
 
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
