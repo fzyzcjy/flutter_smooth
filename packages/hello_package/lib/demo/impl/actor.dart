@@ -20,7 +20,9 @@ class Actor {
 
   Actor._();
 
-  var lastPreemptTimeUs = 0;
+  // var lastPreemptTimeUs = 0;
+
+  AdjustedLastVsyncInfo? lastVsyncInfoWhenPreviousPreemptRender;
 
   final _times = <Duration>[];
 
@@ -35,20 +37,50 @@ class Actor {
       return;
     }
 
-    // TODO how much time?
-    const kThresh = 14 * 1000;
-    // const kThresh = 100 * 1000;
-
-    final now = DateTime.now().microsecondsSinceEpoch;
-    var currentFrameStartTimeUs =
-        SchedulerBinding.instance.currentFrameStartTimeUs!;
-    final deltaTime = now - max(lastPreemptTimeUs, currentFrameStartTimeUs);
-    if (deltaTime > kThresh) {
-      // print('$runtimeType maybePreemptRender say yes '
-      //     'now=$now currentFrameStartTimeUs=$currentFrameStartTimeUs lastPreemptTimeUs=$lastPreemptTimeUs');
-      lastPreemptTimeUs = now;
+    if (_shouldAct()) {
       preemptRender();
     }
+
+    // // how much time?
+    // const kThresh = 14 * 1000;
+    // // const kThresh = 100 * 1000;
+    //
+    // final now = DateTime.now().microsecondsSinceEpoch;
+    // var currentFrameStartTimeUs =
+    //     SchedulerBinding.instance.currentFrameStartTimeUs!;
+    // final deltaTime = now - max(lastPreemptTimeUs, currentFrameStartTimeUs);
+    // if (deltaTime > kThresh) {
+    //   // print('$runtimeType maybePreemptRender say yes '
+    //   //     'now=$now currentFrameStartTimeUs=$currentFrameStartTimeUs lastPreemptTimeUs=$lastPreemptTimeUs');
+    //   lastPreemptTimeUs = now;
+    //   preemptRender();
+    // }
+  }
+
+  bool _shouldAct() {
+    final binding = WidgetsFlutterBinding.ensureInitialized();
+
+    // e.g. set to 1ms
+    // this threshold is not sensitive. see design doc.
+    const kThreshUs = 1 * 1000;
+
+    lastVsyncInfoWhenPreviousPreemptRender ??= binding.lastVsyncInfo();
+
+    // TODO things below can also be cached
+
+    // look at source code, that timestamp is indeed VsyncTargetTime
+    final lastJankFrameVsyncTargetTime = binding.currentSystemFrameTimeStamp.inMicroseconds;
+    final lastPreemptFrameVsyncTargetTime =
+        lastVsyncInfoWhenPreviousPreemptRender!.vsyncTargetTimeRaw.inMicroseconds;
+
+    final interestVsyncTargetTime =
+        max(lastJankFrameVsyncTargetTime, lastPreemptFrameVsyncTargetTime);
+    final interestVsyncTargetDateTimeUs = interestVsyncTargetTime +
+        lastVsyncInfoWhenPreviousPreemptRender!.diffDateTimeTimePoint;
+
+    final nowDateTimeUs = DateTime.now().microsecondsSinceEpoch;
+
+    return nowDateTimeUs > interestVsyncTargetDateTimeUs - kThreshUs;
   }
 
   void preemptRender() {
@@ -61,6 +93,8 @@ class Actor {
       final lastVsyncInfo = binding.lastVsyncInfo();
       print(
           'preemptRender lastVsyncInfo=$lastVsyncInfo currentFrameTimeStamp=${binding.currentFrameTimeStamp} now=${DateTime.now()}');
+
+      lastVsyncInfoWhenPreviousPreemptRender = lastVsyncInfo;
 
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
