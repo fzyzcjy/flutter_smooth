@@ -80,13 +80,17 @@ class Actor {
     final interestVsyncTargetDateTimeUs = interestVsyncTargetTime +
         lastVsyncInfoWhenPreviousPreemptRender!.diffDateTimeTimePoint;
 
+    final interestNextVsyncTargetDateTimeUs =
+        interestVsyncTargetDateTimeUs + 1000000 ~/ 60;
+
     final nowDateTimeUs = DateTime.now().microsecondsSinceEpoch;
 
-    final ans = nowDateTimeUs > interestVsyncTargetDateTimeUs - kThreshUs;
+    final ans = nowDateTimeUs > interestNextVsyncTargetDateTimeUs - kThreshUs;
 
     if (ans) {
       print('shouldAct=true '
           'nowDateTime=${DateTime.fromMicrosecondsSinceEpoch(nowDateTimeUs)} '
+          'interestNextVsyncTargetDateTimeUs=${DateTime.fromMicrosecondsSinceEpoch(interestNextVsyncTargetDateTimeUs)} '
           'interestVsyncTargetDateTimeUs=${DateTime.fromMicrosecondsSinceEpoch(interestVsyncTargetDateTimeUs)}');
     }
 
