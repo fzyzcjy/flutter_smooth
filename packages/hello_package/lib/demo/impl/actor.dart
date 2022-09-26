@@ -62,7 +62,7 @@ class Actor {
 
     // e.g. set to 1ms
     // this threshold is not sensitive. see design doc.
-    const kThreshUs = 1 * 1000;
+    const kThreshUs = 2 * 1000;
 
     lastVsyncInfoWhenPreviousPreemptRender ??= binding.lastVsyncInfo();
 
