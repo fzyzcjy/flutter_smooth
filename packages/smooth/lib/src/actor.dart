@@ -4,10 +4,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:smooth/src/auxiliary_tree.dart';
+import 'package:smooth/src/service_locator.dart';
 
 class Actor {
   int? diffDateTimeTimePoint;
   var interestVsyncTargetTimeByLastPreemptRender = 0;
+
   // var _maybePreemptRenderCallCount = 0;
 
   final _times = <Duration>[];
@@ -18,8 +20,8 @@ class Actor {
   }
 
   void maybePreemptRender() {
-    if (AuxiliaryTreePack.instance == null) {
-      // means this experiment is NOT enabled.
+    if (ServiceLocator.instance.auxiliaryTreeRegistry.trees.isEmpty) {
+      // No active smooth widgets
       return;
     }
 
@@ -131,7 +133,8 @@ class Actor {
   }
 
   void preemptModifyLayerTree(Duration timeStamp) {
-    AuxiliaryTreePack.instance!
-        .runPipeline(timeStamp, debugReason: 'preemptModifyLayerTree');
+    for (final pack in ServiceLocator.instance.auxiliaryTreeRegistry.trees) {
+      pack.runPipeline(timeStamp, debugReason: 'preemptModifyLayerTree');
+    }
   }
 }

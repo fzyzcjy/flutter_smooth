@@ -2,6 +2,22 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:smooth/src/service_locator.dart';
+
+class AuxiliaryTreeRegistry {
+  Iterable<AuxiliaryTreePack> get trees => _trees;
+  final _trees = Set<AuxiliaryTreePack>.identity();
+
+  void _attach(AuxiliaryTreePack value) {
+    assert(!_trees.contains(value));
+    _trees.add(value);
+  }
+
+  void _detach(AuxiliaryTreePack value) {
+    assert(_trees.contains(value));
+    _trees.remove(value);
+  }
+}
 
 class AuxiliaryTreePack {
   late final PipelineOwner pipelineOwner;
@@ -14,9 +30,6 @@ class AuxiliaryTreePack {
   final tickerRegistry = TickerRegistry();
 
   // late StateSetter innerStatefulBuilderSetState;
-
-  // hack, use singleton just for prototype
-  static AuxiliaryTreePack? instance;
 
   AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
     pipelineOwner = PipelineOwner();
@@ -46,8 +59,7 @@ class AuxiliaryTreePack {
       child: wrappedWidget,
     ).attachToRenderTree(buildOwner);
 
-    assert(instance == null);
-    instance = this;
+    ServiceLocator.instance.auxiliaryTreeRegistry._attach(this);
   }
 
   void runPipeline(Duration timeStamp, {required String debugReason}) {
@@ -115,8 +127,7 @@ class AuxiliaryTreePack {
   }
 
   void dispose() {
-    assert(instance == this);
-    instance = null;
+    ServiceLocator.instance.auxiliaryTreeRegistry._detach(this);
   }
 }
 

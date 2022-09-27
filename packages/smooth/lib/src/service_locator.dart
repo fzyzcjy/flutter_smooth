@@ -1,9 +1,8 @@
 import 'package:smooth/src/actor.dart';
+import 'package:smooth/src/auxiliary_tree.dart';
 
 class ServiceLocator {
-  static final _realInstance = ServiceLocator.raw(
-    actor: Actor(),
-  );
+  static final _realInstance = ServiceLocator.raw();
 
   static ServiceLocator? debugOverrideInstance;
 
@@ -17,8 +16,12 @@ class ServiceLocator {
   }
 
   ServiceLocator.raw({
-    required this.actor,
-  });
+    Actor? actor,
+    AuxiliaryTreeRegistry? auxiliaryTreeRegistry,
+  })  : actor = actor ?? Actor(),
+        auxiliaryTreeRegistry =
+            auxiliaryTreeRegistry ?? AuxiliaryTreeRegistry();
 
   final Actor actor;
+  final AuxiliaryTreeRegistry auxiliaryTreeRegistry;
 }
