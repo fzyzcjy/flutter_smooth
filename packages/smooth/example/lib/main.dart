@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
               mode: mode,
               onTapBack: () {
                 setState(() => mode = null);
-                Actor.instance.debugPrintStat();
+                SmoothDebug.debugPrintStat();
               },
             ),
           ),

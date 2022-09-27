@@ -1,5 +1,3 @@
-export 'src/actor.dart';
-export 'src/adapter.dart';
-export 'src/auxiliary_tree.dart';
-export 'src/smooth_builder.dart';
-export 'src/smooth_preempt_point.dart';
+export 'src/debug.dart' show SmoothDebug;
+export 'src/smooth_builder.dart' show SmoothBuilder;
+export 'src/smooth_preempt_point.dart'show SmoothPreemptPoint;
