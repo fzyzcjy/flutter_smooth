@@ -60,7 +60,7 @@ class Actor {
       Timeline.timeSync('window.render', () {
         // print(
         //     'call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
-        window.render(scene);
+        WidgetsBinding.instance.window.render(scene);
       });
 
       scene.dispose();
