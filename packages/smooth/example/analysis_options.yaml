@@ -37,7 +37,6 @@ linter:
     avoid_redundant_argument_values: false
     no_leading_underscores_for_local_identifiers: false
     avoid_bool_literals_in_conditional_expressions: false
-    invariant_booleans: false
     avoid_multiple_declarations_per_line: false
     avoid_setters_without_getters: false
     type_annotate_public_apis: false
