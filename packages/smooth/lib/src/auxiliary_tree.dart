@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'adapter.dart';
-import 'animation.dart';
+import '../../../../old/packages/hello_package/lib/demo/impl/adapter.dart';
+import '../../../../old/packages/hello_package/lib/demo/impl/animation.dart';
 
 class AuxiliaryTreePack {
   late final PipelineOwner pipelineOwner;

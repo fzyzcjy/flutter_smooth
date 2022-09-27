@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'animation.dart';
-import 'auxiliary_tree.dart';
+import '../../../../../../packages/smooth/lib/src/auxiliary_tree.dart';
 
 class AdapterInMainTreeWidget extends SingleChildRenderObjectWidget {
   final AuxiliaryTreePack pack;

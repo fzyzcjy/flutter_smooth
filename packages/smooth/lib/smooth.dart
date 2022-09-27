@@ -1,7 +1,5 @@
-library smooth;
-
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'src/actor.dart';
+export 'src/adapter.dart';
+export 'src/auxiliary_tree.dart';
+export 'src/preempt_builder.dart';
+export 'src/preempt_point.dart';
