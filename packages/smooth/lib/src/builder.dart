@@ -18,8 +18,6 @@ class SmoothBuilder extends StatefulWidget {
 }
 
 class _SmoothBuilderState extends State<SmoothBuilder> {
-  var dummy = 0;
-
   late final AuxiliaryTreePack pack;
 
   @override
@@ -35,7 +33,6 @@ class _SmoothBuilderState extends State<SmoothBuilder> {
           RepaintBoundary(
             child: AdapterInAuxiliaryTreeWidget(
               pack: pack,
-              dummy: dummy++,
             ),
           ),
         ),
@@ -69,7 +66,6 @@ class _SmoothBuilderState extends State<SmoothBuilder> {
     return RepaintBoundary(
       child: AdapterInMainTreeWidget(
         pack: pack,
-        dummy: dummy++,
         child: widget.child,
       ),
     );

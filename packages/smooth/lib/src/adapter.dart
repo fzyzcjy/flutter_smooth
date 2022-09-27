@@ -4,12 +4,10 @@ import 'package:smooth/src/auxiliary_tree.dart';
 
 class AdapterInMainTreeWidget extends SingleChildRenderObjectWidget {
   final AuxiliaryTreePack pack;
-  final int dummy;
 
   const AdapterInMainTreeWidget({
     super.key,
     required this.pack,
-    required this.dummy,
     super.child,
   });
 
@@ -17,15 +15,12 @@ class AdapterInMainTreeWidget extends SingleChildRenderObjectWidget {
   RenderAdapterInMainTree createRenderObject(BuildContext context) =>
       RenderAdapterInMainTree(
         pack: pack,
-        dummy: dummy,
       );
 
   @override
   void updateRenderObject(
       BuildContext context, RenderAdapterInMainTree renderObject) {
-    renderObject
-      ..pack = pack
-      ..dummy = dummy;
+    renderObject.pack = pack;
   }
 }
 
@@ -33,20 +28,9 @@ class RenderAdapterInMainTree extends RenderBox
     with RenderObjectWithChildMixin<RenderBox> {
   RenderAdapterInMainTree({
     required this.pack,
-    required int dummy,
-  }) : _dummy = dummy;
+  });
 
   AuxiliaryTreePack pack;
-
-  int get dummy => _dummy;
-  int _dummy;
-
-  set dummy(int value) {
-    if (_dummy == value) return;
-    _dummy = value;
-    // print('$runtimeType markNeedsLayout because dummy changes');
-    markNeedsLayout();
-  }
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
@@ -139,12 +123,10 @@ class RenderAdapterInMainTree extends RenderBox
 
 class AdapterInAuxiliaryTreeWidget extends SingleChildRenderObjectWidget {
   final AuxiliaryTreePack pack;
-  final int dummy;
 
   const AdapterInAuxiliaryTreeWidget({
     super.key,
     required this.pack,
-    required this.dummy,
     super.child,
   });
 
@@ -152,35 +134,21 @@ class AdapterInAuxiliaryTreeWidget extends SingleChildRenderObjectWidget {
   RenderAdapterInAuxiliaryTree createRenderObject(BuildContext context) =>
       RenderAdapterInAuxiliaryTree(
         pack: pack,
-        dummy: dummy,
       );
 
   @override
   void updateRenderObject(
       BuildContext context, RenderAdapterInAuxiliaryTree renderObject) {
-    renderObject
-      ..pack = pack
-      ..dummy = dummy;
+    renderObject.pack = pack;
   }
 }
 
 class RenderAdapterInAuxiliaryTree extends RenderBox {
   RenderAdapterInAuxiliaryTree({
     required this.pack,
-    required int dummy,
-  }) : _dummy = dummy;
+  });
 
   AuxiliaryTreePack pack;
-
-  int get dummy => _dummy;
-  int _dummy;
-
-  set dummy(int value) {
-    if (_dummy == value) return;
-    _dummy = value;
-    // print('$runtimeType markNeedsLayout because dummy changes');
-    markNeedsLayout();
-  }
 
   @override
   void performLayout() {
