@@ -11,6 +11,9 @@ abstract class PreemptStrategy {
   bool shouldAct();
 
   void onPreemptRender(AdjustedLastVsyncInfo lastVsyncInfo);
+
+  // TODO should it be moved?
+  AdjustedLastVsyncInfo lastVsyncInfo();
 }
 
 class _PreemptStrategyNormal implements PreemptStrategy {
@@ -78,6 +81,10 @@ class _PreemptStrategyNormal implements PreemptStrategy {
             (shouldShiftOneFrameForInterestVsyncTarget ? _kOneFrameUs : 0);
   }
 
+  @override
+  AdjustedLastVsyncInfo lastVsyncInfo() =>
+      SchedulerBinding.instance.lastVsyncInfo();
+
   static const _kOneFrameUs = 1000000 ~/ 60;
 }
 
@@ -89,4 +96,23 @@ class _PreemptStrategyNever implements PreemptStrategy {
 
   @override
   void onPreemptRender(AdjustedLastVsyncInfo lastVsyncInfo) {}
+
+  @override
+  AdjustedLastVsyncInfo lastVsyncInfo() =>
+      _FakeLastVsyncInfo.fromCurrentFrame();
+}
+
+class _FakeLastVsyncInfo implements AdjustedLastVsyncInfo {
+  _FakeLastVsyncInfo.fromCurrentFrame()
+      : vsyncTargetTimeAdjusted =
+            SchedulerBinding.instance.currentFrameTimeStamp;
+
+  @override
+  Duration vsyncTargetTimeAdjusted;
+
+  @override
+  int get diffDateTimeTimePoint => throw UnimplementedError();
+
+  @override
+  Duration get vsyncTargetTimeRaw => throw UnimplementedError();
 }

@@ -27,7 +27,6 @@ class Actor {
     }
   }
 
-
   void _preemptRender() {
     final binding = WidgetsFlutterBinding.ensureInitialized();
     final start = DateTime.now();
@@ -35,7 +34,8 @@ class Actor {
       // print('$runtimeType preemptRender start');
 
       // NOTE this read may take some time
-      final lastVsyncInfo = binding.lastVsyncInfo();
+      final lastVsyncInfo =
+          ServiceLocator.instance.preemptStrategy.lastVsyncInfo();
 
       ServiceLocator.instance.preemptStrategy.onPreemptRender(lastVsyncInfo);
 

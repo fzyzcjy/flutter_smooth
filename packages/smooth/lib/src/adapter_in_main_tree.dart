@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/auxiliary_tree_root_view.dart';
+import 'package:smooth/src/service_locator.dart';
 
 class AdapterInMainTreeWidget extends SingleChildRenderObjectWidget {
   final AuxiliaryTreePack pack;
@@ -51,7 +52,7 @@ class RenderAdapterInMainTree extends RenderBox
     // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952866
     // NOTE need to be *after* setting pack.rootView.configuration
     // hack, just for prototype
-    final lastVsyncInfo = binding.lastVsyncInfo();
+    final lastVsyncInfo = ServiceLocator.instance.preemptStrategy.lastVsyncInfo();
     pack.runPipeline(lastVsyncInfo.vsyncTargetTimeAdjusted,
         debugReason: 'RenderAdapterInMainTree.performLayout');
 
