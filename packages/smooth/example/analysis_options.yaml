@@ -1,29 +1,48 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
+include: package:lint/analysis_options.yaml
 
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
-include: package:flutter_lints/flutter.yaml
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    missing_required_param: error
+    always_require_non_null_named_parameters: error
+    unawaited_futures: error
+    must_call_super: error
+    missing_return: error
+    unrelated_type_equality_checks: error
+    parameter_assignments: warning
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
 
 linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at
-  # https://dart-lang.github.io/linter/lints/index.html.
-  #
-  # Instead of disabling a lint rule for the entire project in the
-  # section below, it can also be suppressed for a single line of code
-  # or a specific dart file by using the `// ignore: name_of_lint` and
-  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
-  # producing the lint.
   rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
-
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+    library_private_types_in_public_api: true
+    unnecessary_constructor_name: true
+    unnecessary_late: true
+    unnecessary_nullable_for_final_variable_declarations: true
+    use_super_parameters: true
+    use_enums: true
+    use_colored_box: true
+    avoid_returning_this: true
+    avoid_js_rounded_ints: true
+    close_sinks: true
+    prefer_single_quotes: true
+    unawaited_futures: true
+    unnecessary_lambdas: true
+    use_key_in_widget_constructors: true
+    avoid_classes_with_only_static_members: false
+    avoid_redundant_argument_values: false
+    no_leading_underscores_for_local_identifiers: false
+    avoid_bool_literals_in_conditional_expressions: false
+    invariant_booleans: false
+    avoid_multiple_declarations_per_line: false
+    avoid_setters_without_getters: false
+    type_annotate_public_apis: false
+    require_trailing_commas: false
+    join_return_with_assignment: false
+    prefer_if_elements_to_conditional_expressions: false
+    use_late_for_private_fields_and_variables: false
+    unnecessary_await_in_return: false
