@@ -54,13 +54,6 @@ class _SmoothBuilderState extends State<SmoothBuilder> {
     // // print('$runtimeType call pack.runPipeline');
     // pack.runPipeline(debugReason: '$runtimeType.build');
 
-    // hack, have not deal with "only refresh main tree when aux tree is dirty",
-    // so let's blindly refresh everything
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      // print('$runtimeType addPostFrameCallback call setState');
-      setState(() {});
-    });
-
     // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
     // now, so we add a RepaintBoundary to let offset==0
     return RepaintBoundary(
