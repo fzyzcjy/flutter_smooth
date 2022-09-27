@@ -3,7 +3,6 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/auxiliary_tree.dart';
 
 class Actor {
@@ -22,7 +21,7 @@ class Actor {
 
   int? diffDateTimeTimePoint;
   var interestVsyncTargetTimeByLastPreemptRender = 0;
-  var _maybePreemptRenderCallCount = 0;
+  // var _maybePreemptRenderCallCount = 0;
 
   final _times = <Duration>[];
 
@@ -37,7 +36,7 @@ class Actor {
       return;
     }
 
-    _maybePreemptRenderCallCount++;
+    // _maybePreemptRenderCallCount++;
 
     if (_shouldAct()) {
       preemptRender();
@@ -139,6 +138,7 @@ class Actor {
       preemptModifyLayerTree(lastVsyncInfo.vsyncTargetTimeAdjusted);
 
       // why this layer - from RenderView.compositeFrame
+      // ignore: invalid_use_of_protected_member
       final scene = binding.renderView.layer!.buildScene(builder);
 
       Timeline.timeSync('window.render', () {

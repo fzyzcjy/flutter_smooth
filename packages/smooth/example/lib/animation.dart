@@ -1,6 +1,7 @@
+// ignore_for_file: avoid_print
+
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
@@ -61,7 +62,7 @@ class _EnterPageAnimationSlowByAnimationState
   late final _controller =
       AnimationController(duration: _kDuration, vsync: this);
   late final _offsetAnimation =
-      Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0))
+      Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
           .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
 
   @override
@@ -201,8 +202,7 @@ class RenderHello extends RenderProxyBox {}
 class _EnterPageAnimationFastByAnimationInner extends StatefulWidget {
   final Widget child;
 
-  const _EnterPageAnimationFastByAnimationInner({Key? key, required this.child})
-      : super(key: key);
+  const _EnterPageAnimationFastByAnimationInner({required this.child});
 
   @override
   State<_EnterPageAnimationFastByAnimationInner> createState() =>
@@ -215,7 +215,7 @@ class _EnterPageAnimationFastByAnimationInnerState
   late final _controller =
       AnimationController(duration: _kDuration, vsync: this);
   late final _offsetAnimation =
-      Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0))
+      Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
           .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
 
   @override
@@ -357,4 +357,5 @@ class Counter {
 //   0
 // ]);
 
-void printWrapped(String text) => RegExp('.{1,800}').allMatches(text).map((m) => m.group(0)).forEach(print);
+void printWrapped(String text) =>
+    RegExp('.{1,800}').allMatches(text).map((m) => m.group(0)).forEach(print);

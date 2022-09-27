@@ -2,10 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
-
-import 'adapter.dart';
-import 'animation.dart';
 
 class AuxiliaryTreePack {
   late final PipelineOwner pipelineOwner;
@@ -25,7 +21,7 @@ class AuxiliaryTreePack {
   AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
     pipelineOwner = PipelineOwner();
     rootView = pipelineOwner.rootNode = AuxiliaryTreeRootView(
-      configuration: AuxiliaryTreeRootViewConfiguration(size: Size.zero),
+      configuration: const AuxiliaryTreeRootViewConfiguration(size: Size.zero),
     );
     buildOwner = BuildOwner(
       focusManager: FocusManager(),
@@ -66,6 +62,7 @@ class AuxiliaryTreePack {
       buildOwner.buildScope(element);
       pipelineOwner.flushLayout();
       pipelineOwner.flushCompositingBits();
+      // ignore: unnecessary_lambdas
       temporarilyRemoveDebugActiveLayout(() {
         pipelineOwner.flushPaint();
       });

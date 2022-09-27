@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'actor.dart';
+import 'package:smooth/src/actor.dart';
 
 // NOTE since prototype, we inject preempt point *manually*.
 // However, in real api, it should be done in RenderObject.layout, i.e. automatically

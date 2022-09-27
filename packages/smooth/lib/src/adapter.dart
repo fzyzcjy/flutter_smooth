@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smooth/src/auxiliary_tree.dart';
@@ -54,12 +52,6 @@ class RenderAdapterInMainTree extends RenderBox
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
     // ref: RenderProxyBox
     return child?.hitTest(result, position: position) ?? false;
-  }
-
-  @override
-  void layout(Constraints constraints, {bool parentUsesSize = false}) {
-    // print('$runtimeType.layout called');
-    super.layout(constraints, parentUsesSize: parentUsesSize);
   }
 
   @override
@@ -137,6 +129,7 @@ class RenderAdapterInMainTree extends RenderBox
       final childContext = PaintingContext(
           pack.mainSubTreeLayerHandle.layer!, context.estimatedBounds);
       child!.paint(childContext, Offset.zero);
+      // ignore: invalid_use_of_protected_member
       childContext.stopRecordingIfNeeded();
     }
 
@@ -187,12 +180,6 @@ class RenderAdapterInAuxiliaryTree extends RenderBox {
     _dummy = value;
     // print('$runtimeType markNeedsLayout because dummy changes');
     markNeedsLayout();
-  }
-
-  @override
-  void layout(Constraints constraints, {bool parentUsesSize = false}) {
-    // print('$runtimeType.layout called');
-    super.layout(constraints, parentUsesSize: parentUsesSize);
   }
 
   @override

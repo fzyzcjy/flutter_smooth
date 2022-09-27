@@ -1,5 +1,4 @@
-import 'dart:async';
-import 'dart:io';
+// ignore_for_file: avoid_print
 
 import 'package:example/animation.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -141,7 +140,7 @@ class _SecondPageState extends State<SecondPage> {
 }
 
 class ComplexWidget extends StatelessWidget {
-  const ComplexWidget({Key? key}) : super(key: key);
+  const ComplexWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +192,7 @@ class ComplexWidget extends StatelessWidget {
 }
 
 class DebugSmallAnimation extends StatefulWidget {
-  const DebugSmallAnimation({Key? key}) : super(key: key);
+  const DebugSmallAnimation({super.key});
 
   @override
   State<DebugSmallAnimation> createState() => _DebugSmallAnimationState();

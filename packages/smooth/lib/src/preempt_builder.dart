@@ -1,9 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-
-import 'adapter.dart';
-import 'auxiliary_tree.dart';
+import 'package:smooth/src/adapter.dart';
+import 'package:smooth/src/auxiliary_tree.dart';
 
 class PreemptBuilder extends StatefulWidget {
   final Widget Function(BuildContext context, Widget child) builder;
