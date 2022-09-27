@@ -1,12 +1,10 @@
-// ignore_for_file: avoid_print
-
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hello_package/demo/impl/preempt_builder.dart';
+import 'preempt_builder.dart';
 
 const _kDuration = Duration(milliseconds: 300);
 // const _kDuration = Duration(milliseconds: 1000);

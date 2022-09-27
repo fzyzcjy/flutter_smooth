@@ -1,14 +1,9 @@
-// ignore_for_file: avoid_print
-
 import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hello_package/demo/impl/animation.dart';
-import 'package:hello_package/demo/impl/preempt_point.dart';
-
-import '../../lib/src/actor.dart';
+import 'package:smooth/smooth.dart';
 
 void main() {
   debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;

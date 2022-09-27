@@ -1,12 +1,10 @@
-// ignore_for_file: avoid_print, prefer_const_constructors, invalid_use_of_protected_member
-
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'animation.dart';
-import '../../../../../../packages/smooth/lib/src/auxiliary_tree.dart';
+import 'auxiliary_tree.dart';
 
 class AdapterInMainTreeWidget extends SingleChildRenderObjectWidget {
   final AuxiliaryTreePack pack;

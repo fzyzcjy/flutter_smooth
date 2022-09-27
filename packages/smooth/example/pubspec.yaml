@@ -31,6 +31,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  smooth:
+    path: ..
 
 dev_dependencies:
   flutter_test:

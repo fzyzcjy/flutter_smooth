@@ -1,8 +1,6 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:hello_package/demo/impl/actor.dart';
+import 'actor.dart';
 
 // NOTE since prototype, we inject preempt point *manually*.
 // However, in real api, it should be done in RenderObject.layout, i.e. automatically

@@ -1,12 +1,10 @@
-// ignore_for_file: invalid_use_of_protected_member, avoid_print
-
 import 'dart:developer';
 import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hello_package/demo/impl/auxiliary_tree.dart';
+import 'package:smooth/auxiliary_tree.dart';
 
 class Actor {
   static final instance = Actor._();

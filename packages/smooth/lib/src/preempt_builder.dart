@@ -1,10 +1,8 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import '../../../../old/packages/hello_package/lib/demo/impl/adapter.dart';
+import 'adapter.dart';
 import 'auxiliary_tree.dart';
 
 class PreemptBuilder extends StatefulWidget {

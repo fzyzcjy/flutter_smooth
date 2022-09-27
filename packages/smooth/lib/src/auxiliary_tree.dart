@@ -1,13 +1,11 @@
-// ignore_for_file: avoid_print, prefer_const_constructors, invalid_use_of_protected_member
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 
-import '../../../../old/packages/hello_package/lib/demo/impl/adapter.dart';
-import '../../../../old/packages/hello_package/lib/demo/impl/animation.dart';
+import 'adapter.dart';
+import 'animation.dart';
 
 class AuxiliaryTreePack {
   late final PipelineOwner pipelineOwner;
