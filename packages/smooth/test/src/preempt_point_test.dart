@@ -15,7 +15,7 @@ void main() {
 
   group('$BuildPreemptPointWidget', () {
     testWidgets('when build, should call maybePreemptRender', (tester) async {
-      verify(actor.maybePreemptRender()).called(0);
+      verifyNever(actor.maybePreemptRender());
       await tester.pumpWidget(BuildPreemptPointWidget(child: Container()));
       verify(actor.maybePreemptRender()).called(1);
     });
@@ -23,7 +23,7 @@ void main() {
 
   group('$LayoutPreemptPointWidget', () {
     testWidgets('when layout, should call maybePreemptRender', (tester) async {
-      verify(actor.maybePreemptRender()).called(0);
+      verifyNever(actor.maybePreemptRender());
       await tester.pumpWidget(LayoutPreemptPointWidget(child: Container()));
       verify(actor.maybePreemptRender()).called(1);
     });
