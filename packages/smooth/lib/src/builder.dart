@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/adapter.dart';
 import 'package:smooth/src/auxiliary_tree.dart';
 
@@ -49,9 +48,8 @@ class _SmoothBuilderState extends State<SmoothBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    // should not run pipeline here, see the link below
     // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952866
-    // // hack, just for prototype
-    // // print('$runtimeType call pack.runPipeline');
     // pack.runPipeline(debugReason: '$runtimeType.build');
 
     // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
