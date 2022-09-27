@@ -5,4 +5,3 @@ import 'package:smooth/src/actor.dart';
   MockSpec<Actor>(),
 ])
 void dummy() {}
-

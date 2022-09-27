@@ -3,7 +3,6 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:smooth/src/auxiliary_tree.dart';
 import 'package:smooth/src/service_locator.dart';
 
 class Actor {

@@ -1,5 +1,5 @@
 import 'package:smooth/src/actor.dart';
-import 'package:smooth/src/auxiliary_tree.dart';
+import 'package:smooth/src/auxiliary_tree_pack.dart';
 
 class ServiceLocator {
   static final _realInstance = ServiceLocator.raw();
