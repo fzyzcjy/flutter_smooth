@@ -4,7 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/auxiliary_tree.dart';
+import 'package:smooth/src/auxiliary_tree.dart';
 
 class Actor {
   static final instance = Actor._();
