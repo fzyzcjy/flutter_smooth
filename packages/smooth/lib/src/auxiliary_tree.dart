@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smooth/src/service_locator.dart';
@@ -25,11 +26,8 @@ class AuxiliaryTreePack {
   late final BuildOwner buildOwner;
   late final RenderObjectToWidgetElement<RenderBox> element;
 
-  // since prototype, only one [RenderAdapterInSecondTree], so do like this
   final mainSubTreeLayerHandle = LayerHandle(OffsetLayer());
   final tickerRegistry = TickerRegistry();
-
-  // late StateSetter innerStatefulBuilderSetState;
 
   AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
     pipelineOwner = PipelineOwner();
@@ -47,15 +45,11 @@ class AuxiliaryTreePack {
     final wrappedWidget = TickerRegistryInheritedWidget(
       registry: tickerRegistry,
       child: widget(this),
-      // child: StatefulBuilder(builder: (_, setState) {
-      //   innerStatefulBuilderSetState = setState;
-      //   return widget(this);
-      // }),
     );
 
     element = RenderObjectToWidgetAdapter<RenderBox>(
       container: rootView,
-      debugShortDescription: '[root]',
+      debugShortDescription: '[AuxiliaryTreePack#${shortHash(this)}.root]',
       child: wrappedWidget,
     ).attachToRenderTree(buildOwner);
 
@@ -66,8 +60,7 @@ class AuxiliaryTreePack {
     Timeline.timeSync('AuxTree.RunPipeline', () {
       // print('$runtimeType runPipeline start debugReason=$debugReason');
 
-      // innerStatefulBuilderSetState(() {});
-      callExtraTickerTick(timeStamp);
+      _callExtraTickerTick(timeStamp);
 
       // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
       // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
@@ -75,7 +68,7 @@ class AuxiliaryTreePack {
       pipelineOwner.flushLayout();
       pipelineOwner.flushCompositingBits();
       // ignore: unnecessary_lambdas
-      temporarilyRemoveDebugActiveLayout(() {
+      _temporarilyRemoveDebugActiveLayout(() {
         pipelineOwner.flushPaint();
       });
       // renderView.compositeFrame(); // this sends the bits to the GPU
@@ -92,7 +85,7 @@ class AuxiliaryTreePack {
   }
 
   /// #5814
-  void callExtraTickerTick(Duration timeStamp) {
+  void _callExtraTickerTick(Duration timeStamp) {
     // #5821
     // final now = DateTime.now();
     // final timeStamp = SchedulerBinding.instance.currentFrameTimeStamp +
@@ -107,27 +100,27 @@ class AuxiliaryTreePack {
     }
   }
 
-  void temporarilyRemoveDebugActiveLayout(VoidCallback f) {
-    // NOTE we have to temporarily remove debugActiveLayout
-    // b/c [SecondTreeRootView.paint] is called inside [preemptRender]
-    // which is inside main tree's build/layout.
-    // thus, if not set it to null we will see error
-    // https://github.com/fzyzcjy/yplusplus/issues/5783#issuecomment-1254974511
-    // In short, this is b/c [debugActiveLayout] is global variable instead
-    // of per-tree variable
-    // and also
-    // https://github.com/fzyzcjy/yplusplus/issues/5793#issuecomment-1256095858
-    final oldDebugActiveLayout = RenderObject.debugActiveLayout;
-    RenderObject.debugActiveLayout = null;
-    try {
-      f();
-    } finally {
-      RenderObject.debugActiveLayout = oldDebugActiveLayout;
-    }
-  }
-
   void dispose() {
     ServiceLocator.instance.auxiliaryTreeRegistry._detach(this);
+  }
+}
+
+void _temporarilyRemoveDebugActiveLayout(VoidCallback f) {
+  // NOTE we have to temporarily remove debugActiveLayout
+  // b/c [SecondTreeRootView.paint] is called inside [preemptRender]
+  // which is inside main tree's build/layout.
+  // thus, if not set it to null we will see error
+  // https://github.com/fzyzcjy/yplusplus/issues/5783#issuecomment-1254974511
+  // In short, this is b/c [debugActiveLayout] is global variable instead
+  // of per-tree variable
+  // and also
+  // https://github.com/fzyzcjy/yplusplus/issues/5793#issuecomment-1256095858
+  final oldDebugActiveLayout = RenderObject.debugActiveLayout;
+  RenderObject.debugActiveLayout = null;
+  try {
+    f();
+  } finally {
+    RenderObject.debugActiveLayout = oldDebugActiveLayout;
   }
 }
 
@@ -199,7 +192,7 @@ class AuxiliaryTreeRootView extends RenderObject
     child!.layout(BoxConstraints.tight(_size));
   }
 
-  // ref RenderView
+  // ref [RenderView]
   @override
   void paint(PaintingContext context, Offset offset) {
     // NOTE we have to temporarily remove debugActiveLayout
@@ -224,33 +217,33 @@ class AuxiliaryTreeRootView extends RenderObject
   void debugAssertDoesMeetConstraints() => true;
 
   void prepareInitialFrame() {
-    // ref: RenderView
+    // ref: [RenderView]
     scheduleInitialLayout();
     scheduleInitialPaint(_updateMatricesAndCreateNewRootLayer());
   }
 
-  // ref: RenderView
+  // ref: [RenderView]
   TransformLayer _updateMatricesAndCreateNewRootLayer() {
     final rootLayer = TransformLayer(transform: Matrix4.identity());
     rootLayer.attach(this);
     return rootLayer;
   }
 
-  // ref: RenderView
+  // ref: [RenderView]
   @override
   bool get isRepaintBoundary => true;
 
-  // ref: RenderView
+  // ref: [RenderView]
   @override
   Rect get paintBounds => Offset.zero & size;
 
-  // ref: RenderView
+  // ref: [RenderView]
   @override
   void performResize() {
     assert(false);
   }
 
-  // hack: just give non-sense value, this is prototype
+  // ref: [RenderView]
   @override
   Rect get semanticBounds => paintBounds;
 }

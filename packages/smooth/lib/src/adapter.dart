@@ -52,7 +52,7 @@ class RenderAdapterInMainTree extends RenderBox
     // hack, just for prototype
     final lastVsyncInfo = binding.lastVsyncInfo();
     pack.runPipeline(lastVsyncInfo.vsyncTargetTimeAdjusted,
-        debugReason: '$runtimeType.performLayout');
+        debugReason: 'RenderAdapterInMainTree.performLayout');
 
     // print('$runtimeType.performLayout child.layout start');
     child!.layout(constraints);
@@ -67,12 +67,15 @@ class RenderAdapterInMainTree extends RenderBox
 
   @override
   void paint(PaintingContext context, Offset offset) {
+    _paintAuxiliaryTreeRootLayerToCurrentContext(context, offset);
+    _paintSubTreeToPackLayer(context.estimatedBounds);
+  }
+
+  // ref: RenderOpacity
+  void _paintAuxiliaryTreeRootLayerToCurrentContext(
+      PaintingContext context, Offset offset) {
     assert(offset == Offset.zero,
         '$runtimeType prototype has not deal with offset yet');
-
-    // print('$runtimeType.paint called');
-
-    // ref: RenderOpacity
 
     // TODO this makes "second tree root layer" be *removed* from its original
     //      parent. shall we move it back later? o/w can be slow!
@@ -101,23 +104,19 @@ class RenderAdapterInMainTree extends RenderBox
     // print('auxiliaryTreeRootLayer.attached=${auxiliaryTreeRootLayer.attached}');
     // printWrapped(
     //     'after addLayer auxiliaryTreeRootLayer=${auxiliaryTreeRootLayer.toStringDeep()}');
+  }
 
-    // ================== paint those child in main tree ===================
-
-    // NOTE do *not* have any relation w/ self's PaintingContext, as we will not paint there
-    {
-      // ref: [PaintingContext.pushLayer]
-      if (pack.mainSubTreeLayerHandle.layer!.hasChildren) {
-        pack.mainSubTreeLayerHandle.layer!.removeAllChildren();
-      }
-      final childContext = PaintingContext(
-          pack.mainSubTreeLayerHandle.layer!, context.estimatedBounds);
-      child!.paint(childContext, Offset.zero);
-      // ignore: invalid_use_of_protected_member
-      childContext.stopRecordingIfNeeded();
+  // NOTE do *not* have any relation w/ self's PaintingContext, as we will not paint there
+  void _paintSubTreeToPackLayer(Rect estimatedBounds) {
+    // ref: [PaintingContext.pushLayer]
+    if (pack.mainSubTreeLayerHandle.layer!.hasChildren) {
+      pack.mainSubTreeLayerHandle.layer!.removeAllChildren();
     }
-
-    // =====================================================================
+    final childContext =
+        PaintingContext(pack.mainSubTreeLayerHandle.layer!, estimatedBounds);
+    child!.paint(childContext, Offset.zero);
+    // ignore: invalid_use_of_protected_member
+    childContext.stopRecordingIfNeeded();
   }
 }
 
@@ -175,16 +174,3 @@ class RenderAdapterInAuxiliaryTree extends RenderBox {
     // context.addLayer(_simpleLayer.layer!);
   }
 }
-
-// final _simpleLayer = () {
-//   final recorder = PictureRecorder();
-//   final canvas = Canvas(recorder);
-//   final rect = Rect.fromLTWH(0, 0, 200, 200);
-//   canvas.drawRect(Rect.fromLTWH(0, 0, 50, 100), Paint()..color = Colors.red);
-//   final pictureLayer = PictureLayer(rect);
-//   pictureLayer.picture = recorder.endRecording();
-//   final wrapperLayer = OffsetLayer();
-//   wrapperLayer.append(pictureLayer);
-//
-//   return LayerHandle(wrapperLayer);
-// }();

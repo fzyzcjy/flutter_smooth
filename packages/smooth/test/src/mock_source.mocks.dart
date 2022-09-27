@@ -61,20 +61,4 @@ class MockActor extends _i1.Mock implements _i2.Actor {
         ),
         returnValueForMissingStub: null,
       );
-  @override
-  void preemptRender() => super.noSuchMethod(
-        Invocation.method(
-          #preemptRender,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void preemptModifyLayerTree(Duration? timeStamp) => super.noSuchMethod(
-        Invocation.method(
-          #preemptModifyLayerTree,
-          [timeStamp],
-        ),
-        returnValueForMissingStub: null,
-      );
 }

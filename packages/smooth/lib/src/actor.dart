@@ -28,7 +28,7 @@ class Actor {
     // _maybePreemptRenderCallCount++;
 
     if (_shouldAct()) {
-      preemptRender();
+      _preemptRender();
     }
   }
 
@@ -78,7 +78,7 @@ class Actor {
 
   static const _kOneFrameUs = 1000000 ~/ 60;
 
-  void preemptRender() {
+  void _preemptRender() {
     final binding = WidgetsFlutterBinding.ensureInitialized();
     final start = DateTime.now();
     Timeline.timeSync('PreemptRender', () {
@@ -109,7 +109,7 @@ class Actor {
 
       final builder = SceneBuilder();
 
-      preemptModifyLayerTree(lastVsyncInfo.vsyncTargetTimeAdjusted);
+      _preemptModifyLayerTree(lastVsyncInfo.vsyncTargetTimeAdjusted);
 
       // why this layer - from RenderView.compositeFrame
       // ignore: invalid_use_of_protected_member
@@ -132,7 +132,7 @@ class Actor {
     // print('$runtimeType preemptRender end');
   }
 
-  void preemptModifyLayerTree(Duration timeStamp) {
+  void _preemptModifyLayerTree(Duration timeStamp) {
     for (final pack in ServiceLocator.instance.auxiliaryTreeRegistry.trees) {
       pack.runPipeline(timeStamp, debugReason: 'preemptModifyLayerTree');
     }
