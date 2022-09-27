@@ -8,16 +8,7 @@ import 'package:smooth/src/auxiliary_tree.dart';
 class Actor {
   static final instance = Actor._();
 
-  final stopwatch = () {
-    final s = Stopwatch();
-    print('stopwatch frequency=${s.frequency}');
-    s.start();
-    return s;
-  }();
-
   Actor._();
-
-  // var lastPreemptTimeUs = 0;
 
   int? diffDateTimeTimePoint;
   var interestVsyncTargetTimeByLastPreemptRender = 0;
@@ -41,21 +32,6 @@ class Actor {
     if (_shouldAct()) {
       preemptRender();
     }
-
-    // // how much time?
-    // const kThresh = 14 * 1000;
-    // // const kThresh = 100 * 1000;
-    //
-    // final now = DateTime.now().microsecondsSinceEpoch;
-    // var currentFrameStartTimeUs =
-    //     SchedulerBinding.instance.currentFrameStartTimeUs!;
-    // final deltaTime = now - max(lastPreemptTimeUs, currentFrameStartTimeUs);
-    // if (deltaTime > kThresh) {
-    //   // print('$runtimeType maybePreemptRender say yes '
-    //   //     'now=$now currentFrameStartTimeUs=$currentFrameStartTimeUs lastPreemptTimeUs=$lastPreemptTimeUs');
-    //   lastPreemptTimeUs = now;
-    //   preemptRender();
-    // }
   }
 
   bool _shouldAct() {
