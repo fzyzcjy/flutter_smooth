@@ -1,9 +1,24 @@
 import 'package:smooth/src/actor.dart';
 
 class ServiceLocator {
-  static var instance = ServiceLocator._();
+  static final _realInstance = ServiceLocator.raw(
+    actor: Actor(),
+  );
 
-  ServiceLocator._();
+  static ServiceLocator? debugOverrideInstance;
 
-  final actor = Actor();
+  static ServiceLocator get instance {
+    ServiceLocator? override;
+    assert(() {
+      override = debugOverrideInstance;
+      return true;
+    }());
+    return override ?? _realInstance;
+  }
+
+  ServiceLocator.raw({
+    required this.actor,
+  });
+
+  final Actor actor;
 }
