@@ -3,7 +3,7 @@ import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/preempt_strategy.dart';
 
 class ServiceLocator {
-  static final _realInstance = ServiceLocator.raw();
+  static final _realInstance = ServiceLocator.normal();
 
   static ServiceLocator? debugOverrideInstance;
 
@@ -16,14 +16,29 @@ class ServiceLocator {
     return override ?? _realInstance;
   }
 
+  factory ServiceLocator.normal() => ServiceLocator.raw(
+        actor: Actor(),
+        preemptStrategy: PreemptStrategy.normal(),
+        auxiliaryTreeRegistry: AuxiliaryTreeRegistry(),
+      );
+
   ServiceLocator.raw({
+    required this.actor,
+    required this.preemptStrategy,
+    required this.auxiliaryTreeRegistry,
+  });
+
+  ServiceLocator copyWith({
     Actor? actor,
     PreemptStrategy? preemptStrategy,
     AuxiliaryTreeRegistry? auxiliaryTreeRegistry,
-  })  : actor = actor ?? Actor(),
-        preemptStrategy = preemptStrategy ?? PreemptStrategy.normal(),
-        auxiliaryTreeRegistry =
-            auxiliaryTreeRegistry ?? AuxiliaryTreeRegistry();
+  }) =>
+      ServiceLocator.raw(
+        actor: actor ?? this.actor,
+        preemptStrategy: preemptStrategy ?? this.preemptStrategy,
+        auxiliaryTreeRegistry:
+            auxiliaryTreeRegistry ?? this.auxiliaryTreeRegistry,
+      );
 
   final Actor actor;
   final PreemptStrategy preemptStrategy;

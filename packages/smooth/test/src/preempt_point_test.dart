@@ -10,7 +10,8 @@ void main() {
   late MockActor actor;
   setUp(() {
     actor = MockActor();
-    ServiceLocator.debugOverrideInstance = ServiceLocator.raw(actor: actor);
+    ServiceLocator.debugOverrideInstance =
+        ServiceLocator.normal().copyWith(actor: actor);
   });
 
   group('$BuildPreemptPointWidget', () {
