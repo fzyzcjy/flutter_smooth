@@ -6,10 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:smooth/src/auxiliary_tree.dart';
 
 class Actor {
-  static final instance = Actor._();
-
-  Actor._();
-
   int? diffDateTimeTimePoint;
   var interestVsyncTargetTimeByLastPreemptRender = 0;
   // var _maybePreemptRenderCallCount = 0;
