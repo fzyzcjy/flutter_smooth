@@ -17,7 +17,6 @@ class SmoothPreemptPoint extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BuildPreemptPointWidget(
       child: _LayoutPreemptPointWidget(
-        dummy: 0,
         child: child,
       ),
     );
@@ -37,42 +36,23 @@ class _BuildPreemptPointWidget extends StatelessWidget {
 }
 
 class _LayoutPreemptPointWidget extends SingleChildRenderObjectWidget {
-  final int dummy;
-
   const _LayoutPreemptPointWidget({
-    required this.dummy,
     super.child,
   });
 
   @override
   _RenderLayoutPreemptPoint createRenderObject(BuildContext context) =>
-      _RenderLayoutPreemptPoint(
-        dummy: dummy,
-      );
+      _RenderLayoutPreemptPoint();
 
   @override
   void updateRenderObject(
-      BuildContext context, _RenderLayoutPreemptPoint renderObject) {
-    renderObject.dummy = dummy;
-  }
+      BuildContext context, _RenderLayoutPreemptPoint renderObject) {}
 }
 
 class _RenderLayoutPreemptPoint extends RenderProxyBox {
   _RenderLayoutPreemptPoint({
-    required int dummy,
     RenderBox? child,
-  })  : _dummy = dummy,
-        super(child);
-
-  int get dummy => _dummy;
-  int _dummy;
-
-  set dummy(int value) {
-    if (_dummy == value) return;
-    _dummy = value;
-    // print('$runtimeType markNeedsLayout because dummy changes');
-    markNeedsLayout();
-  }
+  }) : super(child);
 
   @override
   void performLayout() {
