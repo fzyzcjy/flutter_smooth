@@ -5,10 +5,10 @@ import 'package:smooth/src/actor.dart';
 // NOTE since prototype, we inject preempt point *manually*.
 // However, in real api, it should be done in RenderObject.layout, i.e. automatically
 // without human intervention
-class PreemptPoint extends StatelessWidget {
+class SmoothPreemptPoint extends StatelessWidget {
   final Widget child;
 
-  const PreemptPoint({
+  const SmoothPreemptPoint({
     super.key,
     required this.child,
   });

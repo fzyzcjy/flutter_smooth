@@ -3,21 +3,21 @@ import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/adapter.dart';
 import 'package:smooth/src/auxiliary_tree.dart';
 
-class PreemptBuilder extends StatefulWidget {
+class SmoothBuilder extends StatefulWidget {
   final Widget Function(BuildContext context, Widget child) builder;
   final Widget child;
 
-  const PreemptBuilder({
+  const SmoothBuilder({
     super.key,
     required this.builder,
     required this.child,
   });
 
   @override
-  State<PreemptBuilder> createState() => _PreemptBuilderState();
+  State<SmoothBuilder> createState() => _SmoothBuilderState();
 }
 
-class _PreemptBuilderState extends State<PreemptBuilder> {
+class _SmoothBuilderState extends State<SmoothBuilder> {
   var dummy = 0;
 
   late final AuxiliaryTreePack pack;

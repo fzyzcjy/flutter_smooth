@@ -164,7 +164,7 @@ class ComplexWidget extends StatelessWidget {
               height: 12,
               // NOTE hack, in real world should auto have preempt point
               // but in prototype we do it by hand
-              child: PreemptPoint(
+              child: SmoothPreemptPoint(
                 child: ListTile(
                   dense: true,
                   visualDensity: VisualDensity.compact,

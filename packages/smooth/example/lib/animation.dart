@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:smooth/smooth.dart';
 
@@ -103,7 +101,7 @@ class _EnterPageAnimationFastByAnimationState
   @override
   Widget build(BuildContext context) {
     // print('$runtimeType.build called');
-    return PreemptBuilder(
+    return SmoothBuilder(
       builder: (_, child) =>
           _EnterPageAnimationFastByAnimationInner(child: child),
       child: widget.child,
