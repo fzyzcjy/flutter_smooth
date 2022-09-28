@@ -53,7 +53,7 @@ class RenderAdapterInMainTree extends RenderBox
     // NOTE need to be *after* setting pack.rootView.configuration
     // hack, just for prototype
     pack.runPipeline(
-        ServiceLocator.instance.preemptStrategy.currentVsyncTargetTime,
+        ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp,
         debugReason: 'RenderAdapterInMainTree.performLayout');
 
     // print('$runtimeType.performLayout child.layout start');

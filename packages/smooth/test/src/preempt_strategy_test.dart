@@ -54,7 +54,7 @@ void main() {
 
         TODO;
 
-        expect(strategy.currentVsyncTargetTime, TODO);
+        expect(strategy.currentSmoothFrameTimeStamp, TODO);
         expect(strategy.shouldAct, TODO);
       });
 

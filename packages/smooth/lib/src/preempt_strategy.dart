@@ -13,7 +13,9 @@ abstract class PreemptStrategy {
 
   bool get shouldAct;
 
-  Duration get currentVsyncTargetTime;
+  /// Fancy version of [SchedulerBinding.currentFrameTimeStamp],
+  /// by considering both plain-old frames and *also extra frames*
+  Duration get currentSmoothFrameTimeStamp;
 
   void onPreemptRender();
 }
@@ -61,10 +63,8 @@ class PreemptStrategyNormal implements PreemptStrategy {
     return nextActVsyncTimeStamp - _kThresh;
   }
 
-  /// Fancy version of [SmoothSchedulerBindingMixin.currentFrameVsyncTargetTimeStamp],
-  /// by considering preempt frames
   @override
-  Duration get currentVsyncTargetTime {
+  Duration get currentSmoothFrameTimeStamp {
     final binding = SmoothSchedulerBindingMixin.instance;
     return _maxDuration(
       binding.currentFrameVsyncTargetTimeStamp,
@@ -209,6 +209,6 @@ class _PreemptStrategyNever implements PreemptStrategy {
   void onPreemptRender() {}
 
   @override
-  Duration get currentVsyncTargetTime =>
+  Duration get currentSmoothFrameTimeStamp =>
       SchedulerBinding.instance.currentFrameTimeStamp;
 }

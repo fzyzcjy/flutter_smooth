@@ -48,7 +48,7 @@ class Actor {
 
       final builder = SceneBuilder();
 
-      _preemptModifyLayerTree(ServiceLocator.instance.preemptStrategy.currentVsyncTargetTime);
+      _preemptModifyLayerTree(ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp);
 
       // why this layer - from RenderView.compositeFrame
       // ignore: invalid_use_of_protected_member
