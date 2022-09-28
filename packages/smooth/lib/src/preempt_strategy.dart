@@ -1,10 +1,12 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:clock/clock.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:smooth/src/scheduler_binding.dart';
 
 abstract class PreemptStrategy {
-  factory PreemptStrategy.normal() = _PreemptStrategyNormal;
+  factory PreemptStrategy.normal() = PreemptStrategyNormal;
 
   const factory PreemptStrategy.never() = _PreemptStrategyNever;
 
@@ -15,64 +17,132 @@ abstract class PreemptStrategy {
   void onPreemptRender();
 }
 
-class _PreemptStrategyNormal implements PreemptStrategy {
-  int? diffDateTimeTimePoint;
-  var interestVsyncTargetTimeByLastPreemptRender = 0;
+@visibleForTesting
+class PreemptStrategyNormal implements PreemptStrategy {
+  /// the VsyncTargetTime used by last preempt render
+  var _currentPreemptRenderVsyncTargetTimeStamp = Duration.zero;
+  var _nextActVsyncTimeStampByPreemptRender = Duration.zero;
 
-  _PreemptStrategyNormal();
-
-  // this threshold is not sensitive. see design doc.
-  static const kThreshUs = 2 * 1000;
+  PreemptStrategyNormal();
 
   @override
   bool shouldAct() {
-    diffDateTimeTimePoint ??= binding.lastVsyncInfo().diffDateTimeTimePoint;
+    final binding = SmoothSchedulerBindingMixin.instance;
 
-    // TODO things below can also be cached
-
-    // look at source code, that timestamp is indeed VsyncTargetTime
-    final lastJankFrameVsyncTargetTime =
-        binding.currentSystemFrameTimeStamp.inMicroseconds;
-
-    final interestVsyncTargetTime = max(lastJankFrameVsyncTargetTime,
-        interestVsyncTargetTimeByLastPreemptRender);
-
-    final interestVsyncTargetDateTimeUs =
-        interestVsyncTargetTime + diffDateTimeTimePoint!;
-
-    final nowDateTimeUs = DateTime.now().microsecondsSinceEpoch;
-
-    final ans = nowDateTimeUs > interestVsyncTargetDateTimeUs - kThreshUs;
+    final now = _SimpleDateTime.now();
+    final ans = binding.dateTimeToTimeStamp(now) > _shouldActTimeStamp;
 
     // if (ans) {
     //   print('shouldAct=true '
-    //       'now=${DateTime.fromMicrosecondsSinceEpoch(nowDateTimeUs)} '
-    //       'interestVsyncTargetDateTimeUs=${DateTime.fromMicrosecondsSinceEpoch(interestVsyncTargetDateTimeUs)} '
+    //       'now=${clock.fromMicrosecondsSinceEpoch(nowDateTimeUs)} '
+    //       'interestVsyncTargetDateTimeUs=${clock.fromMicrosecondsSinceEpoch(interestVsyncTargetDateTimeUs)} '
     //       'maybePreemptRenderCallCount=$_maybePreemptRenderCallCount');
     // }
 
     return ans;
   }
 
+  // this threshold is not sensitive. see design doc.
+  static const _kThresh = Duration(milliseconds: 2);
+
+  Duration get _shouldActTimeStamp {
+    final binding = SmoothSchedulerBindingMixin.instance;
+    // TODO things below can also be cached
+
+    final nextActVsyncTimeStampByJankFrame =
+        binding.currentFrameVsyncTargetTimeStamp;
+
+    final nextActVsyncTimeStamp = _maxDuration(
+      nextActVsyncTimeStampByJankFrame,
+      _nextActVsyncTimeStampByPreemptRender,
+    );
+
+    return nextActVsyncTimeStamp - _kThresh;
+  }
+
+  /// Fancy version of [SmoothSchedulerBindingMixin.currentFrameVsyncTargetTimeStamp],
+  /// by considering preempt frames
   @override
-  Duration get currentVsyncTargetTime =>
-      lastVsyncInfo.vsyncTargetTimeAdjusted;
+  Duration get currentVsyncTargetTime {
+    final binding = SmoothSchedulerBindingMixin.instance;
+    return _maxDuration(
+      binding.currentFrameVsyncTargetTimeStamp,
+      _currentPreemptRenderVsyncTargetTimeStamp,
+    );
+  }
 
   @override
   void onPreemptRender() {
-    final now = DateTime.now();
+    final binding = SmoothSchedulerBindingMixin.instance;
+    final now = _SimpleDateTime.now();
+    final nowTimeStamp = binding.dateTimeToTimeStamp(now);
 
-    final shouldShiftOneFrameForInterestVsyncTarget =
-        now.difference(lastVsyncInfo.vsyncTargetDateTime) >
+    final currentPreemptRenderVsyncTargetTimeStamp = vsyncLaterThan(
+      time: nowTimeStamp,
+      oldVsync: _currentPreemptRenderVsyncTargetTimeStamp,
+    );
+
+    final shouldShiftOneFrameForNextActVsyncTime =
+        nowTimeStamp - currentPreemptRenderVsyncTargetTimeStamp >
             const Duration(milliseconds: -4);
 
-    diffDateTimeTimePoint = lastVsyncInfo.diffDateTimeTimePoint;
-    interestVsyncTargetTimeByLastPreemptRender =
-        lastVsyncInfo.vsyncTargetTimeRaw.inMicroseconds +
-            (shouldShiftOneFrameForInterestVsyncTarget ? _kOneFrameUs : 0);
+    _currentPreemptRenderVsyncTargetTimeStamp =
+        currentPreemptRenderVsyncTargetTimeStamp;
+    _nextActVsyncTimeStampByPreemptRender =
+        currentPreemptRenderVsyncTargetTimeStamp +
+            (shouldShiftOneFrameForNextActVsyncTime
+                ? SmoothSchedulerBindingMixin.kOneFrame
+                : Duration.zero);
   }
 
-  static const _kOneFrameUs = 1000000 ~/ 60;
+  @visibleForTesting
+  static Duration vsyncLaterThan({
+    required Duration time,
+    required Duration oldVsync,
+  }) {
+    assert(time >= oldVsync);
+    final diffMicroseconds = time.inMicroseconds - oldVsync.inMicroseconds;
+    return oldVsync +
+        Duration(
+          microseconds:
+              diffMicroseconds ~/ SmoothSchedulerBindingMixin.kOneFrameUs,
+        );
+  }
+}
+
+Duration _maxDuration(Duration a, Duration b) => a > b ? a : b;
+
+extension on SmoothSchedulerBindingMixin {
+  _SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
+      _SimpleDateTime.fromMicrosecondsSinceEpoch(
+          timeStamp.inMicroseconds + diffDateTimeToTimeStamp);
+
+  Duration dateTimeToTimeStamp(_SimpleDateTime dateTime) => Duration(
+      microseconds: dateTime.microsecondsSinceEpoch - diffDateTimeToTimeStamp);
+}
+
+/// [DateTime], but simpler (just a `int`)
+class _SimpleDateTime {
+  final int microsecondsSinceEpoch;
+
+  _SimpleDateTime.fromMicrosecondsSinceEpoch(this.microsecondsSinceEpoch);
+
+  _SimpleDateTime.now()
+      : microsecondsSinceEpoch = clock.now().microsecondsSinceEpoch;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _SimpleDateTime &&
+          runtimeType == other.runtimeType &&
+          microsecondsSinceEpoch == other.microsecondsSinceEpoch;
+
+  @override
+  int get hashCode => microsecondsSinceEpoch.hashCode;
+
+  @override
+  String toString() =>
+      'SimpleDateTime{microsecondsSinceEpoch: $microsecondsSinceEpoch}';
 }
 
 // #31 changes it
