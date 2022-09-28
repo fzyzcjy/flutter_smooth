@@ -4,6 +4,10 @@ import 'package:smooth/smooth.dart';
 import 'package:smooth/src/preempt_strategy.dart';
 import 'package:smooth/src/service_locator.dart';
 
+import 'test_tools/binding.dart';
+import 'test_tools/image.dart';
+import 'test_tools/window.dart';
+
 void main() {
   group('SmoothBuilder', () {
     testWidgets('when pump widgets unrelated to smooth, should build',
@@ -27,6 +31,38 @@ void main() {
       ));
 
       // should have no error
+    });
+
+    testWidgets('when one extra smooth frame', (tester) async {
+      final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
+      binding.window.setUpTearDown(
+        physicalSizeTestValue: const Size(100, 50),
+        devicePixelRatioTestValue: 1,
+      );
+
+      final capturer = WindowRenderCapturer();
+      binding.onWindowRender = capturer.onWindowRender;
+
+      ServiceLocator.debugOverrideInstance =
+          ServiceLocator.normal().copyWith(preemptStrategy: TODO);
+
+      await tester.pumpWidget(SmoothBuilder(
+        builder: (context, child) {
+          TODO; // TODO be different colors for different times? frames?
+          return child;
+        },
+        child: Container(color: Colors.red),
+      ));
+
+      expect(
+        capturer.images,
+        [
+          matchesReferenceImage(
+              await createScreenImage(tester, (im) => im.fillAll(Colors.green))),
+          matchesReferenceImage(
+              await createScreenImage(tester, (im) => im.fillAll(Colors.red))),
+        ],
+      );
     });
   });
 }

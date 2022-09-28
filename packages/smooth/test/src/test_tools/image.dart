@@ -48,14 +48,15 @@ Future<ui.Image> _createScreenImage(void Function(image.Image) draw) {
 }
 
 extension ExtImage on image.Image {
+  void fillAll(Color color) => fill(color.toImageColor());
+
   void fillRect(Rectangle<int> bounds, Color color) {
-    image.fillRect(
-      this,
-      bounds.left,
-      bounds.top,
-      bounds.right,
-      bounds.bottom,
-      image.getColor(color.red, color.green, color.blue, color.alpha),
-    );
+    image.fillRect(this, bounds.left, bounds.top, bounds.right, bounds.bottom,
+        color.toImageColor());
   }
+}
+
+extension ExtColor on Color {
+  int toImageColor() =>
+      image.getColor(color.red, color.green, color.blue, color.alpha);
 }
