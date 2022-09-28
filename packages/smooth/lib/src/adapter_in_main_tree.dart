@@ -52,8 +52,8 @@ class RenderAdapterInMainTree extends RenderBox
     // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952866
     // NOTE need to be *after* setting pack.rootView.configuration
     // hack, just for prototype
-    final lastVsyncInfo = ServiceLocator.instance.preemptStrategy.lastVsyncInfo();
-    pack.runPipeline(lastVsyncInfo.vsyncTargetTimeAdjusted,
+    pack.runPipeline(
+        ServiceLocator.instance.preemptStrategy.currentVsyncTargetTime,
         debugReason: 'RenderAdapterInMainTree.performLayout');
 
     // print('$runtimeType.performLayout child.layout start');

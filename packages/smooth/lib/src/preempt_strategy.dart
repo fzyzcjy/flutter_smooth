@@ -10,10 +10,9 @@ abstract class PreemptStrategy {
 
   bool shouldAct();
 
-  void onPreemptRender(AdjustedLastVsyncInfo lastVsyncInfo);
+  Duration get currentVsyncTargetTime;
 
-  // TODO should it be moved?
-  AdjustedLastVsyncInfo lastVsyncInfo();
+  void onPreemptRender();
 }
 
 class _PreemptStrategyNormal implements PreemptStrategy {
@@ -68,7 +67,15 @@ class _PreemptStrategyNormal implements PreemptStrategy {
   }
 
   @override
-  void onPreemptRender(AdjustedLastVsyncInfo lastVsyncInfo) {
+  Duration get currentVsyncTargetTime =>
+      // TODO dup call to `lastVsyncInfo` here
+      SchedulerBinding.instance.lastVsyncInfo().vsyncTargetTimeAdjusted;
+
+  @override
+  void onPreemptRender() {
+    // NOTE this may be slow; and has duplicate call here
+    final lastVsyncInfo = SchedulerBinding.instance.lastVsyncInfo();
+
     final now = DateTime.now();
 
     final shouldShiftOneFrameForInterestVsyncTarget =
@@ -81,10 +88,6 @@ class _PreemptStrategyNormal implements PreemptStrategy {
             (shouldShiftOneFrameForInterestVsyncTarget ? _kOneFrameUs : 0);
   }
 
-  @override
-  AdjustedLastVsyncInfo lastVsyncInfo() =>
-      SchedulerBinding.instance.lastVsyncInfo();
-
   static const _kOneFrameUs = 1000000 ~/ 60;
 }
 
@@ -95,24 +98,9 @@ class _PreemptStrategyNever implements PreemptStrategy {
   bool shouldAct() => false;
 
   @override
-  void onPreemptRender(AdjustedLastVsyncInfo lastVsyncInfo) {}
+  void onPreemptRender() {}
 
   @override
-  AdjustedLastVsyncInfo lastVsyncInfo() =>
-      _FakeLastVsyncInfo.fromCurrentFrame();
-}
-
-class _FakeLastVsyncInfo implements AdjustedLastVsyncInfo {
-  _FakeLastVsyncInfo.fromCurrentFrame()
-      : vsyncTargetTimeAdjusted =
-            SchedulerBinding.instance.currentFrameTimeStamp;
-
-  @override
-  Duration vsyncTargetTimeAdjusted;
-
-  @override
-  int get diffDateTimeTimePoint => throw UnimplementedError();
-
-  @override
-  Duration get vsyncTargetTimeRaw => throw UnimplementedError();
+  Duration get currentVsyncTargetTime =>
+      SchedulerBinding.instance.currentFrameTimeStamp;
 }

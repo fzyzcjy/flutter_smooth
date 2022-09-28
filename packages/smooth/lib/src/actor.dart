@@ -33,11 +33,7 @@ class Actor {
     Timeline.timeSync('PreemptRender', () {
       // print('$runtimeType preemptRender start');
 
-      // NOTE this read may take some time
-      final lastVsyncInfo =
-          ServiceLocator.instance.preemptStrategy.lastVsyncInfo();
-
-      ServiceLocator.instance.preemptStrategy.onPreemptRender(lastVsyncInfo);
+      ServiceLocator.instance.preemptStrategy.onPreemptRender();
 
       // print('preemptRender '
       //     'lastVsyncInfo=$lastVsyncInfo '
@@ -51,7 +47,7 @@ class Actor {
 
       final builder = SceneBuilder();
 
-      _preemptModifyLayerTree(lastVsyncInfo.vsyncTargetTimeAdjusted);
+      _preemptModifyLayerTree(ServiceLocator.instance.preemptStrategy.currentVsyncTargetTime);
 
       // why this layer - from RenderView.compositeFrame
       // ignore: invalid_use_of_protected_member
