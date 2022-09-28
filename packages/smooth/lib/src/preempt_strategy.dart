@@ -91,7 +91,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
     _nextActAdjustedVsyncTimeStampByPreemptRender =
         currentPreemptRenderVsyncTargetTimeStamp +
             (shouldShiftOneFrameForNextActVsyncTime
-                ? SmoothSchedulerBindingMixin.kOneFrame
+                ? kOneFrame
                 : Duration.zero);
   }
 
@@ -101,10 +101,9 @@ class PreemptStrategyNormal implements PreemptStrategy {
     required Duration baseVsync,
   }) {
     final diffMicroseconds = time.inMicroseconds - baseVsync.inMicroseconds;
-    const oneFrameUs = SmoothSchedulerBindingMixin.kOneFrameUs;
     return baseVsync +
         Duration(
-          microseconds: (diffMicroseconds / oneFrameUs).floor() * oneFrameUs,
+          microseconds: (diffMicroseconds / kOneFrameUs).floor() * kOneFrameUs,
         );
   }
 }

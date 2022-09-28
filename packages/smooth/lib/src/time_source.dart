@@ -44,7 +44,7 @@ class _VsyncSourceReal implements TimeSource {
   // the end of current plain-old frame, while [beginFrameDateTime] means
   // the clock when plain-old frame starts.
   DateTime get _currentFrameVsyncTargetDateTime =>
-      _binding.beginFrameDateTime.add(SmoothSchedulerBindingMixin.kOneFrame);
+      _binding.beginFrameDateTime.add(kOneFrame);
 
   SmoothSchedulerBindingMixin get _binding =>
       SmoothSchedulerBindingMixin.instance;

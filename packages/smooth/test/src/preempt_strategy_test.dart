@@ -6,7 +6,7 @@ void main() {
   group('PreemptStrategyNormal', () {
     group('vsyncLaterThan', () {
       test('kOneFrameUs', () {
-        expect(SmoothSchedulerBindingMixin.kOneFrameUs, 16666);
+        expect(kOneFrameUs, 16666);
       });
 
       test('when same', () {

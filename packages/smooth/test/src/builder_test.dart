@@ -60,7 +60,7 @@ void main() {
         children: [
           SmoothBuilder(
             builder: (context, child) => SimpleAnimatedBuilder(
-              duration: SmoothSchedulerBindingMixin.kOneFrame * 10,
+              duration: kOneFrame * 10,
               builder: (_, animationValue) {
                 debugPrint(
                     'SimpleAnimatedBuilder.builder animationValue=$animationValue');
