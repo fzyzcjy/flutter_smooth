@@ -1,13 +1,12 @@
-import 'dart:math';
-
-import 'package:clock/clock.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/scheduler_binding.dart';
 import 'package:smooth/src/simple_date_time.dart';
+import 'package:smooth/src/vsync_source.dart';
 
 abstract class PreemptStrategy {
-  factory PreemptStrategy.normal() = PreemptStrategyNormal;
+  factory PreemptStrategy.normal({required VsyncSource vsyncSource}) =
+      PreemptStrategyNormal;
 
   const factory PreemptStrategy.never() = _PreemptStrategyNever;
 
@@ -22,18 +21,18 @@ abstract class PreemptStrategy {
 
 @visibleForTesting
 class PreemptStrategyNormal implements PreemptStrategy {
+  final VsyncSource vsyncSource;
+
   /// the VsyncTargetTime used by last preempt render
   var _currentPreemptRenderVsyncTargetTimeStamp = Duration.zero;
   var _nextActVsyncTimeStampByPreemptRender = Duration.zero;
 
-  PreemptStrategyNormal();
+  PreemptStrategyNormal({required this.vsyncSource});
 
   @override
   bool get shouldAct {
-    final binding = SmoothSchedulerBindingMixin.instance;
-
     final now = SimpleDateTime.now();
-    final ans = binding.dateTimeToTimeStamp(now) > shouldActTimeStamp;
+    final ans = vsyncSource.dateTimeToTimeStamp(now) > shouldActTimeStamp;
 
     // if (ans) {
     //   print('shouldAct=true '
@@ -49,11 +48,10 @@ class PreemptStrategyNormal implements PreemptStrategy {
   static const _kThresh = Duration(milliseconds: 2);
 
   Duration get shouldActTimeStamp {
-    final binding = SmoothSchedulerBindingMixin.instance;
     // TODO things below can also be cached
 
     final nextActVsyncTimeStampByJankFrame =
-        binding.currentFrameVsyncTargetTimeStamp;
+        vsyncSource.currentFrameVsyncTargetTimeStamp;
 
     final nextActVsyncTimeStamp = _maxDuration(
       nextActVsyncTimeStampByJankFrame,
@@ -65,18 +63,16 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
   @override
   Duration get currentSmoothFrameTimeStamp {
-    final binding = SmoothSchedulerBindingMixin.instance;
     return _maxDuration(
-      binding.currentFrameVsyncTargetTimeStamp,
+      vsyncSource.currentFrameVsyncTargetTimeStamp,
       _currentPreemptRenderVsyncTargetTimeStamp,
     );
   }
 
   @override
   void onPreemptRender() {
-    final binding = SmoothSchedulerBindingMixin.instance;
     final now = SimpleDateTime.now();
-    final nowTimeStamp = binding.dateTimeToTimeStamp(now);
+    final nowTimeStamp = vsyncSource.dateTimeToTimeStamp(now);
 
     final currentPreemptRenderVsyncTargetTimeStamp = vsyncLaterThan(
       time: nowTimeStamp,
@@ -112,15 +108,6 @@ class PreemptStrategyNormal implements PreemptStrategy {
 }
 
 Duration _maxDuration(Duration a, Duration b) => a > b ? a : b;
-
-extension on SmoothSchedulerBindingMixin {
-  // SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
-  //     SimpleDateTime.fromMicrosecondsSinceEpoch(
-  //         timeStamp.inMicroseconds + diffDateTimeToTimeStamp);
-
-  Duration dateTimeToTimeStamp(SimpleDateTime dateTime) => Duration(
-      microseconds: dateTime.microsecondsSinceEpoch - diffDateTimeToTimeStamp);
-}
 
 class _PreemptStrategyNever implements PreemptStrategy {
   const _PreemptStrategyNever();

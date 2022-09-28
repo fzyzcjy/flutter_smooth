@@ -1,6 +1,7 @@
 import 'package:smooth/src/actor.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/preempt_strategy.dart';
+import 'package:smooth/src/vsync_source.dart';
 
 class ServiceLocator {
   static final _realInstance = ServiceLocator.normal();
@@ -18,7 +19,9 @@ class ServiceLocator {
 
   factory ServiceLocator.normal() => ServiceLocator.raw(
         actor: Actor(),
-        preemptStrategy: PreemptStrategy.normal(),
+        preemptStrategy: PreemptStrategy.normal(
+          vsyncSource: const VsyncSource.real(),
+        ),
         auxiliaryTreeRegistry: AuxiliaryTreeRegistry(),
       );
 
