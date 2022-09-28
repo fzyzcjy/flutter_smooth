@@ -54,6 +54,13 @@ extension ExtImage on image.Image {
     image.fillRect(this, bounds.left, bounds.top, bounds.right, bounds.bottom,
         color.toImageColor());
   }
+
+  void fillLeftRight(Color left, Color right) {
+    assert(width.isEven);
+    final halfWidth = width ~/ 2;
+    fillRect(Rectangle(0, 0, halfWidth, height), left);
+    fillRect(Rectangle(halfWidth, 0, halfWidth, height), right);
+  }
 }
 
 extension ExtColor on Color {

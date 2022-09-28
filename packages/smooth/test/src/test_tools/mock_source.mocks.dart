@@ -30,10 +30,11 @@ class MockActor extends _i1.Mock implements _i2.Actor {
         returnValueForMissingStub: null,
       );
   @override
-  void maybePreemptRender() => super.noSuchMethod(
+  void maybePreemptRender({Object? debugToken}) => super.noSuchMethod(
         Invocation.method(
           #maybePreemptRender,
           [],
+          {#debugToken: debugToken},
         ),
         returnValueForMissingStub: null,
       );

@@ -44,17 +44,21 @@ void main() {
         devicePixelRatioTestValue: 1,
       );
 
-      final mainPreemptPointDebugToken = Object();
+      final testBeginTime = binding.clock.now();
 
       final capturer = WindowRenderCapturer();
       binding.onWindowRender = capturer.onWindowRender;
 
-      ServiceLocator.debugOverrideInstance = ServiceLocator.normal().copyWith(
-        preemptStrategy: PreemptStrategyTest(
-          shouldAct: ({debugToken}) => debugToken == mainPreemptPointDebugToken,
-          currentSmoothFrameTimeStamp: () => TODO,
-        ),
-      );
+      // TODO remove?
+      // final mainPreemptPointDebugToken = Object();
+      // ServiceLocator.debugOverrideInstance = ServiceLocator.normal().copyWith(
+      //   preemptStrategy: PreemptStrategyTest(
+      //     shouldAct: ({debugToken}) => debugToken == mainPreemptPointDebugToken,
+      //     currentSmoothFrameTimeStamp: () => TODO,
+      //   ),
+      // );
+
+      const red = Color.fromARGB(255, 255, 0, 0);
 
       await tester.pumpWidget(Stack(
         children: [
@@ -64,27 +68,66 @@ void main() {
               builder: (_, animationValue) {
                 debugPrint(
                     'SimpleAnimatedBuilder.builder animationValue=$animationValue');
-                return TODO;
+                return Stack(
+                  children: [
+                    child,
+                    Positioned(
+                      left: 50,
+                      top: 0,
+                      bottom: 0,
+                      right: 0,
+                      child: ColoredBox(
+                        color: _green(animationValue),
+                      ),
+                    ),
+                  ],
+                );
               },
             ),
-            child: Container(color: Colors.red),
+            child: Container(color: red),
           ),
+          Builder(builder: (_) {
+            // 16ms - sufficiently near but less than 1/60s
+            binding.elapseBlocking(const Duration(milliseconds: 16));
+            return Container();
+          }),
           LayoutPreemptPointWidget(
-            debugToken: mainPreemptPointDebugToken,
+            // debugToken: mainPreemptPointDebugToken,
             child: Container(),
           ),
         ],
       ));
 
-      expect(
+      await expectLater(
         capturer.images,
         [
           matchesReferenceImage(await createScreenImage(
-              tester, (im) => im.fillAll(Colors.green))),
-          matchesReferenceImage(
-              await createScreenImage(tester, (im) => im.fillAll(Colors.red))),
+              tester, (im) => im.fillLeftRight(red, _green(0)))),
+        ],
+      );
+
+      capturer.images.clear();
+
+      final pumpDuration =
+          testBeginTime.add(kOneFrame).difference(binding.clock.now());
+      expect(pumpDuration, kOneFrame - const Duration(milliseconds: 16));
+
+      // Need one plain-old frame (the pumpWidget frame), before being able to
+      // create smooth extra frames. Otherwise, the layer tree is event not
+      // built yet (because paint is not called yet).
+      await tester.pump(pumpDuration);
+
+      await expectLater(
+        capturer.images,
+        [
+          matchesReferenceImage(await createScreenImage(
+              tester, (im) => im.fillLeftRight(red, _green(0.1)))),
+          matchesReferenceImage(await createScreenImage(
+              tester, (im) => im.fillLeftRight(red, _green(0.2)))),
         ],
       );
     });
   });
 }
+
+Color _green(double value) => Color.fromARGB(255, 0, (255 * value).round(), 0);
