@@ -64,8 +64,10 @@ class _RenderAlwaysLayoutBuilder extends RenderProxyBox {
 
   @override
   void performLayout() {
-    onPerformLayout?.call();
+    print('$runtimeType.performLayout');
+
     super.performLayout();
+    onPerformLayout?.call();
     SchedulerBinding.instance.addPostFrameCallback((_) => markNeedsLayout());
   }
 }
