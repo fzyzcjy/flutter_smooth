@@ -21,6 +21,10 @@ class SimpleDateTime {
 }
 
 extension ExtClock on Clock {
-  SimpleDateTime nowSimple() => SimpleDateTime.fromMicrosecondsSinceEpoch(
-      clock.now().microsecondsSinceEpoch);
+  SimpleDateTime nowSimple() => clock.now().toSimple();
+}
+
+extension ExtDateTime on DateTime {
+  SimpleDateTime toSimple() =>
+      SimpleDateTime.fromMicrosecondsSinceEpoch(microsecondsSinceEpoch);
 }

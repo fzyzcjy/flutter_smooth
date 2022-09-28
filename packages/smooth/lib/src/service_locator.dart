@@ -19,9 +19,7 @@ class ServiceLocator {
 
   factory ServiceLocator.normal() => ServiceLocator.raw(
         actor: Actor(),
-        preemptStrategy: PreemptStrategy.normal(
-          timeSource: const TimeSource.real(),
-        ),
+        preemptStrategy: PreemptStrategy.normal(),
         auxiliaryTreeRegistry: AuxiliaryTreeRegistry(),
       );
 

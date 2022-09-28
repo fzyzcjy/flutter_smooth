@@ -1,41 +1,62 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart' as flutter_test;
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:smooth/src/preempt_strategy.dart';
 import 'package:smooth/src/scheduler_binding.dart';
+import 'package:smooth/src/simple_date_time.dart';
 
+import 'preempt_strategy_test.mocks.dart';
+
+@GenerateNiceMocks([MockSpec<PreemptStrategyDependency>()])
 void main() {
   group('PreemptStrategyNormal', () {
-    // group('when no preempt render', () {
-    //   testWidgets('when first frame', (tester) async {
-    //     final strategy = PreemptStrategyNormal();
-    //
-    //     TODO;
-    //
-    //     expect(strategy.currentSmoothFrameTimeStamp, TODO);
-    //     expect(strategy.shouldAct, TODO);
-    //   });
-    //
-    //   testWidgets('when second frame', (tester) async {
-    //     TODO;
-    //   });
-    // });
-    //
-    // group('when has preempt render', () {
-    //   testWidgets('when first preempt render', (tester) async {
-    //     TODO;
-    //   });
-    //
-    //   testWidgets('when second preempt render', (tester) async {
-    //     TODO;
-    //   });
-    //
-    //   testWidgets('when preempt render is just before vsync', (tester) async {
-    //     TODO;
-    //   });
-    //
-    //   testWidgets('when preempt render is just after vsync', (tester) async {
-    //     TODO;
-    //   });
-    // });
+    final startDateTime = DateTime(2000);
+    const firstFrameTimeStamp = Duration(seconds: 10);
+    const kActThresh = PreemptStrategyNormal.kActThresh;
+
+    late MockPreemptStrategyDependency dependency;
+    late PreemptStrategyNormal strategy;
+    setUp(() {
+      dependency = MockPreemptStrategyDependency();
+      strategy = PreemptStrategyNormal(dependency: dependency);
+    });
+
+    group('when no preempt render', () {
+      testWidgets('when first frame', (tester) async {
+        dependency.mock(
+          now: startDateTime,
+          currentFrameTimeStamp: firstFrameTimeStamp,
+          beginFrameDateTime: startDateTime,
+        );
+        strategy.expect(
+          currentSmoothFrameTimeStamp: firstFrameTimeStamp,
+          shouldActTimeStamp: firstFrameTimeStamp - kActThresh,
+        );
+      });
+
+      testWidgets('when second frame', (tester) async {
+        TODO;
+      });
+    });
+
+    group('when has preempt render', () {
+      testWidgets('when first preempt render', (tester) async {
+        TODO;
+      });
+
+      testWidgets('when second preempt render', (tester) async {
+        TODO;
+      });
+
+      testWidgets('when preempt render is just before vsync', (tester) async {
+        TODO;
+      });
+
+      testWidgets('when preempt render is just after vsync', (tester) async {
+        TODO;
+      });
+    });
   });
 
   // temporarily disable, re-enable later #45
@@ -122,4 +143,27 @@ void main() {
   //     );
   //   });
   // });
+}
+
+extension on MockPreemptStrategyDependency {
+  void mock({
+    required DateTime now,
+    required Duration currentFrameTimeStamp,
+    required DateTime beginFrameDateTime,
+  }) {
+    when(this.now()).thenReturn(now.toSimple());
+    when(this.currentFrameTimeStamp).thenReturn(currentFrameTimeStamp);
+    when(this.beginFrameDateTime).thenReturn(beginFrameDateTime);
+  }
+}
+
+extension on PreemptStrategyNormal {
+  void expect({
+    required Duration currentSmoothFrameTimeStamp,
+    required Duration shouldActTimeStamp,
+  }) {
+    flutter_test.expect(
+        this.currentSmoothFrameTimeStamp, currentSmoothFrameTimeStamp);
+    flutter_test.expect(this.shouldActTimeStamp, shouldActTimeStamp);
+  }
 }
