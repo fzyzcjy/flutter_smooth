@@ -6,6 +6,7 @@ import 'package:smooth/src/service_locator.dart';
 
 import 'test_tools/binding.dart';
 import 'test_tools/image.dart';
+import 'test_tools/preemtp_strategy.dart';
 import 'test_tools/window.dart';
 
 void main() {
@@ -43,8 +44,12 @@ void main() {
       final capturer = WindowRenderCapturer();
       binding.onWindowRender = capturer.onWindowRender;
 
-      ServiceLocator.debugOverrideInstance =
-          ServiceLocator.normal().copyWith(preemptStrategy: TODO);
+      ServiceLocator.debugOverrideInstance = ServiceLocator.normal().copyWith(
+        preemptStrategy: PreemptStrategyTest(
+          shouldAct: shouldAct,
+          currentSmoothFrameTimeStamp: currentSmoothFrameTimeStamp,
+        ),
+      );
 
       await tester.pumpWidget(Stack(
         children: [
@@ -62,8 +67,8 @@ void main() {
       expect(
         capturer.images,
         [
-          matchesReferenceImage(
-              await createScreenImage(tester, (im) => im.fillAll(Colors.green))),
+          matchesReferenceImage(await createScreenImage(
+              tester, (im) => im.fillAll(Colors.green))),
           matchesReferenceImage(
               await createScreenImage(tester, (im) => im.fillAll(Colors.red))),
         ],
