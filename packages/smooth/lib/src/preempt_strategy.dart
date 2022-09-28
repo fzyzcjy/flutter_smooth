@@ -10,7 +10,7 @@ abstract class PreemptStrategy {
 
   const factory PreemptStrategy.never() = _PreemptStrategyNever;
 
-  bool shouldAct();
+  bool get shouldAct;
 
   Duration get currentVsyncTargetTime;
 
@@ -26,11 +26,11 @@ class PreemptStrategyNormal implements PreemptStrategy {
   PreemptStrategyNormal();
 
   @override
-  bool shouldAct() {
+  bool get shouldAct {
     final binding = SmoothSchedulerBindingMixin.instance;
 
     final now = _SimpleDateTime.now();
-    final ans = binding.dateTimeToTimeStamp(now) > _shouldActTimeStamp;
+    final ans = binding.dateTimeToTimeStamp(now) > shouldActTimeStamp;
 
     // if (ans) {
     //   print('shouldAct=true '
@@ -45,7 +45,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
   // this threshold is not sensitive. see design doc.
   static const _kThresh = Duration(milliseconds: 2);
 
-  Duration get _shouldActTimeStamp {
+  Duration get shouldActTimeStamp {
     final binding = SmoothSchedulerBindingMixin.instance;
     // TODO things below can also be cached
 
@@ -125,7 +125,7 @@ extension on SmoothSchedulerBindingMixin {
 class _SimpleDateTime {
   final int microsecondsSinceEpoch;
 
-  _SimpleDateTime.fromMicrosecondsSinceEpoch(this.microsecondsSinceEpoch);
+  // _SimpleDateTime.fromMicrosecondsSinceEpoch(this.microsecondsSinceEpoch);
 
   _SimpleDateTime.now()
       : microsecondsSinceEpoch = clock.now().microsecondsSinceEpoch;
@@ -226,7 +226,7 @@ class _PreemptStrategyNever implements PreemptStrategy {
   const _PreemptStrategyNever();
 
   @override
-  bool shouldAct() => false;
+  bool get shouldAct => false;
 
   @override
   void onPreemptRender() {}

@@ -48,6 +48,29 @@ void main() {
       );
     });
 
-    // TODO more
+    group('when no preempt render', () {
+      testWidgets('when first frame', (tester) async {
+        final strategy = PreemptStrategyNormal();
+
+        TODO;
+
+        expect(strategy.currentVsyncTargetTime, TODO);
+        expect(strategy.shouldAct, TODO);
+      });
+
+      testWidgets('when second frame', (tester) async {
+        TODO;
+      });
+    });
+
+    group('when has preempt render', () {
+      testWidgets('when first preempt render', (tester) async {
+        TODO;
+      });
+
+      testWidgets('when second preempt render', (tester) async {
+        TODO;
+      });
+    });
   });
 }

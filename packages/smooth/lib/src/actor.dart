@@ -22,7 +22,7 @@ class Actor {
 
     // _maybePreemptRenderCallCount++;
 
-    if (ServiceLocator.instance.preemptStrategy.shouldAct()) {
+    if (ServiceLocator.instance.preemptStrategy.shouldAct) {
       _preemptRender();
     }
   }
