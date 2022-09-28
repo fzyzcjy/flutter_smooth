@@ -8,17 +8,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as image;
 
 import 'binding.dart';
+import 'window.dart';
 
 // test the test tool
 void main() {
   testWidgets('createScreenImage', (tester) async {
     final binding = TestWidgetsFlutterBinding.ensureInitialized();
-    binding.window
-      ..devicePixelRatioTestValue = 1
-      ..physicalSizeTestValue = const Size(100, 50);
-    addTearDown(() => binding.window
-      ..clearDevicePixelRatioTestValue()
-      ..clearPhysicalSizeTestValue());
+    binding.window.setUpTearDown(
+        physicalSizeTestValue: const Size(100, 50),
+        devicePixelRatioTestValue: 1);
 
     final im = await createScreenImage(
       tester,

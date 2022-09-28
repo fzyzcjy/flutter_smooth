@@ -18,6 +18,7 @@ dev_dependencies:
   image: ^3.2.0
   lint: ^1.10.0
   mockito: ^5.3.2
+  test_api: ^0.4.2
 
 # https://github.com/flutter/flutter/wiki/The-flutter-tool#using-a-locally-built-engine-with-the-flutter-tool
 dependency_overrides:

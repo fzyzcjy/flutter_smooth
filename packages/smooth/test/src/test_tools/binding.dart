@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'proxy.dart';
+import 'window.dart';
 
 // test the test-tool code
 void main() {
@@ -12,12 +13,9 @@ void main() {
 
   testWidgets('SmoothSchedulerBindingMixin.onWindowRender', (tester) async {
     final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
-    binding.window
-      ..devicePixelRatioTestValue = 1
-      ..physicalSizeTestValue = const Size(100, 50);
-    addTearDown(() => binding.window
-      ..clearDevicePixelRatioTestValue()
-      ..clearPhysicalSizeTestValue());
+    binding.window.setUpTearDown(
+        physicalSizeTestValue: const Size(100, 50),
+        devicePixelRatioTestValue: 1);
 
     final capturer = WindowRenderCapturer();
     binding.onWindowRender = capturer.onWindowRender;
