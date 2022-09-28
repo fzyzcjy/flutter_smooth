@@ -104,7 +104,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
     const oneFrameUs = SmoothSchedulerBindingMixin.kOneFrameUs;
     return baseVsync +
         Duration(
-          microseconds: (diffMicroseconds ~/ oneFrameUs) * oneFrameUs,
+          microseconds: (diffMicroseconds / oneFrameUs).floor() * oneFrameUs,
         );
   }
 }
