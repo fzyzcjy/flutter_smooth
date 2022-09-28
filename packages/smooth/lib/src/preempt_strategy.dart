@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/scheduler_binding.dart';
 import 'package:smooth/src/simple_date_time.dart';
-import 'package:smooth/src/vsync_source.dart';
+import 'package:smooth/src/time_source.dart';
 
 abstract class PreemptStrategy {
-  factory PreemptStrategy.normal({required VsyncSource vsyncSource}) =
+  factory PreemptStrategy.normal({required TimeSource timeSource}) =
       PreemptStrategyNormal;
 
   const factory PreemptStrategy.never() = _PreemptStrategyNever;
@@ -24,18 +24,18 @@ abstract class PreemptStrategy {
 
 @visibleForTesting
 class PreemptStrategyNormal implements PreemptStrategy {
-  final VsyncSource vsyncSource;
+  final TimeSource timeSource;
 
   /// the VsyncTargetTime used by last preempt render
   var _currentPreemptRenderVsyncTargetTimeStamp = Duration.zero;
   var _nextActAdjustedVsyncTimeStampByPreemptRender = Duration.zero;
 
-  PreemptStrategyNormal({required this.vsyncSource});
+  PreemptStrategyNormal({required this.timeSource});
 
   @override
   bool get shouldAct {
     final now = clock.nowSimple();
-    final ans = vsyncSource.dateTimeToTimeStamp(now) > shouldActTimeStamp;
+    final ans = timeSource.dateTimeToTimeStamp(now) > shouldActTimeStamp;
 
     // if (ans) {
     //   print('shouldAct=true '
@@ -54,7 +54,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
     // TODO things below can also be cached
 
     final nextActVsyncTimeStampByJankFrame =
-        vsyncSource.currentFrameAdjustedVsyncTargetTimeStamp;
+        timeSource.currentFrameAdjustedVsyncTargetTimeStamp;
 
     final nextActVsyncTimeStamp = _maxDuration(
       nextActVsyncTimeStampByJankFrame,
@@ -67,7 +67,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
   @override
   Duration get currentSmoothFrameTimeStamp {
     return _maxDuration(
-      vsyncSource.currentFrameAdjustedVsyncTargetTimeStamp,
+      timeSource.currentFrameAdjustedVsyncTargetTimeStamp,
       _currentPreemptRenderVsyncTargetTimeStamp,
     );
   }
@@ -75,7 +75,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
   @override
   void onPreemptRender() {
     final now = clock.nowSimple();
-    final nowTimeStamp = vsyncSource.dateTimeToTimeStamp(now);
+    final nowTimeStamp = timeSource.dateTimeToTimeStamp(now);
 
     final currentPreemptRenderVsyncTargetTimeStamp = vsyncLaterThan(
       time: nowTimeStamp,

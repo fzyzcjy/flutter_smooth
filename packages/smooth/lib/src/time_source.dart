@@ -2,9 +2,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/scheduler_binding.dart';
 import 'package:smooth/src/simple_date_time.dart';
 
-// TODO not proper to name as "VsyncSource"?
-abstract class VsyncSource {
-  const factory VsyncSource.real() = _VsyncSourceReal;
+abstract class TimeSource {
+  const factory TimeSource.real() = _VsyncSourceReal;
 
   /// The adjusted VsyncTargetTime for current plain-old frame
   /// "adjust" means [SchedulerBinding._adjustForEpoch]
@@ -15,7 +14,7 @@ abstract class VsyncSource {
   int get diffDateTimeToTimeStamp;
 }
 
-extension ExtVsyncSource on VsyncSource {
+extension ExtTimeSource on TimeSource {
   // SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
   //     SimpleDateTime.fromMicrosecondsSinceEpoch(
   //         timeStamp.inMicroseconds + diffDateTimeToTimeStamp);
@@ -26,7 +25,7 @@ extension ExtVsyncSource on VsyncSource {
 
 /// *Only* work on real devices, *not* on Flutter widget test environments
 /// because the "widget test" environment has fake `currentFrameTimeStamp`
-class _VsyncSourceReal implements VsyncSource {
+class _VsyncSourceReal implements TimeSource {
   const _VsyncSourceReal();
 
   @override
