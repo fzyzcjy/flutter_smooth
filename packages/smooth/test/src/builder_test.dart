@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/preempt_point.dart';
@@ -13,6 +14,8 @@ import 'test_tools/preemtp_strategy.dart';
 import 'test_tools/window.dart';
 
 void main() {
+  SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
+
   group('SmoothBuilder', () {
     testWidgets('when pump widgets unrelated to smooth, should build',
         (tester) async {
@@ -38,6 +41,7 @@ void main() {
     });
 
     testWidgets('when one extra smooth frame', (tester) async {
+      debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
       final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
       binding.window.setUpTearDown(
         physicalSizeTestValue: const Size(100, 50),
@@ -60,42 +64,48 @@ void main() {
 
       const red = Color.fromARGB(255, 255, 0, 0);
 
-      await tester.pumpWidget(Stack(
-        children: [
-          SmoothBuilder(
-            builder: (context, child) => SimpleAnimatedBuilder(
-              duration: kOneFrame * 10,
-              builder: (_, animationValue) {
-                debugPrint(
-                    'SimpleAnimatedBuilder.builder animationValue=$animationValue');
-                return Stack(
-                  children: [
-                    child,
-                    Positioned(
-                      left: 50,
-                      top: 0,
-                      bottom: 0,
-                      right: 0,
-                      child: ColoredBox(
-                        color: _green(animationValue),
-                      ),
+      await tester.pumpWidget(Directionality(
+        textDirection: TextDirection.ltr,
+        child: Stack(
+          children: [
+            SmoothBuilder(
+              builder: (context, child) => SimpleAnimatedBuilder(
+                duration: kOneFrame * 10,
+                builder: (_, animationValue) {
+                  debugPrint(
+                      'SimpleAnimatedBuilder.builder animationValue=$animationValue');
+                  return Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Stack(
+                      children: [
+                        child,
+                        Positioned(
+                          left: 50,
+                          top: 0,
+                          bottom: 0,
+                          right: 0,
+                          child: ColoredBox(
+                            color: _green(animationValue),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                );
-              },
+                  );
+                },
+              ),
+              child: Container(color: red),
             ),
-            child: Container(color: red),
-          ),
-          Builder(builder: (_) {
-            // 16ms - sufficiently near but less than 1/60s
-            binding.elapseBlocking(const Duration(milliseconds: 16));
-            return Container();
-          }),
-          LayoutPreemptPointWidget(
-            // debugToken: mainPreemptPointDebugToken,
-            child: Container(),
-          ),
-        ],
+            Builder(builder: (_) {
+              // 16ms - sufficiently near but less than 1/60s
+              binding.elapseBlocking(const Duration(milliseconds: 16));
+              return Container();
+            }),
+            LayoutPreemptPointWidget(
+              // debugToken: mainPreemptPointDebugToken,
+              child: Container(),
+            ),
+          ],
+        ),
       ));
 
       await expectLater(
@@ -126,6 +136,8 @@ void main() {
               tester, (im) => im.fillLeftRight(red, _green(0.2)))),
         ],
       );
+
+      debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
     });
   });
 }
