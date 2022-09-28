@@ -78,7 +78,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
     final currentPreemptRenderVsyncTargetTimeStamp = vsyncLaterThan(
       time: nowTimeStamp,
-      oldVsync: _currentPreemptRenderVsyncTargetTimeStamp,
+      baseVsync: _currentPreemptRenderVsyncTargetTimeStamp,
     );
 
     final shouldShiftOneFrameForNextActVsyncTime =
@@ -97,12 +97,11 @@ class PreemptStrategyNormal implements PreemptStrategy {
   @visibleForTesting
   static Duration vsyncLaterThan({
     required Duration time,
-    required Duration oldVsync,
+    required Duration baseVsync,
   }) {
-    assert(time >= oldVsync);
-    final diffMicroseconds = time.inMicroseconds - oldVsync.inMicroseconds;
+    final diffMicroseconds = time.inMicroseconds - baseVsync.inMicroseconds;
     const oneFrameUs = SmoothSchedulerBindingMixin.kOneFrameUs;
-    return oldVsync +
+    return baseVsync +
         Duration(
           microseconds: (diffMicroseconds ~/ oneFrameUs) * oneFrameUs,
         );

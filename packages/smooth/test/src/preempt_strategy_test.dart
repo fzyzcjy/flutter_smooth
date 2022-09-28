@@ -10,7 +10,7 @@ void main() {
       expect(
         PreemptStrategyNormal.vsyncLaterThan(
           time: const Duration(seconds: 10),
-          oldVsync: const Duration(seconds: 10),
+          baseVsync: const Duration(seconds: 10),
         ),
         const Duration(seconds: 10),
       );
@@ -18,7 +18,7 @@ void main() {
       expect(
         PreemptStrategyNormal.vsyncLaterThan(
           time: const Duration(seconds: 10, milliseconds: 16),
-          oldVsync: const Duration(seconds: 10),
+          baseVsync: const Duration(seconds: 10),
         ),
         const Duration(seconds: 10),
       );
@@ -26,7 +26,7 @@ void main() {
       expect(
         PreemptStrategyNormal.vsyncLaterThan(
           time: const Duration(seconds: 10, milliseconds: 17),
-          oldVsync: const Duration(seconds: 10),
+          baseVsync: const Duration(seconds: 10),
         ),
         const Duration(seconds: 10, microseconds: 16666),
       );
@@ -34,7 +34,7 @@ void main() {
       expect(
         PreemptStrategyNormal.vsyncLaterThan(
           time: const Duration(seconds: 10, milliseconds: 33),
-          oldVsync: const Duration(seconds: 10),
+          baseVsync: const Duration(seconds: 10),
         ),
         const Duration(seconds: 10, microseconds: 16666),
       );
@@ -42,10 +42,12 @@ void main() {
       expect(
         PreemptStrategyNormal.vsyncLaterThan(
           time: const Duration(seconds: 10, milliseconds: 34),
-          oldVsync: const Duration(seconds: 10),
+          baseVsync: const Duration(seconds: 10),
         ),
         const Duration(seconds: 10, microseconds: 33332),
       );
+      
+      TODO_when_time_less_than_baseVsync;
     });
 
     group('when no preempt render', () {
