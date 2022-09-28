@@ -15,6 +15,7 @@ dev_dependencies:
   build_runner: ^2.2.1
   flutter_test:
     sdk: flutter
+  image: ^3.2.0
   lint: ^1.10.0
   mockito: ^5.3.2
 

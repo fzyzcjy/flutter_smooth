@@ -12,8 +12,12 @@ void main() {
 
   testWidgets('SmoothSchedulerBindingMixin.onWindowRender', (tester) async {
     final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
-    binding.window.physicalSizeTestValue = const Size(100, 50);
-    addTearDown(() => binding.window.clearPhysicalSizeTestValue());
+    binding.window
+      ..devicePixelRatioTestValue = 1
+      ..physicalSizeTestValue = const Size(100, 50);
+    addTearDown(() => binding.window
+      ..clearDevicePixelRatioTestValue()
+      ..clearPhysicalSizeTestValue());
 
     final capturer = WindowRenderCapturer();
     binding.onWindowRender = capturer.onWindowRender;
@@ -27,7 +31,8 @@ void main() {
       ),
     ));
 
-    expect(capturer.images.single, matchesGoldenFile('../goldens/binding/simple.png'));
+    expect(capturer.images.single,
+        matchesGoldenFile('../goldens/binding/simple.png'));
   });
 }
 
@@ -86,8 +91,8 @@ class WindowRenderCapturer {
   void onWindowRender(ui.Scene scene) {
     final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
 
-    final size = binding.window.physicalSize;
-    final image = scene.toImageSync(size.width.round(), size.height.round());
+    final image = scene.toImageSync(
+        binding.window.logicalWidth, binding.window.logicalHeight);
     images.add(image);
   }
 
@@ -101,4 +106,12 @@ class WindowRenderCapturer {
 //     return Future.wait(futures);
 //   }))!;
 // }
+}
+
+extension ExtWindow on ui.SingletonFlutterWindow {
+  Size get _logicalSize => physicalSize / devicePixelRatio;
+
+  int get logicalWidth => _logicalSize.width.round();
+
+  int get logicalHeight => _logicalSize.height.round();
 }
