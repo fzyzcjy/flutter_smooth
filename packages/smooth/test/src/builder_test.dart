@@ -64,6 +64,7 @@ void main() {
 
       const red = Color.fromARGB(255, 255, 0, 0);
 
+      debugPrint('pumpWidget');
       await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
         child: Stack(
@@ -108,15 +109,11 @@ void main() {
         ),
       ));
 
-      await expectLater(
-        capturer.images,
-        [
-          matchesReferenceImage(await createScreenImage(
-              tester, (im) => im.fillLeftRight(red, _green(0)))),
-        ],
-      );
-
-      capturer.images.clear();
+      await capturer.expect(tester, [
+        await tester
+            .createScreenImage((im) => im.fillLeftRight(red, _green(0))),
+      ]);
+      capturer.reset();
 
       final pumpDuration =
           testBeginTime.add(kOneFrame).difference(binding.clock.now());
@@ -125,17 +122,15 @@ void main() {
       // Need one plain-old frame (the pumpWidget frame), before being able to
       // create smooth extra frames. Otherwise, the layer tree is event not
       // built yet (because paint is not called yet).
+      debugPrint('action: pump');
       await tester.pump(pumpDuration);
 
-      await expectLater(
-        capturer.images,
-        [
-          matchesReferenceImage(await createScreenImage(
-              tester, (im) => im.fillLeftRight(red, _green(0.1)))),
-          matchesReferenceImage(await createScreenImage(
-              tester, (im) => im.fillLeftRight(red, _green(0.2)))),
-        ],
-      );
+      await capturer.expect(tester, [
+        await tester
+            .createScreenImage((im) => im.fillLeftRight(red, _green(0.1))),
+        await tester
+            .createScreenImage((im) => im.fillLeftRight(red, _green(0.2))),
+      ]);
 
       debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
     });

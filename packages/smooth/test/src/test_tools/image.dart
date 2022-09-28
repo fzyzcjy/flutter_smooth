@@ -18,8 +18,7 @@ void main() {
         physicalSizeTestValue: const Size(100, 50),
         devicePixelRatioTestValue: 1);
 
-    final im = await createScreenImage(
-      tester,
+    final im = await tester.createScreenImage(
       (im) => im
         ..fillRect(const Rectangle(0, 0, 50, 50), Colors.red)
         ..fillRect(const Rectangle(50, 0, 50, 50), Colors.green),
@@ -29,9 +28,10 @@ void main() {
   });
 }
 
-Future<ui.Image> createScreenImage(
-    WidgetTester tester, void Function(image.Image) draw) async {
-  return (await tester.runAsync(() => _createScreenImage(draw)))!;
+extension ExtWigetTesterScreenImage on WidgetTester {
+  Future<ui.Image> createScreenImage(void Function(image.Image) draw) async {
+    return (await runAsync(() => _createScreenImage(draw)))!;
+  }
 }
 
 Future<ui.Image> _createScreenImage(void Function(image.Image) draw) {
