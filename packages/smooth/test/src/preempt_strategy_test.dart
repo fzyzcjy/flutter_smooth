@@ -71,6 +71,14 @@ void main() {
       testWidgets('when second preempt render', (tester) async {
         TODO;
       });
+
+      testWidgets('when preempt render is just before vsync', (tester) async {
+        TODO;
+      });
+
+      testWidgets('when preempt render is just after vsync', (tester) async {
+        TODO;
+      });
     });
   });
 }
