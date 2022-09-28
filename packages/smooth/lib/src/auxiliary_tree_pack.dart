@@ -59,7 +59,8 @@ class AuxiliaryTreePack {
 
   void runPipeline(Duration timeStamp, {required String debugReason}) {
     Timeline.timeSync('AuxTree.RunPipeline', () {
-      // print('$runtimeType runPipeline start debugReason=$debugReason');
+      print(
+          '$runtimeType runPipeline start timeStamp=$timeStamp debugReason=$debugReason');
 
       _callExtraTickerTick(timeStamp);
 
