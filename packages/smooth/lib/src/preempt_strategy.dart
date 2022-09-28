@@ -79,7 +79,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
     final currentPreemptRenderVsyncTargetTimeStamp = vsyncLaterThan(
       time: nowTimeStamp,
-      baseVsync: _currentPreemptRenderVsyncTargetTimeStamp,
+      baseVsync: timeSource.currentFrameAdjustedVsyncTargetTimeStamp,
     );
 
     final shouldShiftOneFrameForNextActVsyncTime =
