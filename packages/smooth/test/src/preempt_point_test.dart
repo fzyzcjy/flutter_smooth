@@ -4,7 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:smooth/src/preempt_point.dart';
 import 'package:smooth/src/service_locator.dart';
 
-import 'mock_source.mocks.dart';
+import 'test_tools/mock_source.mocks.dart';
 
 void main() {
   late MockActor actor;
