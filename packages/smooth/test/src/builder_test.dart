@@ -104,9 +104,9 @@ void main() {
                   'AlwaysBuildBuilder.onBuild elapseBlocking for $slowBuilderDuration');
               binding.elapseBlocking(slowBuilderDuration);
             }),
-            AlwaysLayoutBuilder(
-              child: LayoutPreemptPointWidget(
-                // debugToken: mainPreemptPointDebugToken,
+            LayoutPreemptPointWidget(
+              // debugToken: mainPreemptPointDebugToken,
+              child: AlwaysLayoutBuilder(
                 child: Container(),
               ),
             ),
