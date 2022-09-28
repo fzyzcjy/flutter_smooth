@@ -23,8 +23,6 @@ extension ExtTimeSource on TimeSource {
       microseconds: dateTime.microsecondsSinceEpoch - diffDateTimeToTimeStamp);
 }
 
-/// *Only* work on real devices, *not* on Flutter widget test environments
-/// because the "widget test" environment has fake `currentFrameTimeStamp`
 class _VsyncSourceReal implements TimeSource {
   const _VsyncSourceReal();
 
