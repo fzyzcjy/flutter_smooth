@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -16,12 +15,8 @@ void main() {
     binding.window.physicalSizeTestValue = const Size(100, 50);
     addTearDown(() => binding.window.clearPhysicalSizeTestValue());
 
-    final images = <ui.Image>[];
-    binding.onWindowRender = (scene) {
-      final size = binding.window.physicalSize;
-      final image = scene.toImageSync(size.width.round(), size.height.round());
-      images.add(image);
-    };
+    final capturer = WindowRenderCapturer();
+    binding.onWindowRender = capturer.onWindowRender;
 
     // just a simple scene
     await tester.pumpWidget(DecoratedBox(
@@ -32,15 +27,7 @@ void main() {
       ),
     ));
 
-    await tester.runAsync(() async {
-      final image = images.single;
-      final bytes = (await image.toByteData(format: ui.ImageByteFormat.png))!
-          .buffer
-          .asUint8List();
-      File('a.png').writeAsBytesSync(bytes);
-    });
-
-    fail('TODO');
+    expect(capturer.images.single, matchesGoldenFile('../goldens/binding/simple.png'));
   });
 }
 
@@ -89,4 +76,29 @@ class SmoothTestWindow extends ProxyTestWindow implements TestWindow {
     onRender(scene);
     super.render(scene);
   }
+}
+
+class WindowRenderCapturer {
+  final images = <ui.Image>[];
+
+  WindowRenderCapturer();
+
+  void onWindowRender(ui.Scene scene) {
+    final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
+
+    final size = binding.window.physicalSize;
+    final image = scene.toImageSync(size.width.round(), size.height.round());
+    images.add(image);
+  }
+
+// `matchesGoldenFile` is already enough
+// Future<List<Uint8List>> toImages(WidgetTester tester) async {
+//   return (await tester.runAsync(() async {
+//     final futures = images.map((image) async {
+//       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+//       return byteData!.buffer.asUint8List();
+//     });
+//     return Future.wait(futures);
+//   }))!;
+// }
 }
