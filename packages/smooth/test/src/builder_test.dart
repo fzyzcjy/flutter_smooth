@@ -55,6 +55,7 @@ void main() {
         children: [
           SmoothBuilder(
             builder: (context, child) {
+              return AnimatedBuilder(animation: animation, builder: builder);
               TODO; // TODO be different colors for different times? frames?
               return child;
             },
