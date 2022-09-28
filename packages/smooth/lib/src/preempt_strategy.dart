@@ -88,6 +88,11 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
   @override
   void onPreemptRender() {
+    assert(
+        shouldAct(),
+        'When call `onPreemptRender`, should have `shouldAct`=true, '
+        'otherwise the preemptRender should not happen');
+
     final now = dependency.now();
     final nowTimeStamp = _timeInfoCalculator.dateTimeToTimeStamp(now);
 

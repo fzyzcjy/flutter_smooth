@@ -12,7 +12,9 @@ import 'preempt_strategy_test.mocks.dart';
 void main() {
   group('PreemptStrategyNormal', () {
     final startDateTime = DateTime(2000);
-    const firstFrameTimeStamp = Duration(seconds: 10);
+    // NOTE the vsync "target" time means the the *end* of current 16.67ms frame
+    // see VsyncTargetTime in flutter engine c++ code for more details
+    const firstFrameTargetVsyncTimeStamp = Duration(seconds: 10);
     const kActThresh = PreemptStrategyNormal.kActThresh;
 
     late MockPreemptStrategyDependency dependency;
@@ -23,75 +25,196 @@ void main() {
     });
 
     group('when no preempt render', () {
-      const currentFrameTimeStamp = firstFrameTimeStamp;
+      const currentFrameTimeStamp = firstFrameTargetVsyncTimeStamp;
       final beginFrameDateTime = startDateTime;
 
-      testWidgets('when now=begin-of-frame', (tester) async {
+      test('when now=begin-of-frame', () {
         dependency.mock(
           now: startDateTime,
           currentFrameTimeStamp: currentFrameTimeStamp,
           beginFrameDateTime: beginFrameDateTime,
         );
         strategy.expect(
-          currentSmoothFrameTimeStamp: firstFrameTimeStamp,
-          shouldActTimeStamp: firstFrameTimeStamp - kActThresh,
+          currentSmoothFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
+          shouldActTimeStamp: firstFrameTargetVsyncTimeStamp - kActThresh,
+          shouldAct: false,
         );
       });
 
-      testWidgets('when now=near-end-of-frame', (tester) async {
+      test('when now=near-end-of-frame', () {
         dependency.mock(
           now: startDateTime.add(const Duration(milliseconds: 16)),
           currentFrameTimeStamp: currentFrameTimeStamp,
           beginFrameDateTime: beginFrameDateTime,
         );
         strategy.expect(
-          currentSmoothFrameTimeStamp: firstFrameTimeStamp,
-          shouldActTimeStamp: firstFrameTimeStamp - kActThresh,
+          currentSmoothFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
+          shouldActTimeStamp: firstFrameTargetVsyncTimeStamp - kActThresh,
+          shouldAct: true,
         );
       });
 
-      testWidgets('when now=long-later', (tester) async {
+      test('when now=long-later', () {
         dependency.mock(
           now: startDateTime.add(const Duration(milliseconds: 100000)),
           currentFrameTimeStamp: currentFrameTimeStamp,
           beginFrameDateTime: beginFrameDateTime,
         );
         strategy.expect(
-          currentSmoothFrameTimeStamp: firstFrameTimeStamp,
-          shouldActTimeStamp: firstFrameTimeStamp - kActThresh,
+          currentSmoothFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
+          shouldActTimeStamp: firstFrameTargetVsyncTimeStamp - kActThresh,
+          shouldAct: true,
         );
       });
     });
 
     group('when has preempt render', () {
-      group('when verify after preemptRender called', () {
-        testWidgets('when preemptRender is just before vsync', (tester) async {
+      group('inside one plain-old frame, when has one preemptRender', () {
+        void _body({required DateTime now}) {
           dependency.mock(
-            now: startDateTime.add(const Duration(milliseconds: 16)),
-            currentFrameTimeStamp: firstFrameTimeStamp,
+            now: now,
+            currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
             beginFrameDateTime: startDateTime,
           );
-
           strategy.onPreemptRender();
 
           strategy.expect(
-            // Since [currentSmoothFrameTimeStamp] has similar meaning like
-            // [SchedulerBinding.currentFrameTimeStamp], it changes after
-            // [onPreemptRender]
-            currentSmoothFrameTimeStamp: firstFrameTimeStamp + kOneFrame,
-            shouldActTimeStamp: firstFrameTimeStamp + kOneFrame - kActThresh,
+            currentSmoothFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
+            shouldActTimeStamp:
+                firstFrameTargetVsyncTimeStamp + kOneFrame - kActThresh,
+            shouldAct: false,
           );
+        }
+
+        test('when preemptRender is just before vsync', () {
+          _body(now: startDateTime.add(const Duration(milliseconds: 16)));
         });
 
-        testWidgets('when preemptRender is just after vsync', (tester) async {
-          TODO;
+        test('when preemptRender is just after vsync', () {
+          _body(now: startDateTime.add(const Duration(milliseconds: 17)));
         });
       });
 
-      group('when verify after second frame begins', () {
-        testWidgets('simple', (tester) async {
-          TODO;
+      group(
+          'inside one plain-old frame, when has two preemptRender, and focus on the second',
+          () {
+        void _body({required DateTime nowWhenSecondPreemptRender}) {
+          dependency.mock(
+            now: startDateTime.add(const Duration(milliseconds: 16)),
+            currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
+            beginFrameDateTime: startDateTime,
+          );
+          strategy.onPreemptRender();
+
+          dependency.mock(
+            now: nowWhenSecondPreemptRender,
+            // NOTE [currentFrameTimeStamp] and [beginFrameDateTime] are
+            // unchanged, because they are unchanged in one plain-old frame
+            // even if there are multiple extra preempt frames
+            currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
+            beginFrameDateTime: startDateTime,
+          );
+          strategy.onPreemptRender();
+
+          strategy.expect(
+            currentSmoothFrameTimeStamp:
+                firstFrameTargetVsyncTimeStamp + kOneFrame,
+            shouldActTimeStamp:
+                firstFrameTargetVsyncTimeStamp + kOneFrame * 2 - kActThresh,
+            shouldAct: false,
+          );
+        }
+
+        test('when second preemptRender is just before vsync', () {
+          _body(
+            nowWhenSecondPreemptRender:
+                startDateTime.add(kOneFrame + const Duration(milliseconds: 16)),
+          );
         });
+
+        test('when second preemptRender is just after vsync', () {
+          _body(
+            nowWhenSecondPreemptRender:
+                startDateTime.add(kOneFrame + const Duration(milliseconds: 17)),
+          );
+        });
+      });
+
+      group('when second plain-old frame begins', () {
+        for (final nowWhenPreemptRenderShift in const [
+          Duration(milliseconds: 16),
+          Duration(milliseconds: 17),
+        ]) {
+          test(
+              'when have one preemptRender previously (nowWhenSecondPreemptRenderShift=$nowWhenPreemptRenderShift)',
+              () {
+            dependency.mock(
+              now: startDateTime.add(nowWhenPreemptRenderShift),
+              currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
+              beginFrameDateTime: startDateTime,
+            );
+            strategy.onPreemptRender();
+
+            dependency.mock(
+              now: startDateTime
+                  .add(kOneFrame + const Duration(milliseconds: 1)),
+              // second frame
+              currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp + kOneFrame,
+              beginFrameDateTime: startDateTime.add(kOneFrame),
+            );
+
+            strategy.expect(
+              currentSmoothFrameTimeStamp:
+                  firstFrameTargetVsyncTimeStamp + kOneFrame,
+              shouldActTimeStamp:
+                  firstFrameTargetVsyncTimeStamp + kOneFrame - kActThresh,
+              shouldAct: false,
+            );
+          });
+        }
+
+        for (final nowWhenSecondPreemptRenderShift in const [
+          Duration(milliseconds: 16),
+          Duration(milliseconds: 17),
+        ]) {
+          test(
+              'when have two preemptRender previously (nowWhenSecondPreemptRenderShift=$nowWhenSecondPreemptRenderShift)',
+              () {
+            dependency.mock(
+              now: startDateTime.add(const Duration(milliseconds: 16)),
+              currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
+              beginFrameDateTime: startDateTime,
+            );
+            strategy.onPreemptRender();
+
+            dependency.mock(
+              now: startDateTime
+                  .add(kOneFrame + nowWhenSecondPreemptRenderShift),
+              currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
+              beginFrameDateTime: startDateTime,
+            );
+            strategy.onPreemptRender();
+
+            // the "*2" is because, we have *two* preemptRender above
+            // so we assume the first plain-old frame runs for 2/60s
+            dependency.mock(
+              now: startDateTime
+                  .add(kOneFrame * 2 + const Duration(milliseconds: 1)),
+              // second frame
+              currentFrameTimeStamp:
+                  firstFrameTargetVsyncTimeStamp + kOneFrame * 2,
+              beginFrameDateTime: startDateTime.add(kOneFrame * 2),
+            );
+
+            strategy.expect(
+              currentSmoothFrameTimeStamp:
+                  firstFrameTargetVsyncTimeStamp + kOneFrame * 2,
+              shouldActTimeStamp:
+                  firstFrameTargetVsyncTimeStamp + kOneFrame * 2 - kActThresh,
+              shouldAct: false,
+            );
+          });
+        }
       });
     });
   });
@@ -198,9 +321,11 @@ extension on PreemptStrategyNormal {
   void expect({
     required Duration currentSmoothFrameTimeStamp,
     required Duration shouldActTimeStamp,
+    required bool shouldAct,
   }) {
     flutter_test.expect(
         this.currentSmoothFrameTimeStamp, currentSmoothFrameTimeStamp);
     flutter_test.expect(this.shouldActTimeStamp, shouldActTimeStamp);
+    flutter_test.expect(this.shouldAct(), shouldAct);
   }
 }
