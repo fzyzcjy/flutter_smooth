@@ -122,6 +122,20 @@ extension on SmoothSchedulerBindingMixin {
       microseconds: dateTime.microsecondsSinceEpoch - diffDateTimeToTimeStamp);
 }
 
+class _PreemptStrategyNever implements PreemptStrategy {
+  const _PreemptStrategyNever();
+
+  @override
+  bool get shouldAct => false;
+
+  @override
+  void onPreemptRender() {}
+
+  @override
+  Duration get currentSmoothFrameTimeStamp =>
+      SchedulerBinding.instance.currentFrameTimeStamp;
+}
+
 // #31 changes it
 // class _PreemptStrategyNormal implements PreemptStrategy {
 //   int? diffDateTimeTimePoint;
@@ -198,17 +212,3 @@ extension on SmoothSchedulerBindingMixin {
 //
 //   static const _kOneFrameUs = 1000000 ~/ 60;
 // }
-
-class _PreemptStrategyNever implements PreemptStrategy {
-  const _PreemptStrategyNever();
-
-  @override
-  bool get shouldAct => false;
-
-  @override
-  void onPreemptRender() {}
-
-  @override
-  Duration get currentSmoothFrameTimeStamp =>
-      SchedulerBinding.instance.currentFrameTimeStamp;
-}
