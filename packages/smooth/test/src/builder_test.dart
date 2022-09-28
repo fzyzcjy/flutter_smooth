@@ -64,6 +64,8 @@ void main() {
 
       const red = Color.fromARGB(255, 255, 0, 0);
 
+      var slowBuilderDuration = Duration.zero;
+
       debugPrint('pumpWidget');
       await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
@@ -97,8 +99,9 @@ void main() {
               child: Container(color: red),
             ),
             Builder(builder: (_) {
-              // 16ms - sufficiently near but less than 1/60s
-              binding.elapseBlocking(const Duration(milliseconds: 16));
+              debugPrint(
+                  'Builder.builder elapseBlocking for $slowBuilderDuration');
+              binding.elapseBlocking(slowBuilderDuration);
               return Container();
             }),
             LayoutPreemptPointWidget(
@@ -115,9 +118,13 @@ void main() {
       ]);
       capturer.reset();
 
+      // TODO extract this pumpDuration to sth smart?
       final pumpDuration =
           testBeginTime.add(kOneFrame).difference(binding.clock.now());
-      expect(pumpDuration, kOneFrame - const Duration(milliseconds: 16));
+      expect(pumpDuration, kOneFrame);
+
+      // 16ms - sufficiently near but less than 1/60s
+      slowBuilderDuration = const Duration(milliseconds: 16);
 
       // Need one plain-old frame (the pumpWidget frame), before being able to
       // create smooth extra frames. Otherwise, the layer tree is event not
