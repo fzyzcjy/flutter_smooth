@@ -26,12 +26,12 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.64693624"
-     inkscape:cx="597.43136"
-     inkscape:cy="228.77061"
+     inkscape:cx="566.51642"
+     inkscape:cy="307.60373"
      inkscape:window-width="1751"
      inkscape:window-height="1224"
-     inkscape:window-x="2370"
-     inkscape:window-y="25"
+     inkscape:window-x="2298"
+     inkscape:window-y="61"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1" /><defs
      id="defs2"><linearGradient
@@ -62,7 +62,7 @@
      inkscape:label="图层 1"
      inkscape:groupmode="layer"
      id="layer1"><path
-       style="fill:none;stroke:url(#linearGradient9491);stroke-width:4;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:url(#linearGradient9491);stroke-width:4;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1;stroke-linejoin:miter;stroke-linecap:round"
        d="m 107.54777,52.930827 c 0,0 11.0144,-13.390385 35.16084,-13.159626 38.72673,0.370098 63.45373,46.682425 106.33454,46.623598 38.70303,-0.0531 64.61867,-22.493836 64.61867,-22.493836"
        id="path518"
        sodipodi:nodetypes="cssc" /><image
@@ -2348,9 +2348,9 @@ AElFTkSuQmCC
        style="font-size:96px;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;white-space:pre;shape-inside:url(#rect386);display:inline;fill:none;stroke:#135990;stroke-width:4.55055;stroke-miterlimit:3.9;stroke-opacity:1"><tspan
          x="688.92578"
          y="235.97629"
-         id="tspan12573"><tspan
+         id="tspan17721"><tspan
            style="font-family:'Courier New';-inkscape-font-specification:'Courier New'"
-           id="tspan12571">Smooth</tspan></tspan></text><rect
+           id="tspan17719">Smooth</tspan></tspan></text><rect
        style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:2.66336;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
        id="rect3439"
        width="46.970932"
