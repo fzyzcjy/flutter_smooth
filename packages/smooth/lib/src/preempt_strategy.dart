@@ -102,10 +102,10 @@ class PreemptStrategyNormal implements PreemptStrategy {
   }) {
     assert(time >= oldVsync);
     final diffMicroseconds = time.inMicroseconds - oldVsync.inMicroseconds;
+    const oneFrameUs = SmoothSchedulerBindingMixin.kOneFrameUs;
     return oldVsync +
         Duration(
-          microseconds:
-              diffMicroseconds ~/ SmoothSchedulerBindingMixin.kOneFrameUs,
+          microseconds: (diffMicroseconds ~/ oneFrameUs) * oneFrameUs,
         );
   }
 }
@@ -113,9 +113,9 @@ class PreemptStrategyNormal implements PreemptStrategy {
 Duration _maxDuration(Duration a, Duration b) => a > b ? a : b;
 
 extension on SmoothSchedulerBindingMixin {
-  _SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
-      _SimpleDateTime.fromMicrosecondsSinceEpoch(
-          timeStamp.inMicroseconds + diffDateTimeToTimeStamp);
+  // _SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
+  //     _SimpleDateTime.fromMicrosecondsSinceEpoch(
+  //         timeStamp.inMicroseconds + diffDateTimeToTimeStamp);
 
   Duration dateTimeToTimeStamp(_SimpleDateTime dateTime) => Duration(
       microseconds: dateTime.microsecondsSinceEpoch - diffDateTimeToTimeStamp);
