@@ -23,11 +23,14 @@ void main() {
     });
 
     group('when no preempt render', () {
-      testWidgets('when first frame', (tester) async {
+      const currentFrameTimeStamp = firstFrameTimeStamp;
+      final beginFrameDateTime = startDateTime;
+
+      testWidgets('when now=begin-of-frame', (tester) async {
         dependency.mock(
           now: startDateTime,
-          currentFrameTimeStamp: firstFrameTimeStamp,
-          beginFrameDateTime: startDateTime,
+          currentFrameTimeStamp: currentFrameTimeStamp,
+          beginFrameDateTime: beginFrameDateTime,
         );
         strategy.expect(
           currentSmoothFrameTimeStamp: firstFrameTimeStamp,
@@ -35,26 +38,57 @@ void main() {
         );
       });
 
-      testWidgets('when second frame', (tester) async {
-        TODO;
+      testWidgets('when now=near-end-of-frame', (tester) async {
+        dependency.mock(
+          now: startDateTime.add(const Duration(milliseconds: 16)),
+          currentFrameTimeStamp: currentFrameTimeStamp,
+          beginFrameDateTime: beginFrameDateTime,
+        );
+        strategy.expect(
+          currentSmoothFrameTimeStamp: firstFrameTimeStamp,
+          shouldActTimeStamp: firstFrameTimeStamp - kActThresh,
+        );
+      });
+
+      testWidgets('when now=long-later', (tester) async {
+        dependency.mock(
+          now: startDateTime.add(const Duration(milliseconds: 100000)),
+          currentFrameTimeStamp: currentFrameTimeStamp,
+          beginFrameDateTime: beginFrameDateTime,
+        );
+        strategy.expect(
+          currentSmoothFrameTimeStamp: firstFrameTimeStamp,
+          shouldActTimeStamp: firstFrameTimeStamp - kActThresh,
+        );
       });
     });
 
     group('when has preempt render', () {
-      testWidgets('when first preempt render', (tester) async {
-        TODO;
+      group('when verify after preemptRender called', () {
+        testWidgets('when preemptRender is just before vsync', (tester) async {
+          dependency.mock(
+            now: startDateTime.add(const Duration(milliseconds: 16)),
+            currentFrameTimeStamp: firstFrameTimeStamp,
+            beginFrameDateTime: startDateTime,
+          );
+
+          strategy.onPreemptRender();
+
+          strategy.expect(
+            currentSmoothFrameTimeStamp: TODO,
+            shouldActTimeStamp: TODO,
+          );
+        });
+
+        testWidgets('when preemptRender is just after vsync', (tester) async {
+          TODO;
+        });
       });
 
-      testWidgets('when second preempt render', (tester) async {
-        TODO;
-      });
-
-      testWidgets('when preempt render is just before vsync', (tester) async {
-        TODO;
-      });
-
-      testWidgets('when preempt render is just after vsync', (tester) async {
-        TODO;
+      group('when verify after second frame begins', () {
+        testWidgets('simple', (tester) async {
+          TODO;
+        });
       });
     });
   });

@@ -42,7 +42,6 @@ class RenderAdapterInMainTree extends RenderBox
 
   @override
   void performLayout() {
-    final binding = WidgetsFlutterBinding.ensureInitialized();
     // print('$runtimeType.performLayout start');
 
     // NOTE
