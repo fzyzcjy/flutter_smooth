@@ -4,10 +4,7 @@ import 'package:clock/clock.dart';
 class SimpleDateTime {
   final int microsecondsSinceEpoch;
 
-  // SimpleDateTime.fromMicrosecondsSinceEpoch(this.microsecondsSinceEpoch);
-
-  SimpleDateTime.now()
-      : microsecondsSinceEpoch = clock.now().microsecondsSinceEpoch;
+  SimpleDateTime.fromMicrosecondsSinceEpoch(this.microsecondsSinceEpoch);
 
   @override
   bool operator ==(Object other) =>
@@ -21,4 +18,9 @@ class SimpleDateTime {
 
   @override
   String toString() => 'SimpleDateTime($microsecondsSinceEpoch)';
+}
+
+extension ExtClock on Clock {
+  SimpleDateTime nowSimple() => SimpleDateTime.fromMicrosecondsSinceEpoch(
+      clock.now().microsecondsSinceEpoch);
 }

@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/scheduler_binding.dart';
@@ -33,7 +34,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
   @override
   bool get shouldAct {
-    final now = SimpleDateTime.now();
+    final now = clock.nowSimple();
     final ans = vsyncSource.dateTimeToTimeStamp(now) > shouldActTimeStamp;
 
     // if (ans) {
@@ -73,7 +74,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
   @override
   void onPreemptRender() {
-    final now = SimpleDateTime.now();
+    final now = clock.nowSimple();
     final nowTimeStamp = vsyncSource.dateTimeToTimeStamp(now);
 
     final currentPreemptRenderVsyncTargetTimeStamp = vsyncLaterThan(
