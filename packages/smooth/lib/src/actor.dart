@@ -17,14 +17,18 @@ class Actor {
 
   void maybePreemptRender({Object? debugToken}) {
     if (ServiceLocator.instance.auxiliaryTreeRegistry.trees.isEmpty) {
+      print('Actor.maybePreemptRender skip since tree empty');
       // No active smooth widgets
       return;
     }
 
     // _maybePreemptRenderCallCount++;
 
-    if (ServiceLocator.instance.preemptStrategy
-        .shouldAct(debugToken: debugToken)) {
+    final shouldAct = ServiceLocator.instance.preemptStrategy
+        .shouldAct(debugToken: debugToken);
+    print('Actor.maybePreemptRender shouldAct=$shouldAct');
+
+    if (shouldAct) {
       _preemptRender();
     }
   }

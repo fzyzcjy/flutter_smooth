@@ -11,6 +11,7 @@ import 'test_tools/animation.dart';
 import 'test_tools/binding.dart';
 import 'test_tools/image.dart';
 import 'test_tools/preemtp_strategy.dart';
+import 'test_tools/widgets.dart';
 import 'test_tools/window.dart';
 
 void main() {
@@ -98,15 +99,16 @@ void main() {
               ),
               child: Container(color: red),
             ),
-            Builder(builder: (_) {
+            AlwaysBuildBuilder(onBuild: () {
               debugPrint(
-                  'Builder.builder elapseBlocking for $slowBuilderDuration');
+                  'AlwaysBuildBuilder.onBuild elapseBlocking for $slowBuilderDuration');
               binding.elapseBlocking(slowBuilderDuration);
-              return Container();
             }),
-            LayoutPreemptPointWidget(
-              // debugToken: mainPreemptPointDebugToken,
-              child: Container(),
+            AlwaysLayoutBuilder(
+              child: LayoutPreemptPointWidget(
+                // debugToken: mainPreemptPointDebugToken,
+                child: Container(),
+              ),
             ),
           ],
         ),
