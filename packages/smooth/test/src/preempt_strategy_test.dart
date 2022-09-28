@@ -75,8 +75,11 @@ void main() {
           strategy.onPreemptRender();
 
           strategy.expect(
-            currentSmoothFrameTimeStamp: TODO,
-            shouldActTimeStamp: TODO,
+            // Since [currentSmoothFrameTimeStamp] has similar meaning like
+            // [SchedulerBinding.currentFrameTimeStamp], it changes after
+            // [onPreemptRender]
+            currentSmoothFrameTimeStamp: firstFrameTimeStamp + kOneFrame,
+            shouldActTimeStamp: firstFrameTimeStamp + kOneFrame - kActThresh,
           );
         });
 

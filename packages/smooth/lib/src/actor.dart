@@ -39,8 +39,6 @@ class Actor {
     Timeline.timeSync('PreemptRender', () {
       // print('$runtimeType preemptRender start');
 
-      ServiceLocator.instance.preemptStrategy.onPreemptRender();
-
       // print('preemptRender '
       //     'lastVsyncInfo=$lastVsyncInfo '
       //     'currentFrameTimeStamp=${binding.currentFrameTimeStamp} '
@@ -53,8 +51,9 @@ class Actor {
 
       final builder = SceneBuilder();
 
-      _preemptModifyLayerTree(
-          ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp);
+      final smoothFrameTimeStamp =
+          ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp;
+      _preemptModifyLayerTree(smoothFrameTimeStamp);
 
       // why this layer - from RenderView.compositeFrame
       // ignore: invalid_use_of_protected_member
@@ -67,6 +66,8 @@ class Actor {
       });
 
       scene.dispose();
+
+      ServiceLocator.instance.preemptStrategy.onPreemptRender();
 
       // #5831
       // // #5822
