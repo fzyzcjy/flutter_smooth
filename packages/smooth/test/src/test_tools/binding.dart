@@ -12,15 +12,33 @@ void main() {
   SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('SmoothSchedulerBindingMixin.onWindowRender', (tester) async {
-    final scenes = <ui.Scene>[];
-    SmoothAutomatedTestWidgetsFlutterBinding.instance.onWindowRender = scenes.add;
+    final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
+    binding.window.physicalSizeTestValue = const Size(100, 50);
+    addTearDown(() => binding.window.clearPhysicalSizeTestValue());
 
-    await tester.pumpWidget(Container(color: Colors.red));
+    final images = <ui.Image>[];
+    binding.onWindowRender = (scene) {
+      final size = binding.window.physicalSize;
+      final image = scene.toImageSync(size.width.round(), size.height.round());
+      images.add(image);
+    };
 
-    print('hi onWindowRender');
-    final image = await scenes.single.toImage(100, 100);
-    final bytes = (await image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
-    File('a.png').writeAsBytesSync(bytes);
+    // just a simple scene
+    await tester.pumpWidget(DecoratedBox(
+      decoration:
+          BoxDecoration(border: Border.all(color: Colors.green, width: 1)),
+      child: Center(
+        child: Container(width: 10, height: 10, color: Colors.green.shade200),
+      ),
+    ));
+
+    await tester.runAsync(() async {
+      final image = images.single;
+      final bytes = (await image.toByteData(format: ui.ImageByteFormat.png))!
+          .buffer
+          .asUint8List();
+      File('a.png').writeAsBytesSync(bytes);
+    });
 
     fail('TODO');
   });
@@ -72,4 +90,3 @@ class SmoothTestWindow extends ProxyTestWindow implements TestWindow {
     super.render(scene);
   }
 }
-
