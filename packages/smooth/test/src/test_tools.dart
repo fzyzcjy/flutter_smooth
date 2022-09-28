@@ -26,12 +26,28 @@ class SmoothAutomatedTestWidgetsFlutterBinding
 }
 
 mixin SmoothSchedulerBindingMixin on AutomatedTestWidgetsFlutterBinding {
+  OnWindowRender? onWindowRender;
+
   @override
-  TestWindow get window => SmoothTestWindow(super.window);
+  TestWindow get window =>
+      SmoothTestWindow(super.window, onRender: (s) => onWindowRender?.call(s));
 }
 
+typedef OnWindowRender = void Function(ui.Scene scene);
+
 class SmoothTestWindow extends ProxyTestWindow implements TestWindow {
-  const SmoothTestWindow(super._inner);
+  final OnWindowRender onRender;
+
+  const SmoothTestWindow(
+    super._inner, {
+    required this.onRender,
+  });
+
+  @override
+  void render(ui.Scene scene) {
+    onRender(scene);
+    super.render(scene);
+  }
 }
 
 class ProxyTestWindow implements TestWindow {
