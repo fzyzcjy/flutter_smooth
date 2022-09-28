@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth/src/service_locator.dart';
 
@@ -29,7 +30,7 @@ class Actor {
 
   void _preemptRender() {
     final binding = WidgetsFlutterBinding.ensureInitialized();
-    final start = DateTime.now();
+    final start = clock.now();
     Timeline.timeSync('PreemptRender', () {
       // print('$runtimeType preemptRender start');
 
@@ -65,7 +66,7 @@ class Actor {
       // // #5822
       // binding.platformDispatcher.preemptRequestVsync();
     });
-    _times.add(DateTime.now().difference(start));
+    _times.add(clock.now().difference(start));
 
     // print('$runtimeType preemptRender end');
   }
