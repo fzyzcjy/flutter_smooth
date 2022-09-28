@@ -2,20 +2,20 @@ import 'package:flutter/foundation.dart';
 import 'package:smooth/src/preempt_strategy.dart';
 
 class PreemptStrategyTest implements PreemptStrategy {
-  final ValueGetter<bool> _shouldAct;
+  final bool Function({Object? debugToken}) _shouldAct;
   final ValueGetter<Duration> _currentSmoothFrameTimeStamp;
 
   PreemptStrategyTest({
-    required ValueGetter<bool> shouldAct,
+    required bool Function({Object? debugToken}) shouldAct,
     required ValueGetter<Duration> currentSmoothFrameTimeStamp,
   })  : _shouldAct = shouldAct,
         _currentSmoothFrameTimeStamp = currentSmoothFrameTimeStamp;
 
   @override
-  bool get shouldAct => _shouldAct();
+  bool shouldAct({Object? debugToken}) => _shouldAct(debugToken: debugToken);
 
   @override
-  Duration get currentSmoothFrameTimeStamp => _currentSmoothFrameTimeStamp;
+  Duration get currentSmoothFrameTimeStamp => _currentSmoothFrameTimeStamp();
 
   @override
   void onPreemptRender() {}

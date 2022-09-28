@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
+import 'package:smooth/src/preempt_point.dart';
 import 'package:smooth/src/preempt_strategy.dart';
+import 'package:smooth/src/scheduler_binding.dart';
 import 'package:smooth/src/service_locator.dart';
 
+import 'test_tools/animation.dart';
 import 'test_tools/binding.dart';
 import 'test_tools/image.dart';
 import 'test_tools/preemtp_strategy.dart';
@@ -41,27 +44,35 @@ void main() {
         devicePixelRatioTestValue: 1,
       );
 
+      final mainPreemptPointDebugToken = Object();
+
       final capturer = WindowRenderCapturer();
       binding.onWindowRender = capturer.onWindowRender;
 
       ServiceLocator.debugOverrideInstance = ServiceLocator.normal().copyWith(
         preemptStrategy: PreemptStrategyTest(
-          shouldAct: shouldAct,
-          currentSmoothFrameTimeStamp: currentSmoothFrameTimeStamp,
+          shouldAct: ({debugToken}) => debugToken == mainPreemptPointDebugToken,
+          currentSmoothFrameTimeStamp: () => TODO,
         ),
       );
 
       await tester.pumpWidget(Stack(
         children: [
           SmoothBuilder(
-            builder: (context, child) {
-              return AnimatedBuilder(animation: animation, builder: builder);
-              TODO; // TODO be different colors for different times? frames?
-              return child;
-            },
+            builder: (context, child) => SimpleAnimatedBuilder(
+              duration: SmoothSchedulerBindingMixin.kOneFrame * 10,
+              builder: (_, animationValue) {
+                debugPrint(
+                    'SimpleAnimatedBuilder.builder animationValue=$animationValue');
+                return TODO;
+              },
+            ),
             child: Container(color: Colors.red),
           ),
-          SmoothPreemptPoint(child: Container()),
+          LayoutPreemptPointWidget(
+            debugToken: mainPreemptPointDebugToken,
+            child: Container(),
+          ),
         ],
       ));
 

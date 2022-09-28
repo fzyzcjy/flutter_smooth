@@ -12,7 +12,7 @@ abstract class PreemptStrategy {
   const factory PreemptStrategy.never() = _PreemptStrategyNever;
 
   /// Should we run `preemptRender` now
-  bool get shouldAct;
+  bool shouldAct({Object? debugToken});
 
   /// Fancy version of [SchedulerBinding.currentFrameTimeStamp],
   /// by considering both plain-old frames and *also extra frames*
@@ -33,7 +33,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
   PreemptStrategyNormal({required this.timeSource});
 
   @override
-  bool get shouldAct {
+  bool shouldAct({Object? debugToken}) {
     final now = clock.nowSimple();
     final ans = timeSource.dateTimeToTimeStamp(now) > shouldActTimeStamp;
 
@@ -115,7 +115,7 @@ class _PreemptStrategyNever implements PreemptStrategy {
   const _PreemptStrategyNever();
 
   @override
-  bool get shouldAct => false;
+  bool shouldAct({Object? debugToken}) => false;
 
   @override
   void onPreemptRender() {}

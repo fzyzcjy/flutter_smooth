@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SimpleAnimatedBuilder extends StatefulWidget {
   final Duration duration;
-  final Widget Function(BuildContext, Animation<double> animation) builder;
+  final Widget Function(BuildContext, double animationValue) builder;
 
   const SimpleAnimatedBuilder({
     super.key,
@@ -36,7 +36,7 @@ class _SimpleAnimatedBuilderState extends State<SimpleAnimatedBuilder>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: controller,
-      builder: (context, child) => widget.builder(context, controller),
+      builder: (context, child) => widget.builder(context, controller.value),
     );
   }
 }

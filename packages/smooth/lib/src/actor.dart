@@ -15,7 +15,7 @@ class Actor {
         'PreemptRender times=[${_times.map((d) => d.inMicroseconds / 1000).toList().join(', ')}]');
   }
 
-  void maybePreemptRender() {
+  void maybePreemptRender({Object? debugToken}) {
     if (ServiceLocator.instance.auxiliaryTreeRegistry.trees.isEmpty) {
       // No active smooth widgets
       return;
@@ -23,7 +23,8 @@ class Actor {
 
     // _maybePreemptRenderCallCount++;
 
-    if (ServiceLocator.instance.preemptStrategy.shouldAct) {
+    if (ServiceLocator.instance.preemptStrategy
+        .shouldAct(debugToken: debugToken)) {
       _preemptRender();
     }
   }
@@ -48,7 +49,8 @@ class Actor {
 
       final builder = SceneBuilder();
 
-      _preemptModifyLayerTree(ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp);
+      _preemptModifyLayerTree(
+          ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp);
 
       // why this layer - from RenderView.compositeFrame
       // ignore: invalid_use_of_protected_member
