@@ -46,12 +46,17 @@ void main() {
       ServiceLocator.debugOverrideInstance =
           ServiceLocator.normal().copyWith(preemptStrategy: TODO);
 
-      await tester.pumpWidget(SmoothBuilder(
-        builder: (context, child) {
-          TODO; // TODO be different colors for different times? frames?
-          return child;
-        },
-        child: Container(color: Colors.red),
+      await tester.pumpWidget(Stack(
+        children: [
+          SmoothBuilder(
+            builder: (context, child) {
+              TODO; // TODO be different colors for different times? frames?
+              return child;
+            },
+            child: Container(color: Colors.red),
+          ),
+          SmoothPreemptPoint(child: Container()),
+        ],
       ));
 
       expect(
