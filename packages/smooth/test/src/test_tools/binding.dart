@@ -1,14 +1,28 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'proxy.dart';
 
+// test the test-tool code
 void main() {
-  // test the test-tool code
+  SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
+
   testWidgets('SmoothSchedulerBindingMixin.onWindowRender', (tester) async {
-    TODO;
+    final scenes = <ui.Scene>[];
+    SmoothAutomatedTestWidgetsFlutterBinding.instance.onWindowRender = scenes.add;
+
+    await tester.pumpWidget(Container(color: Colors.red));
+
+    print('hi onWindowRender');
+    final image = await scenes.single.toImage(100, 100);
+    final bytes = (await image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    File('a.png').writeAsBytesSync(bytes);
+
+    fail('TODO');
   });
 }
 
