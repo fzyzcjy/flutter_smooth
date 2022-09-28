@@ -4,6 +4,7 @@ import 'package:clock/clock.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/scheduler_binding.dart';
+import 'package:smooth/src/simple_date_time.dart';
 
 abstract class PreemptStrategy {
   factory PreemptStrategy.normal() = PreemptStrategyNormal;
@@ -29,7 +30,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
   bool get shouldAct {
     final binding = SmoothSchedulerBindingMixin.instance;
 
-    final now = _SimpleDateTime.now();
+    final now = SimpleDateTime.now();
     final ans = binding.dateTimeToTimeStamp(now) > shouldActTimeStamp;
 
     // if (ans) {
@@ -74,7 +75,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
   @override
   void onPreemptRender() {
     final binding = SmoothSchedulerBindingMixin.instance;
-    final now = _SimpleDateTime.now();
+    final now = SimpleDateTime.now();
     final nowTimeStamp = binding.dateTimeToTimeStamp(now);
 
     final currentPreemptRenderVsyncTargetTimeStamp = vsyncLaterThan(
@@ -113,36 +114,12 @@ class PreemptStrategyNormal implements PreemptStrategy {
 Duration _maxDuration(Duration a, Duration b) => a > b ? a : b;
 
 extension on SmoothSchedulerBindingMixin {
-  // _SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
-  //     _SimpleDateTime.fromMicrosecondsSinceEpoch(
+  // SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
+  //     SimpleDateTime.fromMicrosecondsSinceEpoch(
   //         timeStamp.inMicroseconds + diffDateTimeToTimeStamp);
 
-  Duration dateTimeToTimeStamp(_SimpleDateTime dateTime) => Duration(
+  Duration dateTimeToTimeStamp(SimpleDateTime dateTime) => Duration(
       microseconds: dateTime.microsecondsSinceEpoch - diffDateTimeToTimeStamp);
-}
-
-/// [DateTime], but simpler (just a `int`)
-class _SimpleDateTime {
-  final int microsecondsSinceEpoch;
-
-  // _SimpleDateTime.fromMicrosecondsSinceEpoch(this.microsecondsSinceEpoch);
-
-  _SimpleDateTime.now()
-      : microsecondsSinceEpoch = clock.now().microsecondsSinceEpoch;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is _SimpleDateTime &&
-          runtimeType == other.runtimeType &&
-          microsecondsSinceEpoch == other.microsecondsSinceEpoch;
-
-  @override
-  int get hashCode => microsecondsSinceEpoch.hashCode;
-
-  @override
-  String toString() =>
-      'SimpleDateTime{microsecondsSinceEpoch: $microsecondsSinceEpoch}';
 }
 
 // #31 changes it
