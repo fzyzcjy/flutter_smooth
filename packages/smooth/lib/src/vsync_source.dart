@@ -6,11 +6,12 @@ import 'package:smooth/src/simple_date_time.dart';
 abstract class VsyncSource {
   const factory VsyncSource.real() = _VsyncSourceReal;
 
-  /// Just [SchedulerBinding.currentFrameTimeStamp], but mockable
-  Duration get currentFrameTimeStamp;
+  /// The adjusted VsyncTargetTime for current plain-old frame
+  /// "adjust" means [SchedulerBinding._adjustForEpoch]
+  Duration get currentFrameAdjustedVsyncTargetTimeStamp;
 
   /// Converting between a [DateTime] (representing real-world time)
-  /// and a "TimeStamp" like [SchedulerBinding.currentFrameTimeStamp]
+  /// and an "adjusted TimeStamp" such as [SchedulerBinding.currentFrameTimeStamp]
   int get diffDateTimeToTimeStamp;
 }
 
@@ -31,24 +32,23 @@ class _VsyncSourceReal implements VsyncSource {
   @override
   int get diffDateTimeToTimeStamp =>
       _currentFrameVsyncTargetDateTime.microsecondsSinceEpoch -
-      _currentFrameVsyncTargetTimeStamp.inMicroseconds;
+      currentFrameAdjustedVsyncTargetTimeStamp.inMicroseconds;
 
-  /// The current VsyncTargetTime
-  // TODO explain things below
-  // p.s. Look at source code, we see:
+  // we can obtain current plain-old frame's VsyncTargetTime
+  // easily because it is exposed as follows by looking at source code:
   // 1. [currentSystemFrameTimeStamp] is VsyncTargetTime
   // 2. [currentFrameTimeStamp] is the adjusted [currentSystemFrameTimeStamp]
   // 3. [currentFrameTimeStamp] is provided to animation callbacks
-  Duration get _currentFrameVsyncTargetTimeStamp =>
+  @override
+  Duration get currentFrameAdjustedVsyncTargetTimeStamp =>
       _binding.currentFrameTimeStamp;
 
+  // we need to *add one frame*, because [(adjusted) VsyncTargetTime] means
+  // the end of current plain-old frame, while [beginFrameDateTime] means
+  // the clock when plain-old frame starts.
   DateTime get _currentFrameVsyncTargetDateTime =>
-      // TODO explain why one frame
       _binding.beginFrameDateTime.add(SmoothSchedulerBindingMixin.kOneFrame);
 
   SmoothSchedulerBindingMixin get _binding =>
       SmoothSchedulerBindingMixin.instance;
-
-  @override
-  Duration get currentFrameTimeStamp => _binding.currentFrameTimeStamp;
 }

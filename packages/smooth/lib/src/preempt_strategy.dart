@@ -10,12 +10,14 @@ abstract class PreemptStrategy {
 
   const factory PreemptStrategy.never() = _PreemptStrategyNever;
 
+  /// Should we run `preemptRender` now
   bool get shouldAct;
 
   /// Fancy version of [SchedulerBinding.currentFrameTimeStamp],
   /// by considering both plain-old frames and *also extra frames*
   Duration get currentSmoothFrameTimeStamp;
 
+  /// Be called when `preemptRender` is run
   void onPreemptRender();
 }
 
@@ -25,7 +27,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
   /// the VsyncTargetTime used by last preempt render
   var _currentPreemptRenderVsyncTargetTimeStamp = Duration.zero;
-  var _nextActVsyncTimeStampByPreemptRender = Duration.zero;
+  var _nextActAdjustedVsyncTimeStampByPreemptRender = Duration.zero;
 
   PreemptStrategyNormal({required this.vsyncSource});
 
@@ -51,11 +53,11 @@ class PreemptStrategyNormal implements PreemptStrategy {
     // TODO things below can also be cached
 
     final nextActVsyncTimeStampByJankFrame =
-        vsyncSource.currentFrameVsyncTargetTimeStamp;
+        vsyncSource.currentFrameAdjustedVsyncTargetTimeStamp;
 
     final nextActVsyncTimeStamp = _maxDuration(
       nextActVsyncTimeStampByJankFrame,
-      _nextActVsyncTimeStampByPreemptRender,
+      _nextActAdjustedVsyncTimeStampByPreemptRender,
     );
 
     return nextActVsyncTimeStamp - _kThresh;
@@ -64,7 +66,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
   @override
   Duration get currentSmoothFrameTimeStamp {
     return _maxDuration(
-      vsyncSource.currentFrameVsyncTargetTimeStamp,
+      vsyncSource.currentFrameAdjustedVsyncTargetTimeStamp,
       _currentPreemptRenderVsyncTargetTimeStamp,
     );
   }
@@ -85,7 +87,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
     _currentPreemptRenderVsyncTargetTimeStamp =
         currentPreemptRenderVsyncTargetTimeStamp;
-    _nextActVsyncTimeStampByPreemptRender =
+    _nextActAdjustedVsyncTimeStampByPreemptRender =
         currentPreemptRenderVsyncTargetTimeStamp +
             (shouldShiftOneFrameForNextActVsyncTime
                 ? SmoothSchedulerBindingMixin.kOneFrame
