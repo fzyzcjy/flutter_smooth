@@ -20,8 +20,9 @@ abstract class PreemptStrategy {
 
 @visibleForTesting
 class PreemptStrategyNormal implements PreemptStrategy {
-  var _currentPreemptRenderVsyncTargetTime = SimpleDateTime.zero;
-  var _nextActVsyncTimeByPreemptRender = SimpleDateTime.zero;
+  /// the VsyncTargetTime used by last preempt render
+  var _currentPreemptRenderVsyncTargetTimeStamp = Duration.zero;
+  var _nextActVsyncTimeStampByPreemptRender = Duration.zero;
 
   PreemptStrategyNormal();
 
@@ -49,15 +50,15 @@ class PreemptStrategyNormal implements PreemptStrategy {
     final binding = SmoothSchedulerBindingMixin.instance;
     // TODO things below can also be cached
 
-    final nextActVsyncTimeByJankFrame = binding.lastHandleBeginFrameTime
-        .add(SmoothSchedulerBindingMixin.kOneFrame);
+    final nextActVsyncTimeStampByJankFrame =
+        binding.currentFrameVsyncTargetTimeStamp;
 
-    final nextActVsyncTime = maxSimpleDateTime(
-      nextActVsyncTimeByJankFrame,
-      _nextActVsyncTimeByPreemptRender,
+    final nextActVsyncTimeStamp = _maxDuration(
+      nextActVsyncTimeStampByJankFrame,
+      _nextActVsyncTimeStampByPreemptRender,
     );
 
-    return binding.dateTimeToTimeStamp(nextActVsyncTime) - _kThresh;
+    return nextActVsyncTimeStamp - _kThresh;
   }
 
   /// Fancy version of [SmoothSchedulerBindingMixin.currentFrameVsyncTargetTimeStamp],
@@ -65,10 +66,10 @@ class PreemptStrategyNormal implements PreemptStrategy {
   @override
   Duration get currentVsyncTargetTime {
     final binding = SmoothSchedulerBindingMixin.instance;
-    return binding.dateTimeToTimeStamp(maxSimpleDateTime(
-      TODO_binding.currentFrameVsyncTargetTimeStamp,
-      _currentPreemptRenderVsyncTargetTime,
-    ));
+    return _maxDuration(
+      binding.currentFrameVsyncTargetTimeStamp,
+      _currentPreemptRenderVsyncTargetTimeStamp,
+    );
   }
 
   @override
@@ -79,16 +80,16 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
     final currentPreemptRenderVsyncTargetTimeStamp = vsyncLaterThan(
       time: nowTimeStamp,
-      oldVsync: _currentPreemptRenderVsyncTargetTime,
+      oldVsync: _currentPreemptRenderVsyncTargetTimeStamp,
     );
 
     final shouldShiftOneFrameForNextActVsyncTime =
         nowTimeStamp - currentPreemptRenderVsyncTargetTimeStamp >
             const Duration(milliseconds: -4);
 
-    _currentPreemptRenderVsyncTargetTime =
+    _currentPreemptRenderVsyncTargetTimeStamp =
         currentPreemptRenderVsyncTargetTimeStamp;
-    _nextActVsyncTimeByPreemptRender =
+    _nextActVsyncTimeStampByPreemptRender =
         currentPreemptRenderVsyncTargetTimeStamp +
             (shouldShiftOneFrameForNextActVsyncTime
                 ? SmoothSchedulerBindingMixin.kOneFrame
@@ -108,6 +109,17 @@ class PreemptStrategyNormal implements PreemptStrategy {
           microseconds: (diffMicroseconds ~/ oneFrameUs) * oneFrameUs,
         );
   }
+}
+
+Duration _maxDuration(Duration a, Duration b) => a > b ? a : b;
+
+extension on SmoothSchedulerBindingMixin {
+  // SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
+  //     SimpleDateTime.fromMicrosecondsSinceEpoch(
+  //         timeStamp.inMicroseconds + diffDateTimeToTimeStamp);
+
+  Duration dateTimeToTimeStamp(SimpleDateTime dateTime) => Duration(
+      microseconds: dateTime.microsecondsSinceEpoch - diffDateTimeToTimeStamp);
 }
 
 // #31 changes it
