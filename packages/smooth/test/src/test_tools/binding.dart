@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:smooth/src/scheduler_binding.dart';
 
 import 'proxy.dart';
 import 'window.dart';
@@ -36,7 +37,7 @@ void main() {
 
 class SmoothAutomatedTestWidgetsFlutterBinding
     extends AutomatedTestWidgetsFlutterBinding
-    with SmoothSchedulerBindingMixin {
+    with SmoothSchedulerBindingMixin, SmoothSchedulerBindingTestMixin {
   @override
   void initInstances() {
     super.initInstances();
@@ -56,7 +57,7 @@ class SmoothAutomatedTestWidgetsFlutterBinding
   }
 }
 
-mixin SmoothSchedulerBindingMixin on AutomatedTestWidgetsFlutterBinding {
+mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
   OnWindowRender? onWindowRender;
 
   @override
