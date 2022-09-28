@@ -57,6 +57,5 @@ extension ExtImage on image.Image {
 }
 
 extension ExtColor on Color {
-  int toImageColor() =>
-      image.getColor(color.red, color.green, color.blue, color.alpha);
+  int toImageColor() => image.getColor(red, green, blue, alpha);
 }
