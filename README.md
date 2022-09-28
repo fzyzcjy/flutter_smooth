@@ -1,5 +1,7 @@
 # [WIP] flutter_smooth
 
+![logo](https://github.com/fzyzcjy/flutter_smooth/blob/master/doc/logo/logo.svg)
+
 Achieve 60 FPS, no matter how heavy the tree is to build/layout
 
 * Design doc: https://flutter.dev/go/sixty-fps
