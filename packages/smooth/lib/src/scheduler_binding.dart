@@ -2,32 +2,27 @@ import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:smooth/src/simple_date_time.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
-  /// The [DateTime] for [currentFrameVsyncTargetTimeStamp]
-  DateTime get currentFrameVsyncTargetTime => _currentFrameVsyncTargetTime!;
-  DateTime? _currentFrameVsyncTargetTime;
+  SimpleDateTime get lastHandleBeginFrameTime => _lastHandleBeginFrameTime!;
+  SimpleDateTime? _lastHandleBeginFrameTime;
 
-  /// The current VsyncTargetTime
-  // p.s. Look at source code, we see:
-  // 1. [currentSystemFrameTimeStamp] is VsyncTargetTime
-  // 2. [currentFrameTimeStamp] is the adjusted [currentSystemFrameTimeStamp]
-  // 3. [currentFrameTimeStamp] is provided to animation callbacks
-  Duration get currentFrameVsyncTargetTimeStamp => currentFrameTimeStamp;
+  int get _diffDateTimeToTimeStampUs =>
+      _lastHandleBeginFrameTime!.microsecondsSinceEpoch -
+      currentFrameTimeStamp.inMicroseconds;
 
-  int get diffDateTimeToTimeStamp =>
-      currentFrameVsyncTargetTime.microsecondsSinceEpoch -
-      currentFrameVsyncTargetTimeStamp.inMicroseconds;
+  SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
+      SimpleDateTime.fromMicrosecondsSinceEpoch(
+          timeStamp.inMicroseconds + _diffDateTimeToTimeStampUs);
+
+  Duration dateTimeToTimeStamp(SimpleDateTime dateTime) => Duration(
+      microseconds:
+          dateTime.microsecondsSinceEpoch - _diffDateTimeToTimeStampUs);
 
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
-    // NOTE off-by-one problem
-    // By tracing code, [rawTimeStamp] is indeed [VsyncTargetTime],
-    // usually the end of this frame.
-    // But [clock.now()] is begin of this frame.
-    // So we add 16ms to clock.now.
-    // #31
-    _currentFrameVsyncTargetTime = clock.now().add(kOneFrame);
+    _lastHandleBeginFrameTime = SimpleDateTime.now();
 
     super.handleBeginFrame(rawTimeStamp);
   }
