@@ -21,7 +21,6 @@ class _AlwaysBuildBuilderState extends State<AlwaysBuildBuilder> {
   }
 }
 
-@visibleForTesting
 class AlwaysLayoutBuilder extends SingleChildRenderObjectWidget {
   final VoidCallback? onPerformLayout;
   final Object? debugToken;
