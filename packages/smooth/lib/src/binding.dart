@@ -49,9 +49,13 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
   void _handleAfterFlushLayout() {
     print('handleAfterFlushLayout');
 
+    ServiceLocator.instance.preemptStrategy.refresh();
+    final currentSmoothFrameTimeStamp =
+        ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp;
+
     for (final pack in ServiceLocator.instance.auxiliaryTreeRegistry.trees) {
       pack.runPipeline(
-        ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp,
+        currentSmoothFrameTimeStamp,
         // NOTE this is skip-able
         // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261691891
         skipIfTimeStampUnchanged: true,
