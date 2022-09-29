@@ -2,6 +2,7 @@ import 'package:example/example_enter_page_animation/page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:smooth/smooth.dart';
 import 'package:smooth_dev/smooth_dev.dart';
 
 void main() {
@@ -44,15 +45,17 @@ void main() {
         final timeInfo = TimeInfo();
         final capturer = WindowRenderCapturer.autoRegister();
 
-        await tester.pumpWidget(ExampleEnterPageAnimationPage(
-          listTileCount: arg.listTileCount,
-          wrapListTile: ({required child}) => SpyBuilder(
-            onBuild: () => binding.elapseBlocking(arg.listTileBuildTime,
-                reason: 'ListTile build'),
-            onPerformLayout: () => binding.elapseBlocking(
-                arg.listTileLayoutTime,
-                reason: 'ListTile layout'),
-            child: child,
+        await tester.pumpWidget(SmoothScope(
+          child: ExampleEnterPageAnimationPage(
+            listTileCount: arg.listTileCount,
+            wrapListTile: ({required child}) => SpyBuilder(
+              onBuild: () => binding.elapseBlocking(arg.listTileBuildTime,
+                  reason: 'ListTile build'),
+              onPerformLayout: () => binding.elapseBlocking(
+                  arg.listTileLayoutTime,
+                  reason: 'ListTile layout'),
+              child: child,
+            ),
           ),
         ));
         await tester.tap(find.text('smooth'));
@@ -63,6 +66,8 @@ void main() {
 
         await capturer.pack.matchesGoldenFile(tester,
             '../goldens/example_enter_page_animation/${arg.name}/screen');
+
+        debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
       });
     }
   });

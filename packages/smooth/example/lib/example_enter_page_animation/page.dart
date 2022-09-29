@@ -54,6 +54,7 @@ class _ExampleEnterPageAnimationPageState
 
   Widget _buildFirstPage() {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(title: const Text('Preempt for 60FPS')),
         body: OverflowBox(
@@ -114,6 +115,7 @@ class _SecondPageState extends State<SecondPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('SecondPage'),
