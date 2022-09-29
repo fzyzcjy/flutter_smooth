@@ -106,6 +106,27 @@ void main() {
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
       }
 
+      testWidgets('when zero extra frame per plain-old frame', (tester) async {
+        await _body(
+          tester,
+          slowWorkBeforePreemptPoint: const Duration(microseconds: 7900),
+          slowWorkAfterPreemptPoint: const Duration(microseconds: 7900),
+          core: (capturer, timeInfo) async {
+            for (var i = 1; i <= 5; ++i) {
+              await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: i));
+              await capturer.expectAndReset(tester, [
+                await _SmoothBuilderTester.createExpectImage(tester, 0.2 * i),
+              ]);
+            }
+
+            await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 6));
+            await capturer.expectAndReset(tester, [
+              await _SmoothBuilderTester.createExpectImage(tester, 1.0),
+            ]);
+          },
+        );
+      });
+
       testWidgets('when one extra frame per plain-old frame', (tester) async {
         await _body(
           tester,
@@ -113,7 +134,6 @@ void main() {
           slowWorkBeforePreemptPoint: const Duration(microseconds: 15500),
           slowWorkAfterPreemptPoint: const Duration(microseconds: 15500),
           core: (capturer, timeInfo) async {
-            debugPrint('action: pump');
             await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
 
             await capturer.expectAndReset(tester, [
@@ -121,7 +141,6 @@ void main() {
               await _SmoothBuilderTester.createExpectImage(tester, 0.4),
             ]);
 
-            debugPrint('action: pump');
             await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
 
             await capturer.expectAndReset(tester, [
@@ -129,7 +148,6 @@ void main() {
               await _SmoothBuilderTester.createExpectImage(tester, 0.8),
             ]);
 
-            debugPrint('action: pump');
             await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 5));
 
             await capturer.expectAndReset(tester, [
