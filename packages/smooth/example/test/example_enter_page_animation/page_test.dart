@@ -21,8 +21,13 @@ void main() {
     await tester.pumpWidget(const ExampleEnterPageAnimationPage());
     await tester.tap(find.text('smooth'));
 
-    await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
-    TODO;
+    // 300ms animation, thus 18 frames. but we pump 20 frames to see the end
+    for (var i = 1; i <= 21; ++i) {
+      await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
+    }
+
+    await capturer.pack.matchesGoldenFile(
+        tester, '../goldens/example_enter_page_animation/infinitely_fast');
   });
 
   testWidgets('when widget build/layout is slow', (tester) async {
