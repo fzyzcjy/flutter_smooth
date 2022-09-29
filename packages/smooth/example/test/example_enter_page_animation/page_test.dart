@@ -1,6 +1,8 @@
 import 'package:example/example_enter_page_animation/page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:smooth_dev/smooth_dev.dart';
 
 void main() {
   final binding = TestWidgetsFlutterBinding.ensureInitialized();
@@ -12,14 +14,18 @@ void main() {
     ..clearDevicePixelRatioTestValue());
 
   testWidgets('when widget build/layout is infinitely fast', (tester) async {
-    await tester.pumpWidget(const ExampleEnterPageAnimationPage());
+    debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
+    final timeInfo = TimeInfo();
+    final capturer = WindowRenderCapturer.autoRegister();
 
+    await tester.pumpWidget(const ExampleEnterPageAnimationPage());
+    await tester.tap(find.text('smooth'));
+
+    await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
     TODO;
   });
 
   testWidgets('when widget build/layout is slow', (tester) async {
-    await tester.pumpWidget(const ExampleEnterPageAnimationPage());
-
     TODO;
   });
 }

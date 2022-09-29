@@ -53,7 +53,7 @@ class _ExampleEnterPageAnimationPageState
             children: [
               for (final targetMode in EnterPageAnimationMode.values)
                 ListTile(
-                  title: Text('mode=${targetMode.name}'),
+                  title: Text(targetMode.name),
                   onTap: () => setState(() => mode = targetMode),
                 ),
             ],
