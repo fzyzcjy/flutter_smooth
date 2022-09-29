@@ -1,7 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/scheduler_binding.dart';
+import 'package:smooth/src/binding.dart';
 import 'package:smooth/src/simple_date_time.dart';
 
 abstract class PreemptStrategy {

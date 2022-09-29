@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
+import 'package:smooth/src/binding.dart';
 import 'package:smooth/src/preempt_point.dart';
 import 'package:smooth/src/preempt_strategy.dart';
-import 'package:smooth/src/scheduler_binding.dart';
 import 'package:smooth/src/service_locator.dart';
 
 import 'test_tools/animation.dart';
 import 'test_tools/binding.dart';
 import 'test_tools/image.dart';
-import 'test_tools/preemtp_strategy.dart';
 import 'test_tools/widgets.dart';
 import 'test_tools/window.dart';
 

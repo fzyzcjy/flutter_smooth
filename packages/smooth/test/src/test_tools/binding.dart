@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_test/flutter_test.dart' as flutter_test;
-import 'package:smooth/src/scheduler_binding.dart';
+import 'package:smooth/src/binding.dart';
 
 import 'proxy.dart';
 import 'window.dart';

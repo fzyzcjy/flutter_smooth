@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_test/flutter_test.dart' as flutter_test;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:smooth/src/binding.dart';
 import 'package:smooth/src/preempt_strategy.dart';
-import 'package:smooth/src/scheduler_binding.dart';
 import 'package:smooth/src/simple_date_time.dart';
 
 import 'preempt_strategy_test.mocks.dart';
