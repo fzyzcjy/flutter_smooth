@@ -49,12 +49,13 @@ class Actor {
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
 
-      final builder = SceneBuilder();
+      ServiceLocator.instance.preemptStrategy.onPreemptRender();
 
       final smoothFrameTimeStamp =
           ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp;
       _preemptModifyLayerTree(smoothFrameTimeStamp);
 
+      final builder = SceneBuilder();
       // why this layer - from RenderView.compositeFrame
       // ignore: invalid_use_of_protected_member
       final scene = binding.renderView.layer!.buildScene(builder);
@@ -66,8 +67,6 @@ class Actor {
       });
 
       scene.dispose();
-
-      ServiceLocator.instance.preemptStrategy.onPreemptRender();
 
       // #5831
       // // #5822
