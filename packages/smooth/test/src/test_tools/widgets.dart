@@ -63,7 +63,7 @@ class _RenderAlwaysLayoutBuilder extends RenderProxyBox {
 
   @override
   void performLayout() {
-    print('$runtimeType.performLayout');
+    // print('$runtimeType.performLayout');
 
     super.performLayout();
     onPerformLayout?.call();

@@ -61,7 +61,9 @@ class AuxiliaryTreeRootView extends RenderObject
 
     // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952047
     if (_size == Size.zero) {
-      print('WARN: $runtimeType.size is zero, then the subtree may be weird');
+      // ignore: avoid_print
+      print(
+          'WARN: AuxiliaryTreeRootView.size is zero, then the subtree may be weird');
     }
 
     assert(child != null);

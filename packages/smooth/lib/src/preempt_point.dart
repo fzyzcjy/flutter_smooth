@@ -73,7 +73,7 @@ class RenderLayoutPreemptPoint extends RenderProxyBox {
 
   @override
   void performLayout() {
-    print('$runtimeType.performLayout');
+    // print('$runtimeType.performLayout');
     ServiceLocator.instance.actor.maybePreemptRender(debugToken: debugToken);
     super.performLayout();
   }

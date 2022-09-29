@@ -11,13 +11,14 @@ class Actor {
   final _times = <Duration>[];
 
   void debugPrintStat() {
+    // ignore: avoid_print
     print(
         'PreemptRender times=[${_times.map((d) => d.inMicroseconds / 1000).toList().join(', ')}]');
   }
 
   void maybePreemptRender({Object? debugToken}) {
     if (ServiceLocator.instance.auxiliaryTreeRegistry.trees.isEmpty) {
-      print('Actor.maybePreemptRender skip since tree empty');
+      // print('Actor.maybePreemptRender skip since tree empty');
       // No active smooth widgets
       return;
     }
@@ -26,7 +27,7 @@ class Actor {
 
     final shouldAct = ServiceLocator.instance.preemptStrategy
         .shouldAct(debugToken: debugToken);
-    print('Actor.maybePreemptRender shouldAct=$shouldAct');
+    // print('Actor.maybePreemptRender shouldAct=$shouldAct');
 
     if (shouldAct) {
       _preemptRender();

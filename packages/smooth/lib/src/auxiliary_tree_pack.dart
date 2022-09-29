@@ -71,15 +71,15 @@ class AuxiliaryTreePack {
     // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261687755
     if (skipIfTimeStampUnchanged &&
         _previousRunPipelineTimeStamp == timeStamp) {
-      print(
-          '$runtimeType runPipeline skip since timeStamp=$timeStamp same as previous');
+      // print(
+      //     '$runtimeType runPipeline skip since timeStamp=$timeStamp same as previous');
       return;
     }
     _previousRunPipelineTimeStamp = timeStamp;
 
     Timeline.timeSync('AuxTree.RunPipeline', () {
-      print(
-          '$runtimeType runPipeline start timeStamp=$timeStamp debugReason=$debugReason');
+      // print(
+      //     '$runtimeType runPipeline start timeStamp=$timeStamp debugReason=$debugReason');
 
       _callExtraTickerTick(timeStamp);
 

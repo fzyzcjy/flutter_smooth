@@ -89,7 +89,7 @@ class RenderAdapterInMainTree extends RenderBox
 
     // HACK!!!
     if (auxiliaryTreeRootLayer.attached) {
-      print('$runtimeType.paint detach the auxiliaryTreeRootLayer');
+      // print('$runtimeType.paint detach the auxiliaryTreeRootLayer');
       // TODO attach again later?
       auxiliaryTreeRootLayer.detach();
     }

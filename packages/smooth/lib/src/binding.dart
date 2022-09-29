@@ -47,7 +47,7 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
   }
 
   void _handleAfterFlushLayout() {
-    print('handleAfterFlushLayout');
+    // print('handleAfterFlushLayout');
 
     final serviceLocator = ServiceLocator.maybeInstance;
     if (serviceLocator == null) return;
