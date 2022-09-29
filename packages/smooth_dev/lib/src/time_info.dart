@@ -5,6 +5,15 @@ import 'package:smooth/smooth.dart';
 class TimeInfo {
   final testBeginTime = clock.now();
 
+  Duration calcPumpDurationAuto() {
+    final now = clock.now();
+    final smoothFrameIndex =
+        ((now.difference(testBeginTime).inMicroseconds + 1) /
+                kOneFrame.inMicroseconds)
+            .ceil();
+    return calcPumpDuration(smoothFrameIndex: smoothFrameIndex);
+  }
+
   Duration calcPumpDuration({required int smoothFrameIndex}) {
     final targetTime = testBeginTime.add(kOneFrame * smoothFrameIndex);
     final now = clock.now();

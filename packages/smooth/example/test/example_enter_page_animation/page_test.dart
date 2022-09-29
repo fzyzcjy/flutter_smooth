@@ -61,7 +61,7 @@ void main() {
         await tester.tap(find.text('smooth'));
 
         for (var i = 0; i < arg.recordNumFrames; ++i) {
-          await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1 + i));
+          await tester.pump(timeInfo.calcPumpDurationAuto());
         }
 
         await capturer.pack.matchesGoldenFile(tester,
