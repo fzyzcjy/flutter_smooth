@@ -1,6 +1,5 @@
 import 'dart:ui' as ui;
 
-import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -55,13 +54,21 @@ void main() {
         devicePixelRatioTestValue: 1,
       );
 
-      testWidgets('when one extra smooth frame', (tester) async {
+      Future<void> _body(
+        WidgetTester tester, {
+        required Duration slowWorkBeforePreemptPoint,
+        required Duration slowWorkAfterPreemptPoint,
+        required Future<void> Function(WindowRenderCapturer, TimeInfo) core,
+      }) async {
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
         final timeInfo = TimeInfo();
         final capturer = WindowRenderCapturer.autoRegister();
 
-        var slowWorkDuration = Duration.zero;
+        var enableSlowWork = false;
 
+        // Need one plain-old frame (the pumpWidget frame), before being able to
+        // create smooth extra frames. Otherwise, the layer tree is event not
+        // built yet (because paint is not called yet).
         debugPrint('pumpWidget');
         await tester.pumpWidget(SmoothScope(
           child: Directionality(
@@ -69,16 +76,19 @@ void main() {
             child: Stack(
               children: [
                 const _SmoothBuilderTester(),
-                AlwaysBuildBuilder(
-                  onBuild: () => binding.elapseBlocking(slowWorkDuration,
-                      reason: 'first slow builder'),
+                AlwaysLayoutBuilder(
+                  onPerformLayout: () => enableSlowWork
+                      ? binding.elapseBlocking(slowWorkBeforePreemptPoint,
+                          reason: 'slowWorkBeforePreemptPoint')
+                      : null,
                 ),
                 const LayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
                 // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261674207
                 AlwaysLayoutBuilder(
-                  onPerformLayout: () => binding.elapseBlocking(
-                      slowWorkDuration,
-                      reason: 'second slow layout'),
+                  onPerformLayout: () => enableSlowWork
+                      ? binding.elapseBlocking(slowWorkAfterPreemptPoint,
+                          reason: 'slowWorkAfterPreemptPoint')
+                      : null,
                 ),
               ],
             ),
@@ -89,38 +99,46 @@ void main() {
           await _SmoothBuilderTester.createExpectImage(tester, 0),
         ]);
 
-        // 15.5ms - sufficiently near but less than 1/60s
-        slowWorkDuration = const Duration(microseconds: 15500);
+        enableSlowWork = true;
 
-        // Need one plain-old frame (the pumpWidget frame), before being able to
-        // create smooth extra frames. Otherwise, the layer tree is event not
-        // built yet (because paint is not called yet).
-        debugPrint('action: pump now=${clock.now()}');
-        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
-
-        await capturer.expectAndReset(tester, [
-          await _SmoothBuilderTester.createExpectImage(tester, 0.2),
-          await _SmoothBuilderTester.createExpectImage(tester, 0.4),
-        ]);
-
-        debugPrint('action: pump again now=${clock.now()}');
-        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
-
-        await capturer.expectAndReset(tester, [
-          await _SmoothBuilderTester.createExpectImage(tester, 0.6),
-          await _SmoothBuilderTester.createExpectImage(tester, 0.8),
-        ]);
-
-        debugPrint('action: pump again now=${clock.now()}');
-        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 5));
-
-        await capturer.expectAndReset(tester, [
-          await _SmoothBuilderTester.createExpectImage(tester, 1.0),
-          // TODO maybe we can remove this redundant output?
-          await _SmoothBuilderTester.createExpectImage(tester, 1.0),
-        ]);
+        await core(capturer, timeInfo);
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
+      }
+
+      testWidgets('when one extra frame per plain-old frame', (tester) async {
+        await _body(
+          tester,
+          // sufficiently near but less than 1/60s
+          slowWorkBeforePreemptPoint: const Duration(microseconds: 15500),
+          slowWorkAfterPreemptPoint: const Duration(microseconds: 15500),
+          core: (capturer, timeInfo) async {
+            debugPrint('action: pump');
+            await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
+
+            await capturer.expectAndReset(tester, [
+              await _SmoothBuilderTester.createExpectImage(tester, 0.2),
+              await _SmoothBuilderTester.createExpectImage(tester, 0.4),
+            ]);
+
+            debugPrint('action: pump');
+            await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
+
+            await capturer.expectAndReset(tester, [
+              await _SmoothBuilderTester.createExpectImage(tester, 0.6),
+              await _SmoothBuilderTester.createExpectImage(tester, 0.8),
+            ]);
+
+            debugPrint('action: pump');
+            await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 5));
+
+            await capturer.expectAndReset(tester, [
+              await _SmoothBuilderTester.createExpectImage(tester, 1.0),
+              // TODO maybe we can remove this redundant output?
+              await _SmoothBuilderTester.createExpectImage(tester, 1.0),
+            ]);
+          },
+        );
       });
     });
   });
