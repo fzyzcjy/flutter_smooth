@@ -1,64 +1,115 @@
-import 'dart:collection';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_test/flutter_test.dart' as flutter_test;
 import 'package:smooth_dev/smooth_dev.dart';
 
 class WindowRenderCapturer {
-  List<ui.Image> get images => UnmodifiableListView(_images);
-  final _images = <ui.Image>[];
-
-  late final _binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
+  final pack = WindowRenderPack();
 
   WindowRenderCapturer.autoRegister() {
-    assert(_binding.onWindowRender == null);
-    _binding.onWindowRender = onWindowRender;
+    final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
+
+    assert(binding.onWindowRender == null);
+    binding.onWindowRender = _onWindowRender;
     addTearDown(() {
-      assert(_binding.onWindowRender == onWindowRender);
-      return _binding.onWindowRender = null;
+      assert(binding.onWindowRender == _onWindowRender);
+      return binding.onWindowRender = null;
     });
   }
 
-  void reset() => _images.clear();
-
-  void onWindowRender(ui.Scene scene) {
+  void _onWindowRender(ui.Scene scene) {
+    final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
     final image = scene.toImageSync(
-        _binding.window.logicalWidth, _binding.window.logicalHeight);
-    _images.add(image);
+        binding.window.logicalWidth, binding.window.logicalHeight);
+    pack.addByNow(image);
+  }
+}
+
+class WindowRenderPack {
+  final _imagesOfFrame = <int, List<ui.Image>>{};
+
+  Iterable<WindowRenderItem> get flatEntries =>
+      _imagesOfFrame.entries.expand((entry) => entry.value
+          .mapIndexed((renderIndexInFrame, image) => WindowRenderItem(
+                testFrameNumber: entry.key,
+                renderIndexInFrame: renderIndexInFrame,
+                image: image,
+              )));
+
+  void addByNow(ui.Image image) {
+    final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
+    final testFrameNumber = binding.testFrameNumber;
+    (_imagesOfFrame[testFrameNumber] ??= []).add(image);
   }
 
-  Future<void> expect(WidgetTester tester, List<ui.Image> expectImages) async {
+  Future<void> matchesGoldenFile(
+      WidgetTester tester, String goldenPrefix) async {
     try {
-      flutter_test.expect(_images.length, expectImages.length);
-      for (var i = 0; i < _images.length; ++i) {
+      for (final entry in flatEntries) {
         await flutter_test.expectLater(
-          _images[i],
-          matchesReferenceImage(expectImages[i]),
-          reason: 'context: i=$i',
+          entry.image,
+          flutter_test.matchesGoldenFile('${goldenPrefix}_${entry.name}.png'),
         );
       }
     } on TestFailure catch (_) {
-      await tester.runAsync(() async {
-        debugPrint('WindowRenderCapturer.expect save failed images to disk');
-        for (var i = 0; i < _images.length; ++i) {
-          await _images[i].save('failure_${i}_actual.png');
-        }
-        for (var i = 0; i < expectImages.length; ++i) {
-          await expectImages[i].save('failure_${i}_expect.png');
-        }
-      });
-
+      await dumpAll(tester, prefix: 'actual');
       rethrow;
     }
   }
 
-  Future<void> expectAndReset(
-      WidgetTester tester, List<ui.Image> expectImages) async {
-    await expect(tester, expectImages);
-    reset();
+  Future<void> expect(WidgetTester tester, WindowRenderPack matcher) async {
+    try {
+      final actualEntries = flatEntries.toList();
+      final expectEntries = matcher.flatEntries.toList();
+
+      flutter_test.expect(actualEntries.length, expectEntries.length);
+      for (var i = 0; i < actualEntries.length; ++i) {
+        await actualEntries[i]
+            .expect(tester, expectEntries[i], reason: 'context: i=$i');
+      }
+    } on TestFailure catch (_) {
+      await dumpAll(tester, prefix: 'actual');
+      await matcher.dumpAll(tester, prefix: 'expect');
+      rethrow;
+    }
+  }
+
+  Future<void> dumpAll(WidgetTester tester, {required String prefix}) async {
+    debugPrint('dump all images to disk...');
+    await tester.runAsync(() async {
+      for (final entry in flatEntries) {
+        await entry.image.save('${prefix}_${entry.name}.png');
+      }
+    });
+  }
+}
+
+@immutable
+class WindowRenderItem {
+  final int testFrameNumber;
+  final int renderIndexInFrame;
+  final ui.Image image;
+
+  const WindowRenderItem({
+    required this.testFrameNumber,
+    required this.renderIndexInFrame,
+    required this.image,
+  });
+
+  String get name => '${testFrameNumber}_$renderIndexInFrame';
+
+  Future<void> expect(WidgetTester tester, WindowRenderItem matcher,
+      {required String reason}) async {
+    flutter_test.expect(testFrameNumber, matcher.testFrameNumber,
+        reason: reason);
+    flutter_test.expect(renderIndexInFrame, matcher.renderIndexInFrame,
+        reason: reason);
+    await flutter_test.expectLater(image, matchesReferenceImage(matcher.image),
+        reason: reason);
   }
 }
 
