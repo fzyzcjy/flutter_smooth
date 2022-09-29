@@ -56,12 +56,14 @@ mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
 
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
-    super.handleBeginFrame(rawTimeStamp);
+    // should update *before* super.handleBeginFrame, then normal code
+    // can see correct [testFrameNumber]
+    _testFrameNumber = _testFrameNumber! + 1;
 
     _sanityCheckFrameTimeStamp();
-
-    _testFrameNumber = _testFrameNumber! + 1;
     _prevFrameTimeStamp = currentFrameTimeStamp;
+
+    super.handleBeginFrame(rawTimeStamp);
   }
 
   void _sanityCheckFrameTimeStamp() {
