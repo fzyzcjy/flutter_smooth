@@ -38,7 +38,8 @@ class PreemptStrategyNormal implements PreemptStrategy {
   final _TimeInfoCalculator _timeInfoCalculator;
 
   /// the VsyncTargetTime used by last preempt render
-  var _currentPreemptRenderVsyncTargetTimeStamp = Duration.zero;
+  var _currentPreemptRenderVsyncTargetTimeStamp =
+      const Duration(seconds: -10000);
 
   PreemptStrategyNormal({
     this.dependency = const PreemptStrategyDependency(),
@@ -47,15 +48,19 @@ class PreemptStrategyNormal implements PreemptStrategy {
   @override
   bool shouldAct({Object? debugToken}) {
     final now = dependency.now();
-    final ans =
-        _timeInfoCalculator.dateTimeToTimeStamp(now) > shouldActTimeStamp;
+    final nowTimeStamp = _timeInfoCalculator.dateTimeToTimeStamp(now);
+    final ans = nowTimeStamp > shouldActTimeStamp;
 
-    // if (ans) {
-    //   print('shouldAct=true '
-    //       'now=${clock.fromMicrosecondsSinceEpoch(nowDateTimeUs)} '
-    //       'interestVsyncTargetDateTimeUs=${clock.fromMicrosecondsSinceEpoch(interestVsyncTargetDateTimeUs)} '
-    //       'maybePreemptRenderCallCount=$_maybePreemptRenderCallCount');
-    // }
+    if (ans) {
+      print(
+        'shouldAct=true '
+        'now=$now nowTimeStamp=$nowTimeStamp '
+        'shouldActTimeStamp=$shouldActTimeStamp '
+        'currentSmoothFrameTimeStamp=$currentSmoothFrameTimeStamp '
+        'currentFrameAdjustedVsyncTargetTimeStamp=${_timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp} '
+        'currentPreemptRenderVsyncTargetTimeStamp=$_currentPreemptRenderVsyncTargetTimeStamp',
+      );
+    }
 
     return ans;
   }

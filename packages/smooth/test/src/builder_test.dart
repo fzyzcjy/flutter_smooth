@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -101,7 +102,8 @@ void main() {
             ),
             AlwaysBuildBuilder(onBuild: () {
               debugPrint(
-                  'AlwaysBuildBuilder.onBuild elapseBlocking for $slowBuilderDuration');
+                  'AlwaysBuildBuilder.onBuild elapseBlocking for $slowBuilderDuration '
+                  '(p.s. currentFrameTimeStamp=${SchedulerBinding.instance.currentFrameTimeStamp})');
               binding.elapseBlocking(slowBuilderDuration);
             }),
             LayoutPreemptPointWidget(
@@ -125,13 +127,13 @@ void main() {
           testBeginTime.add(kOneFrame).difference(binding.clock.now());
       expect(pumpDuration, kOneFrame);
 
-      // 16ms - sufficiently near but less than 1/60s
-      slowBuilderDuration = const Duration(milliseconds: 16);
+      // 15.5ms - sufficiently near but less than 1/60s
+      slowBuilderDuration = const Duration(microseconds: 15500);
 
       // Need one plain-old frame (the pumpWidget frame), before being able to
       // create smooth extra frames. Otherwise, the layer tree is event not
       // built yet (because paint is not called yet).
-      debugPrint('action: pump');
+      debugPrint('action: pump now=${clock.now()}');
       await tester.pump(pumpDuration);
 
       await capturer.expect(tester, [
