@@ -9,9 +9,14 @@ import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 
 class ExampleEnterPageAnimationPage extends StatefulWidget {
+  final int listTileCount;
   final WidgetWrapper? wrapListTile;
 
-  const ExampleEnterPageAnimationPage({super.key, this.wrapListTile});
+  const ExampleEnterPageAnimationPage({
+    super.key,
+    this.listTileCount = 150,
+    this.wrapListTile,
+  });
 
   @override
   State<ExampleEnterPageAnimationPage> createState() =>
@@ -33,7 +38,8 @@ class _ExampleEnterPageAnimationPageState
           EnterPageAnimation(
             mode: mode,
             child: SecondPage(
-              wrapListTile: wrapListTile,
+              listTileCount: widget.listTileCount,
+              wrapListTile: widget.wrapListTile,
               pageLoadRecorder: pageLoadRecorders.get(mode),
               onTapBack: () {
                 setState(() => mode = null);
@@ -70,12 +76,14 @@ class _ExampleEnterPageAnimationPageState
 class SecondPage extends StatefulWidget {
   final DurationRecorder pageLoadRecorder;
   final VoidCallback onTapBack;
+  final int listTileCount;
   final WidgetWrapper? wrapListTile;
 
   const SecondPage({
     super.key,
     required this.pageLoadRecorder,
     required this.onTapBack,
+    required this.listTileCount,
     required this.wrapListTile,
   });
 
@@ -117,7 +125,10 @@ class _SecondPageState extends State<SecondPage> {
         // in a fancier way.
         body: firstFrame
             ? Container()
-            : ComplexWidget(wrapListTile: widget.wrapListTile),
+            : ComplexWidget(
+                listTileCount: widget.listTileCount,
+                wrapListTile: widget.wrapListTile,
+              ),
       ),
     );
   }

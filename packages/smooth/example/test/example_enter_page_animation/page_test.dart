@@ -1,5 +1,4 @@
 import 'package:example/example_enter_page_animation/page.dart';
-import 'package:example/utils/complex_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,29 +14,73 @@ void main() {
     ..clearDevicePixelRatioTestValue());
 
   group('golden for animation', () {
-    Future<void> _body(
-      WidgetTester tester, {
-      required Duration listTileBuildTime,
-    }) async {
-      debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
-      final timeInfo = TimeInfo();
-      final capturer = WindowRenderCapturer.autoRegister();
+    for (final arg in const [
+      _GoldenArg(
+        name: 'InfinitelyFast',
+        listTileCount: 150,
+        listTileBuildTime: Duration.zero,
+        listTileLayoutTime: Duration.zero,
+        recordNumFrames: 22,
+      ),
+      _GoldenArg(
+        // mimic real case
+        name: 'Realistic',
+        listTileCount: 150,
+        listTileBuildTime: Duration(milliseconds: 1),
+        listTileLayoutTime: Duration(milliseconds: 5),
+        // 150 list tiles, (1+5) ms for one, so need ~54 frames
+        recordNumFrames: 60,
+      ),
+      _GoldenArg(
+        name: 'HighEnd',
+        listTileCount: 150,
+        listTileBuildTime: Duration(microseconds: 300),
+        listTileLayoutTime: Duration(milliseconds: 1),
+        recordNumFrames: 22,
+      ),
+    ]) {
+      testWidgets(arg.name, (tester) async {
+        debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
+        final timeInfo = TimeInfo();
+        final capturer = WindowRenderCapturer.autoRegister();
 
-      await tester.pumpWidget(ExampleEnterPageAnimationPage(
-        wrapListTile: ({required child}) => TODO(child: child),
-      ));
-      await tester.tap(find.text('smooth'));
+        await tester.pumpWidget(ExampleEnterPageAnimationPage(
+          listTileCount: arg.listTileCount,
+          wrapListTile: ({required child}) => SpyBuilder(
+            onBuild: () => binding.elapseBlocking(arg.listTileBuildTime,
+                reason: 'ListTile build'),
+            onPerformLayout: () => binding.elapseBlocking(
+                arg.listTileLayoutTime,
+                reason: 'ListTile layout'),
+            child: child,
+          ),
+        ));
+        await tester.tap(find.text('smooth'));
 
-      // 300ms animation, thus 18 frames. but we pump 20 frames to see the end
-      for (var i = 1; i <= 21; ++i) {
-        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
-      }
+        for (var i = 0; i < arg.recordNumFrames; ++i) {
+          await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1 + i));
+        }
 
-      await capturer.pack.matchesGoldenFile(
-          tester, '../goldens/example_enter_page_animation/infinitely_fast');
+        await capturer.pack.matchesGoldenFile(
+            tester, '../goldens/example_enter_page_animation/${arg.name}/');
+      });
     }
+  });
+}
 
-    TODO_various_cases;
-    TODO_usually_build_fast_layout_slow;
+@immutable
+class _GoldenArg {
+  final String name;
+  final int listTileCount;
+  final Duration listTileBuildTime;
+  final Duration listTileLayoutTime;
+  final int recordNumFrames;
+
+  const _GoldenArg({
+    required this.name,
+    required this.listTileCount,
+    required this.listTileBuildTime,
+    required this.listTileLayoutTime,
+    required this.recordNumFrames,
   });
 }

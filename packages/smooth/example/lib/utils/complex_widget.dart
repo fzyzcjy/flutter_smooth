@@ -8,20 +8,17 @@ typedef WidgetWrapper = Widget Function({required Widget child});
 Widget identityWidgetWrapper({required Widget child}) => child;
 
 class ComplexWidget extends StatelessWidget {
+  final int listTileCount;
   final WidgetWrapper? wrapListTile;
 
   const ComplexWidget({
     super.key,
+    required this.listTileCount,
     required this.wrapListTile,
   });
 
   @override
   Widget build(BuildContext context) {
-    // const N = 30;
-    // const N = 60; // make it big to see jank clearly
-    const N = 150; // make it big to see jank clearly
-    // const N = 1000; // for debug
-
     // const textRepeat = 5;
     const textRepeat = 1;
 
@@ -35,7 +32,7 @@ class ComplexWidget extends StatelessWidget {
           alignment: Alignment.topCenter,
           maxHeight: double.infinity,
           child: Column(
-            children: List<Widget>.generate(N, (int index) {
+            children: List.generate(listTileCount, (int index) {
               // NOTE hack, in real world should auto have preempt point
               // but in prototype we do it by hand
               return SmoothPreemptPoint(
