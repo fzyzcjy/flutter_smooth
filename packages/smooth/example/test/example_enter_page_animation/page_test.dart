@@ -19,17 +19,13 @@ void main() {
       WidgetTester tester, {
       required Duration listTileBuildTime,
     }) async {
-      ComplexListTile.onBuild = (index) => binding.elapseBlocking(
-          listTileBuildTime,
-          reason: 'slowly build index=$index ListTile');
-      TODO_on_layout;
-
-      addTearDown(() => ComplexListTile.onBuild = null);
       debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
       final timeInfo = TimeInfo();
       final capturer = WindowRenderCapturer.autoRegister();
 
-      await tester.pumpWidget(const ExampleEnterPageAnimationPage());
+      await tester.pumpWidget(ExampleEnterPageAnimationPage(
+        wrapListTile: ({required child}) => TODO(child: child),
+      ));
       await tester.tap(find.text('smooth'));
 
       // 300ms animation, thus 18 frames. but we pump 20 frames to see the end

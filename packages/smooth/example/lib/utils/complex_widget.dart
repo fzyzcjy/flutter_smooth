@@ -3,8 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:smooth/smooth.dart';
 
+typedef WidgetWrapper = Widget Function({required Widget child});
+
+Widget identityWidgetWrapper({required Widget child}) => child;
+
 class ComplexWidget extends StatelessWidget {
-  const ComplexWidget({super.key});
+  final WidgetWrapper? wrapListTile;
+
+  const ComplexWidget({
+    super.key,
+    required this.wrapListTile,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,22 +41,24 @@ class ComplexWidget extends StatelessWidget {
               return SmoothPreemptPoint(
                 child: SizedBox(
                   height: 12,
-                  child: ListTile(
-                    dense: true,
-                    visualDensity: VisualDensity.compact,
-                    leading: SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircleAvatar(
-                        child: Text('G$index'),
+                  child: (wrapListTile ?? identityWidgetWrapper)(
+                    child: ListTile(
+                      dense: true,
+                      visualDensity: VisualDensity.compact,
+                      leading: SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircleAvatar(
+                          child: Text('G$index'),
+                        ),
                       ),
+                      title: Text(
+                        'Foo contact from $index-th local contact' * textRepeat,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 5),
+                      ),
+                      subtitle: Text('+91 88888 8800$index'),
                     ),
-                    title: Text(
-                      'Foo contact from $index-th local contact' * textRepeat,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 5),
-                    ),
-                    subtitle: Text('+91 88888 8800$index'),
                   ),
                 ),
               );
