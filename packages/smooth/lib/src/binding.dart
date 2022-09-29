@@ -1,7 +1,9 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:smooth/src/proxy.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   DateTime get beginFrameDateTime => _beginFrameDateTime!;
@@ -21,9 +23,37 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   }
 }
 
+mixin SmoothRendererBindingMixin on RendererBinding {
+  @override
+  PipelineOwner get pipelineOwner => _smoothPipelineOwner;
+  late final _smoothPipelineOwner = _SmoothPipelineOwner(super.pipelineOwner);
+
+  static SmoothRendererBindingMixin get instance {
+    final raw = WidgetsBinding.instance;
+    assert(raw is SmoothRendererBindingMixin,
+        'Please use a WidgetsBinding with SmoothRendererBindingMixin');
+    return raw as SmoothRendererBindingMixin;
+  }
+}
+
+class _SmoothPipelineOwner extends ProxyPipelineOwner {
+  _SmoothPipelineOwner(super.inner);
+
+  @override
+  void flushLayout() {
+    super.flushLayout();
+    _handleAfterFlushLayout();
+  }
+
+  void _handleAfterFlushLayout() {
+    print('TODO _handleAfterFlushLayout');
+    // TODO
+  }
+}
+
 // ref [AutomatedTestWidgetsFlutterBinding]
 class SmoothWidgetsFlutterBinding extends WidgetsFlutterBinding
-    with SmoothSchedulerBindingMixin {
+    with SmoothSchedulerBindingMixin, SmoothRendererBindingMixin {
   @override
   void initInstances() {
     super.initInstances();

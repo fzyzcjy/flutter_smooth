@@ -40,7 +40,10 @@ void main() {
 
 class SmoothAutomatedTestWidgetsFlutterBinding
     extends AutomatedTestWidgetsFlutterBinding
-    with SmoothSchedulerBindingMixin, SmoothSchedulerBindingTestMixin {
+    with
+        SmoothSchedulerBindingMixin,
+        SmoothRendererBindingMixin,
+        SmoothSchedulerBindingTestMixin {
   @override
   void initInstances() {
     super.initInstances();
