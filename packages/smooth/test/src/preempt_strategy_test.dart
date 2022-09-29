@@ -219,90 +219,89 @@ void main() {
     });
   });
 
-  // temporarily disable, re-enable later #45
-  // group('vsyncLaterThan', () {
-  //   test('kOneFrameUs', () {
-  //     expect(kOneFrameUs, 16666);
-  //   });
-  //
-  //   test('when same', () {
-  //     expect(
-  //       PreemptStrategyNormal.vsyncLaterThan(
-  //         time: const Duration(seconds: 10),
-  //         baseVsync: const Duration(seconds: 10),
-  //       ),
-  //       const Duration(seconds: 10),
-  //     );
-  //   });
-  //
-  //   test('when larger', () {
-  //     expect(
-  //       PreemptStrategyNormal.vsyncLaterThan(
-  //         time: const Duration(seconds: 10, milliseconds: 16),
-  //         baseVsync: const Duration(seconds: 10),
-  //       ),
-  //       const Duration(seconds: 10),
-  //     );
-  //
-  //     expect(
-  //       PreemptStrategyNormal.vsyncLaterThan(
-  //         time: const Duration(seconds: 10, milliseconds: 17),
-  //         baseVsync: const Duration(seconds: 10),
-  //       ),
-  //       const Duration(seconds: 10, microseconds: 16666),
-  //     );
-  //
-  //     expect(
-  //       PreemptStrategyNormal.vsyncLaterThan(
-  //         time: const Duration(seconds: 10, milliseconds: 33),
-  //         baseVsync: const Duration(seconds: 10),
-  //       ),
-  //       const Duration(seconds: 10, microseconds: 16666),
-  //     );
-  //
-  //     expect(
-  //       PreemptStrategyNormal.vsyncLaterThan(
-  //         time: const Duration(seconds: 10, milliseconds: 34),
-  //         baseVsync: const Duration(seconds: 10),
-  //       ),
-  //       const Duration(seconds: 10, microseconds: 33332),
-  //     );
-  //   });
-  //
-  //   test('when smaller', () {
-  //     expect(
-  //       PreemptStrategyNormal.vsyncLaterThan(
-  //         time: const Duration(seconds: 9, milliseconds: 984),
-  //         baseVsync: const Duration(seconds: 10),
-  //       ),
-  //       const Duration(seconds: 10),
-  //     );
-  //
-  //     expect(
-  //       PreemptStrategyNormal.vsyncLaterThan(
-  //         time: const Duration(seconds: 9, milliseconds: 983),
-  //         baseVsync: const Duration(seconds: 10),
-  //       ),
-  //       const Duration(seconds: 9, microseconds: 1000000 - 16666),
-  //     );
-  //
-  //     expect(
-  //       PreemptStrategyNormal.vsyncLaterThan(
-  //         time: const Duration(seconds: 9, milliseconds: 967),
-  //         baseVsync: const Duration(seconds: 10),
-  //       ),
-  //       const Duration(seconds: 9, microseconds: 1000000 - 16666),
-  //     );
-  //
-  //     expect(
-  //       PreemptStrategyNormal.vsyncLaterThan(
-  //         time: const Duration(seconds: 9, milliseconds: 966),
-  //         baseVsync: const Duration(seconds: 10),
-  //       ),
-  //       const Duration(seconds: 9, microseconds: 1000000 - 33332),
-  //     );
-  //   });
-  // });
+  group('vsyncLaterThan', () {
+    test('kOneFrameUs', () {
+      expect(kOneFrameUs, 16666);
+    });
+
+    test('when same', () {
+      expect(
+        PreemptStrategyNormal.vsyncLaterThan(
+          time: const Duration(seconds: 10),
+          baseVsync: const Duration(seconds: 10),
+        ),
+        const Duration(seconds: 10),
+      );
+    });
+
+    test('when larger', () {
+      expect(
+        PreemptStrategyNormal.vsyncLaterThan(
+          time: const Duration(seconds: 10, milliseconds: 16),
+          baseVsync: const Duration(seconds: 10),
+        ),
+        const Duration(seconds: 10, microseconds: 16666),
+      );
+
+      expect(
+        PreemptStrategyNormal.vsyncLaterThan(
+          time: const Duration(seconds: 10, milliseconds: 17),
+          baseVsync: const Duration(seconds: 10),
+        ),
+        const Duration(seconds: 10, microseconds: 33332),
+      );
+
+      expect(
+        PreemptStrategyNormal.vsyncLaterThan(
+          time: const Duration(seconds: 10, milliseconds: 33),
+          baseVsync: const Duration(seconds: 10),
+        ),
+        const Duration(seconds: 10, microseconds: 33332),
+      );
+
+      expect(
+        PreemptStrategyNormal.vsyncLaterThan(
+          time: const Duration(seconds: 10, milliseconds: 34),
+          baseVsync: const Duration(seconds: 10),
+        ),
+        const Duration(seconds: 10, microseconds: 16666 * 3),
+      );
+    });
+
+    test('when smaller', () {
+      expect(
+        PreemptStrategyNormal.vsyncLaterThan(
+          time: const Duration(seconds: 9, milliseconds: 984),
+          baseVsync: const Duration(seconds: 10),
+        ),
+        const Duration(seconds: 10),
+      );
+
+      expect(
+        PreemptStrategyNormal.vsyncLaterThan(
+          time: const Duration(seconds: 9, milliseconds: 983),
+          baseVsync: const Duration(seconds: 10),
+        ),
+        const Duration(seconds: 9, microseconds: 1000000 - 16666),
+      );
+
+      expect(
+        PreemptStrategyNormal.vsyncLaterThan(
+          time: const Duration(seconds: 9, milliseconds: 967),
+          baseVsync: const Duration(seconds: 10),
+        ),
+        const Duration(seconds: 9, microseconds: 1000000 - 16666),
+      );
+
+      expect(
+        PreemptStrategyNormal.vsyncLaterThan(
+          time: const Duration(seconds: 9, milliseconds: 966),
+          baseVsync: const Duration(seconds: 10),
+        ),
+        const Duration(seconds: 9, microseconds: 1000000 - 33332),
+      );
+    });
+  });
 }
 
 extension on MockPreemptStrategyDependency {

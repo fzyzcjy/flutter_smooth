@@ -122,7 +122,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
     final diffMicroseconds = time.inMicroseconds - baseVsync.inMicroseconds;
     return baseVsync +
         Duration(
-          microseconds: (diffMicroseconds / kOneFrameUs).floor() * kOneFrameUs,
+          microseconds: (diffMicroseconds / kOneFrameUs).ceil() * kOneFrameUs,
         );
   }
 }
