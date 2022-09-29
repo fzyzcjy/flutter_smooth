@@ -34,7 +34,6 @@ class _SimpleAnimatedBuilderState extends State<SimpleAnimatedBuilder>
 
   @override
   void dispose() {
-    print('hi dispose');
     controller.dispose();
     super.dispose();
   }
