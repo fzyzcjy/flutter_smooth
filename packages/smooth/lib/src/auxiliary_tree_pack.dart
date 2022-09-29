@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smooth/src/auxiliary_tree_root_view.dart';
+import 'package:smooth/src/remove_sub_tree_widget.dart';
 import 'package:smooth/src/service_locator.dart';
 
 class AuxiliaryTreeRegistry {
@@ -29,6 +30,7 @@ class AuxiliaryTreePack {
 
   final mainSubTreeLayerHandle = LayerHandle(OffsetLayer());
   final tickerRegistry = TickerRegistry();
+  final _removeSubTreeController = RemoveSubTreeController();
   Duration? _previousRunPipelineTimeStamp;
 
   AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
@@ -44,9 +46,12 @@ class AuxiliaryTreePack {
 
     rootView.prepareInitialFrame();
 
-    final wrappedWidget = TickerRegistryInheritedWidget(
-      registry: tickerRegistry,
-      child: widget(this),
+    final wrappedWidget = RemoveSubTreeWidget(
+      controller: _removeSubTreeController,
+      child: TickerRegistryInheritedWidget(
+        registry: tickerRegistry,
+        child: widget(this),
+      ),
     );
 
     element = RenderObjectToWidgetAdapter<RenderBox>(
@@ -61,7 +66,7 @@ class AuxiliaryTreePack {
   void runPipeline(
     Duration timeStamp, {
     required bool skipIfTimeStampUnchanged,
-        required String debugReason,
+    required String debugReason,
   }) {
     // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261687755
     if (skipIfTimeStampUnchanged &&
@@ -118,6 +123,18 @@ class AuxiliaryTreePack {
 
   void dispose() {
     ServiceLocator.instance.auxiliaryTreeRegistry._detach(this);
+
+    // #54
+    final previousRunPipelineTimeStamp = _previousRunPipelineTimeStamp;
+    if (previousRunPipelineTimeStamp != null) {
+      _removeSubTreeController.markRemoveSubTree();
+
+      runPipeline(
+        previousRunPipelineTimeStamp,
+        skipIfTimeStampUnchanged: false,
+        debugReason: 'AuxiliaryTreePack.dispose',
+      );
+    }
   }
 }
 
