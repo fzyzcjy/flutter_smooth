@@ -71,39 +71,3 @@ class _RenderAlwaysLayoutBuilder extends RenderProxyBox {
     SchedulerBinding.instance.addPostFrameCallback((_) => markNeedsLayout());
   }
 }
-
-class OnceCallback {
-  VoidCallback? _value;
-
-  set value(VoidCallback v) => _value = v;
-
-  bool get isEmpty => _value == null;
-
-  void call() {
-    final f = _value;
-    _value = null;
-
-    if (f == null) throw Exception;
-    f();
-  }
-}
-
-// class SlowBuilder extends StatefulWidget {
-//   final Duration buildBlockDuration;
-//
-//   const SlowBuilder({super.key, required this.buildBlockDuration});
-//
-//   @override
-//   State<SlowBuilder> createState() => _SlowBuilderState();
-// }
-//
-// class _SlowBuilderState extends State<SlowBuilder> {
-//   @override
-//   Widget build(BuildContext context) {
-//     debugPrint(
-//         'SlowBuilder.build elapseBlocking for ${widget.buildBlockDuration}');
-//     AutomatedTestWidgetsFlutterBinding.instance
-//         .elapseBlocking(widget.buildBlockDuration);
-//     return Container();
-//   }
-// }
