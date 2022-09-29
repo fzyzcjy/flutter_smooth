@@ -49,7 +49,7 @@ class Actor {
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
 
-      ServiceLocator.instance.preemptStrategy.onPreemptRender();
+      ServiceLocator.instance.preemptStrategy.refresh();
 
       final smoothFrameTimeStamp =
           ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp;

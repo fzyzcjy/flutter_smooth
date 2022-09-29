@@ -77,7 +77,7 @@ void main() {
             currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
             beginFrameDateTime: startDateTime,
           );
-          strategy.onPreemptRender();
+          strategy.refresh();
 
           strategy.expect(
             currentSmoothFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
@@ -105,7 +105,7 @@ void main() {
             currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
             beginFrameDateTime: startDateTime,
           );
-          strategy.onPreemptRender();
+          strategy.refresh();
 
           dependency.mock(
             now: nowWhenSecondPreemptRender,
@@ -115,7 +115,7 @@ void main() {
             currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
             beginFrameDateTime: startDateTime,
           );
-          strategy.onPreemptRender();
+          strategy.refresh();
 
           strategy.expect(
             currentSmoothFrameTimeStamp:
@@ -154,7 +154,7 @@ void main() {
               currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
               beginFrameDateTime: startDateTime,
             );
-            strategy.onPreemptRender();
+            strategy.refresh();
 
             dependency.mock(
               now: startDateTime
@@ -186,7 +186,7 @@ void main() {
               currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
               beginFrameDateTime: startDateTime,
             );
-            strategy.onPreemptRender();
+            strategy.refresh();
 
             dependency.mock(
               now: startDateTime
@@ -194,7 +194,7 @@ void main() {
               currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
               beginFrameDateTime: startDateTime,
             );
-            strategy.onPreemptRender();
+            strategy.refresh();
 
             // the "*2" is because, we have *two* preemptRender above
             // so we assume the first plain-old frame runs for 2/60s

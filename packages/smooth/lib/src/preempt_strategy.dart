@@ -17,7 +17,7 @@ abstract class PreemptStrategy {
   Duration get currentSmoothFrameTimeStamp;
 
   /// Be called when `preemptRender` is run
-  void onPreemptRender();
+  void refresh();
 }
 
 class PreemptStrategyDependency {
@@ -85,10 +85,10 @@ class PreemptStrategyNormal implements PreemptStrategy {
   }
 
   @override
-  void onPreemptRender() {
+  void refresh() {
     assert(
         shouldAct(),
-        'When call `onPreemptRender`, should have `shouldAct`=true, '
+        'When call `refresh`, should have `shouldAct`=true, '
         'otherwise the preemptRender should not happen');
 
     final now = dependency.now();
@@ -165,7 +165,7 @@ class _PreemptStrategyNever implements PreemptStrategy {
   bool shouldAct({Object? debugToken}) => false;
 
   @override
-  void onPreemptRender() {}
+  void refresh() {}
 
   @override
   Duration get currentSmoothFrameTimeStamp =>
@@ -230,7 +230,7 @@ class _PreemptStrategyNever implements PreemptStrategy {
 //       SchedulerBinding.instance.lastVsyncInfo().vsyncTargetTimeAdjusted;
 //
 //   @override
-//   void onPreemptRender() {
+//   void refresh() {
 //     // NOTE this may be slow; and has duplicate call here
 //     final lastVsyncInfo = SchedulerBinding.instance.lastVsyncInfo();
 //
