@@ -69,25 +69,17 @@ void main() {
             child: Stack(
               children: [
                 const _SmoothBuilderTester(),
-                AlwaysBuildBuilder(onBuild: () {
-                  debugPrint(
-                      'first slow builder elapseBlocking for $slowWorkDuration '
-                      '(p.s. currentFrameTimeStamp=${SchedulerBinding.instance.currentFrameTimeStamp})');
-                  binding.elapseBlocking(slowWorkDuration);
-                }),
-                LayoutPreemptPointWidget(
-                  // debugToken: mainPreemptPointDebugToken,
-                  child: AlwaysLayoutBuilder(
-                    child: Container(),
-                  ),
+                AlwaysBuildBuilder(
+                  onBuild: () => binding.elapseBlocking(slowWorkDuration,
+                      reason: 'first slow builder'),
                 ),
+                const LayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
                 // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261674207
-                AlwaysLayoutBuilder(onPerformLayout: () {
-                  debugPrint(
-                      'second slow layout elapseBlocking for $slowWorkDuration '
-                      '(p.s. currentFrameTimeStamp=${SchedulerBinding.instance.currentFrameTimeStamp})');
-                  binding.elapseBlocking(slowWorkDuration);
-                }),
+                AlwaysLayoutBuilder(
+                  onPerformLayout: () => binding.elapseBlocking(
+                      slowWorkDuration,
+                      reason: 'second slow layout'),
+                ),
               ],
             ),
           ),

@@ -92,6 +92,14 @@ mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
 
     prevFrameTimeStamp = currentFrameTimeStamp;
   }
+
+  @override
+  void elapseBlocking(Duration duration, {String? reason}) {
+    if (reason != null) {
+      debugPrint('elapseBlocking duration=$duration reason=$reason');
+    }
+    super.elapseBlocking(duration);
+  }
 }
 
 typedef OnWindowRender = void Function(ui.Scene scene);
