@@ -163,7 +163,7 @@ void main() {
         });
       });
 
-      testWidgets('multiple preempt points', (tester) async {
+      testWidgets('preempt multiple times in one frame', (tester) async {
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
         final timeInfo = TimeInfo();
         final capturer = WindowRenderCapturer.autoRegister();
@@ -180,8 +180,9 @@ void main() {
                 for (var i = 0; i < 10; ++i) ...[
                   AlwaysLayoutBuilder(
                     onPerformLayout: () => enableSlowWork
+                        // less than but near 16.666ms
                         ? binding
-                            .elapseBlocking(const Duration(milliseconds: 16))
+                            .elapseBlocking(const Duration(microseconds: 16500))
                         : null,
                   ),
                   const LayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
@@ -204,7 +205,7 @@ void main() {
           await _SmoothBuilderTester.createExpectImage(tester, 0.4),
           await _SmoothBuilderTester.createExpectImage(tester, 0.6),
           await _SmoothBuilderTester.createExpectImage(tester, 0.8),
-          for (var i = 0; i < 3; ++i)
+          for (var i = 0; i < 7; ++i)
             await _SmoothBuilderTester.createExpectImage(tester, 1),
         ]);
 
