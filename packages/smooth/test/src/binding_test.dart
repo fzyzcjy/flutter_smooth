@@ -2,8 +2,7 @@ import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
-
-import 'test_tools/binding.dart';
+import 'package:smooth_dev/smooth_dev.dart';
 
 void main() {
   final binding = SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();

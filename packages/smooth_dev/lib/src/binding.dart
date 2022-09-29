@@ -1,40 +1,11 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smooth/src/binding.dart';
-import 'package:smooth/src/service_locator.dart';
-
-import 'proxy.dart';
-import 'window.dart';
-import 'window_render_capturer.dart';
-
-// test the test-tool code
-void main() {
-  SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
-
-  testWidgets('SmoothSchedulerBindingMixin.onWindowRender', (tester) async {
-    final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
-    binding.window.setUpTearDown(
-        physicalSizeTestValue: const Size(100, 50),
-        devicePixelRatioTestValue: 1);
-
-    final capturer = WindowRenderCapturer.autoRegister();
-
-    // just a simple scene
-    await tester.pumpWidget(DecoratedBox(
-      decoration:
-          BoxDecoration(border: Border.all(color: Colors.green, width: 1)),
-      child: Center(
-        child: Container(width: 10, height: 10, color: Colors.green.shade200),
-      ),
-    ));
-
-    expect(capturer.images.single,
-        matchesGoldenFile('../goldens/binding/simple.png'));
-  });
-}
+import 'package:smooth/smooth.dart';
+import 'package:smooth/src/binding.dart'; // ignore: implementation_imports
+import 'package:smooth/src/service_locator.dart'; // ignore: implementation_imports
+import 'package:smooth_dev/src/proxy.dart';
 
 class SmoothAutomatedTestWidgetsFlutterBinding
     extends AutomatedTestWidgetsFlutterBinding

@@ -1,5 +1,4 @@
 import 'package:flutter/rendering.dart';
-import 'package:smooth/src/auxiliary_tree_pack.dart';
 
 // ref: [ViewConfiguration]
 class AuxiliaryTreeRootViewConfiguration {

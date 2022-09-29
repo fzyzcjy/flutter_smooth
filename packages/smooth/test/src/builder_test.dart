@@ -4,18 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/binding.dart';
 import 'package:smooth/src/preempt_point.dart';
 import 'package:smooth/src/preempt_strategy.dart';
 import 'package:smooth/src/service_locator.dart';
+import 'package:smooth_dev/smooth_dev.dart';
 
 import 'test_tools/animation.dart';
-import 'test_tools/binding.dart';
-import 'test_tools/image.dart';
-import 'test_tools/time_info.dart';
 import 'test_tools/widgets.dart';
-import 'test_tools/window.dart';
-import 'test_tools/window_render_capturer.dart';
 
 void main() {
   SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();

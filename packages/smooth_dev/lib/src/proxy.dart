@@ -67,7 +67,7 @@ class ProxyTestWindow implements TestWindow {
 
   @override
   set displayFeaturesTestValue(
-      List<ui.DisplayFeature> displayFeaturesTestValue) =>
+          List<ui.DisplayFeature> displayFeaturesTestValue) =>
       _inner.displayFeaturesTestValue = displayFeaturesTestValue;
 
   @override
@@ -79,7 +79,7 @@ class ProxyTestWindow implements TestWindow {
 
   @override
   set systemGestureInsetsTestValue(
-      ui.WindowPadding systemGestureInsetsTestValue) =>
+          ui.WindowPadding systemGestureInsetsTestValue) =>
       _inner.systemGestureInsetsTestValue = systemGestureInsetsTestValue;
 
   @override
@@ -99,7 +99,7 @@ class ProxyTestWindow implements TestWindow {
   @override
   set localeTestValue(ui.Locale localeTestValue) =>
       // ignore: deprecated_member_use
-  _inner.localeTestValue = localeTestValue;
+      _inner.localeTestValue = localeTestValue;
 
   @override
   // ignore: deprecated_member_use
@@ -111,7 +111,7 @@ class ProxyTestWindow implements TestWindow {
   @override
   set localesTestValue(List<ui.Locale> localesTestValue) =>
       // ignore: deprecated_member_use
-  _inner.localesTestValue = localesTestValue;
+      _inner.localesTestValue = localesTestValue;
 
   @override
   // ignore: deprecated_member_use
@@ -130,7 +130,7 @@ class ProxyTestWindow implements TestWindow {
   @override
   set initialLifecycleStateTestValue(String state) =>
       // ignore: deprecated_member_use
-  _inner.initialLifecycleStateTestValue = state;
+      _inner.initialLifecycleStateTestValue = state;
 
   @override
   double get textScaleFactor => _inner.textScaleFactor;
@@ -138,12 +138,12 @@ class ProxyTestWindow implements TestWindow {
   @override
   set textScaleFactorTestValue(double textScaleFactorTestValue) =>
       // ignore: deprecated_member_use
-  _inner.textScaleFactorTestValue = textScaleFactorTestValue;
+      _inner.textScaleFactorTestValue = textScaleFactorTestValue;
 
   @override
   void clearTextScaleFactorTestValue() =>
       // ignore: deprecated_member_use
-  _inner.clearTextScaleFactorTestValue();
+      _inner.clearTextScaleFactorTestValue();
 
   @override
   ui.Brightness get platformBrightness => _inner.platformBrightness;
@@ -159,12 +159,12 @@ class ProxyTestWindow implements TestWindow {
   @override
   set platformBrightnessTestValue(ui.Brightness platformBrightnessTestValue) =>
       // ignore: deprecated_member_use
-  _inner.platformBrightnessTestValue = platformBrightnessTestValue;
+      _inner.platformBrightnessTestValue = platformBrightnessTestValue;
 
   @override
   void clearPlatformBrightnessTestValue() =>
       // ignore: deprecated_member_use
-  _inner.clearPlatformBrightnessTestValue();
+      _inner.clearPlatformBrightnessTestValue();
 
   @override
   bool get alwaysUse24HourFormat => _inner.alwaysUse24HourFormat;
@@ -172,12 +172,12 @@ class ProxyTestWindow implements TestWindow {
   @override
   set alwaysUse24HourFormatTestValue(bool alwaysUse24HourFormatTestValue) =>
       // ignore: deprecated_member_use
-  _inner.alwaysUse24HourFormatTestValue = alwaysUse24HourFormatTestValue;
+      _inner.alwaysUse24HourFormatTestValue = alwaysUse24HourFormatTestValue;
 
   @override
   void clearAlwaysUse24HourTestValue() =>
       // ignore: deprecated_member_use
-  _inner.clearAlwaysUse24HourTestValue();
+      _inner.clearAlwaysUse24HourTestValue();
 
   @override
   ui.VoidCallback? get onTextScaleFactorChanged =>
@@ -193,7 +193,7 @@ class ProxyTestWindow implements TestWindow {
 
   @override
   set nativeSpellCheckServiceDefinedTestValue(
-      bool nativeSpellCheckServiceDefinedTestValue) =>
+          bool nativeSpellCheckServiceDefinedTestValue) =>
       _inner.nativeSpellCheckServiceDefinedTestValue =
           nativeSpellCheckServiceDefinedTestValue;
 
@@ -203,7 +203,7 @@ class ProxyTestWindow implements TestWindow {
   @override
   set brieflyShowPasswordTestValue(bool brieflyShowPasswordTestValue) =>
       // ignore: deprecated_member_use
-  _inner.brieflyShowPasswordTestValue = brieflyShowPasswordTestValue;
+      _inner.brieflyShowPasswordTestValue = brieflyShowPasswordTestValue;
 
   @override
   ui.FrameCallback? get onBeginFrame => _inner.onBeginFrame;
@@ -240,12 +240,12 @@ class ProxyTestWindow implements TestWindow {
   @override
   set defaultRouteNameTestValue(String defaultRouteNameTestValue) =>
       // ignore: deprecated_member_use
-  _inner.defaultRouteNameTestValue = defaultRouteNameTestValue;
+      _inner.defaultRouteNameTestValue = defaultRouteNameTestValue;
 
   @override
   void clearDefaultRouteNameTestValue() =>
       // ignore: deprecated_member_use
-  _inner.clearDefaultRouteNameTestValue();
+      _inner.clearDefaultRouteNameTestValue();
 
   @override
   void scheduleFrame() => _inner.scheduleFrame();
@@ -259,12 +259,12 @@ class ProxyTestWindow implements TestWindow {
   @override
   set semanticsEnabledTestValue(bool semanticsEnabledTestValue) =>
       // ignore: deprecated_member_use
-  _inner.semanticsEnabledTestValue = semanticsEnabledTestValue;
+      _inner.semanticsEnabledTestValue = semanticsEnabledTestValue;
 
   @override
   void clearSemanticsEnabledTestValue() =>
       // ignore: deprecated_member_use
-  _inner.clearSemanticsEnabledTestValue();
+      _inner.clearSemanticsEnabledTestValue();
 
   @override
   ui.VoidCallback? get onSemanticsEnabledChanged =>
@@ -287,14 +287,14 @@ class ProxyTestWindow implements TestWindow {
 
   @override
   set accessibilityFeaturesTestValue(
-      ui.AccessibilityFeatures accessibilityFeaturesTestValue) =>
+          ui.AccessibilityFeatures accessibilityFeaturesTestValue) =>
       // ignore: deprecated_member_use
-  _inner.accessibilityFeaturesTestValue = accessibilityFeaturesTestValue;
+      _inner.accessibilityFeaturesTestValue = accessibilityFeaturesTestValue;
 
   @override
   void clearAccessibilityFeaturesTestValue() =>
       // ignore: deprecated_member_use
-  _inner.clearAccessibilityFeaturesTestValue();
+      _inner.clearAccessibilityFeaturesTestValue();
 
   @override
   ui.ViewConfiguration get viewConfiguration => _inner.viewConfiguration;
@@ -320,7 +320,7 @@ class ProxyTestWindow implements TestWindow {
 
   @override
   void sendPlatformMessage(String name, ByteData? data,
-      ui.PlatformMessageResponseCallback? callback) =>
+          ui.PlatformMessageResponseCallback? callback) =>
       _inner.sendPlatformMessage(name, data, callback);
 
   @override
@@ -330,7 +330,7 @@ class ProxyTestWindow implements TestWindow {
   @override
   set onPlatformMessage(ui.PlatformMessageCallback? callback) =>
       // ignore: deprecated_member_use
-  _inner.onPlatformMessage = onPlatformMessage;
+      _inner.onPlatformMessage = onPlatformMessage;
 
   @override
   // ignore: deprecated_member_use

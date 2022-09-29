@@ -5,7 +5,11 @@ class AutoStartSlideTransition extends StatefulWidget {
   final Duration duration;
   final Widget child;
 
-  const AutoStartSlideTransition({required this.child, required this.duration});
+  const AutoStartSlideTransition({
+    super.key,
+    required this.child,
+    required this.duration,
+  });
 
   @override
   State<AutoStartSlideTransition> createState() =>

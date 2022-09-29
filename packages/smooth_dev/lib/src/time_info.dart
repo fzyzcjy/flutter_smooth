@@ -1,6 +1,6 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smooth/src/binding.dart';
+import 'package:smooth/smooth.dart';
 
 class TimeInfo {
   final testBeginTime = clock.now();

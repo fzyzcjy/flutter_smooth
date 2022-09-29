@@ -7,27 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as image;
-
-import 'window.dart';
-import 'window_render_capturer.dart';
-
-// test the test tool
-void main() {
-  testWidgets('createScreenImage', (tester) async {
-    final binding = TestWidgetsFlutterBinding.ensureInitialized();
-    binding.window.setUpTearDown(
-        physicalSizeTestValue: const Size(100, 50),
-        devicePixelRatioTestValue: 1);
-
-    final im = await tester.createScreenImage(
-      (im) => im
-        ..fillRect(const Rectangle(0, 0, 50, 50), Colors.red)
-        ..fillRect(const Rectangle(50, 0, 50, 50), Colors.green),
-    );
-
-    expect(im, matchesGoldenFile('../goldens/image/simple.png'));
-  });
-}
+import 'package:smooth_dev/smooth_dev.dart';
 
 extension ExtWigetTesterScreenImage on WidgetTester {
   Future<ui.Image> createScreenImage(void Function(image.Image) draw) async {

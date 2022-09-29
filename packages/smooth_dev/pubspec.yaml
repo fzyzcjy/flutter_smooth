@@ -8,10 +8,15 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
+  clock: ^1.0.0
   flutter:
     sdk: flutter
-
-dev_dependencies:
   flutter_test:
     sdk: flutter
+  image: ^3.2.0
+  smooth:
+    path: ../smooth
+  test_api: ^0.4.2
+
+dev_dependencies:
   lint: ^1.10.0

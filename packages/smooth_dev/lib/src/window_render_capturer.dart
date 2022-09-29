@@ -5,8 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_test/flutter_test.dart' as flutter_test;
-
-import 'binding.dart';
+import 'package:smooth_dev/smooth_dev.dart';
 
 class WindowRenderCapturer {
   List<ui.Image> get images => UnmodifiableListView(_images);

@@ -40,6 +40,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   lint: ^1.10.0
+  smooth_dev:
+    path: ../../smooth_dev
 
 # https://github.com/flutter/flutter/wiki/The-flutter-tool#using-a-locally-built-engine-with-the-flutter-tool
 dependency_overrides:
