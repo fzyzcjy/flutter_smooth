@@ -111,13 +111,21 @@ void main() {
           await _SmoothBuilderTester.createExpectImage(tester, 0.4),
         ]);
 
-        // #60
         debugPrint('action: pump again now=${clock.now()}');
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
 
         await capturer.expectAndReset(tester, [
           await _SmoothBuilderTester.createExpectImage(tester, 0.6),
           await _SmoothBuilderTester.createExpectImage(tester, 0.8),
+        ]);
+
+        debugPrint('action: pump again now=${clock.now()}');
+        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 5));
+
+        await capturer.expectAndReset(tester, [
+          await _SmoothBuilderTester.createExpectImage(tester, 1.0),
+          // TODO maybe we can remove this redundant output?
+          await _SmoothBuilderTester.createExpectImage(tester, 1.0),
         ]);
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
