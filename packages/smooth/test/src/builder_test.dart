@@ -54,15 +54,6 @@ void main() {
       final capturer = WindowRenderCapturer();
       binding.onWindowRender = capturer.onWindowRender;
 
-      // TODO remove?
-      // final mainPreemptPointDebugToken = Object();
-      // ServiceLocator.debugOverrideInstance = ServiceLocator.normal().copyWith(
-      //   preemptStrategy: PreemptStrategyTest(
-      //     shouldAct: ({debugToken}) => debugToken == mainPreemptPointDebugToken,
-      //     currentSmoothFrameTimeStamp: () => TODO,
-      //   ),
-      // );
-
       const red = Color.fromARGB(255, 255, 0, 0);
 
       var slowWorkDuration = Duration.zero;
