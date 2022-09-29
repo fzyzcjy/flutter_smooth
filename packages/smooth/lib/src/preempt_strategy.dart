@@ -39,7 +39,6 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
   /// the VsyncTargetTime used by last preempt render
   var _currentPreemptRenderVsyncTargetTimeStamp = Duration.zero;
-  var _nextActAdjustedVsyncTimeStampByPreemptRender = Duration.zero;
 
   PreemptStrategyNormal({
     this.dependency = const PreemptStrategyDependency(),
@@ -67,7 +66,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
   Duration get shouldActTimeStamp {
     final nextActVsyncTimeStamp = _maxDuration(
       _timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp,
-      _nextActAdjustedVsyncTimeStampByPreemptRender,
+      _currentPreemptRenderVsyncTargetTimeStamp + kOneFrame,
     );
     return nextActVsyncTimeStamp - kActThresh;
   }
@@ -90,22 +89,16 @@ class PreemptStrategyNormal implements PreemptStrategy {
     final now = dependency.now();
     final nowTimeStamp = _timeInfoCalculator.dateTimeToTimeStamp(now);
 
-    final currentPreemptRenderVsyncTargetTimeStamp = vsyncLaterThan(
+    final nextVsync = vsyncLaterThan(
       time: nowTimeStamp,
       baseVsync: _timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp,
     );
 
-    final shouldShiftOneFrameForNextActVsyncTime =
-        nowTimeStamp - currentPreemptRenderVsyncTargetTimeStamp >
-            const Duration(milliseconds: -4);
+    final shouldShiftOneFrame =
+        nextVsync - nowTimeStamp > const Duration(milliseconds: 12);
 
     _currentPreemptRenderVsyncTargetTimeStamp =
-        currentPreemptRenderVsyncTargetTimeStamp;
-    _nextActAdjustedVsyncTimeStampByPreemptRender =
-        currentPreemptRenderVsyncTargetTimeStamp +
-            (shouldShiftOneFrameForNextActVsyncTime
-                ? kOneFrame
-                : Duration.zero);
+        nextVsync - (shouldShiftOneFrame ? kOneFrame : Duration.zero);
   }
 
   @visibleForTesting
