@@ -7,8 +7,8 @@ import 'package:smooth/smooth.dart';
 const _kDuration = Duration(milliseconds: 300);
 
 enum EnterPageAnimationMode {
-  plain,
   smooth,
+  plain,
 }
 
 class EnterPageAnimation extends StatelessWidget {

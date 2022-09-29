@@ -56,7 +56,9 @@ class _ExampleEnterPageAnimationPageState
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('Preempt for 60FPS')),
-        body: Center(
+        body: OverflowBox(
+          alignment: Alignment.topCenter,
+          maxHeight: double.infinity,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

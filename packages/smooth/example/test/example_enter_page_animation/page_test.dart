@@ -61,8 +61,8 @@ void main() {
           await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1 + i));
         }
 
-        await capturer.pack.matchesGoldenFile(
-            tester, '../goldens/example_enter_page_animation/${arg.name}/');
+        await capturer.pack.matchesGoldenFile(tester,
+            '../goldens/example_enter_page_animation/${arg.name}/screen');
       });
     }
   });
