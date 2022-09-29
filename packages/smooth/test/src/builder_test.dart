@@ -66,7 +66,7 @@ void main() {
 
       const red = Color.fromARGB(255, 255, 0, 0);
 
-      var slowBuilderDuration = Duration.zero;
+      var slowWorkDuration = Duration.zero;
 
       debugPrint('pumpWidget');
       await tester.pumpWidget(Directionality(
@@ -102,9 +102,9 @@ void main() {
             ),
             AlwaysBuildBuilder(onBuild: () {
               debugPrint(
-                  'AlwaysBuildBuilder.onBuild elapseBlocking for $slowBuilderDuration '
+                  'first slow builder elapseBlocking for $slowWorkDuration '
                   '(p.s. currentFrameTimeStamp=${SchedulerBinding.instance.currentFrameTimeStamp})');
-              binding.elapseBlocking(slowBuilderDuration);
+              binding.elapseBlocking(slowWorkDuration);
             }),
             LayoutPreemptPointWidget(
               // debugToken: mainPreemptPointDebugToken,
@@ -112,6 +112,13 @@ void main() {
                 child: Container(),
               ),
             ),
+            // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261674207
+            AlwaysLayoutBuilder(onPerformLayout: () {
+              debugPrint(
+                  'second slow layout elapseBlocking for $slowWorkDuration '
+                  '(p.s. currentFrameTimeStamp=${SchedulerBinding.instance.currentFrameTimeStamp})');
+              binding.elapseBlocking(slowWorkDuration);
+            }),
           ],
         ),
       ));
@@ -128,7 +135,7 @@ void main() {
       expect(pumpDuration, kOneFrame);
 
       // 15.5ms - sufficiently near but less than 1/60s
-      slowBuilderDuration = const Duration(microseconds: 15500);
+      slowWorkDuration = const Duration(microseconds: 15500);
 
       // Need one plain-old frame (the pumpWidget frame), before being able to
       // create smooth extra frames. Otherwise, the layer tree is event not
