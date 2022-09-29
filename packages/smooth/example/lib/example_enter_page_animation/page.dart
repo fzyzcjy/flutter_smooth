@@ -110,7 +110,7 @@ class _SecondPageState extends State<SecondPage> {
         // NOTE: this one extra frame lag is *avoidable*.
         // Since this is a prototype, I do not bother to initialize the aux tree pack
         // in a fancier way.
-        body: firstFrame ? Container() : const ComplexWidget(),
+        body: firstFrame ? Container() : const ComplexLongColumn(),
       ),
     );
   }
