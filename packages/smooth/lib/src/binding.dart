@@ -49,11 +49,14 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
   void _handleAfterFlushLayout() {
     print('handleAfterFlushLayout');
 
-    ServiceLocator.instance.preemptStrategy.refresh();
-    final currentSmoothFrameTimeStamp =
-        ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp;
+    final serviceLocator = ServiceLocator.maybeInstance;
+    if (serviceLocator == null) return;
 
-    for (final pack in ServiceLocator.instance.auxiliaryTreeRegistry.trees) {
+    serviceLocator.preemptStrategy.refresh();
+    final currentSmoothFrameTimeStamp =
+        serviceLocator.preemptStrategy.currentSmoothFrameTimeStamp;
+
+    for (final pack in serviceLocator.auxiliaryTreeRegistry.trees) {
       pack.runPipeline(
         currentSmoothFrameTimeStamp,
         // NOTE this is skip-able

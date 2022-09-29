@@ -4,6 +4,8 @@ import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/preempt_strategy.dart';
 
 class ServiceLocator {
+  static ServiceLocator? get maybeInstance => _instance;
+
   static ServiceLocator get instance => _instance!;
   static ServiceLocator? _instance;
 
