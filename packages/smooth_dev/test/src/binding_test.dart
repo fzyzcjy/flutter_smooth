@@ -22,7 +22,7 @@ void main() {
       ),
     ));
 
-    expect(capturer.images.single,
+    expect(capturer.pack.flatEntries.single.image,
         matchesGoldenFile('../goldens/binding/simple.png'));
   });
 }
