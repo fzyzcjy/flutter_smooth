@@ -18,27 +18,31 @@ void main() {
   SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
 
   group('SmoothBuilder', () {
-    testWidgets('when pump widgets unrelated to smooth, should build',
-        (tester) async {
-      ServiceLocator.debugOverrideInstance = ServiceLocator.normal()
-          .copyWith(preemptStrategy: const PreemptStrategy.never());
+    group('use never preempt strategy', () {
+      testWidgets('when pump widgets unrelated to smooth, should build',
+          (tester) async {
+        await tester.pumpWidget(SmoothScope(
+          serviceLocator: ServiceLocator.normal()
+              .copyWith(preemptStrategy: const PreemptStrategy.never()),
+          child: Container(),
+        ));
 
-      await tester.pumpWidget(Container());
+        // should have no error
+      });
 
-      // should have no error
-    });
+      testWidgets('when use SmoothBuilder with simplest case, should build',
+          (tester) async {
+        await tester.pumpWidget(SmoothScope(
+          serviceLocator: ServiceLocator.normal()
+              .copyWith(preemptStrategy: const PreemptStrategy.never()),
+          child: SmoothBuilder(
+            builder: (context, child) => child,
+            child: Container(),
+          ),
+        ));
 
-    testWidgets('when use SmoothBuilder with simplest case, should build',
-        (tester) async {
-      ServiceLocator.debugOverrideInstance = ServiceLocator.normal()
-          .copyWith(preemptStrategy: const PreemptStrategy.never());
-
-      await tester.pumpWidget(SmoothBuilder(
-        builder: (context, child) => child,
-        child: Container(),
-      ));
-
-      // should have no error
+        // should have no error
+      });
     });
 
     testWidgets('when one extra smooth frame', (tester) async {
@@ -59,57 +63,59 @@ void main() {
       var slowWorkDuration = Duration.zero;
 
       debugPrint('pumpWidget');
-      await tester.pumpWidget(Directionality(
-        textDirection: TextDirection.ltr,
-        child: Stack(
-          children: [
-            SmoothBuilder(
-              builder: (context, child) => SimpleAnimatedBuilder(
-                duration: kOneFrame * 10,
-                builder: (_, animationValue) {
-                  debugPrint(
-                      'SimpleAnimatedBuilder.builder animationValue=$animationValue');
-                  return Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Stack(
-                      children: [
-                        child,
-                        Positioned(
-                          left: 50,
-                          top: 0,
-                          bottom: 0,
-                          right: 0,
-                          child: ColoredBox(
-                            color: _green(animationValue),
+      await tester.pumpWidget(SmoothScope(
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: Stack(
+            children: [
+              SmoothBuilder(
+                builder: (context, child) => SimpleAnimatedBuilder(
+                  duration: kOneFrame * 10,
+                  builder: (_, animationValue) {
+                    debugPrint(
+                        'SimpleAnimatedBuilder.builder animationValue=$animationValue');
+                    return Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Stack(
+                        children: [
+                          child,
+                          Positioned(
+                            left: 50,
+                            top: 0,
+                            bottom: 0,
+                            right: 0,
+                            child: ColoredBox(
+                              color: _green(animationValue),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                child: Container(color: red),
               ),
-              child: Container(color: red),
-            ),
-            AlwaysBuildBuilder(onBuild: () {
-              debugPrint(
-                  'first slow builder elapseBlocking for $slowWorkDuration '
-                  '(p.s. currentFrameTimeStamp=${SchedulerBinding.instance.currentFrameTimeStamp})');
-              binding.elapseBlocking(slowWorkDuration);
-            }),
-            LayoutPreemptPointWidget(
-              // debugToken: mainPreemptPointDebugToken,
-              child: AlwaysLayoutBuilder(
-                child: Container(),
+              AlwaysBuildBuilder(onBuild: () {
+                debugPrint(
+                    'first slow builder elapseBlocking for $slowWorkDuration '
+                    '(p.s. currentFrameTimeStamp=${SchedulerBinding.instance.currentFrameTimeStamp})');
+                binding.elapseBlocking(slowWorkDuration);
+              }),
+              LayoutPreemptPointWidget(
+                // debugToken: mainPreemptPointDebugToken,
+                child: AlwaysLayoutBuilder(
+                  child: Container(),
+                ),
               ),
-            ),
-            // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261674207
-            AlwaysLayoutBuilder(onPerformLayout: () {
-              debugPrint(
-                  'second slow layout elapseBlocking for $slowWorkDuration '
-                  '(p.s. currentFrameTimeStamp=${SchedulerBinding.instance.currentFrameTimeStamp})');
-              binding.elapseBlocking(slowWorkDuration);
-            }),
-          ],
+              // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261674207
+              AlwaysLayoutBuilder(onPerformLayout: () {
+                debugPrint(
+                    'second slow layout elapseBlocking for $slowWorkDuration '
+                    '(p.s. currentFrameTimeStamp=${SchedulerBinding.instance.currentFrameTimeStamp})');
+                binding.elapseBlocking(slowWorkDuration);
+              }),
+            ],
+          ),
         ),
       ));
 

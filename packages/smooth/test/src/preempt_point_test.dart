@@ -8,16 +8,15 @@ import 'test_tools/mock_source.mocks.dart';
 
 void main() {
   late MockActor actor;
-  setUp(() {
-    actor = MockActor();
-    ServiceLocator.debugOverrideInstance =
-        ServiceLocator.normal().copyWith(actor: actor);
-  });
+  setUp(() => actor = MockActor());
 
   group('$BuildPreemptPointWidget', () {
     testWidgets('when build, should call maybePreemptRender', (tester) async {
       verifyNever(actor.maybePreemptRender());
-      await tester.pumpWidget(BuildPreemptPointWidget(child: Container()));
+      await tester.pumpWidget(SmoothScope(
+        serviceLocator: ServiceLocator.normal().copyWith(actor: actor),
+        child: BuildPreemptPointWidget(child: Container()),
+      ));
       verify(actor.maybePreemptRender()).called(1);
     });
   });
@@ -25,7 +24,10 @@ void main() {
   group('$LayoutPreemptPointWidget', () {
     testWidgets('when layout, should call maybePreemptRender', (tester) async {
       verifyNever(actor.maybePreemptRender());
-      await tester.pumpWidget(LayoutPreemptPointWidget(child: Container()));
+      await tester.pumpWidget(SmoothScope(
+        serviceLocator: ServiceLocator.normal().copyWith(actor: actor),
+        child: LayoutPreemptPointWidget(child: Container()),
+      ));
       verify(actor.maybePreemptRender()).called(1);
     });
   });
