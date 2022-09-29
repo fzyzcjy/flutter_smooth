@@ -54,7 +54,10 @@ void main() {
               onPerformLayout: () => binding.elapseBlocking(
                   arg.listTileLayoutTime,
                   reason: 'ListTile layout'),
-              child: child,
+              child: ColoredBox(
+                color: Colors.green,
+                child: child,
+              ),
             ),
           ),
         ));
