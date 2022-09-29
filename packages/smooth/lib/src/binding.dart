@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/proxy.dart';
+import 'package:smooth/src/service_locator.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   DateTime get beginFrameDateTime => _beginFrameDateTime!;
@@ -46,8 +47,17 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
   }
 
   void _handleAfterFlushLayout() {
-    print('TODO _handleAfterFlushLayout now=${clock.now()}');
-    // TODO
+    print('handleAfterFlushLayout');
+
+    for (final pack in ServiceLocator.instance.auxiliaryTreeRegistry.trees) {
+      pack.runPipeline(
+        ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp,
+        // NOTE this is skip-able
+        // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261691891
+        skipIfTimeStampUnchanged: true,
+        debugReason: 'SmoothPipelineOwner.handleAfterFlushLayout',
+      );
+    }
   }
 }
 
