@@ -36,11 +36,21 @@ class SmoothAutomatedTestWidgetsFlutterBinding
 }
 
 mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
+  @override
+  void initInstances() {
+    super.initInstances();
+    setUp(() => _testFrameNumber = 0);
+    tearDown(() => _testFrameNumber = null);
+  }
+
   OnWindowRender? onWindowRender;
 
   @override
   TestWindow get window =>
       SmoothTestWindow(super.window, onRender: (s) => onWindowRender?.call(s));
+
+  int get testFrameNumber => _testFrameNumber!;
+  int? _testFrameNumber;
 
   Duration? _prevFrameTimeStamp;
 
@@ -48,6 +58,13 @@ mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
   void handleBeginFrame(Duration? rawTimeStamp) {
     super.handleBeginFrame(rawTimeStamp);
 
+    _sanityCheckFrameTimeStamp();
+
+    _testFrameNumber = _testFrameNumber! + 1;
+    _prevFrameTimeStamp = currentFrameTimeStamp;
+  }
+
+  void _sanityCheckFrameTimeStamp() {
     final smoothActive = ServiceLocator.maybeInstance != null;
     if (smoothActive && _prevFrameTimeStamp != null) {
       expect(
@@ -60,8 +77,6 @@ mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
             'prevFrameTimeStamp=$_prevFrameTimeStamp ',
       );
     }
-
-    _prevFrameTimeStamp = currentFrameTimeStamp;
   }
 
   @override
