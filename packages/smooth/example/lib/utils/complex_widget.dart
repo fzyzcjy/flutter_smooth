@@ -27,11 +27,11 @@ class ComplexWidget extends StatelessWidget {
           maxHeight: double.infinity,
           child: Column(
             children: List<Widget>.generate(N, (int index) {
-              return SizedBox(
-                height: 12,
-                // NOTE hack, in real world should auto have preempt point
-                // but in prototype we do it by hand
-                child: SmoothPreemptPoint(
+              // NOTE hack, in real world should auto have preempt point
+              // but in prototype we do it by hand
+              return SmoothPreemptPoint(
+                child: SizedBox(
+                  height: 12,
                   child: ListTile(
                     dense: true,
                     visualDensity: VisualDensity.compact,
