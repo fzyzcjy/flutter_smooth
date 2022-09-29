@@ -23,7 +23,7 @@ packages:
     source: hosted
     version: "1.2.1"
   clock:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: clock
       url: "https://pub.flutter-io.cn"
