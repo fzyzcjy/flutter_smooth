@@ -65,16 +65,10 @@ class PreemptStrategyNormal implements PreemptStrategy {
   static const kActThresh = Duration(milliseconds: 2);
 
   Duration get shouldActTimeStamp {
-    // TODO things below can also be cached
-
-    final nextActVsyncTimeStampByJankFrame =
-        _timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp;
-
     final nextActVsyncTimeStamp = _maxDuration(
-      nextActVsyncTimeStampByJankFrame,
+      _timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp,
       _nextActAdjustedVsyncTimeStampByPreemptRender,
     );
-
     return nextActVsyncTimeStamp - kActThresh;
   }
 

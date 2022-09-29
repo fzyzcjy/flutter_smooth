@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_test/flutter_test.dart' as flutter_test;
 import 'package:mockito/annotations.dart';
@@ -322,9 +323,27 @@ extension on PreemptStrategyNormal {
     required Duration shouldActTimeStamp,
     required bool shouldAct,
   }) {
+    debugPrint(
+      'PreemptStrategyNormal.expect actual: '
+      'currentSmoothFrameTimeStamp=${this.currentSmoothFrameTimeStamp} '
+      'shouldActTimeStamp=${this.shouldActTimeStamp} '
+      'shouldAct=${this.shouldAct()}',
+    );
+
     flutter_test.expect(
-        this.currentSmoothFrameTimeStamp, currentSmoothFrameTimeStamp);
-    flutter_test.expect(this.shouldActTimeStamp, shouldActTimeStamp);
-    flutter_test.expect(this.shouldAct(), shouldAct);
+      this.currentSmoothFrameTimeStamp,
+      currentSmoothFrameTimeStamp,
+      reason: 'currentSmoothFrameTimeStamp',
+    );
+    flutter_test.expect(
+      this.shouldActTimeStamp,
+      shouldActTimeStamp,
+      reason: 'shouldActTimeStamp',
+    );
+    flutter_test.expect(
+      this.shouldAct(),
+      shouldAct,
+      reason: 'shouldAct',
+    );
   }
 }
