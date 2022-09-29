@@ -19,6 +19,7 @@ analyzer:
 
 linter:
   rules:
+    public_member_api_docs: true
     library_private_types_in_public_api: true
     unnecessary_constructor_name: true
     unnecessary_late: true
