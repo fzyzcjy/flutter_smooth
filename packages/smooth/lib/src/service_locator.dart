@@ -6,7 +6,11 @@ import 'package:smooth/src/preempt_strategy.dart';
 class ServiceLocator {
   static ServiceLocator? get maybeInstance => _instance;
 
-  static ServiceLocator get instance => _instance!;
+  static ServiceLocator get instance {
+    assert(_instance != null, 'Do you forget to put `SmoothScope` in tree?');
+    return _instance!;
+  }
+
   static ServiceLocator? _instance;
 
   factory ServiceLocator.normal() => ServiceLocator.raw(
