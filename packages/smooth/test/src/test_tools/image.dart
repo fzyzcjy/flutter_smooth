@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as image;
 
-import 'binding.dart';
 import 'window.dart';
+import 'window_render_capturer.dart';
 
 // test the test tool
 void main() {

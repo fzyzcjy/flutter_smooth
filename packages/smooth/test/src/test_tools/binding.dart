@@ -1,15 +1,14 @@
-import 'dart:collection';
-import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_test/flutter_test.dart' as flutter_test;
 import 'package:smooth/src/binding.dart';
+import 'package:smooth/src/service_locator.dart';
 
 import 'proxy.dart';
 import 'window.dart';
+import 'window_render_capturer.dart';
 
 // test the test-tool code
 void main() {
@@ -21,8 +20,7 @@ void main() {
         physicalSizeTestValue: const Size(100, 50),
         devicePixelRatioTestValue: 1);
 
-    final capturer = WindowRenderCapturer();
-    binding.onWindowRender = capturer.onWindowRender;
+    final capturer = WindowRenderCapturer.autoRegister();
 
     // just a simple scene
     await tester.pumpWidget(DecoratedBox(
@@ -72,6 +70,28 @@ mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
   @override
   TestWindow get window =>
       SmoothTestWindow(super.window, onRender: (s) => onWindowRender?.call(s));
+
+  Duration? prevFrameTimeStamp;
+
+  @override
+  void handleBeginFrame(Duration? rawTimeStamp) {
+    super.handleBeginFrame(rawTimeStamp);
+
+    final smoothActive = ServiceLocator.maybeInstance != null;
+    if (smoothActive && prevFrameTimeStamp != null) {
+      expect(
+        (currentFrameTimeStamp - prevFrameTimeStamp!).inMicroseconds %
+            kOneFrame.inMicroseconds,
+        0,
+        reason: 'frame timestamp should be multiples of kOneFrame, '
+            'otherwise Smooth logic will be wrong '
+            'currentFrameTimeStamp=$currentFrameTimeStamp '
+            'prevFrameTimeStamp=$prevFrameTimeStamp ',
+      );
+    }
+
+    prevFrameTimeStamp = currentFrameTimeStamp;
+  }
 }
 
 typedef OnWindowRender = void Function(ui.Scene scene);
@@ -89,60 +109,4 @@ class SmoothTestWindow extends ProxyTestWindow implements TestWindow {
     onRender(scene);
     super.render(scene);
   }
-}
-
-class WindowRenderCapturer {
-  List<ui.Image> get images => UnmodifiableListView(_images);
-  final _images = <ui.Image>[];
-
-  WindowRenderCapturer();
-
-  void reset() => _images.clear();
-
-  void onWindowRender(ui.Scene scene) {
-    final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
-
-    final image = scene.toImageSync(
-        binding.window.logicalWidth, binding.window.logicalHeight);
-    _images.add(image);
-  }
-
-  Future<void> expect(WidgetTester tester, List<ui.Image> expectImages) async {
-    try {
-      flutter_test.expect(_images.length, expectImages.length);
-      for (var i = 0; i < _images.length; ++i) {
-        await flutter_test.expectLater(
-            _images[i], matchesReferenceImage(expectImages[i]));
-      }
-    } on TestFailure catch (_) {
-      await tester.runAsync(() async {
-        debugPrint('WindowRenderCapturer.expect save failed images to disk');
-        for (var i = 0; i < _images.length; ++i) {
-          await _images[i].save('failure_${i}_actual.png');
-        }
-        for (var i = 0; i < expectImages.length; ++i) {
-          await expectImages[i].save('failure_${i}_expect.png');
-        }
-      });
-
-      rethrow;
-    }
-  }
-}
-
-extension ExtUiImage on ui.Image {
-  Future<void> save(String path) async {
-    final byteData = await toByteData(format: ui.ImageByteFormat.png);
-    final bytes = byteData!.buffer.asUint8List();
-    debugPrint('Save image to $path');
-    File(path).writeAsBytesSync(bytes);
-  }
-}
-
-extension ExtWindow on ui.SingletonFlutterWindow {
-  Size get _logicalSize => physicalSize / devicePixelRatio;
-
-  int get logicalWidth => _logicalSize.width.round();
-
-  int get logicalHeight => _logicalSize.height.round();
 }
