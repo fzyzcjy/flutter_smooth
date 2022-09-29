@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 
 void main() {
+  SmoothWidgetsFlutterBinding.ensureInitialized();
   debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
   runApp(const MyApp());
 }
