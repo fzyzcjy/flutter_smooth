@@ -42,26 +42,26 @@ mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
   TestWindow get window =>
       SmoothTestWindow(super.window, onRender: (s) => onWindowRender?.call(s));
 
-  Duration? prevFrameTimeStamp;
+  Duration? _prevFrameTimeStamp;
 
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
     super.handleBeginFrame(rawTimeStamp);
 
     final smoothActive = ServiceLocator.maybeInstance != null;
-    if (smoothActive && prevFrameTimeStamp != null) {
+    if (smoothActive && _prevFrameTimeStamp != null) {
       expect(
-        (currentFrameTimeStamp - prevFrameTimeStamp!).inMicroseconds %
+        (currentFrameTimeStamp - _prevFrameTimeStamp!).inMicroseconds %
             kOneFrame.inMicroseconds,
         0,
         reason: 'frame timestamp should be multiples of kOneFrame, '
             'otherwise Smooth logic will be wrong '
             'currentFrameTimeStamp=$currentFrameTimeStamp '
-            'prevFrameTimeStamp=$prevFrameTimeStamp ',
+            'prevFrameTimeStamp=$_prevFrameTimeStamp ',
       );
     }
 
-    prevFrameTimeStamp = currentFrameTimeStamp;
+    _prevFrameTimeStamp = currentFrameTimeStamp;
   }
 
   @override
