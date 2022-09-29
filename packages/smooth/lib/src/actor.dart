@@ -80,7 +80,11 @@ class Actor {
 
   void _preemptModifyLayerTree(Duration timeStamp) {
     for (final pack in ServiceLocator.instance.auxiliaryTreeRegistry.trees) {
-      pack.runPipeline(timeStamp, debugReason: 'preemptModifyLayerTree');
+      pack.runPipeline(
+        timeStamp,
+        skipIfTimeStampUnchanged: false,
+        debugReason: 'preemptModifyLayerTree',
+      );
     }
   }
 }

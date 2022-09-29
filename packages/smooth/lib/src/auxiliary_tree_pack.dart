@@ -29,6 +29,7 @@ class AuxiliaryTreePack {
 
   final mainSubTreeLayerHandle = LayerHandle(OffsetLayer());
   final tickerRegistry = TickerRegistry();
+  Duration? _previousRunPipelineTimeStamp;
 
   AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
     pipelineOwner = PipelineOwner();
@@ -57,7 +58,20 @@ class AuxiliaryTreePack {
     ServiceLocator.instance.auxiliaryTreeRegistry._attach(this);
   }
 
-  void runPipeline(Duration timeStamp, {required String debugReason}) {
+  void runPipeline(
+    Duration timeStamp, {
+    required bool skipIfTimeStampUnchanged,
+        required String debugReason,
+  }) {
+    // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261687755
+    if (skipIfTimeStampUnchanged &&
+        _previousRunPipelineTimeStamp == timeStamp) {
+      print(
+          '$runtimeType runPipeline skip since timeStamp=$timeStamp same as previous');
+      return;
+    }
+    _previousRunPipelineTimeStamp = timeStamp;
+
     Timeline.timeSync('AuxTree.RunPipeline', () {
       print(
           '$runtimeType runPipeline start timeStamp=$timeStamp debugReason=$debugReason');
