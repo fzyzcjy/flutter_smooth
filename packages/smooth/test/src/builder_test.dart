@@ -104,11 +104,20 @@ void main() {
         // create smooth extra frames. Otherwise, the layer tree is event not
         // built yet (because paint is not called yet).
         debugPrint('action: pump now=${clock.now()}');
-        await tester.pump(timeInfo.calcPumpDuration(frameIndex: 1));
+        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
 
         await capturer.expectAndReset(tester, [
           await _SmoothBuilderTester.createExpectImage(tester, 0.1),
           await _SmoothBuilderTester.createExpectImage(tester, 0.2),
+        ]);
+
+        // #60
+        debugPrint('action: pump again now=${clock.now()}');
+        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
+
+        await capturer.expectAndReset(tester, [
+          await _SmoothBuilderTester.createExpectImage(tester, 0.3),
+          await _SmoothBuilderTester.createExpectImage(tester, 0.4),
         ]);
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
