@@ -107,8 +107,8 @@ void main() {
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
 
         await capturer.expectAndReset(tester, [
-          await _SmoothBuilderTester.createExpectImage(tester, 0.1),
           await _SmoothBuilderTester.createExpectImage(tester, 0.2),
+          await _SmoothBuilderTester.createExpectImage(tester, 0.4),
         ]);
 
         // #60
@@ -116,8 +116,8 @@ void main() {
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
 
         await capturer.expectAndReset(tester, [
-          await _SmoothBuilderTester.createExpectImage(tester, 0.3),
-          await _SmoothBuilderTester.createExpectImage(tester, 0.4),
+          await _SmoothBuilderTester.createExpectImage(tester, 0.6),
+          await _SmoothBuilderTester.createExpectImage(tester, 0.8),
         ]);
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
@@ -143,7 +143,7 @@ class _SmoothBuilderTester extends StatelessWidget {
   Widget build(BuildContext context) {
     return SmoothBuilder(
       builder: (context, child) => SimpleAnimatedBuilder(
-        duration: kOneFrame * 10,
+        duration: kOneFrame * 5,
         builder: (_, animationValue) {
           debugPrint(
               'SimpleAnimatedBuilder.builder animationValue=$animationValue');
