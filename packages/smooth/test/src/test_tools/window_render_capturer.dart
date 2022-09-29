@@ -36,7 +36,10 @@ class WindowRenderCapturer {
       flutter_test.expect(_images.length, expectImages.length);
       for (var i = 0; i < _images.length; ++i) {
         await flutter_test.expectLater(
-            _images[i], matchesReferenceImage(expectImages[i]));
+          _images[i],
+          matchesReferenceImage(expectImages[i]),
+          reason: 'context: i=$i',
+        );
       }
     } on TestFailure catch (_) {
       await tester.runAsync(() async {

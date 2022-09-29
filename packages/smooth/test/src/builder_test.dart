@@ -162,6 +162,54 @@ void main() {
           );
         });
       });
+
+      testWidgets('multiple preempt points', (tester) async {
+        debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
+        final timeInfo = TimeInfo();
+        final capturer = WindowRenderCapturer.autoRegister();
+
+        var enableSlowWork = false;
+
+        debugPrint('pumpWidget');
+        await tester.pumpWidget(SmoothScope(
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: Stack(
+              children: [
+                const _SmoothBuilderTester(),
+                for (var i = 0; i < 10; ++i) ...[
+                  AlwaysLayoutBuilder(
+                    onPerformLayout: () => enableSlowWork
+                        ? binding
+                            .elapseBlocking(const Duration(milliseconds: 16))
+                        : null,
+                  ),
+                  const LayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
+                ],
+              ],
+            ),
+          ),
+        ));
+
+        await capturer.expectAndReset(tester, [
+          await _SmoothBuilderTester.createExpectImage(tester, 0),
+        ]);
+
+        enableSlowWork = true;
+
+        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
+
+        await capturer.expectAndReset(tester, [
+          await _SmoothBuilderTester.createExpectImage(tester, 0.2),
+          await _SmoothBuilderTester.createExpectImage(tester, 0.4),
+          await _SmoothBuilderTester.createExpectImage(tester, 0.6),
+          await _SmoothBuilderTester.createExpectImage(tester, 0.8),
+          for (var i = 0; i < 3; ++i)
+            await _SmoothBuilderTester.createExpectImage(tester, 1),
+        ]);
+
+        debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
+      });
     });
   });
 }
