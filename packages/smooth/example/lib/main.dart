@@ -4,6 +4,7 @@ import 'package:example/example_enter_page_animation/page.dart';
 import 'package:example/utils/debug_plain_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:smooth/smooth.dart';
 
 void main() {
   debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
@@ -15,26 +16,29 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Builder(
-          builder: (context) => ListView(
-            children: [
-              ListTile(
-                title: const Text('Example: Enter page animation'),
-                onTap: () => Navigator.push<dynamic>(
-                    context,
-                    MaterialPageRoute<dynamic>(
-                        builder: (_) => const ExampleEnterPageAnimationPage())),
-              ),
-              ListTile(
-                title: const Text('Show debug widget'),
-                onTap: () => Navigator.push<dynamic>(
-                    context,
-                    MaterialPageRoute<dynamic>(
-                        builder: (_) => const DebugPlainAnimationPage())),
-              ),
-            ],
+    return SmoothScope(
+      child: MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => ListView(
+              children: [
+                ListTile(
+                  title: const Text('Example: Enter page animation'),
+                  onTap: () => Navigator.push<dynamic>(
+                      context,
+                      MaterialPageRoute<dynamic>(
+                          builder: (_) =>
+                              const ExampleEnterPageAnimationPage())),
+                ),
+                ListTile(
+                  title: const Text('Show debug widget'),
+                  onTap: () => Navigator.push<dynamic>(
+                      context,
+                      MaterialPageRoute<dynamic>(
+                          builder: (_) => const DebugPlainAnimationPage())),
+                ),
+              ],
+            ),
           ),
         ),
       ),
