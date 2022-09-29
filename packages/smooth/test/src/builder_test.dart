@@ -13,6 +13,7 @@ import 'package:smooth/src/service_locator.dart';
 import 'test_tools/animation.dart';
 import 'test_tools/binding.dart';
 import 'test_tools/image.dart';
+import 'test_tools/time_info.dart';
 import 'test_tools/widgets.dart';
 import 'test_tools/window.dart';
 import 'test_tools/window_render_capturer.dart';
@@ -56,7 +57,7 @@ void main() {
 
       testWidgets('when one extra smooth frame', (tester) async {
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
-        final testBeginTime = binding.clock.now();
+        final timeInfo = TimeInfo();
         final capturer = WindowRenderCapturer.autoRegister();
 
         var slowWorkDuration = Duration.zero;
@@ -103,10 +104,7 @@ void main() {
         // create smooth extra frames. Otherwise, the layer tree is event not
         // built yet (because paint is not called yet).
         debugPrint('action: pump now=${clock.now()}');
-        final pumpDuration =
-            testBeginTime.add(kOneFrame).difference(binding.clock.now());
-        expect(pumpDuration, kOneFrame);
-        await tester.pump(pumpDuration);
+        await tester.pump(timeInfo.calcPumpDuration(frameIndex: 1));
 
         await capturer.expectAndReset(tester, [
           await _SmoothBuilderTester.createExpectImage(tester, 0.1),
