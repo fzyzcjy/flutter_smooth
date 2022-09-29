@@ -48,6 +48,9 @@ class SmoothAutomatedTestWidgetsFlutterBinding
   void initInstances() {
     super.initInstances();
     _instance = this;
+
+    // NOTE see https://github.com/fzyzcjy/flutter_smooth/issues/48
+    accuratePump = true;
   }
 
   static SmoothAutomatedTestWidgetsFlutterBinding get instance =>
