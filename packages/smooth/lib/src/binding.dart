@@ -46,7 +46,7 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
   }
 
   void _handleAfterFlushLayout() {
-    print('TODO _handleAfterFlushLayout');
+    print('TODO _handleAfterFlushLayout now=${clock.now()}');
     // TODO
   }
 }
