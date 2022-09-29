@@ -149,6 +149,7 @@ void main() {
             .createScreenImage((im) => im.fillLeftRight(red, _green(0.2))),
       ]);
 
+      await tester.pumpWidget(Container());
       debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
     });
   });

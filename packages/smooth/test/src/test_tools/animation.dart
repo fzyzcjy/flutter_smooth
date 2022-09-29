@@ -33,6 +33,12 @@ class _SimpleAnimatedBuilderState extends State<SimpleAnimatedBuilder>
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: controller,
