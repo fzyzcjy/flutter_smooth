@@ -11,20 +11,23 @@ class AdapterInAuxiliaryTreeWidget extends SingleChildRenderObjectWidget {
   });
 
   @override
-  RenderAdapterInAuxiliaryTree createRenderObject(BuildContext context) =>
-      RenderAdapterInAuxiliaryTree(
+  // ignore: library_private_types_in_public_api
+  _RenderAdapterInAuxiliaryTree createRenderObject(BuildContext context) =>
+      _RenderAdapterInAuxiliaryTree(
         pack: pack,
       );
 
   @override
   void updateRenderObject(
-      BuildContext context, RenderAdapterInAuxiliaryTree renderObject) {
+      BuildContext context,
+      // ignore: library_private_types_in_public_api
+      _RenderAdapterInAuxiliaryTree renderObject) {
     renderObject.pack = pack;
   }
 }
 
-class RenderAdapterInAuxiliaryTree extends RenderBox {
-  RenderAdapterInAuxiliaryTree({
+class _RenderAdapterInAuxiliaryTree extends RenderBox {
+  _RenderAdapterInAuxiliaryTree({
     required this.pack,
   });
 

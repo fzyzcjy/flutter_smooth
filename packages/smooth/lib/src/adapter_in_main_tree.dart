@@ -14,21 +14,24 @@ class AdapterInMainTreeWidget extends SingleChildRenderObjectWidget {
   });
 
   @override
-  RenderAdapterInMainTree createRenderObject(BuildContext context) =>
-      RenderAdapterInMainTree(
+  // ignore: library_private_types_in_public_api
+  _RenderAdapterInMainTree createRenderObject(BuildContext context) =>
+      _RenderAdapterInMainTree(
         pack: pack,
       );
 
   @override
   void updateRenderObject(
-      BuildContext context, RenderAdapterInMainTree renderObject) {
+      BuildContext context,
+      // ignore: library_private_types_in_public_api
+      _RenderAdapterInMainTree renderObject) {
     renderObject.pack = pack;
   }
 }
 
-class RenderAdapterInMainTree extends RenderBox
+class _RenderAdapterInMainTree extends RenderBox
     with RenderObjectWithChildMixin<RenderBox> {
-  RenderAdapterInMainTree({
+  _RenderAdapterInMainTree({
     required this.pack,
   });
 

@@ -23,22 +23,22 @@ class AuxiliaryTreeRegistry {
 }
 
 class AuxiliaryTreePack {
-  late final PipelineOwner pipelineOwner;
+  late final PipelineOwner _pipelineOwner;
   late final AuxiliaryTreeRootView rootView;
-  late final BuildOwner buildOwner;
-  late final RenderObjectToWidgetElement<RenderBox> element;
+  late final BuildOwner _buildOwner;
+  late final RenderObjectToWidgetElement<RenderBox> _element;
 
   final mainSubTreeLayerHandle = LayerHandle(OffsetLayer());
-  final tickerRegistry = TickerRegistry();
+  final _tickerRegistry = TickerRegistry();
   final _removeSubTreeController = RemoveSubTreeController();
   Duration? _previousRunPipelineTimeStamp;
 
   AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
-    pipelineOwner = PipelineOwner();
-    rootView = pipelineOwner.rootNode = AuxiliaryTreeRootView(
+    _pipelineOwner = PipelineOwner();
+    rootView = _pipelineOwner.rootNode = AuxiliaryTreeRootView(
       configuration: const AuxiliaryTreeRootViewConfiguration(size: Size.zero),
     );
-    buildOwner = BuildOwner(
+    _buildOwner = BuildOwner(
       focusManager: FocusManager(),
       // onBuildScheduled: () =>
       //     print('second tree BuildOwner.onBuildScheduled called'),
@@ -49,16 +49,16 @@ class AuxiliaryTreePack {
     final wrappedWidget = RemoveSubTreeWidget(
       controller: _removeSubTreeController,
       child: TickerRegistryInheritedWidget(
-        registry: tickerRegistry,
+        registry: _tickerRegistry,
         child: widget(this),
       ),
     );
 
-    element = RenderObjectToWidgetAdapter<RenderBox>(
+    _element = RenderObjectToWidgetAdapter<RenderBox>(
       container: rootView,
       debugShortDescription: '[AuxiliaryTreePack#${shortHash(this)}.root]',
       child: wrappedWidget,
-    ).attachToRenderTree(buildOwner);
+    ).attachToRenderTree(_buildOwner);
 
     ServiceLocator.instance.auxiliaryTreeRegistry._attach(this);
   }
@@ -85,16 +85,16 @@ class AuxiliaryTreePack {
 
       // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
       // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
-      buildOwner.buildScope(element);
-      pipelineOwner.flushLayout();
-      pipelineOwner.flushCompositingBits();
+      _buildOwner.buildScope(_element);
+      _pipelineOwner.flushLayout();
+      _pipelineOwner.flushCompositingBits();
       // ignore: unnecessary_lambdas
       _temporarilyRemoveDebugActiveLayout(() {
-        pipelineOwner.flushPaint();
+        _pipelineOwner.flushPaint();
       });
       // renderView.compositeFrame(); // this sends the bits to the GPU
       // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
-      buildOwner.finalizeTree();
+      _buildOwner.finalizeTree();
 
       // printWrapped('$runtimeType.runPipeline end');
       // printWrapped('pack.rootView.layer=${rootView.layer?.toStringDeep()}');
@@ -116,7 +116,7 @@ class AuxiliaryTreePack {
 
     // print('$runtimeType callExtraTickerTick tickers=${tickerRegistry.tickers}');
 
-    for (final ticker in tickerRegistry.tickers) {
+    for (final ticker in _tickerRegistry.tickers) {
       ticker.maybeExtraTick(timeStamp);
     }
   }
