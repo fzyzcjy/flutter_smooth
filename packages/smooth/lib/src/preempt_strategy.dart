@@ -86,11 +86,6 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
   @override
   void refresh() {
-    assert(
-        shouldAct(),
-        'When call `refresh`, should have `shouldAct`=true, '
-        'otherwise the preemptRender should not happen');
-
     final now = dependency.now();
     final nowTimeStamp = _timeInfoCalculator.dateTimeToTimeStamp(now);
 

@@ -49,6 +49,7 @@ class Actor {
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
 
+      assert(ServiceLocator.instance.preemptStrategy.shouldAct());
       ServiceLocator.instance.preemptStrategy.refresh();
 
       final smoothFrameTimeStamp =
