@@ -27,10 +27,24 @@ class WindowRenderCapturer {
         binding.window.logicalWidth, binding.window.logicalHeight);
     pack.addByNow(image);
   }
+
+  Future<void> expectAndReset(
+    WidgetTester tester, {
+    required int expectTestFrameNumber,
+    required List<ui.Image> expectImages,
+  }) async {
+    await pack.expect(
+        tester, WindowRenderPack.of({expectTestFrameNumber: expectImages}));
+    pack.reset();
+  }
 }
 
 class WindowRenderPack {
-  final _imagesOfFrame = <int, List<ui.Image>>{};
+  final Map<int, List<ui.Image>> _imagesOfFrame;
+
+  WindowRenderPack() : _imagesOfFrame = {};
+
+  WindowRenderPack.of(this._imagesOfFrame);
 
   Iterable<WindowRenderItem> get flatEntries =>
       _imagesOfFrame.entries.expand((entry) => entry.value
@@ -39,6 +53,8 @@ class WindowRenderPack {
                 renderIndexInFrame: renderIndexInFrame,
                 image: image,
               )));
+
+  void reset() => _imagesOfFrame.clear();
 
   void addByNow(ui.Image image) {
     final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
@@ -82,7 +98,7 @@ class WindowRenderPack {
     debugPrint('dump all images to disk...');
     await tester.runAsync(() async {
       for (final entry in flatEntries) {
-        await entry.image.save('${prefix}_${entry.name}.png');
+        await entry.image.save('dump_${prefix}_${entry.name}.png');
       }
     });
   }

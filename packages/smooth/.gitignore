@@ -29,4 +29,4 @@ migrate_working_dir/
 .packages
 build/
 
-failure_*.png
+dump_*.png

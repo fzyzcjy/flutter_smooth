@@ -60,10 +60,10 @@ mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
     // can see correct [testFrameNumber]
     _testFrameNumber = _testFrameNumber! + 1;
 
+    super.handleBeginFrame(rawTimeStamp);
+
     _sanityCheckFrameTimeStamp();
     _prevFrameTimeStamp = currentFrameTimeStamp;
-
-    super.handleBeginFrame(rawTimeStamp);
   }
 
   void _sanityCheckFrameTimeStamp() {
