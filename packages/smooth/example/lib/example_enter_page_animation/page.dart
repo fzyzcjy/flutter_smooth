@@ -56,7 +56,7 @@ class _ExampleEnterPageAnimationPageState
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(title: const Text('Preempt for 60FPS')),
+        appBar: AppBar(title: const Text('Example')),
         body: OverflowBox(
           alignment: Alignment.topCenter,
           maxHeight: double.infinity,

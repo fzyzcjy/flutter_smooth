@@ -20,6 +20,9 @@ class MyApp extends StatelessWidget {
     return SmoothScope(
       child: MaterialApp(
         home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Smooth: 60FPS'),
+          ),
           body: Builder(
             builder: (context) => ListView(
               children: [
