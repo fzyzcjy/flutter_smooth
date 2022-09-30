@@ -1,6 +1,8 @@
 import 'package:example/utils/complex_widget.dart';
 import 'package:example/utils/debug_plain_animation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 
@@ -90,7 +92,59 @@ class _DummyState extends State<_Dummy> {
   @override
   Widget build(BuildContext context) {
     count++;
-    SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
-    return ColoredBox(color: Colors.cyan[(count % 8 + 1) * 100]!);
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() {});
+    });
+
+    print('hi ${describeIdentity(this)}.build');
+    return _DummyInner(
+      dummy: count,
+      child: ColoredBox(color: Colors.cyan[(count % 8 + 1) * 100]!),
+    );
+  }
+}
+
+class _DummyInner extends SingleChildRenderObjectWidget {
+  final int dummy;
+
+  const _DummyInner({
+    super.key,
+    required this.dummy,
+    super.child,
+  });
+
+  @override
+  _RenderDummy createRenderObject(BuildContext context) =>
+      _RenderDummy(dummy: dummy);
+
+  @override
+  void updateRenderObject(BuildContext context, _RenderDummy renderObject) {
+    renderObject.dummy = dummy;
+  }
+}
+
+class _RenderDummy extends RenderProxyBox {
+  _RenderDummy({
+    required int dummy,
+    RenderBox? child,
+  })  : _dummy = dummy,
+        super(child);
+
+  // not mark repaint yet
+  int get dummy => _dummy;
+  int _dummy;
+
+  set dummy(int value) {
+    if (_dummy == value) return;
+    _dummy = value;
+    print('hi ${describeIdentity(this)} set dummy thus markNeedsPaint');
+    markNeedsPaint();
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    print('hi ${describeIdentity(this)}.paint');
+    super.paint(context, offset);
   }
 }
