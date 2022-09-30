@@ -21,7 +21,7 @@ class ExampleGesturePage extends StatelessWidget {
               child: CounterWidget(prefix: 'Plain: '),
             ),
             SizedBox(
-              height: 80,
+              height: 120,
               child: SmoothBuilder(
                 builder: (_, child) => const Directionality(
                   textDirection: TextDirection.ltr,

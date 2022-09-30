@@ -61,15 +61,34 @@ class _CounterWidgetState extends State<CounterWidget>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (_, __) {
-        _count++;
-        return Text(
-          '${widget.prefix} ${_count.toString().padRight(10)} ${DateTime.now()}',
-          style: const TextStyle(color: Colors.black, fontSize: 22),
-        );
-      },
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedBuilder(
+          animation: _controller,
+          builder: (_, __) {
+            _count++;
+            return Text(
+              '${widget.prefix} ${_count.toString().padRight(10)} ${DateTime.now()}',
+              style: const TextStyle(color: Colors.black, fontSize: 22),
+            );
+          },
+        ),
+        RotationTransition(
+          turns: _controller,
+          child: Container(
+            width: 50,
+            height: 50,
+            color: Colors.green,
+            child: const Center(
+              child: Text(
+                'a',
+                style: TextStyle(fontSize: 50, color: Colors.white, height: 1),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
