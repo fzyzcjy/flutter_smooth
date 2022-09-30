@@ -1,4 +1,3 @@
-import 'package:example/example_gesture/gesture_visualizer.dart';
 import 'package:example/utils/complex_widget.dart';
 import 'package:example/utils/debug_plain_animation.dart';
 import 'package:flutter/material.dart';
@@ -24,18 +23,20 @@ class ExampleGesturePage extends StatelessWidget {
             SizedBox(
               height: 200,
               child: SmoothBuilder(
-                builder: (_, child) => Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: GestureVisualizerByListener(
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                            child: ColoredBox(color: Colors.blue.shade50)),
-                        const CounterWidget(prefix: 'Smooth: '),
-                      ],
-                    ),
-                  ),
-                ),
+                // TODO only to reproduce #5879
+                builder: (_, child) => const _Dummy(),
+                // builder: (_, child) => Directionality(
+                //   textDirection: TextDirection.ltr,
+                //   child: GestureVisualizerByListener(
+                //     child: Stack(
+                //       children: [
+                //         Positioned.fill(
+                //             child: ColoredBox(color: Colors.blue.shade50)),
+                //         const CounterWidget(prefix: 'Smooth: '),
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 // child: Container(color: Colors.green),
                 child: const SizedBox(),
               ),
@@ -73,5 +74,23 @@ class ExampleGesturePage extends StatelessWidget {
         wrapListTile: null,
       );
     });
+  }
+}
+
+class _Dummy extends StatefulWidget {
+  const _Dummy();
+
+  @override
+  State<_Dummy> createState() => _DummyState();
+}
+
+class _DummyState extends State<_Dummy> {
+  var count = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    count++;
+    SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    return ColoredBox(color: Colors.cyan[(count % 8 + 1) * 100]!);
   }
 }

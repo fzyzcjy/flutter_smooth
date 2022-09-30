@@ -77,6 +77,8 @@ class AuxiliaryTreePack {
     }
     _previousRunPipelineTimeStamp = timeStamp;
 
+    print('hi $runtimeType.runPipeline layer=${rootView.layer}');
+
     Timeline.timeSync('AuxTree.RunPipeline', () {
       // print(
       //     '$runtimeType runPipeline start timeStamp=$timeStamp debugReason=$debugReason');
