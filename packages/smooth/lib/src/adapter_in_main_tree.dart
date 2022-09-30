@@ -39,8 +39,10 @@ class _RenderAdapterInMainTree extends RenderBox
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
-    // ref: RenderProxyBox
-    return child?.hitTest(result, position: position) ?? false;
+    // TODO correct? #5871
+    if (child!.hitTest(result, position: position)) return true;
+    if (pack.rootView.hitTest(result, position: position)) return true;
+    return false;
   }
 
   @override

@@ -93,6 +93,44 @@ class AuxiliaryTreeRootView extends RenderObject
     return rootLayer;
   }
 
+  // ref [RenderView] and [RenderProxyBox]
+  //
+  // [RenderProxyBox] is:
+  //
+  // (RenderBox)
+  // bool hitTest(BoxHitTestResult result, { required Offset position }) {
+  //   if (_size!.contains(position)) {
+  //     if (hitTestChildren(result, position: position) || hitTestSelf(position)) {
+  //       result.add(BoxHitTestEntry(this, position));
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
+  //
+  // (RenderProxyBoxMixin)
+  // bool hitTestChildren(BoxHitTestResult result, { required Offset position }) {
+  //   return child?.hitTest(result, position: position) ?? false;
+  // }
+  //
+  // -----
+  //
+  // [RenderView] is:
+  // bool hitTest(HitTestResult result, { required Offset position }) {
+  //   if (child != null) {
+  //     child!.hitTest(BoxHitTestResult.wrap(result), position: position);
+  //   }
+  //   result.add(HitTestEntry(this));
+  //   return true;
+  // }
+  bool hitTest(HitTestResult result, {required Offset position}) {
+    // TODO correct? #5871
+    final childHit =
+        child!.hitTest(BoxHitTestResult.wrap(result), position: position);
+    if (childHit) result.add(HitTestEntry(this));
+    return childHit;
+  }
+
   // ref: [RenderView]
   @override
   bool get isRepaintBoundary => true;

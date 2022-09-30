@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 
 class AdapterInAuxiliaryTreeWidget extends SingleChildRenderObjectWidget {
