@@ -109,16 +109,19 @@ class Actor {
 
     final pendingPacket =
         PlatformDispatcher.pointerDataPacketStorageReadPendingAndClear();
+    // ref: [GestureBinding._handlePointerDataPacket]
+    final pendingEvents = PointerEventConverter.expand(
+        pendingPacket.data, window.devicePixelRatio);
     print(
         'pendingPacket.len=${pendingPacket.data.length} pendingPacket.data=${pendingPacket.data}');
 
-    // WARN: this fake event is VERY dummy! many fields are not filled in
-    // so a real consumer of pointer event may get VERY confused!
-    final event = PointerMoveEvent(
-      pointer: pointer,
-      position: Offset(_nextDummyPosition, _nextDummyPosition),
-    );
-    _nextDummyPosition = (_nextDummyPosition + 10) % 300;
+    // // WARN: this fake event is VERY dummy! many fields are not filled in
+    // // so a real consumer of pointer event may get VERY confused!
+    // final event = PointerMoveEvent(
+    //   pointer: pointer,
+    //   position: Offset(_nextDummyPosition, _nextDummyPosition),
+    // );
+    // _nextDummyPosition = (_nextDummyPosition + 10) % 300;
 
     final interestPipelineOwners = ServiceLocator
         .instance.auxiliaryTreeRegistry.trees
@@ -126,13 +129,16 @@ class Actor {
         .toList();
 
     // https://github.com/fzyzcjy/yplusplus/issues/5867#issuecomment-1263053441
-    gestureBinding.handlePointerEvent(
-      event,
-      filter: (entry) {
-        final target = entry.target;
-        return target is RenderObject &&
-            interestPipelineOwners.contains(target.owner);
-      },
-    );
+    for (final event in pendingEvents) {
+      // TODO this is WRONG, will cause duplicate event sending! #5875
+      gestureBinding.handlePointerEvent(
+        event,
+        filter: (entry) {
+          final target = entry.target;
+          return target is RenderObject &&
+              interestPipelineOwners.contains(target.owner);
+        },
+      );
+    }
   }
 }
