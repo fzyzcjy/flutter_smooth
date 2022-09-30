@@ -14,32 +14,38 @@ class ExampleGesturePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Example'),
       ),
-      body: GestureVisualizerByListener(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Column(
-            children: [
-              const RepaintBoundary(
-                child: CounterWidget(prefix: 'Plain: '),
-              ),
-              SizedBox(
-                height: 120,
-                child: SmoothBuilder(
-                  builder: (_, child) => const Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: CounterWidget(prefix: 'Smooth: '),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Column(
+          children: [
+            const RepaintBoundary(
+              child: CounterWidget(prefix: 'Plain: '),
+            ),
+            SizedBox(
+              height: 200,
+              child: SmoothBuilder(
+                builder: (_, child) => Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: GestureVisualizerByListener(
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                            child: ColoredBox(color: Colors.blue.shade50)),
+                        const CounterWidget(prefix: 'Smooth: '),
+                      ],
+                    ),
                   ),
-                  // child: Container(color: Colors.green),
-                  child: const SizedBox(),
                 ),
+                // child: Container(color: Colors.green),
+                child: const SizedBox(),
               ),
-              Expanded(
-                child: OverflowBox(
-                  child: _buildAlwaysRebuildComplexWidget(),
-                ),
+            ),
+            Expanded(
+              child: OverflowBox(
+                child: _buildAlwaysRebuildComplexWidget(),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
