@@ -49,7 +49,8 @@ class Actor {
       //     'shouldShiftOneFrameForInterestVsyncTarget=$shouldShiftOneFrameForInterestVsyncTarget '
       //     'set-interestVsyncTargetTimeByLastPreemptRender=$interestVsyncTargetTimeByLastPreemptRender');
 
-      _hackDispatchExtraPointerEvents();
+      // #5867
+      // _hackDispatchExtraPointerEvents();
 
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
