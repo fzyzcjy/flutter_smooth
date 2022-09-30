@@ -23,6 +23,7 @@ class AuxiliaryTreeRootViewConfiguration {
   String toString() => '$size';
 }
 
+// NOTE ref [RenderView], which is "tree root view" for main tree
 class AuxiliaryTreeRootView extends RenderObject
     with RenderObjectWithChildMixin<RenderBox> {
   AuxiliaryTreeRootView({
