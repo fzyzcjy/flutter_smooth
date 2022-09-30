@@ -116,7 +116,19 @@ class Actor {
     );
     _nextDummyPosition = (_nextDummyPosition + 10) % 300;
 
+    final interestPipelineOwners = ServiceLocator
+        .instance.auxiliaryTreeRegistry.trees
+        .map((tree) => tree.pipelineOwner)
+        .toList();
+
     // https://github.com/fzyzcjy/yplusplus/issues/5867#issuecomment-1263053441
-    gestureBinding.handlePointerEvent(event);
+    gestureBinding.handlePointerEvent(
+      event,
+      filter: (entry) {
+        final target = entry.target;
+        return target is RenderObject &&
+            interestPipelineOwners.contains(target.owner);
+      },
+    );
   }
 }

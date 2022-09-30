@@ -23,7 +23,7 @@ class AuxiliaryTreeRegistry {
 }
 
 class AuxiliaryTreePack {
-  late final PipelineOwner _pipelineOwner;
+  late final PipelineOwner pipelineOwner;
   late final AuxiliaryTreeRootView rootView;
   late final BuildOwner _buildOwner;
   late final RenderObjectToWidgetElement<RenderBox> _element;
@@ -34,8 +34,8 @@ class AuxiliaryTreePack {
   Duration? _previousRunPipelineTimeStamp;
 
   AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
-    _pipelineOwner = PipelineOwner();
-    rootView = _pipelineOwner.rootNode = AuxiliaryTreeRootView(
+    pipelineOwner = PipelineOwner();
+    rootView = pipelineOwner.rootNode = AuxiliaryTreeRootView(
       configuration: const AuxiliaryTreeRootViewConfiguration(size: Size.zero),
     );
     _buildOwner = BuildOwner(
@@ -86,11 +86,11 @@ class AuxiliaryTreePack {
       // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
       // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
       _buildOwner.buildScope(_element);
-      _pipelineOwner.flushLayout();
-      _pipelineOwner.flushCompositingBits();
+      pipelineOwner.flushLayout();
+      pipelineOwner.flushCompositingBits();
       // ignore: unnecessary_lambdas
       _temporarilyRemoveDebugActiveLayout(() {
-        _pipelineOwner.flushPaint();
+        pipelineOwner.flushPaint();
       });
       // renderView.compositeFrame(); // this sends the bits to the GPU
       // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
