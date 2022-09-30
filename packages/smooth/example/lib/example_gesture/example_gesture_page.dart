@@ -40,9 +40,16 @@ class ExampleGesturePage extends StatelessWidget {
                 child: const SizedBox(),
               ),
             ),
-            Expanded(
-              child: OverflowBox(
-                child: _buildAlwaysRebuildComplexWidget(),
+            SizedBox(
+              height: 100,
+              // https://github.com/fzyzcjy/yplusplus/issues/5876#issuecomment-1263264848
+              child: RepaintBoundary(
+                // https://github.com/fzyzcjy/yplusplus/issues/5876#issuecomment-1263276032
+                child: ClipRect(
+                  child: OverflowBox(
+                    child: _buildAlwaysRebuildComplexWidget(),
+                  ),
+                ),
               ),
             ),
           ],
@@ -54,18 +61,15 @@ class ExampleGesturePage extends StatelessWidget {
   static var _dummy = 1;
 
   Widget _buildAlwaysRebuildComplexWidget() {
-    // https://github.com/fzyzcjy/yplusplus/issues/5876#issuecomment-1263264848
-    return RepaintBoundary(
-      child: StatefulBuilder(builder: (_, setState) {
-        SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    return StatefulBuilder(builder: (_, setState) {
+      SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
 
-        return ComplexWidget(
-          // thus it will recreate the whole subtree, in each frame
-          key: ValueKey('${_dummy++}'),
-          listTileCount: 150,
-          wrapListTile: null,
-        );
-      }),
-    );
+      return ComplexWidget(
+        // thus it will recreate the whole subtree, in each frame
+        key: ValueKey('${_dummy++}'),
+        listTileCount: 150,
+        wrapListTile: null,
+      );
+    });
   }
 }
