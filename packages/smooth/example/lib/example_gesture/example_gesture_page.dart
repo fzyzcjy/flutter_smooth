@@ -67,7 +67,9 @@ class ExampleGesturePage extends StatelessWidget {
       return ComplexWidget(
         // thus it will recreate the whole subtree, in each frame
         key: ValueKey('${_dummy++}'),
-        listTileCount: 150,
+        // listTileCount: 150,
+        // TODO temporary, only for #5879 reproduction
+        listTileCount: 2,
         wrapListTile: null,
       );
     });
