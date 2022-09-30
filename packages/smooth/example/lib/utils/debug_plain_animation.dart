@@ -67,6 +67,8 @@ class _CounterWidgetState extends State<CounterWidget>
         AnimatedBuilder(
           animation: _controller,
           builder: (_, __) {
+            // print(
+            //     '$runtimeType AnimatedBuilder.builder called (${widget.prefix})');
             _count++;
             return Text(
               '${widget.prefix} ${_count.toString().padRight(10)} ${DateTime.now()}',
