@@ -15,7 +15,10 @@ class _GestureVisualizerByListenerState
     extends State<GestureVisualizerByListener> {
   Offset? position;
 
-  void _updatePosition(Offset? value) => setState(() => position = value);
+  void _updatePosition(Offset? value) {
+    print('_GestureVisualizerByListenerState position=$value');
+    setState(() => position = value);
+  }
 
   static const size = 48.0;
 
