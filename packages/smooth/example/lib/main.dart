@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:example/example_enter_page_animation/page.dart';
-import 'package:example/example_gesture/ExampleGesturePage.dart';
+import 'package:example/example_gesture/example_gesture_page.dart';
 import 'package:example/utils/debug_plain_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
