@@ -110,8 +110,10 @@ class _RenderAdapterInMainTree extends RenderBox
     // context.pushLayer(auxiliaryTreeRootLayer, (context, offset) {}, offset);
 
     // print('auxiliaryTreeRootLayer.attached=${auxiliaryTreeRootLayer.attached}');
-    // printWrapped(
-    //     'after addLayer auxiliaryTreeRootLayer=${auxiliaryTreeRootLayer.toStringDeep()}');
+    printWrapped(
+        '$runtimeType._paintAuxiliaryTreeRootLayerToCurrentContext after addLayer '
+        'context.containerLayer.attached=${context.containerLayer.attached} '
+        'auxiliaryTreeRootLayer=${auxiliaryTreeRootLayer.toStringDeep()}');
   }
 
   // NOTE do *not* have any relation w/ self's PaintingContext, as we will not paint there
@@ -127,3 +129,6 @@ class _RenderAdapterInMainTree extends RenderBox
     childContext.stopRecordingIfNeeded();
   }
 }
+
+void printWrapped(String text) =>
+    RegExp('.{1,800}').allMatches(text).map((m) => m.group(0)).forEach(print);

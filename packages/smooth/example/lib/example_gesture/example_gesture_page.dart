@@ -138,8 +138,9 @@ class _RenderDummy extends RenderProxyBox {
   set dummy(int value) {
     if (_dummy == value) return;
     _dummy = value;
-    print('hi ${describeIdentity(this)} set dummy thus markNeedsPaint');
+    print('hi ${describeIdentity(this)} set dummy thus markNeedsPaint START');
     markNeedsPaint();
+    print('hi ${describeIdentity(this)} set dummy thus markNeedsPaint END');
   }
 
   @override

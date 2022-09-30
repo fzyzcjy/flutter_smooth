@@ -7,6 +7,9 @@ class ProxyPipelineOwner implements PipelineOwner {
   ProxyPipelineOwner(this.inner);
 
   @override
+  List<RenderObject> get nodesNeedingPaint => inner.nodesNeedingPaint;
+
+  @override
   VoidCallback? get onNeedVisualUpdate => inner.onNeedVisualUpdate;
 
   @override

@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
+import 'package:smooth/src/adapter_in_main_tree.dart';
 
 // ref: [ViewConfiguration]
 class AuxiliaryTreeRootViewConfiguration {
@@ -88,7 +90,7 @@ class AuxiliaryTreeRootView extends RenderObject
 
   // ref: [RenderView]
   TransformLayer _updateMatricesAndCreateNewRootLayer() {
-    final rootLayer = TransformLayer(transform: Matrix4.identity());
+    final rootLayer = MyTransformLayer(transform: Matrix4.identity());
     rootLayer.attach(this);
     return rootLayer;
   }
@@ -148,4 +150,22 @@ class AuxiliaryTreeRootView extends RenderObject
   // ref: [RenderView]
   @override
   Rect get semanticBounds => paintBounds;
+}
+
+class MyTransformLayer extends TransformLayer {
+  MyTransformLayer({super.transform, super.offset});
+
+  @override
+  void attach(covariant Object owner) {
+    print('${describeIdentity(this)}.attach owner=$owner');
+    printWrapped(StackTrace.current.toString());
+    super.attach(owner);
+  }
+
+  @override
+  void detach() {
+    print('${describeIdentity(this)}.detach (old)owner=$owner');
+    printWrapped(StackTrace.current.toString());
+    super.detach();
+  }
 }

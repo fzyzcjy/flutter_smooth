@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:smooth/src/adapter_in_main_tree.dart';
 import 'package:smooth/src/auxiliary_tree_root_view.dart';
 import 'package:smooth/src/remove_sub_tree_widget.dart';
 import 'package:smooth/src/service_locator.dart';
@@ -77,7 +78,8 @@ class AuxiliaryTreePack {
     }
     _previousRunPipelineTimeStamp = timeStamp;
 
-    print('hi $runtimeType.runPipeline layer=${rootView.layer}');
+    print(
+        'hi $runtimeType.runPipeline debugReason=$debugReason layer=${rootView.layer}');
 
     Timeline.timeSync('AuxTree.RunPipeline', () {
       // print(
@@ -92,11 +94,16 @@ class AuxiliaryTreePack {
       pipelineOwner.flushCompositingBits();
       // ignore: unnecessary_lambdas
       _temporarilyRemoveDebugActiveLayout(() {
+        print(
+            'hi call pipelineOwner.flushPaint pipelineOwner=${describeIdentity(pipelineOwner)} nodesNeedingPaint=${pipelineOwner.nodesNeedingPaint}');
         pipelineOwner.flushPaint();
       });
       // renderView.compositeFrame(); // this sends the bits to the GPU
       // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
       _buildOwner.finalizeTree();
+
+      printWrapped(
+          '$runtimeType.runPipeline after finalizeTree rootView.layer=${rootView.layer!.toStringDeep()}');
 
       // printWrapped('$runtimeType.runPipeline end');
       // printWrapped('pack.rootView.layer=${rootView.layer?.toStringDeep()}');
