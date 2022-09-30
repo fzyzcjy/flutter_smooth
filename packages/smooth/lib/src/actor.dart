@@ -107,6 +107,10 @@ class Actor {
         'pointer=$pointer '
         'hitTest=${gestureBinding.hitTests[pointer]!}');
 
+    final pendingPacket = PlatformDispatcher.pointerDataPacketStorageReadAll();
+    print(
+        'pendingPacket.len=${pendingPacket.data.length} pendingPacket.data=${pendingPacket.data}');
+
     // WARN: this fake event is VERY dummy! many fields are not filled in
     // so a real consumer of pointer event may get VERY confused!
     final event = PointerMoveEvent(
