@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:clock/clock.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth/src/service_locator.dart';
 
@@ -91,9 +93,29 @@ class Actor {
     }
   }
 
+  static var _nextDummyPosition = 0.0;
+
   // TODO just prototype, not final code
   // #5867
   void _hackDispatchExtraPointerEvents() {
-    TODO;
+    final gestureBinding = GestureBinding.instance;
+
+    final pointer = gestureBinding.hitTests.keys.firstOrNull;
+    if (pointer == null) return;
+
+    print('hackDispatchExtraPointerEvents '
+        'pointer=$pointer '
+        'hitTest=${gestureBinding.hitTests[pointer]!}');
+
+    // WARN: this fake event is VERY dummy! many fields are not filled in
+    // so a real consumer of pointer event may get VERY confused!
+    final event = PointerMoveEvent(
+      pointer: pointer,
+      position: Offset(_nextDummyPosition, _nextDummyPosition),
+    );
+    _nextDummyPosition = (_nextDummyPosition + 10) % 300;
+
+    // https://github.com/fzyzcjy/yplusplus/issues/5867#issuecomment-1263053441
+    gestureBinding.handlePointerEvent(event);
   }
 }
