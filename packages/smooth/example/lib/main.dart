@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:example/example_enter_page_animation/page.dart';
+import 'package:example/example_gesture/ExampleGesturePage.dart';
 import 'package:example/utils/debug_plain_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -33,6 +34,13 @@ class MyApp extends StatelessWidget {
                       MaterialPageRoute<dynamic>(
                           builder: (_) =>
                               const ExampleEnterPageAnimationPage())),
+                ),
+                ListTile(
+                  title: const Text('Example: Gesture'),
+                  onTap: () => Navigator.push<dynamic>(
+                      context,
+                      MaterialPageRoute<dynamic>(
+                          builder: (_) => const ExampleGesturePage())),
                 ),
                 ListTile(
                   title: const Text('Show debug widget'),

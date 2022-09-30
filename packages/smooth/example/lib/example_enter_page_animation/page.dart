@@ -53,23 +53,20 @@ class _ExampleEnterPageAnimationPageState
   }
 
   Widget _buildFirstPage() {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Example')),
-        body: OverflowBox(
-          alignment: Alignment.topCenter,
-          maxHeight: double.infinity,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (final targetMode in EnterPageAnimationMode.values)
-                ListTile(
-                  title: Text(targetMode.name),
-                  onTap: () => setState(() => mode = targetMode),
-                ),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Example')),
+      body: OverflowBox(
+        alignment: Alignment.topCenter,
+        maxHeight: double.infinity,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final targetMode in EnterPageAnimationMode.values)
+              ListTile(
+                title: Text(targetMode.name),
+                onTap: () => setState(() => mode = targetMode),
+              ),
+          ],
         ),
       ),
     );
@@ -114,6 +111,7 @@ class _SecondPageState extends State<SecondPage> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO remove MaterialApp here
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
