@@ -1,3 +1,4 @@
+import 'package:example/example_gesture/gesture_visualizer.dart';
 import 'package:example/utils/complex_widget.dart';
 import 'package:example/utils/debug_plain_animation.dart';
 import 'package:flutter/material.dart';
@@ -13,30 +14,32 @@ class ExampleGesturePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Example'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Column(
-          children: [
-            const RepaintBoundary(
-              child: CounterWidget(prefix: 'Plain: '),
-            ),
-            SizedBox(
-              height: 120,
-              child: SmoothBuilder(
-                builder: (_, child) => const Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: CounterWidget(prefix: 'Smooth: '),
+      body: GestureVisualizerByListener(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Column(
+            children: [
+              const RepaintBoundary(
+                child: CounterWidget(prefix: 'Plain: '),
+              ),
+              SizedBox(
+                height: 120,
+                child: SmoothBuilder(
+                  builder: (_, child) => const Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: CounterWidget(prefix: 'Smooth: '),
+                  ),
+                  // child: Container(color: Colors.green),
+                  child: const SizedBox(),
                 ),
-                // child: Container(color: Colors.green),
-                child: const SizedBox(),
               ),
-            ),
-            Expanded(
-              child: OverflowBox(
-                child: _buildAlwaysRebuildComplexWidget(),
+              Expanded(
+                child: OverflowBox(
+                  child: _buildAlwaysRebuildComplexWidget(),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
