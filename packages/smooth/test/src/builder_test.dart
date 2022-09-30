@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -220,6 +221,84 @@ void main() {
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
       });
+    });
+
+    group('randomized test', () {
+      final mustWidgets = <Widget>[
+        TODO,
+      ];
+
+      final optionalWidgets = <Widget>[
+        const AlwaysLayoutBuilder(),
+        const AlwaysBuildBuilder(),
+        TODO,
+      ];
+
+      final wrappers = <Widget Function(Widget)>[
+        (child) => BuildPreemptPointWidget(child: child),
+        (child) => LayoutPreemptPointWidget(child: child),
+        // cause special behavior about painting
+        (child) => RepaintBoundary(child: child),
+        // cause special behavior about build/layout
+        (child) => LayoutBuilder(builder: (_, __) => child),
+        // quite normal widget
+        (child) => Container(child: child),
+      ];
+
+      Future<void> _body(WidgetTester tester, {required int seed}) async {
+        final r = Random(seed);
+        debugPrint('Test seed=$seed');
+
+        debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
+        final timeInfo = TimeInfo();
+        final capturer = WindowRenderCapturer.autoRegister();
+
+        final childWidget = ValueNotifier<Widget>(Container());
+
+        await tester.pumpWidget(SmoothScope(
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: ValueListenableBuilder<Widget>(
+              valueListenable: childWidget,
+              builder: (_, value, __) => value,
+            ),
+          ),
+        ));
+
+        for (var i = 0; i < 10; ++i) {
+          final numChildren = 1 + r.nextInt(4);
+          var children = <Widget>[
+            ...mustWidgets,
+            for (var i = 0; i < numChildren; ++i)
+              optionalWidgets[r.nextInt(optionalWidgets.length)],
+          ];
+          children.shuffle(r);
+
+          children = children.map((child) {
+            final numWrappers = r.nextInt(3);
+            var result = child;
+            for (var i = 0; i < numWrappers; ++i) {
+              result = wrappers[r.nextInt(wrappers.length)](result);
+            }
+            return result;
+          }).toList();
+
+          childWidget.value = Column(children: children);
+          await tester.pump(timeInfo.calcPumpDurationAuto());
+        }
+
+        TODO_expect;
+
+        debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
+      }
+
+      testWidgets('random', (tester) async {
+        for (var iter = 0; iter < 100; ++iter) {
+          await _body(tester, seed: Random().nextInt(100000000));
+        }
+      });
+
+      // when see bugs, can add extra tests here with fixed seed
     });
   });
 }

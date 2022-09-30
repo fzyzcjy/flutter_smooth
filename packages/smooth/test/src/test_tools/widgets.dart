@@ -6,7 +6,7 @@ class AlwaysBuildBuilder extends StatefulWidget {
   final VoidCallback? onBuild;
   final Widget? child;
 
-  const AlwaysBuildBuilder({super.key, required this.onBuild, this.child});
+  const AlwaysBuildBuilder({super.key, this.onBuild, this.child});
 
   @override
   State<AlwaysBuildBuilder> createState() => _AlwaysBuildBuilderState();
