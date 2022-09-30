@@ -42,7 +42,7 @@ class ExampleGesturePage extends StatelessWidget {
     );
   }
 
-  static var _dummy = 0;
+  static var _dummy = 1;
 
   Widget _buildAlwaysRebuildComplexWidget() {
     return StatefulBuilder(builder: (_, setState) {
@@ -50,7 +50,7 @@ class ExampleGesturePage extends StatelessWidget {
 
       return ComplexWidget(
         // thus it will recreate the whole subtree, in each frame
-        key: ValueKey(_dummy++),
+        key: ValueKey('${_dummy++}'),
         listTileCount: 150,
         wrapListTile: null,
       );

@@ -128,6 +128,7 @@ class _SecondPageState extends State<SecondPage> {
         body: firstFrame
             ? Container()
             : ComplexWidget(
+                key: const ValueKey(''),
                 listTileCount: widget.listTileCount,
                 wrapListTile: widget.wrapListTile,
               ),
