@@ -34,7 +34,9 @@ class DebugPlainAnimationPage extends StatelessWidget {
 }
 
 class CounterWidget extends StatefulWidget {
-  const CounterWidget({super.key});
+  final String prefix;
+
+  const CounterWidget({super.key, this.prefix = ''});
 
   @override
   State<CounterWidget> createState() => _CounterWidgetState();
@@ -46,15 +48,13 @@ class _CounterWidgetState extends State<CounterWidget> {
   @override
   Widget build(BuildContext context) {
     count++;
-    SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          '${count.toString().padRight(10)} ${DateTime.now()}',
-          style: const TextStyle(fontSize: 30, color: Colors.black),
-        ),
-      ],
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() {});
+    });
+    return Text(
+      '${widget.prefix} ${count.toString().padRight(10)} ${DateTime.now()}',
+      style: const TextStyle(color: Colors.black, fontSize: 22),
     );
   }
 }
