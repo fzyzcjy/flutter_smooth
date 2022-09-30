@@ -6,14 +6,26 @@ class DebugPlainAnimationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Debug Plain Animation'),
-        ),
-        body: const Center(
-          child: RepaintBoundary(
-            child: _DebugPlainAnimationInner(),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Debug Plain Animation'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              RepaintBoundary(
+                child: CounterWidget(),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'This simple animation only serves to test your monitor. '
+                'If this one is not 60FPS, then your monitor/recorder/player/etc may have problem',
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
+            ],
           ),
         ),
       ),
@@ -21,15 +33,14 @@ class DebugPlainAnimationPage extends StatelessWidget {
   }
 }
 
-class _DebugPlainAnimationInner extends StatefulWidget {
-  const _DebugPlainAnimationInner();
+class CounterWidget extends StatefulWidget {
+  const CounterWidget({super.key});
 
   @override
-  State<_DebugPlainAnimationInner> createState() =>
-      __DebugPlainAnimationInnerState();
+  State<CounterWidget> createState() => _CounterWidgetState();
 }
 
-class __DebugPlainAnimationInnerState extends State<_DebugPlainAnimationInner> {
+class _CounterWidgetState extends State<CounterWidget> {
   var count = 0;
 
   @override
@@ -42,12 +53,6 @@ class __DebugPlainAnimationInnerState extends State<_DebugPlainAnimationInner> {
         Text(
           '${count.toString().padRight(10)} ${DateTime.now()}',
           style: const TextStyle(fontSize: 30, color: Colors.black),
-        ),
-        const SizedBox(height: 16),
-        const Text(
-          'This simple animation only serves to test your monitor. '
-          'If this one is not 60FPS, then your monitor/recorder/player/etc may have problem',
-          style: TextStyle(fontSize: 16, color: Colors.black),
         ),
       ],
     );
