@@ -107,7 +107,8 @@ class Actor {
         'pointer=$pointer '
         'hitTest=${gestureBinding.hitTests[pointer]!}');
 
-    final pendingPacket = PlatformDispatcher.pointerDataPacketStorageReadAll();
+    final pendingPacket =
+        PlatformDispatcher.pointerDataPacketStorageReadPendingAndClear();
     print(
         'pendingPacket.len=${pendingPacket.data.length} pendingPacket.data=${pendingPacket.data}');
 
