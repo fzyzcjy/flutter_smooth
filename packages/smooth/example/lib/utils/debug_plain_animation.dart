@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 class DebugPlainAnimationPage extends StatelessWidget {
   const DebugPlainAnimationPage({super.key});
@@ -42,19 +41,35 @@ class CounterWidget extends StatefulWidget {
   State<CounterWidget> createState() => _CounterWidgetState();
 }
 
-class _CounterWidgetState extends State<CounterWidget> {
-  var count = 0;
+class _CounterWidgetState extends State<CounterWidget>
+    with SingleTickerProviderStateMixin {
+  late final _controller =
+      AnimationController(duration: const Duration(seconds: 1), vsync: this);
+  var _count = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    count++;
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      setState(() {});
-    });
-    return Text(
-      '${widget.prefix} ${count.toString().padRight(10)} ${DateTime.now()}',
-      style: const TextStyle(color: Colors.black, fontSize: 22),
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (_, __) {
+        _count++;
+        return Text(
+          '${widget.prefix} ${_count.toString().padRight(10)} ${DateTime.now()}',
+          style: const TextStyle(color: Colors.black, fontSize: 22),
+        );
+      },
     );
   }
 }
