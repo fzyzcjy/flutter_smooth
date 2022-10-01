@@ -19,11 +19,22 @@ class ExampleGesturePage extends StatelessWidget {
         child: Column(
           children: [
             // const LeaveAfterSomeFrames(),
-            const RepaintBoundary(
-              child: CounterWidget(prefix: 'Plain: '),
+            SizedBox(
+              height: 150,
+              child: RepaintBoundary(
+                child: GestureVisualizerByListener(
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                          child: ColoredBox(color: Colors.green.shade50)),
+                      const CounterWidget(prefix: 'Plain: '),
+                    ],
+                  ),
+                ),
+              ),
             ),
             SizedBox(
-              height: 200,
+              height: 150,
               child: SmoothBuilder(
                 // // only to reproduce #5879
                 // builder: (_, child) => const _Dummy(),
@@ -70,9 +81,7 @@ class ExampleGesturePage extends StatelessWidget {
       return ComplexWidget(
         // thus it will recreate the whole subtree, in each frame
         key: ValueKey('${_dummy++}'),
-        // listTileCount: 150,
-        // TODO temporary, only for #5879 reproduction
-        listTileCount: 2,
+        listTileCount: 20,
         wrapListTile: null,
       );
     });
