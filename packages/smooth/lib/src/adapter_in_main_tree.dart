@@ -92,7 +92,9 @@ class _RenderAdapterInMainTree extends RenderBox
     // print(
     //     'just start auxiliaryTreeRootLayer=${auxiliaryTreeRootLayer.toStringDeep()}');
 
+    // this may or may not be good...
     // HACK!!!
+    // related https://github.com/fzyzcjy/yplusplus/issues/5884#issuecomment-1264216323
     if (auxiliaryTreeRootLayer.attached) {
       // print('$runtimeType.paint detach the auxiliaryTreeRootLayer');
       // TODO attach again later?
