@@ -116,6 +116,7 @@ class AuxiliaryTreePack {
     });
   }
 
+  // NOTE #5884
   void _temporarilyEnsureLayerAttached(void Function() run) {
     final dummyOwner = _DummyOwnerForLayer();
 
