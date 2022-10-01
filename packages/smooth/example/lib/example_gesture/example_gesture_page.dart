@@ -19,6 +19,7 @@ class ExampleGesturePage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
           children: [
+            const LeaveAfterSomeFrames(),
             const RepaintBoundary(
               child: CounterWidget(prefix: 'Plain: '),
             ),
@@ -147,5 +148,34 @@ class _RenderDummy extends RenderProxyBox {
   void paint(PaintingContext context, Offset offset) {
     print('hi ${describeIdentity(this)}.paint');
     super.paint(context, offset);
+  }
+}
+
+class LeaveAfterSomeFrames extends StatefulWidget {
+  final VoidCallback? onBuild;
+  final Widget? child;
+
+  const LeaveAfterSomeFrames({super.key, this.onBuild, this.child});
+
+  @override
+  State<LeaveAfterSomeFrames> createState() => _LeaveAfterSomeFramesState();
+}
+
+class _LeaveAfterSomeFramesState extends State<LeaveAfterSomeFrames> {
+  var count = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    count++;
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() {});
+      if (count >= 10) {
+        print('action: Leave after some frames!');
+        Navigator.pop(context);
+        count = -99999;
+      }
+    });
+    widget.onBuild?.call();
+    return widget.child ?? Container();
   }
 }
