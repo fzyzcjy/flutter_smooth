@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 // ref: [ViewConfiguration]
@@ -155,15 +154,17 @@ class MyTransformLayer extends TransformLayer {
   MyTransformLayer({super.transform, super.offset});
 
   @override
+  // ignore: unnecessary_overrides
   void attach(covariant Object owner) {
-    print('${describeIdentity(this)}.attach owner=$owner');
+    // print('${describeIdentity(this)}.attach owner=$owner');
     // printWrapped(StackTrace.current.toString());
     super.attach(owner);
   }
 
   @override
+  // ignore: unnecessary_overrides
   void detach() {
-    print('${describeIdentity(this)}.detach (old)owner=$owner');
+    // print('${describeIdentity(this)}.detach (old)owner=$owner');
     // printWrapped(StackTrace.current.toString());
     super.detach();
   }

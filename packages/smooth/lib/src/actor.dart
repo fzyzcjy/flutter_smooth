@@ -93,7 +93,7 @@ class Actor {
     }
   }
 
-  static var _nextDummyPosition = 0.0;
+  // static var _nextDummyPosition = 0.0;
 
   // TODO just prototype, not final code
   // #5867
@@ -103,17 +103,17 @@ class Actor {
     final pointer = gestureBinding.hitTests.keys.firstOrNull;
     if (pointer == null) return;
 
-    print('hackDispatchExtraPointerEvents '
-        'pointer=$pointer '
-        'hitTest=${gestureBinding.hitTests[pointer]!}');
+    // print('hackDispatchExtraPointerEvents '
+    //     'pointer=$pointer '
+    //     'hitTest=${gestureBinding.hitTests[pointer]!}');
 
     final pendingPacket =
         PlatformDispatcher.pointerDataPacketStorageReadPendingAndClear();
     // ref: [GestureBinding._handlePointerDataPacket]
     final pendingEvents = PointerEventConverter.expand(
         pendingPacket.data, window.devicePixelRatio);
-    print(
-        'pendingPacket.len=${pendingPacket.data.length} pendingPacket.data=${pendingPacket.data}');
+    // print(
+    //     'pendingPacket.len=${pendingPacket.data.length} pendingPacket.data=${pendingPacket.data}');
 
     // // WARN: this fake event is VERY dummy! many fields are not filled in
     // // so a real consumer of pointer event may get VERY confused!
