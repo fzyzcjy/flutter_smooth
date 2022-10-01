@@ -5,8 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 
-class ExampleGesturePage extends StatelessWidget {
+class ExampleGesturePage extends StatefulWidget {
   const ExampleGesturePage({super.key});
+
+  @override
+  State<ExampleGesturePage> createState() => _ExampleGesturePageState();
+}
+
+class _ExampleGesturePageState extends State<ExampleGesturePage> {
+  var listTileCount = 20;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +73,15 @@ class ExampleGesturePage extends StatelessWidget {
                 ),
               ),
             ),
+            Row(
+              children: [
+                for (final value in [1, 10, 20, 100, 200])
+                  TextButton(
+                    onPressed: () => setState(() => listTileCount = value),
+                    child: Text('$value'),
+                  ),
+              ],
+            ),
           ],
         ),
       ),
@@ -81,7 +97,7 @@ class ExampleGesturePage extends StatelessWidget {
       return ComplexWidget(
         // thus it will recreate the whole subtree, in each frame
         key: ValueKey('${_dummy++}'),
-        listTileCount: 20,
+        listTileCount: listTileCount,
         wrapListTile: null,
       );
     });
