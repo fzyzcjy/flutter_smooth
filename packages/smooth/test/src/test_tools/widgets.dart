@@ -15,7 +15,9 @@ class AlwaysBuildBuilder extends StatefulWidget {
 class _AlwaysBuildBuilderState extends State<AlwaysBuildBuilder> {
   @override
   Widget build(BuildContext context) {
-    SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() {});
+    });
     widget.onBuild?.call();
     return widget.child ?? Container();
   }

@@ -11,7 +11,7 @@ void main() {
         physicalSizeTestValue: const Size(100, 50),
         devicePixelRatioTestValue: 1);
 
-    final capturer = WindowRenderCapturer.autoRegister();
+    final capturer = WindowRenderCapturer.autoDispose();
 
     // just a simple scene
     await tester.pumpWidget(DecoratedBox(

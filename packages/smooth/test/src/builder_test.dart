@@ -59,7 +59,7 @@ void main() {
         }) async {
           debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
           final timeInfo = TimeInfo();
-          final capturer = WindowRenderCapturer.autoRegister();
+          final capturer = WindowRenderCapturer.autoDispose();
 
           var enableSlowWork = false;
 
@@ -174,7 +174,7 @@ void main() {
       testWidgets('preempt multiple times in one frame', (tester) async {
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
         final timeInfo = TimeInfo();
-        final capturer = WindowRenderCapturer.autoRegister();
+        final capturer = WindowRenderCapturer.autoDispose();
 
         var enableSlowWork = false;
 
@@ -226,7 +226,7 @@ void main() {
     group('randomized test', () {
       final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
       binding.window.setUpTearDown(
-        physicalSizeTestValue: const Size(100, 50),
+        physicalSizeTestValue: const Size(50, 200),
         devicePixelRatioTestValue: 1,
       );
 
@@ -235,7 +235,8 @@ void main() {
         required int seed,
         required _AnimatingPart animatingPart,
       }) async {
-        debugPrint('Test seed=$seed animatingPart=$animatingPart');
+        debugPrint(
+            '${'=' * 30} Test seed=$seed animatingPart=$animatingPart ${'=' * 30}');
         final r = Random(seed);
 
         final mustWidgets = <Widget>[
@@ -302,10 +303,11 @@ void main() {
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
         final timeInfo = TimeInfo();
-        final capturer = WindowRenderCapturer.autoRegister();
+        final capturer = WindowRenderCapturer();
 
         final childWidget = ValueNotifier<Widget>(Container());
 
+        debugPrint('action: pumpWidget');
         await tester.pumpWidget(SmoothScope(
           child: Directionality(
             textDirection: TextDirection.ltr,
@@ -334,16 +336,26 @@ void main() {
             return result;
           }).toList();
 
+          children = children
+              .map((child) => SizedBox(height: 20, child: child))
+              .toList();
+
           childWidget.value = Column(children: children);
+
+          debugPrint('action: pump');
           await tester.pump(timeInfo.calcPumpDurationAuto());
         }
 
+        debugPrint('action: verify');
         try {
-          final lastScenePerFrameArr = await Future.wait(
-              capturer.pack.imagesOfFrame.entries.map((entry) async {
-            final image = entry.value.last;
-            return await image.toBytes();
-          }).toList());
+          final lastScenePerFrameArr = (await tester.runAsync(() async {
+            return await Future.wait(
+                capturer.pack.imagesOfFrame.entries.map((entry) async {
+              final image = entry.value.last;
+              return await image.toBytes();
+            }).toList());
+          }))!;
+
           for (var i = 0; i < lastScenePerFrameArr.length - 1; ++i) {
             expect(
                 lastScenePerFrameArr[i] != lastScenePerFrameArr[i + 1], true);
@@ -353,18 +365,26 @@ void main() {
           rethrow;
         }
 
+        final Object? exception = tester.takeException();
+        expect(exception, isNull);
+        if (exception != null) throw exception;
+
+        capturer.dispose();
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
       }
 
       for (final animatingPart in _AnimatingPart.values) {
-        testWidgets('random animatingPart=${animatingPart.name}',
-            (tester) async {
+        group('animatingPart=${animatingPart.name}', () {
           for (var iter = 0; iter < 100; ++iter) {
-            await _body(
-              tester,
-              seed: Random().nextInt(100000000),
-              animatingPart: animatingPart,
-            );
+            // have to use a brand new `testWidgets` for one experiment
+            // because otherwise things like timing will be wrong
+            testWidgets('experiment $iter', (tester) async {
+              await _body(
+                tester,
+                seed: Random().nextInt(100000000),
+                animatingPart: animatingPart,
+              );
+            });
           }
         });
       }

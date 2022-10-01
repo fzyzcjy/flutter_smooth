@@ -11,15 +11,20 @@ import 'package:smooth_dev/smooth_dev.dart';
 class WindowRenderCapturer {
   final pack = WindowRenderPack();
 
-  WindowRenderCapturer.autoRegister() {
+  WindowRenderCapturer() {
     final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
-
     assert(binding.onWindowRender == null);
     binding.onWindowRender = _onWindowRender;
-    addTearDown(() {
-      assert(binding.onWindowRender == _onWindowRender);
-      return binding.onWindowRender = null;
-    });
+  }
+
+  WindowRenderCapturer.autoDispose() {
+    addTearDown(dispose);
+  }
+
+  void dispose() {
+    final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
+    assert(binding.onWindowRender == _onWindowRender);
+    return binding.onWindowRender = null;
   }
 
   void _onWindowRender(ui.Scene scene) {

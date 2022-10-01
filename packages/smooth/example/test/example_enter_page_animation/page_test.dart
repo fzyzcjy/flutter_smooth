@@ -43,7 +43,7 @@ void main() {
       testWidgets(arg.name, (tester) async {
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
         final timeInfo = TimeInfo();
-        final capturer = WindowRenderCapturer.autoRegister();
+        final capturer = WindowRenderCapturer.autoDispose();
 
         await tester.pumpWidget(SmoothScope(
           child: ExampleEnterPageAnimationPage(
