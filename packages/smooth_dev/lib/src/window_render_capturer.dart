@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
@@ -40,26 +41,26 @@ class WindowRenderCapturer {
 }
 
 class WindowRenderPack {
-  final Map<int, List<ui.Image>> _imagesOfFrame;
+  final Map<int, List<ui.Image>> imagesOfFrame;
 
-  WindowRenderPack() : _imagesOfFrame = {};
+  WindowRenderPack() : imagesOfFrame = {};
 
-  WindowRenderPack.of(this._imagesOfFrame);
+  WindowRenderPack.of(this.imagesOfFrame);
 
   Iterable<WindowRenderItem> get flatEntries =>
-      _imagesOfFrame.entries.expand((entry) => entry.value
+      imagesOfFrame.entries.expand((entry) => entry.value
           .mapIndexed((renderIndexInFrame, image) => WindowRenderItem(
                 testFrameNumber: entry.key,
                 renderIndexInFrame: renderIndexInFrame,
                 image: image,
               )));
 
-  void reset() => _imagesOfFrame.clear();
+  void reset() => imagesOfFrame.clear();
 
   void addByNow(ui.Image image) {
     final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
     final testFrameNumber = binding.testFrameNumber;
-    (_imagesOfFrame[testFrameNumber] ??= []).add(image);
+    (imagesOfFrame[testFrameNumber] ??= []).add(image);
   }
 
   Future<void> matchesGoldenFile(
@@ -130,11 +131,14 @@ class WindowRenderItem {
 }
 
 extension ExtUiImage on ui.Image {
-  Future<void> save(String path) async {
+  Future<Uint8List> toBytes() async {
     final byteData = await toByteData(format: ui.ImageByteFormat.png);
-    final bytes = byteData!.buffer.asUint8List();
+    return byteData!.buffer.asUint8List();
+  }
+
+  Future<void> save(String path) async {
     debugPrint('Save image to $path');
-    File(path).writeAsBytesSync(bytes);
+    File(path).writeAsBytesSync(await toBytes());
   }
 }
 

@@ -224,30 +224,81 @@ void main() {
     });
 
     group('randomized test', () {
-      final mustWidgets = <Widget>[
-        TODO,
-      ];
+      final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
+      binding.window.setUpTearDown(
+        physicalSizeTestValue: const Size(100, 50),
+        devicePixelRatioTestValue: 1,
+      );
 
-      final optionalWidgets = <Widget>[
-        const AlwaysLayoutBuilder(),
-        const AlwaysBuildBuilder(),
-        TODO,
-      ];
-
-      final wrappers = <Widget Function(Widget)>[
-        (child) => BuildPreemptPointWidget(child: child),
-        (child) => LayoutPreemptPointWidget(child: child),
-        // cause special behavior about painting
-        (child) => RepaintBoundary(child: child),
-        // cause special behavior about build/layout
-        (child) => LayoutBuilder(builder: (_, __) => child),
-        // quite normal widget
-        (child) => Container(child: child),
-      ];
-
-      Future<void> _body(WidgetTester tester, {required int seed}) async {
+      Future<void> _body(
+        WidgetTester tester, {
+        required int seed,
+        required _AnimatingPart animatingPart,
+      }) async {
+        debugPrint('Test seed=$seed animatingPart=$animatingPart');
         final r = Random(seed);
-        debugPrint('Test seed=$seed');
+
+        final mustWidgets = <Widget>[
+          SmoothBuilder(
+            builder: (context, child) => animatingPart == _AnimatingPart.auxTree
+                ? SimpleAnimatedBuilder(
+                    duration: const Duration(seconds: 1),
+                    builder: (_, value) => ColoredBox(
+                      color: Color.fromARGB(255, 0, (255 * value).round(), 0),
+                      child: child,
+                    ),
+                  )
+                : child,
+            child: animatingPart == _AnimatingPart.mainTreeChild
+                ? SimpleAnimatedBuilder(
+                    duration: const Duration(seconds: 1),
+                    builder: (_, value) => ColoredBox(
+                      color: Color.fromARGB(255, 0, 0, (255 * value).round()),
+                    ),
+                  )
+                : Container(color: Colors.blue),
+          ),
+        ];
+
+        Duration randomBlockingDuration() {
+          switch (r.nextInt(4)) {
+            case 0:
+              return Duration.zero;
+            case 1:
+              // short
+              return Duration(microseconds: r.nextInt(2000));
+            case 2:
+              // medium
+              return Duration(milliseconds: r.nextInt(16));
+            case 3:
+              // large
+              return Duration(milliseconds: r.nextInt(30));
+            default:
+              throw UnimplementedError;
+          }
+        }
+
+        final optionalWidgets = <Widget>[
+          const AlwaysLayoutBuilder(),
+          const AlwaysBuildBuilder(),
+          AlwaysLayoutBuilder(onPerformLayout: () {
+            binding.elapseBlocking(randomBlockingDuration());
+          }),
+          AlwaysBuildBuilder(onBuild: () {
+            binding.elapseBlocking(randomBlockingDuration());
+          }),
+        ];
+
+        final wrappers = <Widget Function(Widget)>[
+          (child) => BuildPreemptPointWidget(child: child),
+          (child) => LayoutPreemptPointWidget(child: child),
+          // cause special behavior about painting
+          (child) => RepaintBoundary(child: child),
+          // cause special behavior about build/layout
+          (child) => LayoutBuilder(builder: (_, __) => child),
+          // quite normal widget
+          (child) => Container(child: child),
+        ];
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
         final timeInfo = TimeInfo();
@@ -287,16 +338,36 @@ void main() {
           await tester.pump(timeInfo.calcPumpDurationAuto());
         }
 
-        TODO_expect;
+        try {
+          final lastScenePerFrameArr = await Future.wait(
+              capturer.pack.imagesOfFrame.entries.map((entry) async {
+            final image = entry.value.last;
+            return await image.toBytes();
+          }).toList());
+          for (var i = 0; i < lastScenePerFrameArr.length - 1; ++i) {
+            expect(
+                lastScenePerFrameArr[i] != lastScenePerFrameArr[i + 1], true);
+          }
+        } on TestFailure catch (_) {
+          await capturer.pack.dumpAll(tester, prefix: 'failure');
+          rethrow;
+        }
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
       }
 
-      testWidgets('random', (tester) async {
-        for (var iter = 0; iter < 100; ++iter) {
-          await _body(tester, seed: Random().nextInt(100000000));
-        }
-      });
+      for (final animatingPart in _AnimatingPart.values) {
+        testWidgets('random animatingPart=${animatingPart.name}',
+            (tester) async {
+          for (var iter = 0; iter < 100; ++iter) {
+            await _body(
+              tester,
+              seed: Random().nextInt(100000000),
+              animatingPart: animatingPart,
+            );
+          }
+        });
+      }
 
       // when see bugs, can add extra tests here with fixed seed
     });
@@ -346,4 +417,9 @@ class _SmoothBuilderTester extends StatelessWidget {
       child: Container(color: _red),
     );
   }
+}
+
+enum _AnimatingPart {
+  auxTree,
+  mainTreeChild,
 }
