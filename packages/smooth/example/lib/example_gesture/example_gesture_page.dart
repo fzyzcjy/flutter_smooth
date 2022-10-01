@@ -13,7 +13,7 @@ class ExampleGesturePage extends StatefulWidget {
 }
 
 class _ExampleGesturePageState extends State<ExampleGesturePage> {
-  var listTileCount = 20;
+  var listTileCount = 150;
 
   @override
   Widget build(BuildContext context) {
@@ -94,11 +94,14 @@ class _ExampleGesturePageState extends State<ExampleGesturePage> {
     return StatefulBuilder(builder: (_, setState) {
       SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
 
-      return ComplexWidget(
-        // thus it will recreate the whole subtree, in each frame
-        key: ValueKey('${_dummy++}'),
-        listTileCount: listTileCount,
-        wrapListTile: null,
+      return Opacity(
+        opacity: 0,
+        child: ComplexWidget(
+          // thus it will recreate the whole subtree, in each frame
+          key: ValueKey('${_dummy++}'),
+          listTileCount: listTileCount,
+          wrapListTile: null,
+        ),
       );
     });
   }
