@@ -75,7 +75,7 @@ class _ExampleGesturePageState extends State<ExampleGesturePage> {
             ),
             Row(
               children: [
-                for (final value in [1, 10, 20, 100, 200])
+                for (final value in [1, 10, 20, 50, 100, 200])
                   TextButton(
                     onPressed: () => setState(() => listTileCount = value),
                     child: Text('$value'),
@@ -94,13 +94,10 @@ class _ExampleGesturePageState extends State<ExampleGesturePage> {
     return StatefulBuilder(builder: (_, setState) {
       SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
 
-      return Opacity(
-        opacity: 0,
-        child: ComplexWidget(
-          listTileCount: listTileCount,
-          wrapListTile: null,
-          prefix: '${_dummy++}',
-        ),
+      return ComplexWidget(
+        listTileCount: listTileCount,
+        wrapListTile: null,
+        prefix: '${_dummy++}',
       );
     });
   }
