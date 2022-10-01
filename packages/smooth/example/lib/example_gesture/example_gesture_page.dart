@@ -13,7 +13,8 @@ class ExampleGesturePage extends StatefulWidget {
 }
 
 class _ExampleGesturePageState extends State<ExampleGesturePage> {
-  var listTileCount = 150;
+  var listTileCount = 15;
+  var paint = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,7 @@ class _ExampleGesturePageState extends State<ExampleGesturePage> {
               ),
             ),
             SizedBox(
-              height: 100,
+              height: 50,
               // https://github.com/fzyzcjy/yplusplus/issues/5876#issuecomment-1263264848
               child: RepaintBoundary(
                 // https://github.com/fzyzcjy/yplusplus/issues/5876#issuecomment-1263276032
@@ -75,10 +76,21 @@ class _ExampleGesturePageState extends State<ExampleGesturePage> {
             ),
             Row(
               children: [
-                for (final value in [1, 10, 20, 50, 100, 200])
-                  TextButton(
-                    onPressed: () => setState(() => listTileCount = value),
-                    child: Text('$value'),
+                for (final value in [1, 10, 15, 20, 50, 100, 200])
+                  SizedBox(
+                    width: 48,
+                    child: TextButton(
+                      onPressed: () => setState(() => listTileCount = value),
+                      child: Text('$value'),
+                    ),
+                  ),
+                for (final value in [false, true])
+                  SizedBox(
+                    width: 48,
+                    child: TextButton(
+                      onPressed: () => setState(() => paint = value),
+                      child: Text('$value'),
+                    ),
                   ),
               ],
             ),
@@ -94,10 +106,13 @@ class _ExampleGesturePageState extends State<ExampleGesturePage> {
     return StatefulBuilder(builder: (_, setState) {
       SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
 
-      return ComplexWidget(
-        listTileCount: listTileCount,
-        wrapListTile: null,
-        prefix: '${_dummy++}',
+      return Opacity(
+        opacity: paint ? 1 : 0,
+        child: ComplexWidget(
+          listTileCount: listTileCount,
+          wrapListTile: null,
+          prefix: '${_dummy++}',
+        ),
       );
     });
   }
