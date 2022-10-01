@@ -92,11 +92,13 @@ class AuxiliaryTreePack {
       _buildOwner.buildScope(_element);
       pipelineOwner.flushLayout();
       pipelineOwner.flushCompositingBits();
-      // ignore: unnecessary_lambdas
       _temporarilyRemoveDebugActiveLayout(() {
-        print(
-            'hi call pipelineOwner.flushPaint pipelineOwner=${describeIdentity(pipelineOwner)} nodesNeedingPaint=${pipelineOwner.nodesNeedingPaint}');
-        pipelineOwner.flushPaint();
+        // NOTE #5884
+        _temporarilyEnsureLayerAttached(() {
+          print(
+              'hi call pipelineOwner.flushPaint pipelineOwner=${describeIdentity(pipelineOwner)} nodesNeedingPaint=${pipelineOwner.nodesNeedingPaint}');
+          pipelineOwner.flushPaint();
+        });
       });
       // renderView.compositeFrame(); // this sends the bits to the GPU
       // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
@@ -112,6 +114,27 @@ class AuxiliaryTreePack {
 
       // print('$runtimeType runPipeline end');
     });
+  }
+
+  void _temporarilyEnsureLayerAttached(void Function() run) {
+    final dummyOwner = _DummyOwnerForLayer();
+
+    // ignore: invalid_use_of_protected_member
+    final needAction = !rootView.layer!.attached;
+
+    if (needAction) {
+      // ignore: invalid_use_of_protected_member
+      rootView.layer!.attach(dummyOwner);
+    }
+    try {
+      run();
+    } finally {
+      if (needAction) {
+        // ignore: invalid_use_of_protected_member
+        assert(rootView.layer!.owner == dummyOwner);
+        rootView.layer!.detach(); // ignore: invalid_use_of_protected_member
+      }
+    }
   }
 
   /// #5814
@@ -165,3 +188,5 @@ void _temporarilyRemoveDebugActiveLayout(VoidCallback f) {
     RenderObject.debugActiveLayout = oldDebugActiveLayout;
   }
 }
+
+class _DummyOwnerForLayer {}
