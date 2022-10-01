@@ -10,19 +10,19 @@ Widget identityWidgetWrapper({required Widget child}) => child;
 class ComplexWidget extends StatelessWidget {
   final int listTileCount;
   final WidgetWrapper? wrapListTile;
+  final String prefix;
 
   const ComplexWidget({
-    required ValueKey<String> super.key,
+    super.key,
     required this.listTileCount,
     required this.wrapListTile,
+    this.prefix = '',
   });
 
   @override
   Widget build(BuildContext context) {
     // const textRepeat = 5;
     const textRepeat = 1;
-
-    final widgetKeyName = (key! as ValueKey<String>).value;
 
     // do not let semantics confuse the metrics. b/c we are having a huge
     // amount of text in this demo, while in realworld never has that
@@ -52,11 +52,12 @@ class ComplexWidget extends StatelessWidget {
                         ),
                       ),
                       title: Text(
-                        'Foo contact from $index-th local contact' * textRepeat,
+                        '$prefix Foo contact from $index-th local contact' *
+                            textRepeat,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(fontSize: 5),
                       ),
-                      subtitle: Text('$widgetKeyName +91 88888 8800$index'),
+                      subtitle: Text('$prefix +91 88888 8800$index'),
                     ),
                   ),
                 ),

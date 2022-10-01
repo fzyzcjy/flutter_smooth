@@ -97,10 +97,9 @@ class _ExampleGesturePageState extends State<ExampleGesturePage> {
       return Opacity(
         opacity: 0,
         child: ComplexWidget(
-          // thus it will recreate the whole subtree, in each frame
-          key: ValueKey('${_dummy++}'),
           listTileCount: listTileCount,
           wrapListTile: null,
+          prefix: '${_dummy++}',
         ),
       );
     });
