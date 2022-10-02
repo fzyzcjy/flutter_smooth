@@ -1,5 +1,5 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:smooth/src/adapter_in_auxiliary_tree.dart';
 import 'package:smooth/src/adapter_in_main_tree.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 
@@ -43,24 +43,21 @@ class _SmoothMultiChildBuilderState extends State<SmoothMultiChildBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO ok?
+    print('${describeIdentity(this)}.build call buildScope');
+    pack.buildOwner.buildScope(pack.element);
+
     // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
     // now, so we add a RepaintBoundary to let offset==0
     return RepaintBoundary(
       child: AdapterInMainTreeWidget(
         pack: pack,
-        children: TODO,
+        // NOTE the [slots] are updated after we call [buildOwner.buildScope]
+        // just above.
+        children: pack.childPlaceholderRegistry.slots
+            .map((slot) => widget.childBuilder(context, slot))
+            .toList(),
       ),
     );
-  }
-}
-
-class SmoothChildPlaceholder extends StatelessWidget {
-  final Object slot;
-
-  const SmoothChildPlaceholder({super.key, required this.slot});
-
-  @override
-  Widget build(BuildContext context) {
-    return TODO;
   }
 }
