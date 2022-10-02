@@ -84,7 +84,7 @@ class _RenderAdapterInMainTree extends RenderBox
       final childParentData = child.parentData! as _AdapterParentData;
 
       child.layout(constraints);
-      pack.mainSubTreeSizeOfSlot[childParentData.slot] = child.size;
+      pack.mainSubTreeData(childParentData.slot).size = child.size;
 
       child = childParentData.nextSibling;
     }
@@ -145,26 +145,21 @@ class _RenderAdapterInMainTree extends RenderBox
   // NOTE do *not* have any relation w/ self's PaintingContext, as we will not paint there
   static void _paintSubTreesToPackLayer(
       AuxiliaryTreePack pack, RenderBox? firstChild, Rect estimatedBounds) {
-    final prevHandleOfSlot = pack.mainSubTreeLayerHandleOfSlot;
-    pack.mainSubTreeLayerHandleOfSlot = {};
-
+    final usedSlots = <Object>[];
     var child = firstChild;
     while (child != null) {
       final childParentData = child.parentData! as _AdapterParentData;
+      final slot = childParentData.slot;
 
-      final layerHandle = prevHandleOfSlot.remove(childParentData.slot) ??
-          LayerHandle(OffsetLayer());
-      pack.mainSubTreeLayerHandleOfSlot[childParentData.slot] = layerHandle;
-
-      _paintSubTreeToPackLayer(child, layerHandle, estimatedBounds);
+      usedSlots.add(slot);
+      _paintSubTreeToPackLayer(
+          child, pack.mainSubTreeData(slot).layerHandle, estimatedBounds);
 
       child = childParentData.nextSibling;
     }
 
     // TODO should reuse, not throw away #5928
-    for (final handle in prevHandleOfSlot.values) {
-      handle.layer = null;
-    }
+    pack.removeMainSubTreeSlotsWhere((slot) => !usedSlots.contains(slot));
   }
 
   static void _paintSubTreeToPackLayer(RenderBox child,

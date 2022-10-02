@@ -23,14 +23,34 @@ class AuxiliaryTreeRegistry {
   }
 }
 
+class MainSubTreeSlotData {
+  final layerHandle = LayerHandle(OffsetLayer());
+  Size? size;
+
+  void dispose() {
+    layerHandle.layer = null;
+    size = null;
+  }
+}
+
 class AuxiliaryTreePack {
   late final PipelineOwner pipelineOwner;
   late final AuxiliaryTreeRootView rootView;
   late final BuildOwner buildOwner;
   late final RenderObjectToWidgetElement<RenderBox> element;
 
-  var mainSubTreeLayerHandleOfSlot = <Object, LayerHandle<OffsetLayer>>{};
-  var mainSubTreeSizeOfSlot = <Object, Size>{};
+  MainSubTreeSlotData mainSubTreeData(Object slot) =>
+      _mainSubTreeDataOfSlot[slot] ??= MainSubTreeSlotData();
+  final _mainSubTreeDataOfSlot = <Object, MainSubTreeSlotData>{};
+
+  void removeMainSubTreeSlotsWhere(bool Function(Object slot) test) {
+    final keysToRemove = _mainSubTreeDataOfSlot.keys.where(test).toList();
+    for (final key in keysToRemove) {
+      final removed = _mainSubTreeDataOfSlot.remove(key)!;
+      removed.dispose();
+    }
+  }
+
   final _tickerRegistry = TickerRegistry();
   final _removeSubTreeController = RemoveSubTreeController();
   final childPlaceholderRegistry = SmoothChildPlaceholderRegistry();

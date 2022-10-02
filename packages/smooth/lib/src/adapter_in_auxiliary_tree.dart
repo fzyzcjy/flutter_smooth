@@ -53,7 +53,7 @@ class _RenderAdapterInAuxiliaryTree extends RenderBox {
     // size = constraints.biggest;
 
     // https://github.com/fzyzcjy/yplusplus/issues/5924#issuecomment-1264585802
-    final realSize = pack.mainSubTreeSizeOfSlot[slot];
+    final realSize = pack.mainSubTreeData(slot).size;
     size = realSize ?? _fallbackSize(constraints);
   }
 
@@ -82,7 +82,7 @@ class _RenderAdapterInAuxiliaryTree extends RenderBox {
 
     // print('$runtimeType paint');
 
-    context.addLayer(pack.mainSubTreeLayerHandleOfSlot[slot]!.layer!);
+    context.addLayer(pack.mainSubTreeData(slot).layerHandle.layer!);
     // context.addLayer(_simpleLayer.layer!);
   }
 }
