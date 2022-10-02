@@ -30,9 +30,12 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
   }
 
   Widget _buildSmooth() {
-    // TODO
-    return ListView.builder(
-      itemBuilder: _buildRow,
+    return SmoothMultiChildBuilder(
+      builder: (context) => ListView.builder(
+        itemBuilder: (context, index) => SmoothChild(
+          child: _buildRow(context, index),
+        ),
+      ),
     );
   }
 
