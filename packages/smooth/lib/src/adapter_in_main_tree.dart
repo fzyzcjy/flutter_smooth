@@ -4,13 +4,13 @@ import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/auxiliary_tree_root_view.dart';
 import 'package:smooth/src/service_locator.dart';
 
-class AdapterInMainTreeWidget extends SingleChildRenderObjectWidget {
+class AdapterInMainTreeWidget extends MultiChildRenderObjectWidget {
   final AuxiliaryTreePack pack;
 
-  const AdapterInMainTreeWidget({
+  AdapterInMainTreeWidget({
     super.key,
     required this.pack,
-    super.child,
+    super.children,
   });
 
   @override
@@ -29,8 +29,12 @@ class AdapterInMainTreeWidget extends SingleChildRenderObjectWidget {
   }
 }
 
+class _AdapterParentData extends ContainerBoxParentData<RenderBox> {}
+
 class _RenderAdapterInMainTree extends RenderBox
-    with RenderObjectWithChildMixin<RenderBox> {
+    with
+        ContainerRenderObjectMixin<RenderBox, _AdapterParentData>,
+        RenderBoxContainerDefaultsMixin<RenderBox, _AdapterParentData> {
   _RenderAdapterInMainTree({
     required this.pack,
   });
@@ -38,9 +42,16 @@ class _RenderAdapterInMainTree extends RenderBox
   AuxiliaryTreePack pack;
 
   @override
+  void setupParentData(RenderBox child) {
+    if (child.parentData is! _AdapterParentData) {
+      child.parentData = _AdapterParentData();
+    }
+  }
+
+  @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
     // TODO correct? #5871
-    if (child!.hitTest(result, position: position)) return true;
+    if (defaultHitTestChildren(result, position: position)) return true;
     if (pack.rootView.hitTest(result, position: position)) return true;
     return false;
   }
@@ -63,7 +74,12 @@ class _RenderAdapterInMainTree extends RenderBox
     );
 
     // print('$runtimeType.performLayout child.layout start');
-    child!.layout(constraints);
+    RenderBox? child = firstChild;
+    while (child != null) {
+      final childParentData = child.parentData! as _AdapterParentData;
+      child.layout(constraints);
+      child = childParentData.nextSibling;
+    }
     // print('$runtimeType.performLayout child.layout end');
 
     size = constraints.biggest;

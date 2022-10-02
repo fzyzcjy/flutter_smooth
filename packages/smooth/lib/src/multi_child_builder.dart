@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth/src/adapter_in_auxiliary_tree.dart';
+import 'package:smooth/src/adapter_in_main_tree.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 
 // TODO merge with classical [SmoothBuilder]
@@ -42,7 +43,14 @@ class _SmoothMultiChildBuilderState extends State<SmoothMultiChildBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return TODO;
+    // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
+    // now, so we add a RepaintBoundary to let offset==0
+    return RepaintBoundary(
+      child: AdapterInMainTreeWidget(
+        pack: pack,
+        children: TODO,
+      ),
+    );
   }
 }
 

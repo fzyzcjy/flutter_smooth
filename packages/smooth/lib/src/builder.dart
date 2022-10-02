@@ -58,7 +58,7 @@ class _SmoothBuilderState extends State<SmoothBuilder> {
     return RepaintBoundary(
       child: AdapterInMainTreeWidget(
         pack: pack,
-        child: widget.child,
+        children: [widget.child],
       ),
     );
   }
