@@ -42,9 +42,7 @@ class _AdapterInMainTreeInner extends MultiChildRenderObjectWidget {
   final AuxiliaryTreePack pack;
 
   _AdapterInMainTreeInner({
-    super.key,
     required this.pack,
-    super.children,
   });
 
   @override

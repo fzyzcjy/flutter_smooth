@@ -17,7 +17,8 @@ class SmoothBuilder extends StatefulWidget {
 
 class _SmoothBuilderState extends State<SmoothBuilder> {
   late final AuxiliaryTreePack pack;
-  static const _slot = 'dummy-slot'; // TODO
+
+  // static const _slot = 'dummy-slot'; // TODO
 
   @override
   void initState() {

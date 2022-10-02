@@ -31,10 +31,8 @@ class _AdapterInAuxiliaryTreeInner extends SingleChildRenderObjectWidget {
   final Object slot;
 
   const _AdapterInAuxiliaryTreeInner({
-    super.key,
     required this.pack,
     required this.slot,
-    super.child,
   });
 
   @override
