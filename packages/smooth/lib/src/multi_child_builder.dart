@@ -47,19 +47,23 @@ class _SmoothMultiChildBuilderState extends State<SmoothMultiChildBuilder> {
     print('${describeIdentity(this)}.build call buildScope');
     pack.buildOwner.buildScope(pack.element);
 
+    print('${describeIdentity(this)}.build create children '
+        '(slots=${pack.childPlaceholderRegistry.slots})');
+    // NOTE the [slots] are updated after we call [buildOwner.buildScope]
+    // just above.
+    final children = pack.childPlaceholderRegistry.slots
+        .map((slot) => AdapterInMainTreeChildWidget(
+              slot: slot,
+              child: widget.childBuilder(context, slot),
+            ))
+        .toList();
+
     // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
     // now, so we add a RepaintBoundary to let offset==0
     return RepaintBoundary(
       child: AdapterInMainTreeWidget(
         pack: pack,
-        // NOTE the [slots] are updated after we call [buildOwner.buildScope]
-        // just above.
-        children: pack.childPlaceholderRegistry.slots
-            .map((slot) => AdapterInMainTreeChildWidget(
-                  slot: slot,
-                  child: widget.childBuilder(context, slot),
-                ))
-            .toList(),
+        children: children,
       ),
     );
   }

@@ -164,6 +164,8 @@ class _RenderAdapterInMainTree extends RenderBox
 
   static void _paintSubTreeToPackLayer(RenderBox child,
       LayerHandle<OffsetLayer> layerHandle, Rect estimatedBounds) {
+    print('_paintSubTreeToPackLayer child=$child layerHandle=$layerHandle');
+
     // ref: [PaintingContext.pushLayer]
     if (layerHandle.layer!.hasChildren) {
       layerHandle.layer!.removeAllChildren();

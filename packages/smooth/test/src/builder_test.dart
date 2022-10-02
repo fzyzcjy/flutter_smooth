@@ -417,7 +417,10 @@ void main() {
                 itemCount: 3,
                 // NOTE deliberately disable it to test accurately
                 cacheExtent: 0,
-                itemBuilder: (_, index) => SmoothChildPlaceholder(slot: index),
+                itemBuilder: (_, index) {
+                  debugPrint('ListView.itemBuilder called ($index)');
+                  return SmoothChildPlaceholder(slot: index);
+                },
               ),
             ),
             childBuilder: (_, slot) => Container(
