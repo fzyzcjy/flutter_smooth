@@ -25,8 +25,8 @@ class AuxiliaryTreeRegistry {
 class AuxiliaryTreePack {
   late final PipelineOwner pipelineOwner;
   late final AuxiliaryTreeRootView rootView;
-  late final BuildOwner _buildOwner;
-  late final RenderObjectToWidgetElement<RenderBox> _element;
+  late final BuildOwner buildOwner;
+  late final RenderObjectToWidgetElement<RenderBox> element;
 
   final mainSubTreeLayerHandle = LayerHandle(OffsetLayer());
   final _tickerRegistry = TickerRegistry();
@@ -38,7 +38,7 @@ class AuxiliaryTreePack {
     rootView = pipelineOwner.rootNode = AuxiliaryTreeRootView(
       configuration: const AuxiliaryTreeRootViewConfiguration(size: Size.zero),
     );
-    _buildOwner = BuildOwner(
+    buildOwner = BuildOwner(
       focusManager: FocusManager(),
       // onBuildScheduled: () =>
       //     print('second tree BuildOwner.onBuildScheduled called'),
@@ -54,17 +54,16 @@ class AuxiliaryTreePack {
       ),
     );
 
-    _element = RenderObjectToWidgetAdapter<RenderBox>(
+    element = RenderObjectToWidgetAdapter<RenderBox>(
       container: rootView,
       debugShortDescription: '[AuxiliaryTreePack#${shortHash(this)}.root]',
       child: wrappedWidget,
-    ).attachToRenderTree(_buildOwner);
+    ).attachToRenderTree(buildOwner);
 
     ServiceLocator.instance.auxiliaryTreeRegistry._attach(this);
   }
 
-  void runPipeline(
-    Duration timeStamp, {
+  void runPipeline(Duration timeStamp, {
     required bool skipIfTimeStampUnchanged,
     required String debugReason,
   }) {
@@ -88,7 +87,7 @@ class AuxiliaryTreePack {
 
       // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
       // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
-      _buildOwner.buildScope(_element);
+      buildOwner.buildScope(element);
       pipelineOwner.flushLayout();
       pipelineOwner.flushCompositingBits();
       _temporarilyRemoveDebugActiveLayout(() {
@@ -102,7 +101,7 @@ class AuxiliaryTreePack {
       });
       // renderView.compositeFrame(); // this sends the bits to the GPU
       // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
-      _buildOwner.finalizeTree();
+      buildOwner.finalizeTree();
 
       // printWrapped(
       //     '$runtimeType.runPipeline after finalizeTree rootView.layer=${rootView.layer!.toStringDeep()}');
