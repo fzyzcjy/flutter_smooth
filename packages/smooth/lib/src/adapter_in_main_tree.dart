@@ -4,6 +4,20 @@ import 'package:flutter/rendering.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/auxiliary_tree_root_view.dart';
 
+class AdapterInMainTreeController {
+  _RenderAdapterInMainTreeInner? _renderBox;
+
+  void _attach(_RenderAdapterInMainTreeInner value) {
+    assert(_renderBox == null);
+    _renderBox = value;
+  }
+
+  void _detach(_RenderAdapterInMainTreeInner value) {
+    assert(_renderBox == value);
+    _renderBox = null;
+  }
+}
+
 class AdapterInMainTree extends StatelessWidget {
   final AuxiliaryTreePack pack;
 
@@ -76,6 +90,18 @@ class _RenderAdapterInMainTreeInner extends RenderBox
   });
 
   AuxiliaryTreePack pack;
+
+  @override
+  void attach(covariant PipelineOwner owner) {
+    super.attach(owner);
+    pack.adapterInMainTreeController._attach(this);
+  }
+
+  @override
+  void detach() {
+    pack.adapterInMainTreeController._detach(this);
+    super.detach();
+  }
 
   @override
   void setupParentData(RenderBox child) {
