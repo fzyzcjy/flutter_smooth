@@ -14,7 +14,7 @@ import 'test_tools/animation.dart';
 import 'test_tools/widgets.dart';
 
 void main() {
-  SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
 
   group('SmoothBuilder', () {
     group('use never PreemptStrategy.never', () {
@@ -44,7 +44,6 @@ void main() {
     });
 
     group('render output test', () {
-      final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
       binding.window.setUpTearDown(
         physicalSizeTestValue: const Size(100, 50),
         devicePixelRatioTestValue: 1,
@@ -224,7 +223,6 @@ void main() {
     });
 
     group('randomized test', () {
-      final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
       binding.window.setUpTearDown(
         physicalSizeTestValue: const Size(50, 200),
         devicePixelRatioTestValue: 1,
@@ -390,6 +388,58 @@ void main() {
       }
 
       // when see bugs, can add extra tests here with fixed seed
+    });
+
+    // related: example/lib/example_list_view_page.dart
+    group('ListView in auxiliary tree', () {
+      binding.window.setUpTearDown(
+        physicalSizeTestValue: const Size(50, 100),
+        devicePixelRatioTestValue: 1,
+      );
+
+      testWidgets('simplest without preempt', (tester) async {
+        final timeInfo = TimeInfo();
+        final capturer = WindowRenderCapturer.autoDispose();
+
+        final colors = [
+          Colors.red,
+          Colors.green,
+          Colors.blue,
+        ];
+
+        await tester.pumpWidget(SmoothScope(
+          serviceLocator: ServiceLocator.normal()
+              .copyWith(preemptStrategy: const PreemptStrategy.never()),
+          child: SmoothMultiChildBuilder(
+            smoothBuilder: (_) => ListView.builder(
+              itemCount: 3,
+              // NOTE deliberately disable it to test accurately
+              cacheExtent: 0,
+              itemBuilder: (_, index) => SmoothChildPlaceholder(slot: index),
+            ),
+            childBuilder: (_, slot) => Container(
+              height: 60,
+              color: colors[slot as int],
+            ),
+          ),
+        ));
+        await capturer
+            .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
+          await tester.createScreenImage((im) => im
+            ..fillRect(const Rectangle(0, 0, 50, 60), colors[0])
+            ..fillRect(const Rectangle(0, 60, 50, 40), colors[1])),
+        ]);
+
+        await tester.drag(find.byType(Scrollable), const Offset(0, -50));
+        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
+        await capturer
+            .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
+          await tester.createScreenImage((im) => im
+            ..fillRect(const Rectangle(0, 0, 50, 10), colors[0])
+            ..fillRect(const Rectangle(0, 10, 50, 60), colors[1])
+            ..fillRect(const Rectangle(0, 70, 50, 30), colors[2])),
+        ]);
+      });
     });
   });
 }
