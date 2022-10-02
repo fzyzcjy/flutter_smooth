@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 
 // TODO merge with classical [SmoothBuilder]
 class SmoothMultiChildBuilder extends StatefulWidget {
-  final Widget Function(BuildContext context) builder;
+  final Widget Function(BuildContext context) smoothBuilder;
+  final Widget Function(BuildContext context, Object slot) childBuilder;
 
-  const SmoothMultiChildBuilder({super.key, required this.builder});
+  const SmoothMultiChildBuilder({
+    super.key,
+    required this.smoothBuilder,
+    required this.childBuilder,
+  });
 
   @override
   State<SmoothMultiChildBuilder> createState() =>
@@ -18,10 +23,10 @@ class _SmoothMultiChildBuilderState extends State<SmoothMultiChildBuilder> {
   }
 }
 
-class SmoothChild extends StatelessWidget {
-  final Widget child;
+class SmoothChildPlaceholder extends StatelessWidget {
+  final Object slot;
 
-  const SmoothChild({super.key, required this.child});
+  const SmoothChildPlaceholder({super.key, required this.slot});
 
   @override
   Widget build(BuildContext context) {
