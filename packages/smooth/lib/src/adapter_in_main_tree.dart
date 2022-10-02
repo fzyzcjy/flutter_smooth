@@ -88,11 +88,13 @@ class _AdapterParentData extends ContainerBoxParentData<RenderBox> {
 class _RenderAdapterInMainTreeInner extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, _AdapterParentData>,
-        RenderBoxContainerDefaultsMixin<RenderBox, _AdapterParentData> {
+        RenderBoxContainerDefaultsMixin<RenderBox, _AdapterParentData>,
+        _MainTreeChildrenLayoutActor {
   _RenderAdapterInMainTreeInner({
     required this.pack,
   });
 
+  @override
   AuxiliaryTreePack pack;
 
   @override
@@ -122,8 +124,6 @@ class _RenderAdapterInMainTreeInner extends RenderBox
     return false;
   }
 
-  var _debugSelfFlushAuxTreeLayout = false;
-
   @override
   void performLayout() {
     // print('$runtimeType.performLayout start');
@@ -132,19 +132,7 @@ class _RenderAdapterInMainTreeInner extends RenderBox
     pack.rootView.configuration =
         AuxiliaryTreeRootViewConfiguration(size: constraints.biggest);
 
-    // #5942
-    assert(() {
-      _debugSelfFlushAuxTreeLayout = true;
-      return true;
-    }());
-    try {
-      pack.pipelineOwner.flushLayout();
-    } finally {
-      assert(() {
-        _debugSelfFlushAuxTreeLayout = false;
-        return true;
-      }());
-    }
+    _mainTreeChildrenLayout();
 
     // old (before #5942)
     // // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952866
@@ -169,20 +157,6 @@ class _RenderAdapterInMainTreeInner extends RenderBox
     // // print('$runtimeType.performLayout child.layout end');
 
     size = constraints.biggest;
-  }
-
-  // see diagram in #5942
-  void _buildChild(Object slot) {
-    assert(_debugSelfFlushAuxTreeLayout);
-
-    TODO;
-  }
-
-  // see diagram in #5942
-  void _layoutChild(Object slot) {
-    assert(_debugSelfFlushAuxTreeLayout);
-
-    TODO;
   }
 
   // TODO correct?
@@ -266,6 +240,42 @@ class _RenderAdapterInMainTreeInner extends RenderBox
     child.paint(childContext, Offset.zero);
     // ignore: invalid_use_of_protected_member
     childContext.stopRecordingIfNeeded();
+  }
+}
+
+mixin _MainTreeChildrenLayoutActor {
+  AuxiliaryTreePack get pack;
+
+  var _debugMainTreeChildrenLayoutActive = false;
+
+  void _mainTreeChildrenLayout() {
+    // #5942
+    assert(() {
+      _debugMainTreeChildrenLayoutActive = true;
+      return true;
+    }());
+    try {
+      pack.pipelineOwner.flushLayout();
+    } finally {
+      assert(() {
+        _debugMainTreeChildrenLayoutActive = false;
+        return true;
+      }());
+    }
+  }
+
+  // see diagram in #5942
+  void _buildChild(Object slot) {
+    assert(_debugMainTreeChildrenLayoutActive);
+
+    TODO;
+  }
+
+  // see diagram in #5942
+  void _layoutChild(Object slot) {
+    assert(_debugMainTreeChildrenLayoutActive);
+
+    TODO;
   }
 }
 
