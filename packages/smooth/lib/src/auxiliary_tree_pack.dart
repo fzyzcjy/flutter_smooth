@@ -30,6 +30,7 @@ class AuxiliaryTreePack {
   late final RenderObjectToWidgetElement<RenderBox> element;
 
   var mainSubTreeLayerHandleOfSlot = <Object, LayerHandle<OffsetLayer>>{};
+  var mainSubTreeSizeOfSlot = <Object, Size>{};
   final _tickerRegistry = TickerRegistry();
   final _removeSubTreeController = RemoveSubTreeController();
   final childPlaceholderRegistry = SmoothChildPlaceholderRegistry();

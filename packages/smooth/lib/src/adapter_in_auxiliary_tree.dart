@@ -43,7 +43,12 @@ class _RenderAdapterInAuxiliaryTree extends RenderBox {
   @override
   void performLayout() {
     // print('$runtimeType.performLayout called');
-    size = constraints.biggest;
+
+    // old
+    // size = constraints.biggest;
+
+    // https://github.com/fzyzcjy/yplusplus/issues/5924#issuecomment-1264585802
+    size = pack.mainSubTreeSizeOfSlot[slot] ?? constraints.biggest;
   }
 
   // TODO correct?

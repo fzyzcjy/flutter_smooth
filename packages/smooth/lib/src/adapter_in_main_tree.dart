@@ -82,7 +82,10 @@ class _RenderAdapterInMainTree extends RenderBox
     RenderBox? child = firstChild;
     while (child != null) {
       final childParentData = child.parentData! as _AdapterParentData;
+
       child.layout(constraints);
+      pack.mainSubTreeSizeOfSlot[childParentData.slot] = child.size;
+
       child = childParentData.nextSibling;
     }
     // print('$runtimeType.performLayout child.layout end');
