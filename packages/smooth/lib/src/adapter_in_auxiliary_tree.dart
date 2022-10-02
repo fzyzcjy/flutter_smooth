@@ -11,7 +11,7 @@ class AdapterInAuxiliaryTree extends StatelessWidget {
     super.key,
     required this.pack,
     required this.slot,
-    super.child,
+    // super.child,
   });
 
   @override

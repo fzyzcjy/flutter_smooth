@@ -53,8 +53,9 @@ class AuxiliaryTreePack {
 
   final _tickerRegistry = TickerRegistry();
   final _removeSubTreeController = RemoveSubTreeController();
-  final childPlaceholderRegistry = SmoothChildPlaceholderRegistry();
   Duration? _previousRunPipelineTimeStamp;
+
+  // final childPlaceholderRegistry = SmoothChildPlaceholderRegistry();
 
   AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
     pipelineOwner = PipelineOwner();
@@ -74,13 +75,11 @@ class AuxiliaryTreePack {
       // TODO may merge these providers (inherited widgets)
       child: AuxiliaryTreePackProvider(
         pack: this,
-        // TODO do we still need registry now? #5942
-        child: SmoothChildPlaceholderRegistryProvider(
-          registry: childPlaceholderRegistry,
-          child: TickerRegistryInheritedWidget(
-            registry: _tickerRegistry,
-            child: widget(this),
-          ),
+        // child: SmoothChildPlaceholderRegistryProvider(
+        //   registry: childPlaceholderRegistry,
+        child: TickerRegistryInheritedWidget(
+          registry: _tickerRegistry,
+          child: widget(this),
         ),
       ),
     );
