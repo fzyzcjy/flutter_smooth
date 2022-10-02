@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/auxiliary_tree_root_view.dart';
-import 'package:smooth/src/service_locator.dart';
 
 class AdapterInMainTree extends StatelessWidget {
   final AuxiliaryTreePack pack;
@@ -93,6 +92,8 @@ class _RenderAdapterInMainTreeInner extends RenderBox
     return false;
   }
 
+  var _debugSelfFlushAuxTreeLayout = false;
+
   @override
   void performLayout() {
     // print('$runtimeType.performLayout start');
@@ -101,26 +102,41 @@ class _RenderAdapterInMainTreeInner extends RenderBox
     pack.rootView.configuration =
         AuxiliaryTreeRootViewConfiguration(size: constraints.biggest);
 
-    // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952866
-    // NOTE need to be *after* setting pack.rootView.configuration
-    // hack, just for prototype
-    pack.runPipeline(
-      ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp,
-      skipIfTimeStampUnchanged: false,
-      debugReason: 'RenderAdapterInMainTree.performLayout',
-    );
-
-    // print('$runtimeType.performLayout child.layout start');
-    RenderBox? child = firstChild;
-    while (child != null) {
-      final childParentData = child.parentData! as _AdapterParentData;
-
-      child.layout(constraints);
-      pack.mainSubTreeData(childParentData.slot).size = child.size;
-
-      child = childParentData.nextSibling;
+    // #5942
+    assert(() {
+      _debugSelfFlushAuxTreeLayout = true;
+      return true;
+    }());
+    try {
+      pack.pipelineOwner.flushLayout();
+    } finally {
+      assert(() {
+        _debugSelfFlushAuxTreeLayout = false;
+        return true;
+      }());
     }
-    // print('$runtimeType.performLayout child.layout end');
+
+    // old (before #5942)
+    // // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952866
+    // // NOTE need to be *after* setting pack.rootView.configuration
+    // // hack, just for prototype
+    // pack.runPipeline(
+    //   ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp,
+    //   skipIfTimeStampUnchanged: false,
+    //   debugReason: 'RenderAdapterInMainTree.performLayout',
+    // );
+    //
+    // // print('$runtimeType.performLayout child.layout start');
+    // RenderBox? child = firstChild;
+    // while (child != null) {
+    //   final childParentData = child.parentData! as _AdapterParentData;
+    //
+    //   child.layout(constraints);
+    //   pack.mainSubTreeData(childParentData.slot).size = child.size;
+    //
+    //   child = childParentData.nextSibling;
+    // }
+    // // print('$runtimeType.performLayout child.layout end');
 
     size = constraints.biggest;
   }
