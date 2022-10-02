@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 
@@ -51,7 +53,18 @@ class _RenderAdapterInAuxiliaryTree extends RenderBox {
     // size = constraints.biggest;
 
     // https://github.com/fzyzcjy/yplusplus/issues/5924#issuecomment-1264585802
-    size = pack.mainSubTreeSizeOfSlot[slot] ?? constraints.biggest;
+    final realSize = pack.mainSubTreeSizeOfSlot[slot];
+    size = realSize ?? _fallbackSize(constraints);
+  }
+
+  static Size _fallbackSize(BoxConstraints constraints) {
+    final raw = constraints.biggest;
+    // NOTE make it finite size, since a size cannot be infinite
+    // https://github.com/fzyzcjy/yplusplus/issues/5930#issuecomment-1264641509
+    return Size(
+      min(raw.width, double.maxFinite),
+      min(raw.height, double.maxFinite),
+    );
   }
 
   // TODO correct?
