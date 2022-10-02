@@ -128,8 +128,12 @@ class Actor {
         .map((tree) => tree.pipelineOwner)
         .toList();
 
+    // NOTE only deal with those events that does *not* require a [hitTest]
+    //      pointer *move* events are such kind.
+    final interestEvents = pendingEvents.whereType<PointerMoveEvent>().toList();
+
     // https://github.com/fzyzcjy/yplusplus/issues/5867#issuecomment-1263053441
-    for (final event in pendingEvents) {
+    for (final event in interestEvents) {
       // TODO this is WRONG, will cause duplicate event sending! #5875
       gestureBinding.handlePointerEvent(
         event,
