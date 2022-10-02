@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:smooth/smooth.dart';
 
 class ExampleListViewPage extends StatefulWidget {
-  const ExampleListViewPage({super.key});
+  final bool enableSmooth;
+
+  const ExampleListViewPage({super.key, required this.enableSmooth});
 
   @override
   State<ExampleListViewPage> createState() => _ExampleListViewPageState();
@@ -15,11 +17,22 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Example'),
+        title: Text('Example (${widget.enableSmooth ? 'smooth' : 'plain'})'),
       ),
-      body: ListView.builder(
-        itemBuilder: _buildRow,
-      ),
+      body: widget.enableSmooth ? _buildSmooth() : _buildPlain(),
+    );
+  }
+
+  Widget _buildPlain() {
+    return ListView.builder(
+      itemBuilder: _buildRow,
+    );
+  }
+
+  Widget _buildSmooth() {
+    // TODO
+    return ListView.builder(
+      itemBuilder: _buildRow,
     );
   }
 

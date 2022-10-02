@@ -46,13 +46,16 @@ class MyApp extends StatelessWidget {
                         MaterialPageRoute<dynamic>(
                             builder: (_) => const ExampleGesturePage())),
                   ),
-                  ListTile(
-                    title: const Text('Example: ListView'),
-                    onTap: () => Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                            builder: (_) => const ExampleListViewPage())),
-                  ),
+                  for (final enableSmooth in [false, true])
+                    ListTile(
+                      title: Text(
+                          'Example: ListView (${enableSmooth ? 'smooth' : 'plain'})'),
+                      onTap: () => Navigator.push<dynamic>(
+                          context,
+                          MaterialPageRoute<dynamic>(
+                              builder: (_) => ExampleListViewPage(
+                                  enableSmooth: enableSmooth))),
+                    ),
                   ListTile(
                     title: const Text('Show debug widget'),
                     onTap: () => Navigator.push<dynamic>(
