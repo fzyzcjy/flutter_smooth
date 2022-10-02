@@ -1,13 +1,47 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/auxiliary_tree_root_view.dart';
 import 'package:smooth/src/service_locator.dart';
 
-class AdapterInMainTreeWidget extends MultiChildRenderObjectWidget {
+class AdapterInMainTree extends StatelessWidget {
   final AuxiliaryTreePack pack;
 
-  AdapterInMainTreeWidget({
+  const AdapterInMainTree({super.key, required this.pack});
+
+  @override
+  Widget build(BuildContext context) {
+    print('${describeIdentity(this)}.build call buildScope');
+    // see diagram in #5942 for why we build here
+    pack.buildOwner.buildScope(pack.element);
+
+    // wrong #5942
+    // print('${describeIdentity(this)}.build create children '
+    //     '(slots=${pack.childPlaceholderRegistry.slots})');
+    // // NOTE the [slots] are updated after we call [buildOwner.buildScope]
+    // // just above.
+    // final children = pack.childPlaceholderRegistry.slots
+    //     .map((slot) => AdapterInMainTreeChildWidget(
+    //           slot: slot,
+    //           child: widget.childBuilder(context, slot),
+    //         ))
+    //     .toList();
+
+    // hack: [_AdapterInMainTreeInner] does not respect "offset" in paint
+    // now, so we add a RepaintBoundary to let offset==0
+    return RepaintBoundary(
+      child: _AdapterInMainTreeInner(
+        pack: pack,
+      ),
+    );
+  }
+}
+
+class _AdapterInMainTreeInner extends MultiChildRenderObjectWidget {
+  final AuxiliaryTreePack pack;
+
+  _AdapterInMainTreeInner({
     super.key,
     required this.pack,
     super.children,
@@ -15,8 +49,8 @@ class AdapterInMainTreeWidget extends MultiChildRenderObjectWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _RenderAdapterInMainTree createRenderObject(BuildContext context) =>
-      _RenderAdapterInMainTree(
+  _RenderAdapterInMainTreeInner createRenderObject(BuildContext context) =>
+      _RenderAdapterInMainTreeInner(
         pack: pack,
       );
 
@@ -24,7 +58,7 @@ class AdapterInMainTreeWidget extends MultiChildRenderObjectWidget {
   void updateRenderObject(
       BuildContext context,
       // ignore: library_private_types_in_public_api
-      _RenderAdapterInMainTree renderObject) {
+      _RenderAdapterInMainTreeInner renderObject) {
     renderObject.pack = pack;
   }
 }
@@ -36,11 +70,11 @@ class _AdapterParentData extends ContainerBoxParentData<RenderBox> {
   set slot(Object value) => _slot = value;
 }
 
-class _RenderAdapterInMainTree extends RenderBox
+class _RenderAdapterInMainTreeInner extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, _AdapterParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, _AdapterParentData> {
-  _RenderAdapterInMainTree({
+  _RenderAdapterInMainTreeInner({
     required this.pack,
   });
 
@@ -197,5 +231,5 @@ class AdapterInMainTreeChildWidget
   }
 
   @override
-  Type get debugTypicalAncestorWidgetClass => AdapterInMainTreeWidget;
+  Type get debugTypicalAncestorWidgetClass => _AdapterInMainTreeInner;
 }

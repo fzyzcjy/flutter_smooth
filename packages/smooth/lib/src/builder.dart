@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smooth/src/adapter_in_auxiliary_tree.dart';
-import 'package:smooth/src/adapter_in_main_tree.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 
 class SmoothBuilder extends StatefulWidget {
@@ -51,22 +50,23 @@ class _SmoothBuilderState extends State<SmoothBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    // should not run pipeline here, see the link below
-    // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952866
-    // pack.runPipeline(debugReason: '$runtimeType.build');
-
-    // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
-    // now, so we add a RepaintBoundary to let offset==0
-    return RepaintBoundary(
-      child: AdapterInMainTreeWidget(
-        pack: pack,
-        children: [
-          AdapterInMainTreeChildWidget(
-            slot: _slot,
-            child: widget.child,
-          ),
-        ],
-      ),
-    );
+    throw UnimplementedError;
+    // // should not run pipeline here, see the link below
+    // // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952866
+    // // pack.runPipeline(debugReason: '$runtimeType.build');
+    //
+    // // hack: [AdapterInMainTreeWidget] does not respect "offset" in paint
+    // // now, so we add a RepaintBoundary to let offset==0
+    // return RepaintBoundary(
+    //   child: AdapterInMainTreeInner(
+    //     pack: pack,
+    //     children: [
+    //       AdapterInMainTreeChildWidget(
+    //         slot: _slot,
+    //         child: widget.child,
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 }
