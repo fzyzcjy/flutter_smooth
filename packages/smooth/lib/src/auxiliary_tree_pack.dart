@@ -74,6 +74,7 @@ class AuxiliaryTreePack {
       // TODO may merge these providers (inherited widgets)
       child: AuxiliaryTreePackProvider(
         pack: this,
+        // TODO do we still need registry now? #5942
         child: SmoothChildPlaceholderRegistryProvider(
           registry: childPlaceholderRegistry,
           child: TickerRegistryInheritedWidget(

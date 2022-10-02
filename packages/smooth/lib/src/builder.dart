@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smooth/src/adapter_in_auxiliary_tree.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 
 class SmoothBuilder extends StatefulWidget {
@@ -25,20 +24,21 @@ class _SmoothBuilderState extends State<SmoothBuilder> {
     super.initState();
     // print('${describeIdentity(this)} initState');
 
-    pack = AuxiliaryTreePack(
-      (pack) => Builder(
-        builder: (context) => widget.builder(
-          context,
-          // hack, since AdapterInAuxiliaryTreeWidget not deal with offset yet
-          RepaintBoundary(
-            child: AdapterInAuxiliaryTreeWidget(
-              slot: _slot,
-              pack: pack,
-            ),
-          ),
-        ),
-      ),
-    );
+    throw UnimplementedError;
+    // pack = AuxiliaryTreePack(
+    //   (pack) => Builder(
+    //     builder: (context) => widget.builder(
+    //       context,
+    //       // hack, since AdapterInAuxiliaryTreeWidget not deal with offset yet
+    //       RepaintBoundary(
+    //         child: AdapterInAuxiliaryTreeWidget(
+    //           slot: _slot,
+    //           pack: pack,
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
   @override

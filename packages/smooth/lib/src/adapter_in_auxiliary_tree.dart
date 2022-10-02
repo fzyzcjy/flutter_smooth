@@ -3,11 +3,34 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 
-class AdapterInAuxiliaryTreeWidget extends SingleChildRenderObjectWidget {
+class AdapterInAuxiliaryTree extends StatelessWidget {
   final AuxiliaryTreePack pack;
   final Object slot;
 
-  const AdapterInAuxiliaryTreeWidget({
+  const AdapterInAuxiliaryTree({
+    super.key,
+    required this.pack,
+    required this.slot,
+    super.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // hack, since [_AdapterInAuxiliaryTreeInner] not deal with offset yet
+    return RepaintBoundary(
+      child: _AdapterInAuxiliaryTreeInner(
+        pack: pack,
+        slot: slot,
+      ),
+    );
+  }
+}
+
+class _AdapterInAuxiliaryTreeInner extends SingleChildRenderObjectWidget {
+  final AuxiliaryTreePack pack;
+  final Object slot;
+
+  const _AdapterInAuxiliaryTreeInner({
     super.key,
     required this.pack,
     required this.slot,

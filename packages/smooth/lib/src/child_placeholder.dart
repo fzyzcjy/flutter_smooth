@@ -89,12 +89,9 @@ class _SmoothChildPlaceholderInnerState
 
   @override
   Widget build(BuildContext context) {
-    // hack, since AdapterInAuxiliaryTreeWidget not deal with offset yet
-    return RepaintBoundary(
-      child: AdapterInAuxiliaryTreeWidget(
-        slot: widget.slot,
-        pack: AuxiliaryTreePackProvider.of(context).pack,
-      ),
+    return AdapterInAuxiliaryTree(
+      slot: widget.slot,
+      pack: AuxiliaryTreePackProvider.of(context).pack,
     );
   }
 }
