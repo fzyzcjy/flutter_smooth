@@ -17,7 +17,7 @@ class AdapterInAuxiliaryTree extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // #5942
-    pack.adapterInMainTreeController.TODO_call_MainTree_child_build;
+    pack.adapterInMainTreeController.buildChild(slot);
 
     // hack, since [_AdapterInAuxiliaryTreeInner] not deal with offset yet
     return RepaintBoundary(
@@ -82,7 +82,7 @@ class _RenderAdapterInAuxiliaryTree extends RenderBox {
     // size = realSize ?? _fallbackSize(constraints);
 
     // #5942
-    pack.adapterInMainTreeController.TODO_call_MainTree_child_layout;
+    pack.adapterInMainTreeController.layoutChild(slot);
     size = pack.mainSubTreeData(slot).size ?? _fallbackSize(constraints);
   }
 

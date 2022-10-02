@@ -16,6 +16,10 @@ class AdapterInMainTreeController {
     assert(_renderBox == value);
     _renderBox = null;
   }
+
+  void buildChild(Object slot) => _renderBox!._buildChild(slot: slot);
+
+  void layoutChild(Object slot) => _renderBox!._layoutChild(slot: slot);
 }
 
 class AdapterInMainTree extends StatelessWidget {
@@ -165,6 +169,20 @@ class _RenderAdapterInMainTreeInner extends RenderBox
     // // print('$runtimeType.performLayout child.layout end');
 
     size = constraints.biggest;
+  }
+
+  // see diagram in #5942
+  void _buildChild(Object slot) {
+    assert(_debugSelfFlushAuxTreeLayout);
+
+    TODO;
+  }
+
+  // see diagram in #5942
+  void _layoutChild(Object slot) {
+    assert(_debugSelfFlushAuxTreeLayout);
+
+    TODO;
   }
 
   // TODO correct?
