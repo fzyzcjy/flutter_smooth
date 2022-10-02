@@ -1,14 +1,22 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:smooth/src/adapter_in_auxiliary_tree.dart';
+import 'package:smooth/src/auxiliary_tree_pack.dart';
 
 class SmoothChildPlaceholderRegistry {
   late final slots = UnmodifiableListView(_slots);
-  final _slots = <Object>[];
+  final _slots = <Object>{};
 
-  void _register(Object slot) => _slots.add(slot);
+  void _register(Object slot) {
+    assert(!_slots.contains(slot));
+    _slots.add(slot);
+  }
 
-  void _unregister(Object slot) => _slots.remove(slot);
+  void _unregister(Object slot) {
+    assert(_slots.contains(slot));
+    _slots.remove(slot);
+  }
 }
 
 class SmoothChildPlaceholderRegistryProvider extends InheritedWidget {
@@ -81,6 +89,11 @@ class _SmoothChildPlaceholderInnerState
 
   @override
   Widget build(BuildContext context) {
-    return TODO;
+    return RepaintBoundary(
+      child: AdapterInAuxiliaryTreeWidget(
+        slot: widget.slot,
+        pack: AuxiliaryTreePackProvider.of(context).pack,
+      ),
+    );
   }
 }

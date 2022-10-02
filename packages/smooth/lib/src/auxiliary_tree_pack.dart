@@ -29,7 +29,7 @@ class AuxiliaryTreePack {
   late final BuildOwner buildOwner;
   late final RenderObjectToWidgetElement<RenderBox> element;
 
-  final mainSubTreeLayerHandle = LayerHandle(OffsetLayer());
+  var mainSubTreeLayerHandleOfSlot = <Object, LayerHandle<OffsetLayer>>{};
   final _tickerRegistry = TickerRegistry();
   final _removeSubTreeController = RemoveSubTreeController();
   final childPlaceholderRegistry = SmoothChildPlaceholderRegistry();
@@ -50,11 +50,15 @@ class AuxiliaryTreePack {
 
     final wrappedWidget = RemoveSubTreeWidget(
       controller: _removeSubTreeController,
-      child: SmoothChildPlaceholderRegistryProvider(
-        registry: childPlaceholderRegistry,
-        child: TickerRegistryInheritedWidget(
-          registry: _tickerRegistry,
-          child: widget(this),
+      // TODO may merge these providers (inherited widgets)
+      child: AuxiliaryTreePackProvider(
+        pack: this,
+        child: SmoothChildPlaceholderRegistryProvider(
+          registry: childPlaceholderRegistry,
+          child: TickerRegistryInheritedWidget(
+            registry: _tickerRegistry,
+            child: widget(this),
+          ),
         ),
       ),
     );
@@ -196,3 +200,19 @@ void _temporarilyRemoveDebugActiveLayout(VoidCallback f) {
 }
 
 class _DummyOwnerForLayer {}
+
+class AuxiliaryTreePackProvider extends InheritedWidget {
+  final AuxiliaryTreePack pack;
+
+  const AuxiliaryTreePackProvider({
+    super.key,
+    required super.child,
+    required this.pack,
+  });
+
+  static AuxiliaryTreePackProvider of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<AuxiliaryTreePackProvider>()!;
+
+  @override
+  bool updateShouldNotify(AuxiliaryTreePackProvider old) => old.pack != pack;
+}

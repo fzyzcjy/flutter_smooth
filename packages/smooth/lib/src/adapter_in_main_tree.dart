@@ -29,7 +29,12 @@ class AdapterInMainTreeWidget extends MultiChildRenderObjectWidget {
   }
 }
 
-class _AdapterParentData extends ContainerBoxParentData<RenderBox> {}
+class _AdapterParentData extends ContainerBoxParentData<RenderBox> {
+  Object get slot => _slot!;
+  Object? _slot;
+
+  set slot(Object value) => _slot = value;
+}
 
 class _RenderAdapterInMainTree extends RenderBox
     with
@@ -92,7 +97,7 @@ class _RenderAdapterInMainTree extends RenderBox
   @override
   void paint(PaintingContext context, Offset offset) {
     _paintAuxiliaryTreeRootLayerToCurrentContext(context, offset);
-    _paintSubTreeToPackLayer(context.estimatedBounds);
+    _paintSubTreesToPackLayer(pack, firstChild, context.estimatedBounds);
   }
 
   // ref: RenderOpacity
@@ -135,14 +140,38 @@ class _RenderAdapterInMainTree extends RenderBox
   }
 
   // NOTE do *not* have any relation w/ self's PaintingContext, as we will not paint there
-  void _paintSubTreeToPackLayer(Rect estimatedBounds) {
-    // ref: [PaintingContext.pushLayer]
-    if (pack.mainSubTreeLayerHandle.layer!.hasChildren) {
-      pack.mainSubTreeLayerHandle.layer!.removeAllChildren();
+  static void _paintSubTreesToPackLayer(
+      AuxiliaryTreePack pack, RenderBox? firstChild, Rect estimatedBounds) {
+    final prevHandleOfSlot = pack.mainSubTreeLayerHandleOfSlot;
+    pack.mainSubTreeLayerHandleOfSlot = {};
+
+    var child = firstChild;
+    while (child != null) {
+      final childParentData = child.parentData! as _AdapterParentData;
+
+      final layerHandle = prevHandleOfSlot.remove(childParentData.slot) ??
+          LayerHandle(OffsetLayer());
+      pack.mainSubTreeLayerHandleOfSlot[childParentData.slot] = layerHandle;
+
+      _paintSubTreeToPackLayer(child, layerHandle, estimatedBounds);
+
+      child = childParentData.nextSibling;
     }
-    final childContext =
-        PaintingContext(pack.mainSubTreeLayerHandle.layer!, estimatedBounds);
-    child!.paint(childContext, Offset.zero);
+
+    // TODO should reuse, not throw away #5928
+    for (final handle in prevHandleOfSlot.values) {
+      handle.layer = null;
+    }
+  }
+
+  static void _paintSubTreeToPackLayer(RenderBox child,
+      LayerHandle<OffsetLayer> layerHandle, Rect estimatedBounds) {
+    // ref: [PaintingContext.pushLayer]
+    if (layerHandle.layer!.hasChildren) {
+      layerHandle.layer!.removeAllChildren();
+    }
+    final childContext = PaintingContext(layerHandle.layer!, estimatedBounds);
+    child.paint(childContext, Offset.zero);
     // ignore: invalid_use_of_protected_member
     childContext.stopRecordingIfNeeded();
   }
@@ -150,3 +179,23 @@ class _RenderAdapterInMainTree extends RenderBox
 
 // void printWrapped(String text) =>
 //     RegExp('.{1,800}').allMatches(text).map((m) => m.group(0)).forEach(print);
+
+class AdapterInMainTreeChildWidget
+    extends ParentDataWidget<_AdapterParentData> {
+  final Object slot;
+
+  const AdapterInMainTreeChildWidget({
+    super.key,
+    required this.slot,
+    required super.child,
+  });
+
+  @override
+  void applyParentData(RenderObject renderObject) {
+    final parentData = renderObject.parentData! as _AdapterParentData;
+    parentData.slot = slot;
+  }
+
+  @override
+  Type get debugTypicalAncestorWidgetClass => AdapterInMainTreeWidget;
+}

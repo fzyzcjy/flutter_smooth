@@ -19,6 +19,7 @@ class SmoothBuilder extends StatefulWidget {
 
 class _SmoothBuilderState extends State<SmoothBuilder> {
   late final AuxiliaryTreePack pack;
+  static const _slot = 'dummy-slot'; // TODO
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _SmoothBuilderState extends State<SmoothBuilder> {
           // hack, since AdapterInAuxiliaryTreeWidget not deal with offset yet
           RepaintBoundary(
             child: AdapterInAuxiliaryTreeWidget(
+              slot: _slot,
               pack: pack,
             ),
           ),
@@ -58,7 +60,12 @@ class _SmoothBuilderState extends State<SmoothBuilder> {
     return RepaintBoundary(
       child: AdapterInMainTreeWidget(
         pack: pack,
-        children: [widget.child],
+        children: [
+          AdapterInMainTreeChildWidget(
+            slot: _slot,
+            child: widget.child,
+          ),
+        ],
       ),
     );
   }

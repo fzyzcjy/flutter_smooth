@@ -3,10 +3,12 @@ import 'package:smooth/src/auxiliary_tree_pack.dart';
 
 class AdapterInAuxiliaryTreeWidget extends SingleChildRenderObjectWidget {
   final AuxiliaryTreePack pack;
+  final Object slot;
 
   const AdapterInAuxiliaryTreeWidget({
     super.key,
     required this.pack,
+    required this.slot,
     super.child,
   });
 
@@ -15,6 +17,7 @@ class AdapterInAuxiliaryTreeWidget extends SingleChildRenderObjectWidget {
   _RenderAdapterInAuxiliaryTree createRenderObject(BuildContext context) =>
       _RenderAdapterInAuxiliaryTree(
         pack: pack,
+        slot: slot,
       );
 
   @override
@@ -22,16 +25,20 @@ class AdapterInAuxiliaryTreeWidget extends SingleChildRenderObjectWidget {
       BuildContext context,
       // ignore: library_private_types_in_public_api
       _RenderAdapterInAuxiliaryTree renderObject) {
-    renderObject.pack = pack;
+    renderObject
+      ..pack = pack
+      ..slot = slot;
   }
 }
 
 class _RenderAdapterInAuxiliaryTree extends RenderBox {
   _RenderAdapterInAuxiliaryTree({
     required this.pack,
+    required this.slot,
   });
 
   AuxiliaryTreePack pack;
+  Object slot;
 
   @override
   void performLayout() {
@@ -54,7 +61,7 @@ class _RenderAdapterInAuxiliaryTree extends RenderBox {
 
     // print('$runtimeType paint');
 
-    context.addLayer(pack.mainSubTreeLayerHandle.layer!);
+    context.addLayer(pack.mainSubTreeLayerHandleOfSlot[slot]!.layer!);
     // context.addLayer(_simpleLayer.layer!);
   }
 }

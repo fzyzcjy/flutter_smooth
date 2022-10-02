@@ -55,7 +55,10 @@ class _SmoothMultiChildBuilderState extends State<SmoothMultiChildBuilder> {
         // NOTE the [slots] are updated after we call [buildOwner.buildScope]
         // just above.
         children: pack.childPlaceholderRegistry.slots
-            .map((slot) => widget.childBuilder(context, slot))
+            .map((slot) => AdapterInMainTreeChildWidget(
+                  slot: slot,
+                  child: widget.childBuilder(context, slot),
+                ))
             .toList(),
       ),
     );
