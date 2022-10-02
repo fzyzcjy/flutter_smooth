@@ -94,6 +94,7 @@ class WindowRenderPack {
             .expect(tester, expectEntries[i], reason: 'context: i=$i');
       }
     } on TestFailure catch (_) {
+      debugPrint('actual=$this expect=$matcher');
       await dumpAll(tester, prefix: 'actual');
       await matcher.dumpAll(tester, prefix: 'expect');
       rethrow;
@@ -108,6 +109,9 @@ class WindowRenderPack {
       }
     });
   }
+
+  @override
+  String toString() => 'WindowRenderPack(imagesOfFrame: $imagesOfFrame)';
 }
 
 @immutable
