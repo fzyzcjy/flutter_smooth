@@ -411,11 +411,14 @@ void main() {
           serviceLocator: ServiceLocator.normal()
               .copyWith(preemptStrategy: const PreemptStrategy.never()),
           child: SmoothMultiChildBuilder(
-            smoothBuilder: (_) => ListView.builder(
-              itemCount: 3,
-              // NOTE deliberately disable it to test accurately
-              cacheExtent: 0,
-              itemBuilder: (_, index) => SmoothChildPlaceholder(slot: index),
+            smoothBuilder: (_) => Directionality(
+              textDirection: TextDirection.ltr,
+              child: ListView.builder(
+                itemCount: 3,
+                // NOTE deliberately disable it to test accurately
+                cacheExtent: 0,
+                itemBuilder: (_, index) => SmoothChildPlaceholder(slot: index),
+              ),
             ),
             childBuilder: (_, slot) => Container(
               height: 60,
