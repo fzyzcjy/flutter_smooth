@@ -12,13 +12,19 @@ class WindowRenderCapturer {
   final pack = WindowRenderPack();
 
   WindowRenderCapturer() {
+    _setUp();
+  }
+
+  factory WindowRenderCapturer.autoDispose() {
+    final capturer = WindowRenderCapturer();
+    addTearDown(capturer.dispose);
+    return capturer;
+  }
+
+  void _setUp() {
     final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
     assert(binding.onWindowRender == null);
     binding.onWindowRender = _onWindowRender;
-  }
-
-  WindowRenderCapturer.autoDispose() {
-    addTearDown(dispose);
   }
 
   void dispose() {
