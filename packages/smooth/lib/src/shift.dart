@@ -17,6 +17,7 @@ class _SmoothShiftState extends State<SmoothShift> {
     print('hi $runtimeType build offset=$offset');
     return Listener(
       onPointerMove: _handlePointerMove,
+      behavior: HitTestBehavior.translucent,
       child: Transform.translate(
         offset: offset,
         child: widget.child,
