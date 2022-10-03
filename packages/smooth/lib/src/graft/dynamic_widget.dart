@@ -60,13 +60,6 @@ class DynamicElement<S extends Object> extends RenderObjectElement
       final widgetTyped = widget as DynamicWidget<S>;
       void processElement(S index) {
         _currentlyUpdatingChildIndex = index;
-        if (_childElements[index] != null &&
-            _childElements[index] != _childElements[index]) {
-          // This index has an old child that isn't used anywhere and should be deactivated.
-          _childElements[index] =
-              updateChild(_childElements[index], null, index);
-          childrenUpdated = true;
-        }
         final newChild = updateChild(
             _childElements[index], _build(index, widgetTyped), index);
         if (newChild != null) {
