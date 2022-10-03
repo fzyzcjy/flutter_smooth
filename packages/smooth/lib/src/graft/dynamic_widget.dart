@@ -271,11 +271,6 @@ abstract class RenderDynamic extends RenderBox
     }
   }
 
-  /// The nodes being kept alive despite not being visible.
-  final Map<int, RenderBox> _keepAliveBucket = <int, RenderBox>{};
-
-  late List<RenderBox> _debugDanglingKeepAlives;
-
   /// Indicates whether integrity check is enabled.
   ///
   /// Setting this property to true will immediately perform an integrity check.
@@ -327,7 +322,6 @@ abstract class RenderDynamic extends RenderBox
 
   @override
   void insert(RenderBox child, {RenderBox? after}) {
-    assert(!_keepAliveBucket.containsValue(child));
     super.insert(child, after: after);
     assert(firstChild != null);
     assert(_debugVerifyChildOrder());
@@ -355,121 +349,77 @@ abstract class RenderDynamic extends RenderBox
     } else {
       // If the child in the bucket is not current child, that means someone has
       // already moved and replaced current child, and we cannot remove this child.
-      if (_keepAliveBucket[childParentData.index] == child) {
-        _keepAliveBucket.remove(childParentData.index);
-      }
-      assert(() {
-        _debugDanglingKeepAlives.remove(child);
-        return true;
-      }());
+      // if (_keepAliveBucket[childParentData.index] == child) {
+      //   _keepAliveBucket.remove(childParentData.index);
+      // }
+      // assert(() {
+      //   _debugDanglingKeepAlives.remove(child);
+      //   return true;
+      // }());
       // Update the slot and reinsert back to _keepAliveBucket in the new slot.
       childManager.didAdoptChild(child);
       // If there is an existing child in the new slot, that mean that child will
       // be moved to other index. In other cases, the existing child should have been
       // removed by updateChild. Thus, it is ok to overwrite it.
-      assert(() {
-        if (_keepAliveBucket.containsKey(childParentData.index)) {
-          _debugDanglingKeepAlives
-              .add(_keepAliveBucket[childParentData.index]!);
-        }
-        return true;
-      }());
-      _keepAliveBucket[childParentData.index!] = child;
+      // assert(() {
+      //   if (_keepAliveBucket.containsKey(childParentData.index)) {
+      //     _debugDanglingKeepAlives
+      //         .add(_keepAliveBucket[childParentData.index]!);
+      //   }
+      //   return true;
+      // }());
+      // _keepAliveBucket[childParentData.index!] = child;
     }
   }
 
-  @override
-  void remove(RenderBox child) {
-    final DynamicParentData childParentData =
-        child.parentData! as DynamicParentData;
-    if (!childParentData._keptAlive) {
-      super.remove(child);
-      return;
-    }
-    assert(_keepAliveBucket[childParentData.index] == child);
-    assert(() {
-      _debugDanglingKeepAlives.remove(child);
-      return true;
-    }());
-    _keepAliveBucket.remove(childParentData.index);
-    dropChild(child);
-  }
+  // throw away this method, since `keepAlive === false`, and the method
+  // collapse to simply call super
+  // void remove(RenderBox child) {}
 
-  @override
-  void removeAll() {
-    super.removeAll();
-    _keepAliveBucket.values.forEach(dropChild);
-    _keepAliveBucket.clear();
-  }
+  // throw away this method, since all about keep alive
+  // void removeAll() {}
 
   void _createOrObtainChild(int index, {required RenderBox? after}) {
     invokeLayoutCallback<SliverConstraints>((SliverConstraints constraints) {
       assert(constraints == this.constraints);
-      if (_keepAliveBucket.containsKey(index)) {
-        final RenderBox child = _keepAliveBucket.remove(index)!;
-        final DynamicParentData childParentData =
-            child.parentData! as DynamicParentData;
-        assert(childParentData._keptAlive);
-        dropChild(child);
-        child.parentData = childParentData;
-        insert(child, after: after);
-        childParentData._keptAlive = false;
-      } else {
-        _childManager.createChild(index, after: after);
-      }
+      // if (_keepAliveBucket.containsKey(index)) {
+      //   final RenderBox child = _keepAliveBucket.remove(index)!;
+      //   final DynamicParentData childParentData =
+      //       child.parentData! as DynamicParentData;
+      //   assert(childParentData._keptAlive);
+      //   dropChild(child);
+      //   child.parentData = childParentData;
+      //   insert(child, after: after);
+      //   childParentData._keptAlive = false;
+      // } else {
+      _childManager.createChild(index, after: after);
+      // }
     });
   }
 
   void _destroyOrCacheChild(RenderBox child) {
-    final DynamicParentData childParentData =
-        child.parentData! as DynamicParentData;
-    if (childParentData.keepAlive) {
-      assert(!childParentData._keptAlive);
-      remove(child);
-      _keepAliveBucket[childParentData.index!] = child;
-      child.parentData = childParentData;
-      super.adoptChild(child);
-      childParentData._keptAlive = true;
-    } else {
-      assert(child.parent == this);
-      _childManager.removeChild(child);
-      assert(child.parent == null);
-    }
+    // final DynamicParentData childParentData =
+    //     child.parentData! as DynamicParentData;
+    // if (childParentData.keepAlive) {
+    //   assert(!childParentData._keptAlive);
+    //   remove(child);
+    //   _keepAliveBucket[childParentData.index!] = child;
+    //   child.parentData = childParentData;
+    //   super.adoptChild(child);
+    //   childParentData._keptAlive = true;
+    // } else {
+    assert(child.parent == this);
+    _childManager.removeChild(child);
+    assert(child.parent == null);
+    // }
   }
 
-  @override
-  void attach(PipelineOwner owner) {
-    super.attach(owner);
-    for (final RenderBox child in _keepAliveBucket.values) {
-      child.attach(owner);
-    }
-  }
-
-  @override
-  void detach() {
-    super.detach();
-    for (final RenderBox child in _keepAliveBucket.values) {
-      child.detach();
-    }
-  }
-
-  @override
-  void redepthChildren() {
-    super.redepthChildren();
-    _keepAliveBucket.values.forEach(redepthChild);
-  }
-
-  @override
-  void visitChildren(RenderObjectVisitor visitor) {
-    super.visitChildren(visitor);
-    _keepAliveBucket.values.forEach(visitor);
-  }
-
-  @override
-  void visitChildrenForSemantics(RenderObjectVisitor visitor) {
-    super.visitChildren(visitor);
-    // Do not visit children in [_keepAliveBucket].
-  }
+  // throw away this method, since all about keep alive
+  // void attach(PipelineOwner owner) {}
+  // void detach() {}
+  // void redepthChildren() {}
+  // void visitChildren(RenderObjectVisitor visitor) {}
+  // void visitChildrenForSemantics(RenderObjectVisitor visitor) {}
 
   /// Called during layout to create and add the child with the given index and
   /// scroll offset.
@@ -586,22 +536,22 @@ abstract class RenderDynamic extends RenderBox
         _destroyOrCacheChild(lastChild!);
         trailingGarbage -= 1;
       }
-      // Ask the child manager to remove the children that are no longer being
-      // kept alive. (This should cause _keepAliveBucket to change, so we have
-      // to prepare our list ahead of time.)
-      _keepAliveBucket.values
-          .where((RenderBox child) {
-            final DynamicParentData childParentData =
-                child.parentData! as DynamicParentData;
-            return !childParentData.keepAlive;
-          })
-          .toList()
-          .forEach(_childManager.removeChild);
-      assert(_keepAliveBucket.values.where((RenderBox child) {
-        final DynamicParentData childParentData =
-            child.parentData! as DynamicParentData;
-        return !childParentData.keepAlive;
-      }).isEmpty);
+      // // Ask the child manager to remove the children that are no longer being
+      // // kept alive. (This should cause _keepAliveBucket to change, so we have
+      // // to prepare our list ahead of time.)
+      // _keepAliveBucket.values
+      //     .where((RenderBox child) {
+      //       final DynamicParentData childParentData =
+      //           child.parentData! as DynamicParentData;
+      //       return !childParentData.keepAlive;
+      //     })
+      //     .toList()
+      //     .forEach(_childManager.removeChild);
+      // assert(_keepAliveBucket.values.where((RenderBox child) {
+      //   final DynamicParentData childParentData =
+      //       child.parentData! as DynamicParentData;
+      //   return !childParentData.keepAlive;
+      // }).isEmpty);
     });
   }
 
@@ -791,15 +741,15 @@ abstract class RenderDynamic extends RenderBox
         child = childParentData.nextSibling;
       }
     }
-    if (_keepAliveBucket.isNotEmpty) {
-      final List<int> indices = _keepAliveBucket.keys.toList()..sort();
-      for (final int index in indices) {
-        children.add(_keepAliveBucket[index]!.toDiagnosticsNode(
-          name: 'child with index $index (kept alive but not laid out)',
-          style: DiagnosticsTreeStyle.offstage,
-        ));
-      }
-    }
+    // if (_keepAliveBucket.isNotEmpty) {
+    //   final List<int> indices = _keepAliveBucket.keys.toList()..sort();
+    //   for (final int index in indices) {
+    //     children.add(_keepAliveBucket[index]!.toDiagnosticsNode(
+    //       name: 'child with index $index (kept alive but not laid out)',
+    //       style: DiagnosticsTreeStyle.offstage,
+    //     ));
+    //   }
+    // }
     return children;
   }
 }
