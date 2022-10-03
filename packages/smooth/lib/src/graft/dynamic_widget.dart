@@ -203,8 +203,8 @@ class DynamicElement<S extends Object> extends RenderObjectElement
 }
 
 // ref [SliverMultiBoxAdaptorParentData]
-class DynamicParentData<S extends Object> extends ParentData
-    with ContainerParentDataMixin<RenderBox> {
+class DynamicParentData<S extends Object>
+    extends ContainerBoxParentData<RenderBox> {
   /// The index of this child according to the [RenderDynamicChildManager].
   S? index;
 
@@ -214,7 +214,9 @@ class DynamicParentData<S extends Object> extends ParentData
 
 // ref [RenderSliverBoxChildManager]
 abstract class RenderDynamic<S extends Object> extends RenderBox
-    with ContainerRenderObjectMixin<RenderBox, DynamicParentData<S>> {
+    with
+        ContainerRenderObjectMixin<RenderBox, DynamicParentData<S>>,
+        RenderBoxContainerDefaultsMixin<RenderBox, DynamicParentData<S>> {
   RenderDynamic({required this.childManager});
 
   /// The delegate that manages the children of this object.
