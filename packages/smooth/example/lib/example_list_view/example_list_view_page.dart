@@ -25,6 +25,16 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
       body: Column(
         children: [
           const CounterWidget(prefix: 'Plain: '),
+          SizedBox(
+            height: 36,
+            child: SmoothBuilder(
+              builder: (_, __) => const Directionality(
+                textDirection: TextDirection.ltr,
+                child: CounterWidget(prefix: 'Smooth: '),
+              ),
+              child: Container(),
+            ),
+          ),
           Expanded(child: widget.enableSmooth ? _buildSmooth() : _buildPlain()),
           Row(
             children: [
