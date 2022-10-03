@@ -18,8 +18,8 @@ class _SmoothShiftState extends State<SmoothShift> {
   void _maybeSchedulePostMainTreeFlushLayoutCallback() {
     if (_hasPendingCallback) return;
 
-    SmoothSchedulerBindingMixin.instance.addPostMainTreeFlushLayoutCallback(() {
-      print('hi $runtimeType addPostMainTreeFlushLayoutCallback.callback');
+    SmoothSchedulerBindingMixin.instance.addStartDrawFrameCallback(() {
+      print('hi $runtimeType addStartDrawFrameCallback.callback');
 
       _hasPendingCallback = false;
 
@@ -31,7 +31,7 @@ class _SmoothShiftState extends State<SmoothShift> {
   @override
   Widget build(BuildContext context) {
     print('hi $runtimeType build offset=$_offset');
-   
+
     _maybeSchedulePostMainTreeFlushLayoutCallback();
 
     return Listener(

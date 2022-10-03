@@ -16,16 +16,22 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     super.handleBeginFrame(rawTimeStamp);
   }
 
-  // ref: [SchedulerBinding._postFrameCallbacks]
-  final _postMainTreeFlushLayoutCallbacks = <VoidCallback>[];
+  @override
+  void handleDrawFrame() {
+    _invokeStartDrawFrameCallbacks();
+    super.handleDrawFrame();
+  }
 
-  void addPostMainTreeFlushLayoutCallback(VoidCallback callback) =>
-      _postMainTreeFlushLayoutCallbacks.add(callback);
+  // ref: [SchedulerBinding._postFrameCallbacks]
+  final _startDrawFrameCallbacks = <VoidCallback>[];
+
+  void addStartDrawFrameCallback(VoidCallback callback) =>
+      _startDrawFrameCallbacks.add(callback);
 
   // ref: [SchedulerBinding._invokeFrameCallbackS]
-  void _invokePostMainTreeFlushLayoutCallbacks() {
-    final localCallbacks = List.of(_postMainTreeFlushLayoutCallbacks);
-    _postMainTreeFlushLayoutCallbacks.clear();
+  void _invokeStartDrawFrameCallbacks() {
+    final localCallbacks = List.of(_startDrawFrameCallbacks);
+    _startDrawFrameCallbacks.clear();
     for (final callback in localCallbacks) {
       try {
         callback();
@@ -67,9 +73,6 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
 
   void _handleAfterFlushLayout() {
     // print('handleAfterFlushLayout');
-
-    SmoothSchedulerBindingMixin.instance
-        ._invokePostMainTreeFlushLayoutCallbacks();
 
     final serviceLocator = ServiceLocator.maybeInstance;
     if (serviceLocator == null) return;
