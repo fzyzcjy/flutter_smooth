@@ -86,11 +86,10 @@ class DynamicElement<S extends Object> extends RenderObjectElement
   void createChild(S index, {required RenderBox? after}) {
     assert(_currentlyUpdatingChildIndex == null);
     owner!.buildScope(this, () {
-      final insertFirst = after == null;
-      assert(insertFirst || _childElements[index - 1] != null);
-      _currentBeforeChild = insertFirst
-          ? null
-          : (_childElements[index - 1]!.renderObject as RenderBox?);
+      // final insertFirst = after == null;
+      // assert(insertFirst || _childElements[index - 1] != null);
+      // _currentBeforeChild = insertFirst ? null : (_childElements[index - 1]!.renderObject as RenderBox?);
+      _currentBeforeChild = after;
       Element? newChild;
       try {
         final adaptorWidget = widget as DynamicWidget<S>;
