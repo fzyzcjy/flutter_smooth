@@ -54,7 +54,6 @@ class DynamicElement<S extends Object> extends RenderObjectElement
   void performRebuild() {
     super.performRebuild();
     _currentBeforeChild = null;
-    bool childrenUpdated = false;
     assert(_currentlyUpdatingChildIndex == null);
     try {
       final widgetTyped = widget as DynamicWidget<S>;
@@ -63,12 +62,9 @@ class DynamicElement<S extends Object> extends RenderObjectElement
         final newChild = updateChild(
             _childElements[index], _build(index, widgetTyped), index);
         if (newChild != null) {
-          childrenUpdated =
-              childrenUpdated || _childElements[index] != newChild;
           _childElements[index] = newChild;
           _currentBeforeChild = newChild.renderObject as RenderBox?;
         } else {
-          childrenUpdated = true;
           _childElements.remove(index);
         }
       }
@@ -76,7 +72,6 @@ class DynamicElement<S extends Object> extends RenderObjectElement
       _childElements.keys.forEach(processElement);
     } finally {
       _currentlyUpdatingChildIndex = null;
-      // renderObject.debugChildIntegrityEnabled = true;
     }
   }
 
