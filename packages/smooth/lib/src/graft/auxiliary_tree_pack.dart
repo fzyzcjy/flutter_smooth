@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smooth/src/graft/adapter_in_main_tree.dart';
 import 'package:smooth/src/graft/auxiliary_tree_root_view.dart';
-import 'package:smooth/src/remove_sub_tree_widget.dart';
+import 'package:smooth/src/maybe_child.dart';
 import 'package:smooth/src/service_locator.dart';
 
 class GraftAuxiliaryTreeRegistry {
@@ -52,7 +52,7 @@ class GraftAuxiliaryTreePack<S extends Object> {
   }
 
   final _tickerRegistry = TickerRegistry();
-  final _removeSubTreeController = RemoveSubTreeController();
+  final _maybeChildController = MaybeChildController(initialEnable: true);
   final adapterInMainTreeController = GraftAdapterInMainTreeController();
   Duration? _previousRunPipelineTimeStamp;
 
@@ -72,8 +72,8 @@ class GraftAuxiliaryTreePack<S extends Object> {
 
     rootView.prepareInitialFrame();
 
-    final wrappedWidget = RemoveSubTreeWidget(
-      controller: _removeSubTreeController,
+    final wrappedWidget = MaybeChild(
+      controller: _maybeChildController,
       // TODO may merge these providers (inherited widgets)
       child: AuxiliaryTreePackProvider(
         pack: this,
@@ -192,7 +192,7 @@ class GraftAuxiliaryTreePack<S extends Object> {
     // #54
     final previousRunPipelineTimeStamp = _previousRunPipelineTimeStamp;
     if (previousRunPipelineTimeStamp != null) {
-      _removeSubTreeController.markRemoveSubTree();
+      _maybeChildController.enable = false;
 
       runPipeline(
         previousRunPipelineTimeStamp,
