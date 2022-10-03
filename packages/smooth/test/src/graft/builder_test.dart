@@ -23,6 +23,97 @@ void main() {
     devicePixelRatioTestValue: 1,
   );
 
+  group('pointer events', () {
+    Future<void> _body(
+      WidgetTester tester, {
+      required Type tappableType,
+      required Widget Function(VoidCallback onTap) buildChild,
+    }) async {
+      final timeInfo = TimeInfo();
+
+      var tapped = false;
+
+      // TODO remove this "set state" hack, after #5955 fixed
+      late StateSetter outerWidgetSetState;
+      await tester.pumpWidget(StatefulBuilder(builder: (_, setState) {
+        outerWidgetSetState = setState;
+        return SmoothScope(child: buildChild(() => tapped = true));
+      }));
+
+      expect(tapped, false);
+
+      await tester.tap(find.byType(tappableType));
+      outerWidgetSetState(() {}); // temporary hack #5955
+      await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
+
+      expect(tapped, true);
+    }
+
+    group('touchable aux tree', () {
+      testWidgets('Listener', (tester) async {
+        await _body(
+          tester,
+          tappableType: Listener,
+          buildChild: (onTap) => GraftBuilder<int>(
+            auxiliaryTreeBuilder: (_) => Listener(
+              onPointerDown: (details) => onTap(),
+              child: const GraftAdapterInAuxiliaryTree(slot: 42),
+            ),
+            mainTreeChildBuilder: (_, slot) => Container(color: Colors.blue),
+          ),
+        );
+      });
+
+      testWidgets('GestureDetector', (tester) async {
+        await _body(
+          tester,
+          tappableType: GestureDetector,
+          buildChild: (onTap) => GraftBuilder<int>(
+            auxiliaryTreeBuilder: (_) => GestureDetector(
+              onTap: onTap,
+              child: const GraftAdapterInAuxiliaryTree(slot: 42),
+            ),
+            mainTreeChildBuilder: (_, slot) => Container(color: Colors.blue),
+          ),
+        );
+      });
+    });
+
+    group('touchable main tree child', () {
+      testWidgets('Listener', (tester) async {
+        await _body(
+          tester,
+          tappableType: Listener,
+          buildChild: (onTap) => GraftBuilder<int>(
+            auxiliaryTreeBuilder: (_) =>
+                const GraftAdapterInAuxiliaryTree(slot: 42),
+            mainTreeChildBuilder: (_, slot) => Listener(
+              onPointerDown: (details) => onTap(),
+              child: Container(color: Colors.blue),
+            ),
+          ),
+        );
+      });
+
+      testWidgets('GestureDetector', (tester) async {
+        await _body(
+          tester,
+          tappableType: GestureDetector,
+          buildChild: (onTap) => GraftBuilder<int>(
+            auxiliaryTreeBuilder: (_) =>
+                const GraftAdapterInAuxiliaryTree(slot: 42),
+            mainTreeChildBuilder: (_, slot) => GestureDetector(
+              onTap: onTap,
+              child: Container(color: Colors.blue),
+            ),
+          ),
+        );
+      });
+    });
+
+    // TODO when both aux tree and main tree child are touchable etc #5957
+  });
+
   testWidgets('simplest', (tester) async {
     debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
     final timeInfo = TimeInfo();
