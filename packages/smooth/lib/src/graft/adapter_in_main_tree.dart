@@ -297,7 +297,9 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
     assert(_debugMainTreeChildrenLayoutActive);
 
     final child = childFromIndex(slot)!;
-    child.layout(constraints);
+
+    // TODO [parentUsesSize] causes unneeded relayout? #5951
+    child.layout(constraints, parentUsesSize: true);
 
     pack.mainSubTreeData(slot).size = child.size;
 
