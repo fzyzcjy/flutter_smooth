@@ -3,68 +3,42 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:smooth/src/graft/adapter_in_main_tree.dart';
-import 'package:smooth/src/graft/auxiliary_tree_root_view.dart';
-import 'package:smooth/src/maybe_child.dart';
+import 'package:smooth/src/auxiliary_tree_root_view.dart';
+import 'package:smooth/src/remove_sub_tree_widget.dart';
 import 'package:smooth/src/service_locator.dart';
 
-class GraftAuxiliaryTreeRegistry {
-  Iterable<GraftAuxiliaryTreePack> get trees => _trees;
-  final _trees = Set<GraftAuxiliaryTreePack>.identity();
+class AuxiliaryTreeRegistry {
+  Iterable<AuxiliaryTreePack> get trees => _trees;
+  final _trees = Set<AuxiliaryTreePack>.identity();
 
-  void _attach(GraftAuxiliaryTreePack value) {
+  void _attach(AuxiliaryTreePack value) {
     assert(!_trees.contains(value));
     _trees.add(value);
   }
 
-  void _detach(GraftAuxiliaryTreePack value) {
+  void _detach(AuxiliaryTreePack value) {
     assert(_trees.contains(value));
     _trees.remove(value);
   }
 }
 
-class MainSubTreeSlotData {
-  final layerHandle = LayerHandle(OffsetLayer());
-  Size? size;
-
-  void dispose() {
-    layerHandle.layer = null;
-    size = null;
-  }
-}
-
-class GraftAuxiliaryTreePack<S extends Object> {
+class AuxiliaryTreePack {
   late final PipelineOwner pipelineOwner;
-  late final GraftAuxiliaryTreeRootView rootView;
-  late final BuildOwner buildOwner;
-  late final RenderObjectToWidgetElement<RenderBox> element;
+  late final AuxiliaryTreeRootView rootView;
+  late final BuildOwner _buildOwner;
+  late final RenderObjectToWidgetElement<RenderBox> _element;
 
-  MainSubTreeSlotData mainSubTreeData(S slot) =>
-      _mainSubTreeDataOfSlot[slot] ??= MainSubTreeSlotData();
-  final _mainSubTreeDataOfSlot = <S, MainSubTreeSlotData>{};
-
-  void removeMainSubTreeSlotsWhere(bool Function(S slot) test) {
-    final keysToRemove = _mainSubTreeDataOfSlot.keys.where(test).toList();
-    for (final key in keysToRemove) {
-      final removed = _mainSubTreeDataOfSlot.remove(key)!;
-      removed.dispose();
-    }
-  }
-
+  final mainSubTreeLayerHandle = LayerHandle(OffsetLayer());
   final _tickerRegistry = TickerRegistry();
-  final _maybeChildController = MaybeChildController(initialEnable: true);
-  final adapterInMainTreeController = GraftAdapterInMainTreeController();
+  final _removeSubTreeController = RemoveSubTreeController();
   Duration? _previousRunPipelineTimeStamp;
 
-  // final childPlaceholderRegistry = SmoothChildPlaceholderRegistry();
-
-  GraftAuxiliaryTreePack(Widget widget) {
+  AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
     pipelineOwner = PipelineOwner();
-    rootView = pipelineOwner.rootNode = GraftAuxiliaryTreeRootView(
-      configuration:
-          const GraftAuxiliaryTreeRootViewConfiguration(size: Size.zero),
+    rootView = pipelineOwner.rootNode = AuxiliaryTreeRootView(
+      configuration: const AuxiliaryTreeRootViewConfiguration(size: Size.zero),
     );
-    buildOwner = BuildOwner(
+    _buildOwner = BuildOwner(
       focusManager: FocusManager(),
       // onBuildScheduled: () =>
       //     print('second tree BuildOwner.onBuildScheduled called'),
@@ -72,25 +46,19 @@ class GraftAuxiliaryTreePack<S extends Object> {
 
     rootView.prepareInitialFrame();
 
-    final wrappedWidget = MaybeChild(
-      controller: _maybeChildController,
-      // TODO may merge these providers (inherited widgets)
-      child: AuxiliaryTreePackProvider(
-        pack: this,
-        // child: SmoothChildPlaceholderRegistryProvider(
-        //   registry: childPlaceholderRegistry,
-        child: TickerRegistryInheritedWidget(
-          registry: _tickerRegistry,
-          child: widget,
-        ),
+    final wrappedWidget = RemoveSubTreeWidget(
+      controller: _removeSubTreeController,
+      child: TickerRegistryInheritedWidget(
+        registry: _tickerRegistry,
+        child: widget(this),
       ),
     );
 
-    element = RenderObjectToWidgetAdapter<RenderBox>(
+    _element = RenderObjectToWidgetAdapter<RenderBox>(
       container: rootView,
       debugShortDescription: '[AuxiliaryTreePack#${shortHash(this)}.root]',
       child: wrappedWidget,
-    ).attachToRenderTree(buildOwner);
+    ).attachToRenderTree(_buildOwner);
 
     ServiceLocator.instance.auxiliaryTreeRegistry._attach(this);
   }
@@ -120,7 +88,7 @@ class GraftAuxiliaryTreePack<S extends Object> {
 
       // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
       // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
-      buildOwner.buildScope(element);
+      _buildOwner.buildScope(_element);
       pipelineOwner.flushLayout();
       pipelineOwner.flushCompositingBits();
       _temporarilyRemoveDebugActiveLayout(() {
@@ -134,7 +102,7 @@ class GraftAuxiliaryTreePack<S extends Object> {
       });
       // renderView.compositeFrame(); // this sends the bits to the GPU
       // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
-      buildOwner.finalizeTree();
+      _buildOwner.finalizeTree();
 
       // printWrapped(
       //     '$runtimeType.runPipeline after finalizeTree rootView.layer=${rootView.layer!.toStringDeep()}');
@@ -192,7 +160,7 @@ class GraftAuxiliaryTreePack<S extends Object> {
     // #54
     final previousRunPipelineTimeStamp = _previousRunPipelineTimeStamp;
     if (previousRunPipelineTimeStamp != null) {
-      _maybeChildController.enable = false;
+      _removeSubTreeController.markRemoveSubTree();
 
       runPipeline(
         previousRunPipelineTimeStamp,
@@ -223,19 +191,3 @@ void _temporarilyRemoveDebugActiveLayout(VoidCallback f) {
 }
 
 class _DummyOwnerForLayer {}
-
-class AuxiliaryTreePackProvider extends InheritedWidget {
-  final GraftAuxiliaryTreePack pack;
-
-  const AuxiliaryTreePackProvider({
-    super.key,
-    required super.child,
-    required this.pack,
-  });
-
-  static AuxiliaryTreePackProvider of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<AuxiliaryTreePackProvider>()!;
-
-  @override
-  bool updateShouldNotify(AuxiliaryTreePackProvider old) => old.pack != pack;
-}

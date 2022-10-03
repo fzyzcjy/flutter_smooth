@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth/src/actor.dart';
-import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
+import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/preempt_strategy.dart';
 
 class ServiceLocator {
@@ -16,7 +16,7 @@ class ServiceLocator {
   factory ServiceLocator.normal() => ServiceLocator.raw(
         actor: Actor(),
         preemptStrategy: PreemptStrategy.normal(),
-        auxiliaryTreeRegistry: GraftAuxiliaryTreeRegistry(),
+        auxiliaryTreeRegistry: AuxiliaryTreeRegistry(),
       );
 
   ServiceLocator.raw({
@@ -28,7 +28,7 @@ class ServiceLocator {
   ServiceLocator copyWith({
     Actor? actor,
     PreemptStrategy? preemptStrategy,
-    GraftAuxiliaryTreeRegistry? auxiliaryTreeRegistry,
+    AuxiliaryTreeRegistry? auxiliaryTreeRegistry,
   }) =>
       ServiceLocator.raw(
         actor: actor ?? this.actor,
@@ -39,7 +39,7 @@ class ServiceLocator {
 
   final Actor actor;
   final PreemptStrategy preemptStrategy;
-  final GraftAuxiliaryTreeRegistry auxiliaryTreeRegistry;
+  final AuxiliaryTreeRegistry auxiliaryTreeRegistry;
 }
 
 class SmoothScope extends StatefulWidget {

@@ -25,20 +25,18 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
 
   Widget _buildPlain() {
     return ListView.builder(
-      itemBuilder: (_, index) => _buildRow(index),
+      itemBuilder: _buildRow,
     );
   }
 
   Widget _buildSmooth() {
-    return SmoothMultiChildBuilder(
-      smoothBuilder: (_) => ListView.builder(
-        itemBuilder: (_, index) => SmoothChildPlaceholder(slot: index),
-      ),
-      childBuilder: (_, slot) => _buildRow(slot as int),
+    // TODO
+    return ListView.builder(
+      itemBuilder: _buildRow,
     );
   }
 
-  Widget _buildRow(int index) {
+  Widget _buildRow(BuildContext context, int index) {
     return SmoothPreemptPoint(
       child: ListTile(
         dense: true,

@@ -12,19 +12,13 @@ class WindowRenderCapturer {
   final pack = WindowRenderPack();
 
   WindowRenderCapturer() {
-    _setUp();
-  }
-
-  factory WindowRenderCapturer.autoDispose() {
-    final capturer = WindowRenderCapturer();
-    addTearDown(capturer.dispose);
-    return capturer;
-  }
-
-  void _setUp() {
     final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
     assert(binding.onWindowRender == null);
     binding.onWindowRender = _onWindowRender;
+  }
+
+  WindowRenderCapturer.autoDispose() {
+    addTearDown(dispose);
   }
 
   void dispose() {
@@ -100,7 +94,6 @@ class WindowRenderPack {
             .expect(tester, expectEntries[i], reason: 'context: i=$i');
       }
     } on TestFailure catch (_) {
-      debugPrint('actual=$this expect=$matcher');
       await dumpAll(tester, prefix: 'actual');
       await matcher.dumpAll(tester, prefix: 'expect');
       rethrow;
@@ -115,9 +108,6 @@ class WindowRenderPack {
       }
     });
   }
-
-  @override
-  String toString() => 'WindowRenderPack(imagesOfFrame: $imagesOfFrame)';
 }
 
 @immutable
