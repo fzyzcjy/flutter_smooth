@@ -91,9 +91,9 @@ class DynamicElement<S extends Object> extends RenderObjectElement
       }
 
       for (final index in _childElements.keys.toList()) {
-        final key = _childElements[index]!.widget.key;
-        final newIndex =
-            key == null ? null : widgetTyped.delegate.findIndexByKey(key);
+        // final key = _childElements[index]!.widget.key;
+        // final newIndex =
+        //     key == null ? null : widgetTyped.delegate.findIndexByKey(key);
         // final childParentData = _childElements[index]!.renderObject?.parentData
         //     as DynamicParentData?;
 
@@ -101,22 +101,22 @@ class DynamicElement<S extends Object> extends RenderObjectElement
         //   indexToLayoutOffset[index] = childParentData.layoutOffset!;
         // }
 
-        if (newIndex != null && newIndex != index) {
-          // // The layout offset of the child being moved is no longer accurate.
-          // if (childParentData != null) {
-          //   childParentData.layoutOffset = null;
-          // }
-
-          newChildren[newIndex] = _childElements[index];
-          if (_replaceMovedChildren) {
-            // We need to make sure the original index gets processed.
-            newChildren.putIfAbsent(index, () => null);
-          }
-          // We do not want the remapped child to get deactivated during processElement.
-          _childElements.remove(index);
-        } else {
-          newChildren.putIfAbsent(index, () => _childElements[index]);
-        }
+        // if (newIndex != null && newIndex != index) {
+        //   // // The layout offset of the child being moved is no longer accurate.
+        //   // if (childParentData != null) {
+        //   //   childParentData.layoutOffset = null;
+        //   // }
+        //
+        //   newChildren[newIndex] = _childElements[index];
+        //   if (_replaceMovedChildren) {
+        //     // We need to make sure the original index gets processed.
+        //     newChildren.putIfAbsent(index, () => null);
+        //   }
+        //   // We do not want the remapped child to get deactivated during processElement.
+        //   _childElements.remove(index);
+        // } else {
+        newChildren.putIfAbsent(index, () => _childElements[index]);
+        // }
       }
 
       // renderObject.debugChildIntegrityEnabled = false; // Moving children will temporary violate the integrity.
