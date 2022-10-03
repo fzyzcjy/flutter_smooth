@@ -18,7 +18,6 @@ class GraftBuilder<S extends Object> extends StatefulWidget {
 
 class _GraftBuilderState<S extends Object> extends State<GraftBuilder<S>> {
   late final GraftAuxiliaryTreePack<S> pack;
-  var postInitialized = false;
 
   @override
   void initState() {
@@ -36,11 +35,6 @@ class _GraftBuilderState<S extends Object> extends State<GraftBuilder<S>> {
 
   @override
   Widget build(BuildContext context) {
-    if (!postInitialized) {
-      postInitialized = true;
-      pack.postInitialization();
-    }
-
     return GraftAdapterInMainTree<S>(
       pack: pack,
       mainTreeChildBuilder: widget.mainTreeChildBuilder,
