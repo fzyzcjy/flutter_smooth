@@ -52,9 +52,13 @@ class GraftAuxiliaryTreePack<S extends Object> {
   }
 
   final _tickerRegistry = TickerRegistry();
-  final _maybeChildController = MaybeChildController(initialEnable: true);
   final adapterInMainTreeController = GraftAdapterInMainTreeController();
   Duration? _previousRunPipelineTimeStamp;
+
+  // NOTE initially be false (not enable subtree), and only enable
+  // in post-initialization
+  // https://github.com/fzyzcjy/yplusplus/issues/5956#issuecomment-1265096237
+  final _maybeChildController = MaybeChildController(initialEnable: false);
 
   // final childPlaceholderRegistry = SmoothChildPlaceholderRegistry();
 
@@ -93,6 +97,11 @@ class GraftAuxiliaryTreePack<S extends Object> {
     ).attachToRenderTree(buildOwner);
 
     ServiceLocator.instance.auxiliaryTreeRegistry._attach(this);
+  }
+
+  void postInitialization() {
+    // https://github.com/fzyzcjy/yplusplus/issues/5956#issuecomment-1265096237
+    _maybeChildController.enable = true;
   }
 
   void runPipeline(
