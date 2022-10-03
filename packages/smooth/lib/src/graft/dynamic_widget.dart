@@ -178,7 +178,7 @@ class DynamicElement<S extends Object> extends RenderObjectElement
   void removeChild(RenderBox child) {
     final S index = renderObject.indexOf(child);
     assert(_currentlyUpdatingChildIndex == null);
-    assert(index >= 0);
+    // assert(index >= 0);
     owner!.buildScope(this, () {
       assert(_childElements.containsKey(index));
       try {
@@ -327,14 +327,16 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
   // throw away this method, since all about keep alive
   // void removeAll() {}
 
-  void _createOrObtainChild(S index, {required RenderBox? after}) {
+  // originally named `_createOrObtainChild`, but no "obtain" logic since no keepalive
+  void _createChild(S index, {required RenderBox? after}) {
     invokeLayoutCallback<SliverConstraints>((SliverConstraints constraints) {
       assert(constraints == this.constraints);
       childManager.createChild(index, after: after);
     });
   }
 
-  void _destroyOrCacheChild(RenderBox child) {
+  // originally named `_destroyOrCacheChild`, but no "cache" logic since no keepalive
+  void _destroyChild(RenderBox child) {
     assert(child.parent == this);
     childManager.removeChild(child);
     assert(child.parent == null);
@@ -364,10 +366,10 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
   /// that call either, except for the one that is created and returned by
   /// `createChild`.
   @protected
-  bool addInitialChild({S index = 0}) {
+  bool addInitialChild({required S index}) {
     assert(_debugAssertChildListLocked());
     assert(firstChild == null);
-    _createOrObtainChild(index, after: null);
+    _createChild(index, after: null);
     if (firstChild != null) {
       assert(firstChild == lastChild);
       assert(indexOf(firstChild!) == index);
@@ -396,7 +398,7 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
   }) {
     assert(_debugAssertChildListLocked());
     final S index = indexOf(firstChild!) - 1;
-    _createOrObtainChild(index, after: null);
+    _createChild(index, after: null);
     if (indexOf(firstChild!) == index) {
       firstChild!.layout(childConstraints, parentUsesSize: parentUsesSize);
       return firstChild;
@@ -425,7 +427,7 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
     assert(_debugAssertChildListLocked());
     assert(after != null);
     final S index = indexOf(after!) + 1;
-    _createOrObtainChild(index, after: after);
+    _createChild(index, after: after);
     final RenderBox? child = childAfter(after);
     if (child != null && indexOf(child) == index) {
       child.layout(childConstraints, parentUsesSize: parentUsesSize);
@@ -434,27 +436,14 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
     return null;
   }
 
-  /// Called after layout with the number of children that can be garbage
-  /// collected at the head and tail of the child list.
-  ///
-  /// Children whose [DynamicParentData.keepAlive] property is
-  /// set to true will be removed to a cache instead of being dropped.
-  ///
-  /// This method also collects any children that were previously kept alive but
-  /// are now no longer necessary. As such, it should be called every time
-  /// [performLayout] is run, even if the arguments are both zero.
+  // ref [RenderSliverMultiBoxAdaptor], but modified
+  /// Called after layout with the slots that can be garbage collected.
   @protected
-  void collectGarbage(S leadingGarbage, S trailingGarbage) {
+  void collectGarbage(Iterable<S> slotsToRemove) {
     assert(_debugAssertChildListLocked());
-    assert(childCount >= leadingGarbage + trailingGarbage);
-    invokeLayoutCallback<SliverConstraints>((SliverConstraints constraints) {
-      while (leadingGarbage > 0) {
-        _destroyOrCacheChild(firstChild!);
-        leadingGarbage -= 1;
-      }
-      while (trailingGarbage > 0) {
-        _destroyOrCacheChild(lastChild!);
-        trailingGarbage -= 1;
+    invokeLayoutCallback((constraints) {
+      for (final slot in slotsToRemove) {
+        _destroyChild(TODO);
       }
     });
   }
