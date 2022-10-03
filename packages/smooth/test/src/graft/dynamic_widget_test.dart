@@ -11,13 +11,15 @@ void main() {
       late final List<String> childrenNamesWhenPaint;
       await tester.pumpWidget(_TestDynamicWidget(
         onPerformLayout: (that, constraints) {
-          expect(that.firstChild, isNull);
-          that.addInitialChild(index: 'a');
-          that.firstChild!.layout(constraints);
+          expect(that.childrenTestWidgetNames, <String>[]);
 
-          final b = that.insertChild(constraints,
-              index: 'b', after: that.firstChild!);
-          b!.layout(constraints);
+          that.createOrUpdateChild(index: 'a', after: null);
+          that.firstChild!.layout(constraints);
+          expect(that.childrenTestWidgetNames, ['a']);
+
+          that.createOrUpdateChild(index: 'b', after: that.firstChild);
+          that.childAfter(that.firstChild!)!.layout(constraints);
+          expect(that.childrenTestWidgetNames, ['a', 'b']);
         },
         onPaint: (that) =>
             childrenNamesWhenPaint = that.childrenTestWidgetNames,
@@ -38,12 +40,14 @@ void main() {
           expect(a.name, 'a');
           // do not layout `a` and GC it
 
+          that.createOrUpdateChild(index: 'b', after: a);
           final b = that.childAfter(a)! as _RenderTest;
           expect(b.name, 'b');
           b.layout(constraints);
 
-          final c = that.insertChild(constraints, index: 'c', after: b);
-          c!.layout(constraints);
+          that.createOrUpdateChild(index: 'c', after: b);
+          final c = that.childAfter(b)!;
+          c.layout(constraints);
 
           expect(that.childrenTestWidgetNames, ['a', 'b', 'c']);
 

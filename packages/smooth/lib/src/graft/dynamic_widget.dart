@@ -20,7 +20,7 @@ abstract class DynamicWidget<S extends Object> extends RenderObjectWidget {
 // ref [RenderSliverBoxChildManager]
 // see [RenderSliverBoxChildManager] for long doc comments for most methods
 abstract class RenderDynamicChildManager<S extends Object> {
-  void createChild(S index, {required RenderBox? after});
+  void createOrUpdateChild(S index, {required RenderBox? after});
 
   void removeChild(RenderBox child);
 
@@ -82,8 +82,9 @@ class DynamicElement<S extends Object> extends RenderObjectElement
   }
 
   // ref [SliverMultiBoxAdaptorElement]
+  // originally named [createChild]
   @override
-  void createChild(S index, {required RenderBox? after}) {
+  void createOrUpdateChild(S index, {required RenderBox? after}) {
     assert(_currentlyUpdatingChildIndex == null);
     owner!.buildScope(this, () {
       // final insertFirst = after == null;
@@ -275,14 +276,6 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
   // throw away this method, since all about keep alive
   // void removeAll() {}
 
-  // originally named `_createOrObtainChild`, but no "obtain" logic since no keepalive
-  void _createChild(S index, {required RenderBox? after}) {
-    invokeLayoutCallback((constraints) {
-      assert(constraints == this.constraints);
-      childManager.createChild(index, after: after);
-    });
-  }
-
   // originally named `_destroyOrCacheChild`, but no "cache" logic since no keepalive
   void _destroyChild(RenderBox child) {
     assert(child.parent == this);
@@ -297,37 +290,20 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
   // void visitChildren(RenderObjectVisitor visitor) {}
   // void visitChildrenForSemantics(RenderObjectVisitor visitor) {}
 
-  /// Called during layout to create and add the child with the given index.
-  /// Does not layout the new child.
-  @protected
-  bool addInitialChild({required S index}) {
+  // ref:
+  // 1. many methods in [RenderSliverMultiBoxAdaptor], including
+  //    * [addInitialChild]
+  //    * [insertAndLayoutLeadingChild]
+  //    * [insertAndLayoutChild]
+  //    * [_createOrObtainChild]
+  // 2. how [LayerBuilder] builds its child widgets
+  // related #5942, #5945, #5946
+  void createOrUpdateChild({required S index, required RenderBox? after}) {
     assert(_debugAssertChildListLocked());
-    assert(firstChild == null);
-    _createChild(index, after: null);
-    if (firstChild != null) {
-      assert(firstChild == lastChild);
-      assert(indexOf(firstChild!) == index);
-      return true;
-    }
-    return false;
-  }
-
-  // modified from [insertAndLayoutLeadingChild]
-  @protected
-  RenderBox? insertLeadingChild(BoxConstraints childConstraints,
-      {required S index}) {
-    assert(_debugAssertChildListLocked());
-    _createChild(index, after: null);
-    return firstChild;
-  }
-
-  // modified from [insertAndLayoutChild]
-  @protected
-  RenderBox? insertChild(BoxConstraints childConstraints,
-      {required S index, required RenderBox after}) {
-    assert(_debugAssertChildListLocked());
-    _createChild(index, after: after);
-    return childAfter(after);
+    invokeLayoutCallback((constraints) {
+      assert(constraints == this.constraints);
+      childManager.createOrUpdateChild(index, after: after);
+    });
   }
 
   // ref [RenderSliverMultiBoxAdaptor], but modified
