@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 import 'package:smooth/src/graft/auxiliary_tree_root_view.dart';
+import 'package:smooth/src/graft/dynamic_widget.dart';
 
 class GraftAdapterInMainTreeController<S extends Object> {
   _RenderGraftAdapterInMainTreeInner? _renderBox;
@@ -60,19 +61,24 @@ class GraftAdapterInMainTree<S extends Object> extends StatelessWidget {
   }
 }
 
-class _GraftAdapterInMainTreeInner<S extends Object>
-    extends MultiChildRenderObjectWidget {
+class _GraftAdapterInMainTreeInner<S extends Object> extends DynamicWidget<S> {
   final GraftAuxiliaryTreePack<S> pack;
 
-  _GraftAdapterInMainTreeInner({
+  const _GraftAdapterInMainTreeInner({
     required this.pack,
   });
+
+  @override
+  Widget? build(DynamicElement<Object> element, S index) {
+    return TODO;
+  }
 
   @override
   // ignore: library_private_types_in_public_api
   _RenderGraftAdapterInMainTreeInner<S> createRenderObject(
           BuildContext context) =>
       _RenderGraftAdapterInMainTreeInner(
+        childManager: context as DynamicElement<S>,
         pack: pack,
       );
 
@@ -93,14 +99,12 @@ class _AdapterParentData<S extends Object>
   set slot(S value) => _slot = value;
 }
 
-class _RenderGraftAdapterInMainTreeInner<S extends Object> extends RenderBox
-    with
-        ContainerRenderObjectMixin<RenderBox, _AdapterParentData>,
-        RenderBoxContainerDefaultsMixin<RenderBox, _AdapterParentData>,
-        _MainTreeChildrenLayoutActor<S> {
+class _RenderGraftAdapterInMainTreeInner<S extends Object>
+    extends RenderDynamic<S> with _MainTreeChildrenLayoutActor<S> {
   _RenderGraftAdapterInMainTreeInner({
     required this.pack,
-  });
+    required super.childManager,
+  }) : super();
 
   @override
   GraftAuxiliaryTreePack<S> pack;
@@ -279,14 +283,14 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> {
   void _buildChild(S slot) {
     assert(_debugMainTreeChildrenLayoutActive);
 
-    throw UnimplementedError;
+    TODO;
   }
 
   // see diagram in #5942
   void _layoutChild(S slot) {
     assert(_debugMainTreeChildrenLayoutActive);
 
-    throw UnimplementedError;
+    TODO;
   }
 }
 
