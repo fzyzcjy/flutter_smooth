@@ -354,8 +354,20 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
   void collectGarbage(Iterable<S> slotsToRemove) {
     assert(_debugAssertChildListLocked());
     invokeLayoutCallback((constraints) {
-      for (final slot in slotsToRemove) {
-        _destroyChild(TODO);
+      final childrenToRemove = <RenderBox>[];
+      {
+        var child = firstChild;
+        while (child != null) {
+          final childParentData = child.parentData! as DynamicParentData<S>;
+          if (slotsToRemove.contains(childParentData.index)) {
+            childrenToRemove.add(child);
+          }
+          child = childParentData.nextSibling;
+        }
+      }
+
+      for (final child in childrenToRemove) {
+        _destroyChild(child);
       }
     });
   }
