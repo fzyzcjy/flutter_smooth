@@ -212,7 +212,7 @@ class DynamicParentData<S extends Object> extends ParentData
   String toString() => 'index=$index; ${super.toString()}';
 }
 
-// ref [RenderSliverMultiBoxAdaptor]
+// ref [RenderSliverBoxChildManager]
 abstract class RenderDynamic<S extends Object> extends RenderBox
     with ContainerRenderObjectMixin<RenderBox, DynamicParentData<S>> {
   RenderDynamic({required this.childManager});
