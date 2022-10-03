@@ -282,18 +282,18 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
     }
   }
 
-  // see diagram in #5942
+  // see diagram in #5942, also ref [LayoutBuilder] and [RenderSliver]
   void _buildChild(S slot) {
     assert(_debugMainTreeChildrenLayoutActive);
 
     TODO;
   }
 
-  // see diagram in #5942
+  // see diagram in #5942, also ref [LayoutBuilder] and [RenderSliver]
   void _layoutChild(S slot) {
     assert(_debugMainTreeChildrenLayoutActive);
-
-    TODO;
+    final child = childFromIndex(slot)!;
+    child.layout(constraints);
   }
 }
 

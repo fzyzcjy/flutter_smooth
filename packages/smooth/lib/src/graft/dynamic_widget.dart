@@ -362,6 +362,17 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
     return childParentData.index!;
   }
 
+  // TODO not efficient now
+  RenderBox? childFromIndex(S index) {
+    var child = firstChild;
+    while (child != null) {
+      final childParentData = child.parentData! as DynamicParentData<S>;
+      if (childParentData.index == index) return child;
+      child = childParentData.nextSibling;
+    }
+    return null;
+  }
+
   @override
   List<DiagnosticsNode> debugDescribeChildren() {
     final children = <DiagnosticsNode>[];
