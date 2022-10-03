@@ -260,7 +260,7 @@ class _RenderGraftAdapterInMainTreeInner<S extends Object>
   }
 }
 
-mixin _MainTreeChildrenLayoutActor<S extends Object> {
+mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
   GraftAuxiliaryTreePack<S> get pack;
 
   /// Whether we are doing layout for main tree children
