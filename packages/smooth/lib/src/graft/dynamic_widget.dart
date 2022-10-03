@@ -193,9 +193,6 @@ class DynamicElement extends RenderObjectElement
   @override
   void didFinishLayout() {
     assert(debugAssertChildListLocked());
-    final firstIndex = _childElements.firstKey() ?? 0;
-    final lastIndex = _childElements.lastKey() ?? 0;
-    (widget as DynamicWidget).delegate.didFinishLayout(firstIndex, lastIndex);
   }
 
   int? _currentlyUpdatingChildIndex;
