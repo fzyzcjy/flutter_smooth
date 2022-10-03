@@ -1,8 +1,8 @@
 import 'package:flutter/rendering.dart';
 
 // ref: [ViewConfiguration]
-class AuxiliaryTreeRootViewConfiguration {
-  const AuxiliaryTreeRootViewConfiguration({
+class GraftAuxiliaryTreeRootViewConfiguration {
+  const GraftAuxiliaryTreeRootViewConfiguration({
     required this.size,
   });
 
@@ -24,11 +24,11 @@ class AuxiliaryTreeRootViewConfiguration {
 }
 
 // NOTE ref [RenderView], which is "tree root view" for main tree
-class AuxiliaryTreeRootView extends RenderObject
+class GraftAuxiliaryTreeRootView extends RenderObject
     with RenderObjectWithChildMixin<RenderBox> {
-  AuxiliaryTreeRootView({
+  GraftAuxiliaryTreeRootView({
     RenderBox? child,
-    required AuxiliaryTreeRootViewConfiguration configuration,
+    required GraftAuxiliaryTreeRootViewConfiguration configuration,
   }) : _configuration = configuration {
     this.child = child;
   }
@@ -40,10 +40,10 @@ class AuxiliaryTreeRootView extends RenderObject
 
   // NOTE ref [RenderView.configuration] which has size and some other things
   /// The constraints used for the root layout.
-  AuxiliaryTreeRootViewConfiguration get configuration => _configuration;
-  AuxiliaryTreeRootViewConfiguration _configuration;
+  GraftAuxiliaryTreeRootViewConfiguration get configuration => _configuration;
+  GraftAuxiliaryTreeRootViewConfiguration _configuration;
 
-  set configuration(AuxiliaryTreeRootViewConfiguration value) {
+  set configuration(GraftAuxiliaryTreeRootViewConfiguration value) {
     if (configuration == value) {
       return;
     }

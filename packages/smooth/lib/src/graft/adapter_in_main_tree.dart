@@ -4,15 +4,15 @@ import 'package:flutter/rendering.dart';
 import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 import 'package:smooth/src/graft/auxiliary_tree_root_view.dart';
 
-class AdapterInMainTreeController {
-  _RenderAdapterInMainTreeInner? _renderBox;
+class GraftAdapterInMainTreeController {
+  _RenderGraftAdapterInMainTreeInner? _renderBox;
 
-  void _attach(_RenderAdapterInMainTreeInner value) {
+  void _attach(_RenderGraftAdapterInMainTreeInner value) {
     assert(_renderBox == null);
     _renderBox = value;
   }
 
-  void _detach(_RenderAdapterInMainTreeInner value) {
+  void _detach(_RenderGraftAdapterInMainTreeInner value) {
     assert(_renderBox == value);
     _renderBox = null;
   }
@@ -22,11 +22,11 @@ class AdapterInMainTreeController {
   void layoutChild(Object slot) => _renderBox!._layoutChild(slot);
 }
 
-class AdapterInMainTree extends StatelessWidget {
-  final AuxiliaryTreePack pack;
+class GraftAdapterInMainTree extends StatelessWidget {
+  final GraftAuxiliaryTreePack pack;
   final Widget Function(BuildContext context, Object slot) mainTreeChildBuilder;
 
-  const AdapterInMainTree({
+  const GraftAdapterInMainTree({
     super.key,
     required this.pack,
     required this.mainTreeChildBuilder,
@@ -53,24 +53,24 @@ class AdapterInMainTree extends StatelessWidget {
     // hack: [_AdapterInMainTreeInner] does not respect "offset" in paint
     // now, so we add a RepaintBoundary to let offset==0
     return RepaintBoundary(
-      child: _AdapterInMainTreeInner(
+      child: _GraftAdapterInMainTreeInner(
         pack: pack,
       ),
     );
   }
 }
 
-class _AdapterInMainTreeInner extends MultiChildRenderObjectWidget {
-  final AuxiliaryTreePack pack;
+class _GraftAdapterInMainTreeInner extends MultiChildRenderObjectWidget {
+  final GraftAuxiliaryTreePack pack;
 
-  _AdapterInMainTreeInner({
+  _GraftAdapterInMainTreeInner({
     required this.pack,
   });
 
   @override
   // ignore: library_private_types_in_public_api
-  _RenderAdapterInMainTreeInner createRenderObject(BuildContext context) =>
-      _RenderAdapterInMainTreeInner(
+  _RenderGraftAdapterInMainTreeInner createRenderObject(BuildContext context) =>
+      _RenderGraftAdapterInMainTreeInner(
         pack: pack,
       );
 
@@ -78,7 +78,7 @@ class _AdapterInMainTreeInner extends MultiChildRenderObjectWidget {
   void updateRenderObject(
       BuildContext context,
       // ignore: library_private_types_in_public_api
-      _RenderAdapterInMainTreeInner renderObject) {
+      _RenderGraftAdapterInMainTreeInner renderObject) {
     renderObject.pack = pack;
   }
 }
@@ -90,17 +90,17 @@ class _AdapterParentData extends ContainerBoxParentData<RenderBox> {
   set slot(Object value) => _slot = value;
 }
 
-class _RenderAdapterInMainTreeInner extends RenderBox
+class _RenderGraftAdapterInMainTreeInner extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, _AdapterParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, _AdapterParentData>,
         _MainTreeChildrenLayoutActor {
-  _RenderAdapterInMainTreeInner({
+  _RenderGraftAdapterInMainTreeInner({
     required this.pack,
   });
 
   @override
-  AuxiliaryTreePack pack;
+  GraftAuxiliaryTreePack pack;
 
   @override
   void attach(covariant PipelineOwner owner) {
@@ -135,7 +135,7 @@ class _RenderAdapterInMainTreeInner extends RenderBox
 
     // NOTE
     pack.rootView.configuration =
-        AuxiliaryTreeRootViewConfiguration(size: constraints.biggest);
+        GraftAuxiliaryTreeRootViewConfiguration(size: constraints.biggest);
 
     _mainTreeChildrenLayout();
 
@@ -214,8 +214,8 @@ class _RenderAdapterInMainTreeInner extends RenderBox
   }
 
   // NOTE do *not* have any relation w/ self's PaintingContext, as we will not paint there
-  static void _paintSubTreesToPackLayer(
-      AuxiliaryTreePack pack, RenderBox? firstChild, Rect estimatedBounds) {
+  static void _paintSubTreesToPackLayer(GraftAuxiliaryTreePack pack,
+      RenderBox? firstChild, Rect estimatedBounds) {
     final usedSlots = <Object>[];
     var child = firstChild;
     while (child != null) {
@@ -249,7 +249,7 @@ class _RenderAdapterInMainTreeInner extends RenderBox
 }
 
 mixin _MainTreeChildrenLayoutActor {
-  AuxiliaryTreePack get pack;
+  GraftAuxiliaryTreePack get pack;
 
   var _debugMainTreeChildrenLayoutActive = false;
 

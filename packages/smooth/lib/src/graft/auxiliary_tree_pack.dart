@@ -8,16 +8,16 @@ import 'package:smooth/src/graft/auxiliary_tree_root_view.dart';
 import 'package:smooth/src/remove_sub_tree_widget.dart';
 import 'package:smooth/src/service_locator.dart';
 
-class AuxiliaryTreeRegistry {
-  Iterable<AuxiliaryTreePack> get trees => _trees;
-  final _trees = Set<AuxiliaryTreePack>.identity();
+class GraftAuxiliaryTreeRegistry {
+  Iterable<GraftAuxiliaryTreePack> get trees => _trees;
+  final _trees = Set<GraftAuxiliaryTreePack>.identity();
 
-  void _attach(AuxiliaryTreePack value) {
+  void _attach(GraftAuxiliaryTreePack value) {
     assert(!_trees.contains(value));
     _trees.add(value);
   }
 
-  void _detach(AuxiliaryTreePack value) {
+  void _detach(GraftAuxiliaryTreePack value) {
     assert(_trees.contains(value));
     _trees.remove(value);
   }
@@ -33,9 +33,9 @@ class MainSubTreeSlotData {
   }
 }
 
-class AuxiliaryTreePack {
+class GraftAuxiliaryTreePack {
   late final PipelineOwner pipelineOwner;
-  late final AuxiliaryTreeRootView rootView;
+  late final GraftAuxiliaryTreeRootView rootView;
   late final BuildOwner buildOwner;
   late final RenderObjectToWidgetElement<RenderBox> element;
 
@@ -53,15 +53,16 @@ class AuxiliaryTreePack {
 
   final _tickerRegistry = TickerRegistry();
   final _removeSubTreeController = RemoveSubTreeController();
-  final adapterInMainTreeController = AdapterInMainTreeController();
+  final adapterInMainTreeController = GraftAdapterInMainTreeController();
   Duration? _previousRunPipelineTimeStamp;
 
   // final childPlaceholderRegistry = SmoothChildPlaceholderRegistry();
 
-  AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
+  GraftAuxiliaryTreePack(Widget Function(GraftAuxiliaryTreePack) widget) {
     pipelineOwner = PipelineOwner();
-    rootView = pipelineOwner.rootNode = AuxiliaryTreeRootView(
-      configuration: const AuxiliaryTreeRootViewConfiguration(size: Size.zero),
+    rootView = pipelineOwner.rootNode = GraftAuxiliaryTreeRootView(
+      configuration:
+          const GraftAuxiliaryTreeRootViewConfiguration(size: Size.zero),
     );
     buildOwner = BuildOwner(
       focusManager: FocusManager(),
@@ -224,7 +225,7 @@ void _temporarilyRemoveDebugActiveLayout(VoidCallback f) {
 class _DummyOwnerForLayer {}
 
 class AuxiliaryTreePackProvider extends InheritedWidget {
-  final AuxiliaryTreePack pack;
+  final GraftAuxiliaryTreePack pack;
 
   const AuxiliaryTreePackProvider({
     super.key,

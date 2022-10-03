@@ -17,12 +17,12 @@ class GraftBuilder extends StatefulWidget {
 }
 
 class _GraftBuilderState extends State<GraftBuilder> {
-  late final AuxiliaryTreePack pack;
+  late final GraftAuxiliaryTreePack pack;
 
   @override
   void initState() {
     super.initState();
-    pack = AuxiliaryTreePack(
+    pack = GraftAuxiliaryTreePack(
       (pack) => Builder(
         builder: (context) => widget.auxiliaryTreeBuilder(context),
       ),
@@ -38,7 +38,7 @@ class _GraftBuilderState extends State<GraftBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return AdapterInMainTree(
+    return GraftAdapterInMainTree(
       pack: pack,
       mainTreeChildBuilder: widget.mainTreeChildBuilder,
     );

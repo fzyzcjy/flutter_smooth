@@ -31,7 +31,7 @@ void main() {
           cacheExtent: 0,
           itemBuilder: (_, index) {
             debugPrint('ListView.itemBuilder called ($index)');
-            return AdapterInAuxiliaryTree(slot: index);
+            return GraftAdapterInAuxiliaryTree(slot: index);
           },
         ),
       ),

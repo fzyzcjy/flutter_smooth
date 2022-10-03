@@ -16,7 +16,7 @@ class SmoothBuilder extends StatefulWidget {
 }
 
 class _SmoothBuilderState extends State<SmoothBuilder> {
-  late final AuxiliaryTreePack pack;
+  late final GraftAuxiliaryTreePack pack;
 
   // static const _slot = 'dummy-slot'; // TODO
 

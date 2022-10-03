@@ -16,7 +16,7 @@ class ServiceLocator {
   factory ServiceLocator.normal() => ServiceLocator.raw(
         actor: Actor(),
         preemptStrategy: PreemptStrategy.normal(),
-        auxiliaryTreeRegistry: AuxiliaryTreeRegistry(),
+        auxiliaryTreeRegistry: GraftAuxiliaryTreeRegistry(),
       );
 
   ServiceLocator.raw({
@@ -28,7 +28,7 @@ class ServiceLocator {
   ServiceLocator copyWith({
     Actor? actor,
     PreemptStrategy? preemptStrategy,
-    AuxiliaryTreeRegistry? auxiliaryTreeRegistry,
+    GraftAuxiliaryTreeRegistry? auxiliaryTreeRegistry,
   }) =>
       ServiceLocator.raw(
         actor: actor ?? this.actor,
@@ -39,7 +39,7 @@ class ServiceLocator {
 
   final Actor actor;
   final PreemptStrategy preemptStrategy;
-  final AuxiliaryTreeRegistry auxiliaryTreeRegistry;
+  final GraftAuxiliaryTreeRegistry auxiliaryTreeRegistry;
 }
 
 class SmoothScope extends StatefulWidget {

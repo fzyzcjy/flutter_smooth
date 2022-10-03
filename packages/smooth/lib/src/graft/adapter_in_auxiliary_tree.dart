@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 
-class AdapterInAuxiliaryTree extends StatelessWidget {
+class GraftAdapterInAuxiliaryTree extends StatelessWidget {
   final Object slot;
 
-  const AdapterInAuxiliaryTree({
+  const GraftAdapterInAuxiliaryTree({
     super.key,
     required this.slot,
     // super.child,
@@ -21,7 +21,7 @@ class AdapterInAuxiliaryTree extends StatelessWidget {
 
     // hack, since [_AdapterInAuxiliaryTreeInner] not deal with offset yet
     return RepaintBoundary(
-      child: _AdapterInAuxiliaryTreeInner(
+      child: _GraftAdapterInAuxiliaryTreeInner(
         pack: pack,
         slot: slot,
       ),
@@ -29,19 +29,19 @@ class AdapterInAuxiliaryTree extends StatelessWidget {
   }
 }
 
-class _AdapterInAuxiliaryTreeInner extends SingleChildRenderObjectWidget {
-  final AuxiliaryTreePack pack;
+class _GraftAdapterInAuxiliaryTreeInner extends SingleChildRenderObjectWidget {
+  final GraftAuxiliaryTreePack pack;
   final Object slot;
 
-  const _AdapterInAuxiliaryTreeInner({
+  const _GraftAdapterInAuxiliaryTreeInner({
     required this.pack,
     required this.slot,
   });
 
   @override
   // ignore: library_private_types_in_public_api
-  _RenderAdapterInAuxiliaryTree createRenderObject(BuildContext context) =>
-      _RenderAdapterInAuxiliaryTree(
+  _RenderGraftAdapterInAuxiliaryTree createRenderObject(BuildContext context) =>
+      _RenderGraftAdapterInAuxiliaryTree(
         pack: pack,
         slot: slot,
       );
@@ -50,20 +50,20 @@ class _AdapterInAuxiliaryTreeInner extends SingleChildRenderObjectWidget {
   void updateRenderObject(
       BuildContext context,
       // ignore: library_private_types_in_public_api
-      _RenderAdapterInAuxiliaryTree renderObject) {
+      _RenderGraftAdapterInAuxiliaryTree renderObject) {
     renderObject
       ..pack = pack
       ..slot = slot;
   }
 }
 
-class _RenderAdapterInAuxiliaryTree extends RenderBox {
-  _RenderAdapterInAuxiliaryTree({
+class _RenderGraftAdapterInAuxiliaryTree extends RenderBox {
+  _RenderGraftAdapterInAuxiliaryTree({
     required this.pack,
     required this.slot,
   });
 
-  AuxiliaryTreePack pack;
+  GraftAuxiliaryTreePack pack;
   Object slot;
 
   @override

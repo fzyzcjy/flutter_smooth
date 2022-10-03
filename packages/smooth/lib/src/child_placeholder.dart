@@ -8,6 +8,6 @@ class SmoothChildPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AdapterInAuxiliaryTree(slot: slot);
+    return GraftAdapterInAuxiliaryTree(slot: slot);
   }
 }
