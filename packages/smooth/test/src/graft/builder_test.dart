@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/src/graft/adapter_in_auxiliary_tree.dart';
 import 'package:smooth/src/graft/builder.dart';
@@ -23,6 +24,7 @@ void main() {
   );
 
   testWidgets('simplest', (tester) async {
+    debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
     final timeInfo = TimeInfo();
     final capturer = WindowRenderCapturer.autoDispose();
 
@@ -81,5 +83,7 @@ void main() {
         ..fillRect(const Rectangle(0, 10, 50, 60), colors[1])
         ..fillRect(const Rectangle(0, 70, 50, 30), colors[2])),
     ]);
+
+    debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
   });
 }
