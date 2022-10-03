@@ -39,10 +39,10 @@ class _RenderAdapterInMainTree extends RenderBox
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
-    // TODO correct? #5871
-    if (child!.hitTest(result, position: position)) return true;
-    if (pack.rootView.hitTest(result, position: position)) return true;
-    return false;
+    // https://github.com/fzyzcjy/yplusplus/issues/5917#issuecomment-1265350754
+    final childHit = child!.hitTest(result, position: position);
+    final auxTreeHit = pack.rootView.hitTest(result, position: position);
+    return childHit || auxTreeHit;
   }
 
   @override
