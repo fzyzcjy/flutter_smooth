@@ -288,11 +288,11 @@ abstract class RenderDynamic extends RenderBox
   @override
   void adoptChild(RenderObject child) {
     super.adoptChild(child);
-    final DynamicParentData childParentData =
-        child.parentData! as DynamicParentData;
-    if (!childParentData._keptAlive) {
-      childManager.didAdoptChild(child as RenderBox);
-    }
+    // final DynamicParentData childParentData =
+    //     child.parentData! as DynamicParentData;
+    // if (!childParentData._keptAlive) {
+    childManager.didAdoptChild(child as RenderBox);
+    // }
   }
 
   bool _debugAssertChildListLocked() =>
@@ -315,38 +315,38 @@ abstract class RenderDynamic extends RenderBox
     // 2. The child is keptAlive.
     // In this case, the child is no longer in the childList but might be stored in
     // [_keepAliveBucket]. We need to update the location of the child in the bucket.
-    final DynamicParentData childParentData =
-        child.parentData! as DynamicParentData;
-    if (!childParentData.keptAlive) {
-      super.move(child, after: after);
-      childManager.didAdoptChild(child); // updates the slot in the parentData
-      // Its slot may change even if super.move does not change the position.
-      // In this case, we still want to mark as needs layout.
-      markNeedsLayout();
-    } else {
-      // If the child in the bucket is not current child, that means someone has
-      // already moved and replaced current child, and we cannot remove this child.
-      // if (_keepAliveBucket[childParentData.index] == child) {
-      //   _keepAliveBucket.remove(childParentData.index);
-      // }
-      // assert(() {
-      //   _debugDanglingKeepAlives.remove(child);
-      //   return true;
-      // }());
-      // Update the slot and reinsert back to _keepAliveBucket in the new slot.
-      childManager.didAdoptChild(child);
-      // If there is an existing child in the new slot, that mean that child will
-      // be moved to other index. In other cases, the existing child should have been
-      // removed by updateChild. Thus, it is ok to overwrite it.
-      // assert(() {
-      //   if (_keepAliveBucket.containsKey(childParentData.index)) {
-      //     _debugDanglingKeepAlives
-      //         .add(_keepAliveBucket[childParentData.index]!);
-      //   }
-      //   return true;
-      // }());
-      // _keepAliveBucket[childParentData.index!] = child;
-    }
+    // final DynamicParentData childParentData =
+    //     child.parentData! as DynamicParentData;
+    // if (!childParentData.keptAlive) {
+    super.move(child, after: after);
+    childManager.didAdoptChild(child); // updates the slot in the parentData
+    // Its slot may change even if super.move does not change the position.
+    // In this case, we still want to mark as needs layout.
+    markNeedsLayout();
+    // } else {
+    //   // If the child in the bucket is not current child, that means someone has
+    //   // already moved and replaced current child, and we cannot remove this child.
+    //   // if (_keepAliveBucket[childParentData.index] == child) {
+    //   //   _keepAliveBucket.remove(childParentData.index);
+    //   // }
+    //   // assert(() {
+    //   //   _debugDanglingKeepAlives.remove(child);
+    //   //   return true;
+    //   // }());
+    //   // Update the slot and reinsert back to _keepAliveBucket in the new slot.
+    //   childManager.didAdoptChild(child);
+    //   // If there is an existing child in the new slot, that mean that child will
+    //   // be moved to other index. In other cases, the existing child should have been
+    //   // removed by updateChild. Thus, it is ok to overwrite it.
+    //   // assert(() {
+    //   //   if (_keepAliveBucket.containsKey(childParentData.index)) {
+    //   //     _debugDanglingKeepAlives
+    //   //         .add(_keepAliveBucket[childParentData.index]!);
+    //   //   }
+    //   //   return true;
+    //   // }());
+    //   // _keepAliveBucket[childParentData.index!] = child;
+    // }
   }
 
   // throw away this method, since `keepAlive === false`, and the method
