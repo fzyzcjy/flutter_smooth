@@ -301,6 +301,7 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
   // see diagram in #5942, also ref [LayoutBuilder] and [RenderSliver]
   void _layoutChild(S slot) {
     assert(_debugMainTreeChildrenLayoutActive);
+
     final child = childFromIndex(slot)!;
     child.layout(constraints);
 
@@ -309,6 +310,8 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
   }
 
   void _collectGarbage(Set<S> whitelistSlots) {
+    assert(_debugMainTreeChildrenLayoutActive);
+
     final slotsToRemove = <S>[];
 
     var child = firstChild;
