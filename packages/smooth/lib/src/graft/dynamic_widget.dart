@@ -57,7 +57,8 @@ class DynamicElement<S extends Object> extends RenderObjectElement
     assert(_currentlyUpdatingChildIndex == null);
     try {
       final widgetTyped = widget as DynamicWidget<S>;
-      void processElement(S index) {
+      final indices = _childElements.keys.toList();
+      for (final index in indices) {
         _currentlyUpdatingChildIndex = index;
         final newChild = updateChild(
             _childElements[index], _build(index, widgetTyped), index);
@@ -68,8 +69,6 @@ class DynamicElement<S extends Object> extends RenderObjectElement
           _childElements.remove(index);
         }
       }
-
-      _childElements.keys.forEach(processElement);
     } finally {
       _currentlyUpdatingChildIndex = null;
     }
