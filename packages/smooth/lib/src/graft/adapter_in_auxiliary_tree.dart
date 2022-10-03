@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 
 class GraftAdapterInAuxiliaryTree<S extends Object> extends StatelessWidget {
@@ -65,6 +66,12 @@ class RenderGraftAdapterInAuxiliaryTree<S extends Object> extends RenderBox {
 
   GraftAuxiliaryTreePack pack;
   S slot;
+
+  @override
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
+    return pack.adapterInMainTreeController
+        .hitTestChild(slot, result, position: position);
+  }
 
   @override
   void performLayout() {

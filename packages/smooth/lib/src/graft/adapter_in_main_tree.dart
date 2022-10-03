@@ -23,6 +23,10 @@ class GraftAdapterInMainTreeController<S extends Object> {
 
   void layoutChild(S slot, BoxConstraints constraintsFromAuxTree) =>
       _renderBox!._layoutChild(slot, constraintsFromAuxTree);
+
+  bool hitTestChild(S slot, BoxHitTestResult result,
+          {required Offset position}) =>
+      _renderBox!._hitTestChild(slot, result, position: position);
 }
 
 class GraftAdapterInMainTree<S extends Object> extends StatelessWidget {
@@ -128,10 +132,31 @@ class _RenderGraftAdapterInMainTreeInner<S extends Object>
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
-    // TODO correct? #5871
-    if (defaultHitTestChildren(result, position: position)) return true;
-    if (pack.rootView.hitTest(result, position: position)) return true;
-    return false;
+    // old way (done in #5871)
+    // if (defaultHitTestChildren(result, position: position)) return true;
+    // if (pack.rootView.hitTest(result, position: position)) return true;
+    // return false;
+
+    // new way (#5954)
+    // here, we pass hitTest to aux tree; then, later
+    // in [RenderGraftAdapterInAuxiliaryTree], it should call our [_hitTestChild]
+    return pack.rootView.hitTest(result, position: position);
+  }
+
+  bool _hitTestChild(S slot, BoxHitTestResult result,
+      {required Offset position}) {
+    final child = childFromIndex(slot)!;
+
+    // copy from [defaultHitTestChildren]
+    final childParentData = child.parentData! as DynamicParentData<S>;
+    return result.addWithPaintOffset(
+      offset: childParentData.offset,
+      position: position,
+      hitTest: (result, transformed) {
+        assert(transformed == position - childParentData.offset);
+        return child.hitTest(result, position: transformed);
+      },
+    );
   }
 
   @override
