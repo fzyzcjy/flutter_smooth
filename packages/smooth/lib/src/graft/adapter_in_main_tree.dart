@@ -274,6 +274,8 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
     }());
     try {
       pack.pipelineOwner.flushLayout();
+     
+      TODO_gc;
     } finally {
       assert(() {
         _debugMainTreeChildrenLayoutActive = false;
