@@ -72,9 +72,9 @@ class DynamicElement extends RenderObjectElement
           // } else if (indexToLayoutOffset.containsKey(index)) {
           //   parentData.layoutOffset = indexToLayoutOffset[index];
           // }
-          if (!parentData.keptAlive) {
-            _currentBeforeChild = newChild.renderObject as RenderBox?;
-          }
+          // if (!parentData.keptAlive) {
+          _currentBeforeChild = newChild.renderObject as RenderBox?;
+          // }
         } else {
           childrenUpdated = true;
           _childElements.remove(index);
@@ -248,8 +248,15 @@ class DynamicElement extends RenderObjectElement
 // void debugVisitOnstageChildren(ElementVisitor visitor)
 }
 
+// ref [SliverMultiBoxAdaptorParentData]
 class DynamicParentData extends ParentData
-    with ContainerParentDataMixin<RenderBox> {}
+    with ContainerParentDataMixin<RenderBox> {
+  /// The index of this child according to the [RenderDynamicChildManager].
+  int? index;
+
+  @override
+  String toString() => 'index=$index; ${super.toString()}';
+}
 
 // ref [RenderSliverMultiBoxAdaptor]
 abstract class RenderDynamic extends RenderBox
