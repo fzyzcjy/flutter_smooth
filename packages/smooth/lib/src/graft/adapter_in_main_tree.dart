@@ -286,23 +286,3 @@ mixin _MainTreeChildrenLayoutActor {
 
 // void printWrapped(String text) =>
 //     RegExp('.{1,800}').allMatches(text).map((m) => m.group(0)).forEach(print);
-//
-// class AdapterInMainTreeChildWidget
-//     extends ParentDataWidget<_AdapterParentData> {
-//   final Object slot;
-//
-//   const AdapterInMainTreeChildWidget({
-//     super.key,
-//     required this.slot,
-//     required super.child,
-//   });
-//
-//   @override
-//   void applyParentData(RenderObject renderObject) {
-//     final parentData = renderObject.parentData! as _AdapterParentData;
-//     parentData.slot = slot;
-//   }
-//
-//   @override
-//   Type get debugTypicalAncestorWidgetClass => _AdapterInMainTreeInner;
-// }

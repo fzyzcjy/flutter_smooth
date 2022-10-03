@@ -58,7 +58,7 @@ class GraftAuxiliaryTreePack {
 
   // final childPlaceholderRegistry = SmoothChildPlaceholderRegistry();
 
-  GraftAuxiliaryTreePack(Widget Function(GraftAuxiliaryTreePack) widget) {
+  GraftAuxiliaryTreePack(Widget widget) {
     pipelineOwner = PipelineOwner();
     rootView = pipelineOwner.rootNode = GraftAuxiliaryTreeRootView(
       configuration:
@@ -81,7 +81,7 @@ class GraftAuxiliaryTreePack {
         //   registry: childPlaceholderRegistry,
         child: TickerRegistryInheritedWidget(
           registry: _tickerRegistry,
-          child: widget(this),
+          child: widget,
         ),
       ),
     );

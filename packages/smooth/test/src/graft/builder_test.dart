@@ -14,6 +14,7 @@ void main() {
   );
 
   testWidgets('simplest', (tester) async {
+    final timeInfo = TimeInfo();
     final capturer = WindowRenderCapturer.autoDispose();
 
     final colors = [
@@ -48,7 +49,7 @@ void main() {
     ]);
 
     await tester.drag(find.byType(Scrollable), const Offset(0, -50));
-    await tester.pump();
+    await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
     await capturer
         .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
       await tester.createScreenImage((im) => im

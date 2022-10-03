@@ -23,10 +23,7 @@ class _GraftBuilderState extends State<GraftBuilder> {
   void initState() {
     super.initState();
     pack = GraftAuxiliaryTreePack(
-      (pack) => Builder(
-        builder: (context) => widget.auxiliaryTreeBuilder(context),
-      ),
-    );
+        Builder(builder: (context) => widget.auxiliaryTreeBuilder(context)));
   }
 
   @override
