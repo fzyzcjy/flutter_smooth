@@ -31,12 +31,14 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
 
   Widget _buildPlain() {
     return ListView.builder(
+      itemCount: 1000,
       itemBuilder: _buildRow,
     );
   }
 
   Widget _buildSmooth() {
     return SmoothListView.builder(
+      itemCount: 1000,
       itemBuilder: _buildRow,
     );
   }
