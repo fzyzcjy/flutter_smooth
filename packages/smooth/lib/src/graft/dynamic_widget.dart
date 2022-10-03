@@ -13,6 +13,8 @@ abstract class DynamicWidget extends RenderObjectWidget {
 
   @override
   RenderDynamic createRenderObject(BuildContext context);
+
+  Widget? build(DynamicElement element, int index);
 }
 
 // ref [RenderSliverBoxChildManager]
@@ -119,7 +121,9 @@ class DynamicElement extends RenderObjectElement
 
   // ref [SliverMultiBoxAdaptorElement]
   Widget? _build(int index, DynamicWidget widget) {
-    return widget.delegate.build(this, index);
+    // originally: `return widget.delegate.build(this, index);`
+    // but we do not have any changeable `delegate` variable to simplify impl
+    return widget.build(this, index);
   }
 
   // ref [SliverMultiBoxAdaptorElement]
