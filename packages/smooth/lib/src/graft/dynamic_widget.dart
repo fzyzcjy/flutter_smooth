@@ -275,7 +275,7 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
 
   // originally named `_createOrObtainChild`, but no "obtain" logic since no keepalive
   void _createChild(S index, {required RenderBox? after}) {
-    invokeLayoutCallback<SliverConstraints>((SliverConstraints constraints) {
+    invokeLayoutCallback((constraints) {
       assert(constraints == this.constraints);
       childManager.createChild(index, after: after);
     });
@@ -295,22 +295,8 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
   // void visitChildren(RenderObjectVisitor visitor) {}
   // void visitChildrenForSemantics(RenderObjectVisitor visitor) {}
 
-  /// Called during layout to create and add the child with the given index and
-  /// scroll offset.
-  ///
-  /// Calls [RenderSliverBoxChildManager.createChild] to actually create and add
-  /// the child if necessary. The child may instead be obtained from a cache;
-  /// see [DynamicParentData.keepAlive].
-  ///
-  /// Returns false if there was no cached child and `createChild` did not add
-  /// any child, otherwise returns true.
-  ///
+  /// Called during layout to create and add the child with the given index.
   /// Does not layout the new child.
-  ///
-  /// When this is called, there are no visible children, so no children can be
-  /// removed during the call to `createChild`. No child should be added during
-  /// that call either, except for the one that is created and returned by
-  /// `createChild`.
   @protected
   bool addInitialChild({required S index}) {
     assert(_debugAssertChildListLocked());
@@ -326,17 +312,6 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
 
   /// Called during layout to create, add, and layout the child before
   /// [firstChild].
-  ///
-  /// Calls [RenderSliverBoxChildManager.createChild] to actually create and add
-  /// the child if necessary. The child may instead be obtained from a cache;
-  /// see [DynamicParentData.keepAlive].
-  ///
-  /// Returns the new child or null if no child was obtained.
-  ///
-  /// The child that was previously the first child, as well as any subsequent
-  /// children, may be removed by this call if they have not yet been laid out
-  /// during this layout pass. No child should be added during that call except
-  /// for the one that is created and returned by `createChild`.
   @protected
   RenderBox? insertAndLayoutLeadingChild(
     BoxConstraints childConstraints, {
@@ -355,16 +330,6 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
 
   /// Called during layout to create, add, and layout the child after
   /// the given child.
-  ///
-  /// Calls [RenderSliverBoxChildManager.createChild] to actually create and add
-  /// the child if necessary. The child may instead be obtained from a cache;
-  /// see [DynamicParentData.keepAlive].
-  ///
-  /// Returns the new child. It is the responsibility of the caller to configure
-  /// the child's scroll offset.
-  ///
-  /// Children after the `after` child may be removed in the process. Only the
-  /// new child may be added.
   @protected
   RenderBox? insertAndLayoutChild(
     BoxConstraints childConstraints, {
