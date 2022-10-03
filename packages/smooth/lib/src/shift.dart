@@ -17,6 +17,7 @@ class _SmoothShiftState extends State<SmoothShift> {
 
   void _maybeSchedulePostMainTreeFlushLayoutCallback() {
     if (_hasPendingCallback) return;
+    _hasPendingCallback = true;
 
     SmoothSchedulerBindingMixin.instance.addStartDrawFrameCallback(() {
       print('hi $runtimeType addStartDrawFrameCallback.callback');
