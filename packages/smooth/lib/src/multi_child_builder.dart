@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:smooth/src/graft/builder.dart';
 
 // TODO merge with classical [SmoothBuilder]
-class SmoothMultiChildBuilder extends StatelessWidget {
+class SmoothMultiChildBuilder<S extends Object> extends StatelessWidget {
   final Widget Function(BuildContext context) smoothBuilder;
-  final Widget Function(BuildContext context, Object slot) childBuilder;
+  final Widget Function(BuildContext context, S slot) childBuilder;
 
   const SmoothMultiChildBuilder({
     super.key,

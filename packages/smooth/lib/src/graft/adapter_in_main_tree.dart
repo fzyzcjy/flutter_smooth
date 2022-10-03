@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 import 'package:smooth/src/graft/auxiliary_tree_root_view.dart';
 
-class GraftAdapterInMainTreeController {
+class GraftAdapterInMainTreeController<S extends Object> {
   _RenderGraftAdapterInMainTreeInner? _renderBox;
 
   void _attach(_RenderGraftAdapterInMainTreeInner value) {
@@ -17,14 +17,14 @@ class GraftAdapterInMainTreeController {
     _renderBox = null;
   }
 
-  void buildChild(Object slot) => _renderBox!._buildChild(slot);
+  void buildChild(S slot) => _renderBox!._buildChild(slot);
 
-  void layoutChild(Object slot) => _renderBox!._layoutChild(slot);
+  void layoutChild(S slot) => _renderBox!._layoutChild(slot);
 }
 
-class GraftAdapterInMainTree extends StatelessWidget {
-  final GraftAuxiliaryTreePack pack;
-  final Widget Function(BuildContext context, Object slot) mainTreeChildBuilder;
+class GraftAdapterInMainTree<S extends Object> extends StatelessWidget {
+  final GraftAuxiliaryTreePack<S> pack;
+  final Widget Function(BuildContext context, S slot) mainTreeChildBuilder;
 
   const GraftAdapterInMainTree({
     super.key,
@@ -60,8 +60,9 @@ class GraftAdapterInMainTree extends StatelessWidget {
   }
 }
 
-class _GraftAdapterInMainTreeInner extends MultiChildRenderObjectWidget {
-  final GraftAuxiliaryTreePack pack;
+class _GraftAdapterInMainTreeInner<S extends Object>
+    extends MultiChildRenderObjectWidget {
+  final GraftAuxiliaryTreePack<S> pack;
 
   _GraftAdapterInMainTreeInner({
     required this.pack,
@@ -69,7 +70,8 @@ class _GraftAdapterInMainTreeInner extends MultiChildRenderObjectWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _RenderGraftAdapterInMainTreeInner createRenderObject(BuildContext context) =>
+  _RenderGraftAdapterInMainTreeInner<S> createRenderObject(
+          BuildContext context) =>
       _RenderGraftAdapterInMainTreeInner(
         pack: pack,
       );
@@ -78,29 +80,30 @@ class _GraftAdapterInMainTreeInner extends MultiChildRenderObjectWidget {
   void updateRenderObject(
       BuildContext context,
       // ignore: library_private_types_in_public_api
-      _RenderGraftAdapterInMainTreeInner renderObject) {
+      _RenderGraftAdapterInMainTreeInner<S> renderObject) {
     renderObject.pack = pack;
   }
 }
 
-class _AdapterParentData extends ContainerBoxParentData<RenderBox> {
-  Object get slot => _slot!;
-  Object? _slot;
+class _AdapterParentData<S extends Object>
+    extends ContainerBoxParentData<RenderBox> {
+  S get slot => _slot!;
+  S? _slot;
 
-  set slot(Object value) => _slot = value;
+  set slot(S value) => _slot = value;
 }
 
-class _RenderGraftAdapterInMainTreeInner extends RenderBox
+class _RenderGraftAdapterInMainTreeInner<S extends Object> extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, _AdapterParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, _AdapterParentData>,
-        _MainTreeChildrenLayoutActor {
+        _MainTreeChildrenLayoutActor<S> {
   _RenderGraftAdapterInMainTreeInner({
     required this.pack,
   });
 
   @override
-  GraftAuxiliaryTreePack pack;
+  GraftAuxiliaryTreePack<S> pack;
 
   @override
   void attach(covariant PipelineOwner owner) {
@@ -116,8 +119,8 @@ class _RenderGraftAdapterInMainTreeInner extends RenderBox
 
   @override
   void setupParentData(RenderBox child) {
-    if (child.parentData is! _AdapterParentData) {
-      child.parentData = _AdapterParentData();
+    if (child.parentData is! _AdapterParentData<S>) {
+      child.parentData = _AdapterParentData<S>();
     }
   }
 
@@ -214,12 +217,15 @@ class _RenderGraftAdapterInMainTreeInner extends RenderBox
   }
 
   // NOTE do *not* have any relation w/ self's PaintingContext, as we will not paint there
-  static void _paintSubTreesToPackLayer(GraftAuxiliaryTreePack pack,
-      RenderBox? firstChild, Rect estimatedBounds) {
+  static void _paintSubTreesToPackLayer<S extends Object>(
+    GraftAuxiliaryTreePack<S> pack,
+    RenderBox? firstChild,
+    Rect estimatedBounds,
+  ) {
     final usedSlots = <Object>[];
     var child = firstChild;
     while (child != null) {
-      final childParentData = child.parentData! as _AdapterParentData;
+      final childParentData = child.parentData! as _AdapterParentData<S>;
       final slot = childParentData.slot;
 
       usedSlots.add(slot);
@@ -248,8 +254,8 @@ class _RenderGraftAdapterInMainTreeInner extends RenderBox
   }
 }
 
-mixin _MainTreeChildrenLayoutActor {
-  GraftAuxiliaryTreePack get pack;
+mixin _MainTreeChildrenLayoutActor<S extends Object> {
+  GraftAuxiliaryTreePack<S> get pack;
 
   var _debugMainTreeChildrenLayoutActive = false;
 
@@ -270,14 +276,14 @@ mixin _MainTreeChildrenLayoutActor {
   }
 
   // see diagram in #5942
-  void _buildChild(Object slot) {
+  void _buildChild(S slot) {
     assert(_debugMainTreeChildrenLayoutActive);
 
     TODO;
   }
 
   // see diagram in #5942
-  void _layoutChild(Object slot) {
+  void _layoutChild(S slot) {
     assert(_debugMainTreeChildrenLayoutActive);
 
     TODO;

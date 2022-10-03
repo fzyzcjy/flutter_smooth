@@ -33,17 +33,17 @@ class MainSubTreeSlotData {
   }
 }
 
-class GraftAuxiliaryTreePack {
+class GraftAuxiliaryTreePack<S extends Object> {
   late final PipelineOwner pipelineOwner;
   late final GraftAuxiliaryTreeRootView rootView;
   late final BuildOwner buildOwner;
   late final RenderObjectToWidgetElement<RenderBox> element;
 
-  MainSubTreeSlotData mainSubTreeData(Object slot) =>
+  MainSubTreeSlotData mainSubTreeData(S slot) =>
       _mainSubTreeDataOfSlot[slot] ??= MainSubTreeSlotData();
-  final _mainSubTreeDataOfSlot = <Object, MainSubTreeSlotData>{};
+  final _mainSubTreeDataOfSlot = <S, MainSubTreeSlotData>{};
 
-  void removeMainSubTreeSlotsWhere(bool Function(Object slot) test) {
+  void removeMainSubTreeSlotsWhere(bool Function(S slot) test) {
     final keysToRemove = _mainSubTreeDataOfSlot.keys.where(test).toList();
     for (final key in keysToRemove) {
       final removed = _mainSubTreeDataOfSlot.remove(key)!;

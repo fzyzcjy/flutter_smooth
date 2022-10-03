@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 
-class GraftAdapterInAuxiliaryTree extends StatelessWidget {
-  final Object slot;
+class GraftAdapterInAuxiliaryTree<S extends Object> extends StatelessWidget {
+  final S slot;
 
   const GraftAdapterInAuxiliaryTree({
     super.key,
@@ -29,9 +29,10 @@ class GraftAdapterInAuxiliaryTree extends StatelessWidget {
   }
 }
 
-class _GraftAdapterInAuxiliaryTreeInner extends SingleChildRenderObjectWidget {
+class _GraftAdapterInAuxiliaryTreeInner<S extends Object>
+    extends SingleChildRenderObjectWidget {
   final GraftAuxiliaryTreePack pack;
-  final Object slot;
+  final S slot;
 
   const _GraftAdapterInAuxiliaryTreeInner({
     required this.pack,
@@ -40,7 +41,8 @@ class _GraftAdapterInAuxiliaryTreeInner extends SingleChildRenderObjectWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _RenderGraftAdapterInAuxiliaryTree createRenderObject(BuildContext context) =>
+  _RenderGraftAdapterInAuxiliaryTree<S> createRenderObject(
+          BuildContext context) =>
       _RenderGraftAdapterInAuxiliaryTree(
         pack: pack,
         slot: slot,
@@ -50,21 +52,21 @@ class _GraftAdapterInAuxiliaryTreeInner extends SingleChildRenderObjectWidget {
   void updateRenderObject(
       BuildContext context,
       // ignore: library_private_types_in_public_api
-      _RenderGraftAdapterInAuxiliaryTree renderObject) {
+      _RenderGraftAdapterInAuxiliaryTree<S> renderObject) {
     renderObject
       ..pack = pack
       ..slot = slot;
   }
 }
 
-class _RenderGraftAdapterInAuxiliaryTree extends RenderBox {
+class _RenderGraftAdapterInAuxiliaryTree<S extends Object> extends RenderBox {
   _RenderGraftAdapterInAuxiliaryTree({
     required this.pack,
     required this.slot,
   });
 
   GraftAuxiliaryTreePack pack;
-  Object slot;
+  S slot;
 
   @override
   void performLayout() {

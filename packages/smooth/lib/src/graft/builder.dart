@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:smooth/src/graft/adapter_in_main_tree.dart';
 import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 
-class GraftBuilder extends StatefulWidget {
+class GraftBuilder<S extends Object> extends StatefulWidget {
   final Widget Function(BuildContext context) auxiliaryTreeBuilder;
-  final Widget Function(BuildContext context, Object slot) mainTreeChildBuilder;
+  final Widget Function(BuildContext context, S slot) mainTreeChildBuilder;
 
   const GraftBuilder({
     super.key,
