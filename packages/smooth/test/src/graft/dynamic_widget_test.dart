@@ -114,7 +114,6 @@ class _TestRenderDynamic extends RenderDynamic<String> {
 
   @override
   void performLayout() {
-    super.performLayout();
     onPerformLayout(this, constraints);
     size = constraints.biggest;
   }
@@ -137,7 +136,7 @@ class _TestWidget extends SingleChildRenderObjectWidget {
   static List<String> findAll() => find
       .byType(_TestWidget)
       .evaluate()
-      .map((widget) => (widget as _TestWidget).name)
+      .map((element) => (element.widget as _TestWidget).name)
       .toList();
 
   @override
