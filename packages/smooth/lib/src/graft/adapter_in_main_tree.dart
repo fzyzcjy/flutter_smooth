@@ -56,6 +56,7 @@ class GraftAdapterInMainTree<S extends Object> extends StatelessWidget {
     return RepaintBoundary(
       child: _GraftAdapterInMainTreeInner(
         pack: pack,
+        mainTreeChildBuilder: mainTreeChildBuilder,
       ),
     );
   }
@@ -63,15 +64,16 @@ class GraftAdapterInMainTree<S extends Object> extends StatelessWidget {
 
 class _GraftAdapterInMainTreeInner<S extends Object> extends DynamicWidget<S> {
   final GraftAuxiliaryTreePack<S> pack;
+  final Widget Function(BuildContext context, S slot) mainTreeChildBuilder;
 
   const _GraftAdapterInMainTreeInner({
     required this.pack,
+    required this.mainTreeChildBuilder,
   });
 
   @override
-  Widget? build(DynamicElement<Object> element, S index) {
-    return TODO;
-  }
+  Widget? build(DynamicElement<Object> element, S index) =>
+      mainTreeChildBuilder(element, index);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -261,6 +263,7 @@ class _RenderGraftAdapterInMainTreeInner<S extends Object>
 mixin _MainTreeChildrenLayoutActor<S extends Object> {
   GraftAuxiliaryTreePack<S> get pack;
 
+  /// Whether we are doing layout for main tree children
   var _debugMainTreeChildrenLayoutActive = false;
 
   void _mainTreeChildrenLayout() {
