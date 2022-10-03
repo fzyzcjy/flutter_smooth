@@ -24,8 +24,13 @@ class AdapterInMainTreeController {
 
 class AdapterInMainTree extends StatelessWidget {
   final AuxiliaryTreePack pack;
+  final Widget Function(BuildContext context, Object slot) mainTreeChildBuilder;
 
-  const AdapterInMainTree({super.key, required this.pack});
+  const AdapterInMainTree({
+    super.key,
+    required this.pack,
+    required this.mainTreeChildBuilder,
+  });
 
   @override
   Widget build(BuildContext context) {
