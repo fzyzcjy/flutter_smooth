@@ -110,12 +110,11 @@ class DynamicElement extends RenderObjectElement
         }
       }
 
-      renderObject.debugChildIntegrityEnabled =
-          false; // Moving children will temporary violate the integrity.
+      // renderObject.debugChildIntegrityEnabled = false; // Moving children will temporary violate the integrity.
       newChildren.keys.forEach(processElement);
     } finally {
       _currentlyUpdatingChildIndex = null;
-      renderObject.debugChildIntegrityEnabled = true;
+      // renderObject.debugChildIntegrityEnabled = true;
     }
   }
 
@@ -278,25 +277,13 @@ abstract class RenderDynamic extends RenderBox
     }
   }
 
-  /// Indicates whether integrity check is enabled.
-  ///
-  /// Setting this property to true will immediately perform an integrity check.
-  ///
-  /// The integrity check consists of:
-  ///
-  /// 1. Verify that the children index in childList is in ascending order.
-  /// 2. Verify that there is no dangling keepalive child as the result of [move].
-  bool get debugChildIntegrityEnabled => _debugChildIntegrityEnabled;
-  bool _debugChildIntegrityEnabled = true;
-
-  set debugChildIntegrityEnabled(bool enabled) {
-    assert(enabled != null);
-    assert(() {
-      _debugChildIntegrityEnabled = enabled;
-      return _debugVerifyChildOrder() &&
-          (!_debugChildIntegrityEnabled || _debugDanglingKeepAlives.isEmpty);
-    }());
-  }
+  // throw away, since both of its check are meaningless in DynamicWidget
+  // 1. Verify that the children index in childList is in ascending order.
+  //    -> our "index" is slot and is orderless
+  // 2. Verify that there is no dangling keepalive child as the result of [move].
+  //    -> we do not implement keepalive
+  // bool _debugChildIntegrityEnabled = true;
+  // bool _debugVerifyChildOrder() {}
 
   @override
   void adoptChild(RenderObject child) {
@@ -311,27 +298,10 @@ abstract class RenderDynamic extends RenderBox
   bool _debugAssertChildListLocked() =>
       childManager.debugAssertChildListLocked();
 
-  /// Verify that the child list index is in strictly increasing order.
-  ///
-  /// This has no effect in release builds.
-  bool _debugVerifyChildOrder() {
-    if (_debugChildIntegrityEnabled) {
-      RenderBox? child = firstChild;
-      int index;
-      while (child != null) {
-        index = indexOf(child);
-        child = childAfter(child);
-        assert(child == null || indexOf(child) > index);
-      }
-    }
-    return true;
-  }
-
   @override
   void insert(RenderBox child, {RenderBox? after}) {
     super.insert(child, after: after);
     assert(firstChild != null);
-    assert(_debugVerifyChildOrder());
   }
 
   @override
