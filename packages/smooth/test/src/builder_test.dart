@@ -410,7 +410,7 @@ void main() {
         await tester.pumpWidget(SmoothScope(
           serviceLocator: ServiceLocator.normal()
               .copyWith(preemptStrategy: const PreemptStrategy.never()),
-          child: SmoothMultiChildBuilder(
+          child: SmoothMultiChildBuilder<int>(
             smoothBuilder: (_) => Directionality(
               textDirection: TextDirection.ltr,
               child: ListView.builder(
@@ -425,7 +425,7 @@ void main() {
             ),
             childBuilder: (_, slot) => Container(
               height: 60,
-              color: colors[slot as int],
+              color: colors[slot],
             ),
           ),
         ));

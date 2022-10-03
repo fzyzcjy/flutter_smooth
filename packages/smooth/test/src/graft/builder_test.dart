@@ -33,7 +33,20 @@ void main() {
     ];
 
     await tester.pumpWidget(SmoothScope(
-      child: GraftBuilder(
+      // only for debug
+      // child: Directionality(
+      //   textDirection: TextDirection.ltr,
+      //   child: ListView.builder(
+      //     itemCount: 3,
+      //     // NOTE deliberately disable it to test accurately
+      //     cacheExtent: 0,
+      //     itemBuilder: (_, index) {
+      //       debugPrint('ListView.itemBuilder called ($index)');
+      //       return Container(height: 60, color: colors[index]);
+      //     },
+      //   ),
+      // ),
+      child: GraftBuilder<int>(
         auxiliaryTreeBuilder: (_) => Directionality(
           textDirection: TextDirection.ltr,
           child: ListView.builder(
@@ -48,7 +61,7 @@ void main() {
         ),
         mainTreeChildBuilder: (_, slot) => Container(
           height: 60,
-          color: colors[slot as int],
+          color: colors[slot],
         ),
       ),
     ));
