@@ -162,6 +162,8 @@ void main() {
         ..fillRect(const Rectangle(0, 60, 50, 40), colors[1])),
     ]);
 
+    expect(tester.getRect(find.byType(Scrollable)),
+        const Rect.fromLTWH(0, 0, 50, 100));
     await tester.drag(find.byType(Scrollable), const Offset(0, -50));
     outerWidgetSetState(() {}); // temporary hack #5955
     await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
