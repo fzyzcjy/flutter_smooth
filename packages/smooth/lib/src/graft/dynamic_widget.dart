@@ -341,10 +341,11 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
   @protected
   RenderBox? insertAndLayoutLeadingChild(
     BoxConstraints childConstraints, {
+    required S index,
     bool parentUsesSize = false,
   }) {
     assert(_debugAssertChildListLocked());
-    final S index = indexOf(firstChild!) - 1;
+    // final S index = indexOf(firstChild!) - 1;
     _createChild(index, after: null);
     if (indexOf(firstChild!) == index) {
       firstChild!.layout(childConstraints, parentUsesSize: parentUsesSize);
@@ -368,11 +369,12 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
   @protected
   RenderBox? insertAndLayoutChild(
     BoxConstraints childConstraints, {
+    required S index,
     required RenderBox after,
     bool parentUsesSize = false,
   }) {
     assert(_debugAssertChildListLocked());
-    final S index = indexOf(after) + 1;
+    // final S index = indexOf(after) + 1;
     _createChild(index, after: after);
     final RenderBox? child = childAfter(after);
     if (child != null && indexOf(child) == index) {
