@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 
 class AdapterInAuxiliaryTree extends StatelessWidget {
-  final AuxiliaryTreePack pack;
   final Object slot;
 
   const AdapterInAuxiliaryTree({
     super.key,
-    required this.pack,
     required this.slot,
     // super.child,
   });
 
   @override
   Widget build(BuildContext context) {
+    final pack = AuxiliaryTreePackProvider.of(context).pack;
+
     // #5942
     pack.adapterInMainTreeController.buildChild(slot);
 
