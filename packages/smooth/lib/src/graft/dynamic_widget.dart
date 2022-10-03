@@ -31,20 +31,9 @@ class DynamicElement extends RenderObjectElement
   @override
   RenderDynamic get renderObject => super.renderObject as RenderDynamic;
 
-  // ref [SliverMultiBoxAdaptorElement]
-  @override
-  void update(covariant SliverMultiBoxAdaptorWidget newWidget) {
-    final SliverMultiBoxAdaptorWidget oldWidget =
-        widget as SliverMultiBoxAdaptorWidget;
-    super.update(newWidget);
-    final SliverChildDelegate newDelegate = newWidget.delegate;
-    final SliverChildDelegate oldDelegate = oldWidget.delegate;
-    if (newDelegate != oldDelegate &&
-        (newDelegate.runtimeType != oldDelegate.runtimeType ||
-            newDelegate.shouldRebuild(oldDelegate))) {
-      performRebuild();
-    }
-  }
+  // no need to mimic [SliverMultiBoxAdaptorElement.update],
+  // since we do not have a changeable delegate object
+  // void update(covariant SliverMultiBoxAdaptorWidget newWidget) {}
 
   // ref [SliverMultiBoxAdaptorElement]
   final _childElements = SplayTreeMap<int, Element?>();
@@ -58,11 +47,9 @@ class DynamicElement extends RenderObjectElement
     bool childrenUpdated = false;
     assert(_currentlyUpdatingChildIndex == null);
     try {
-      final SplayTreeMap<int, Element?> newChildren =
-          SplayTreeMap<int, Element?>();
-      final Map<int, double> indexToLayoutOffset = HashMap<int, double>();
-      final SliverMultiBoxAdaptorWidget adaptorWidget =
-          widget as SliverMultiBoxAdaptorWidget;
+      final newChildren = SplayTreeMap<int, Element?>();
+      final indexToLayoutOffset = HashMap<int, double>();
+      final adaptorWidget = widget as DynamicWidget;
       void processElement(int index) {
         _currentlyUpdatingChildIndex = index;
         if (_childElements[index] != null &&
@@ -78,8 +65,8 @@ class DynamicElement extends RenderObjectElement
           childrenUpdated =
               childrenUpdated || _childElements[index] != newChild;
           _childElements[index] = newChild;
-          final SliverMultiBoxAdaptorParentData parentData = newChild
-              .renderObject!.parentData! as SliverMultiBoxAdaptorParentData;
+          final parentData =
+              newChild.renderObject!.parentData! as DynamicParentData;
           if (index == 0) {
             parentData.layoutOffset = 0.0;
           } else if (indexToLayoutOffset.containsKey(index)) {
@@ -94,13 +81,12 @@ class DynamicElement extends RenderObjectElement
         }
       }
 
-      for (final int index in _childElements.keys.toList()) {
-        final Key? key = _childElements[index]!.widget.key;
-        final int? newIndex =
+      for (final index in _childElements.keys.toList()) {
+        final key = _childElements[index]!.widget.key;
+        final newIndex =
             key == null ? null : adaptorWidget.delegate.findIndexByKey(key);
-        final SliverMultiBoxAdaptorParentData? childParentData =
-            _childElements[index]!.renderObject?.parentData
-                as SliverMultiBoxAdaptorParentData?;
+        final childParentData = _childElements[index]!.renderObject?.parentData
+            as DynamicParentData?;
 
         if (childParentData != null && childParentData.layoutOffset != null) {
           indexToLayoutOffset[index] = childParentData.layoutOffset!;
@@ -149,7 +135,7 @@ class DynamicElement extends RenderObjectElement
   }
 
   // ref [SliverMultiBoxAdaptorElement]
-  Widget? _build(int index, SliverMultiBoxAdaptorWidget widget) {
+  Widget? _build(int index, DynamicWidget widget) {
     return widget.delegate.build(this, index);
   }
 
@@ -158,15 +144,14 @@ class DynamicElement extends RenderObjectElement
   void createChild(int index, {required RenderBox? after}) {
     assert(_currentlyUpdatingChildIndex == null);
     owner!.buildScope(this, () {
-      final bool insertFirst = after == null;
+      final insertFirst = after == null;
       assert(insertFirst || _childElements[index - 1] != null);
       _currentBeforeChild = insertFirst
           ? null
           : (_childElements[index - 1]!.renderObject as RenderBox?);
       Element? newChild;
       try {
-        final SliverMultiBoxAdaptorWidget adaptorWidget =
-            widget as SliverMultiBoxAdaptorWidget;
+        final adaptorWidget = widget as DynamicWidget;
         _currentlyUpdatingChildIndex = index;
         newChild = updateChild(
             _childElements[index], _build(index, adaptorWidget), index);
@@ -184,11 +169,10 @@ class DynamicElement extends RenderObjectElement
   // ref [SliverMultiBoxAdaptorElement]
   @override
   Element? updateChild(Element? child, Widget? newWidget, Object? newSlot) {
-    final SliverMultiBoxAdaptorParentData? oldParentData =
-        child?.renderObject?.parentData as SliverMultiBoxAdaptorParentData?;
-    final Element? newChild = super.updateChild(child, newWidget, newSlot);
-    final SliverMultiBoxAdaptorParentData? newParentData =
-        newChild?.renderObject?.parentData as SliverMultiBoxAdaptorParentData?;
+    final oldParentData = child?.renderObject?.parentData as DynamicParentData?;
+    final newChild = super.updateChild(child, newWidget, newSlot);
+    final newParentData =
+        newChild?.renderObject?.parentData as DynamicParentData?;
 
     // Preserve the old layoutOffset if the renderObject was swapped out.
     if (oldParentData != newParentData &&
@@ -236,11 +220,9 @@ class DynamicElement extends RenderObjectElement
   @override
   void didFinishLayout() {
     assert(debugAssertChildListLocked());
-    final int firstIndex = _childElements.firstKey() ?? 0;
-    final int lastIndex = _childElements.lastKey() ?? 0;
-    (widget as SliverMultiBoxAdaptorWidget)
-        .delegate
-        .didFinishLayout(firstIndex, lastIndex);
+    final firstIndex = _childElements.firstKey() ?? 0;
+    final lastIndex = _childElements.lastKey() ?? 0;
+    (widget as DynamicWidget).delegate.didFinishLayout(firstIndex, lastIndex);
   }
 
   int? _currentlyUpdatingChildIndex;
@@ -254,8 +236,7 @@ class DynamicElement extends RenderObjectElement
   @override
   void didAdoptChild(RenderBox child) {
     assert(_currentlyUpdatingChildIndex != null);
-    final SliverMultiBoxAdaptorParentData childParentData =
-        child.parentData! as SliverMultiBoxAdaptorParentData;
+    final childParentData = child.parentData! as DynamicParentData;
     childParentData.index = _currentlyUpdatingChildIndex;
   }
 
@@ -272,8 +253,7 @@ class DynamicElement extends RenderObjectElement
     assert(renderObject.debugValidateChild(child));
     renderObject.insert(child as RenderBox, after: _currentBeforeChild);
     assert(() {
-      final SliverMultiBoxAdaptorParentData childParentData =
-          child.parentData! as SliverMultiBoxAdaptorParentData;
+      final childParentData = child.parentData! as DynamicParentData;
       assert(slot == childParentData.index);
       return true;
     }());
@@ -303,8 +283,7 @@ class DynamicElement extends RenderObjectElement
   @override
   void debugVisitOnstageChildren(ElementVisitor visitor) {
     _childElements.values.cast<Element>().where((Element child) {
-      final SliverMultiBoxAdaptorParentData parentData =
-          child.renderObject!.parentData! as SliverMultiBoxAdaptorParentData;
+      final parentData = child.renderObject!.parentData! as DynamicParentData;
       final double itemExtent;
       switch (renderObject.constraints.axis) {
         case Axis.horizontal:
@@ -325,10 +304,12 @@ class DynamicElement extends RenderObjectElement
   }
 }
 
+class DynamicParentData extends ParentData
+    with ContainerParentDataMixin<RenderBox> {}
+
 // ref [RenderSliverMultiBoxAdaptor]
 abstract class RenderDynamic extends RenderBox
-    with
-        ContainerRenderObjectMixin<RenderBox, SliverMultiBoxAdaptorParentData> {
+    with ContainerRenderObjectMixin<RenderBox, DynamicParentData> {
   RenderDynamic({required this.childManager});
 
   // ref [RenderSliverMultiBoxAdaptor]
