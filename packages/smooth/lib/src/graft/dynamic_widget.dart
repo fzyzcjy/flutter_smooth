@@ -312,42 +312,22 @@ abstract class RenderDynamic<S extends Object> extends RenderBox
     return false;
   }
 
-  /// Called during layout to create, add, and layout the child before
-  /// [firstChild].
+  // modified from [insertAndLayoutLeadingChild]
   @protected
-  RenderBox? insertAndLayoutLeadingChild(
-    BoxConstraints childConstraints, {
-    required S index,
-    bool parentUsesSize = false,
-  }) {
+  RenderBox? insertLeadingChild(BoxConstraints childConstraints,
+      {required S index}) {
     assert(_debugAssertChildListLocked());
-    // final S index = indexOf(firstChild!) - 1;
     _createChild(index, after: null);
-    if (indexOf(firstChild!) == index) {
-      firstChild!.layout(childConstraints, parentUsesSize: parentUsesSize);
-      return firstChild;
-    }
-    return null;
+    return firstChild;
   }
 
-  /// Called during layout to create, add, and layout the child after
-  /// the given child.
+  // modified from [insertAndLayoutChild]
   @protected
-  RenderBox? insertAndLayoutChild(
-    BoxConstraints childConstraints, {
-    required S index,
-    required RenderBox after,
-    bool parentUsesSize = false,
-  }) {
+  RenderBox? insertChild(BoxConstraints childConstraints,
+      {required S index, required RenderBox after}) {
     assert(_debugAssertChildListLocked());
-    // final S index = indexOf(after) + 1;
     _createChild(index, after: after);
-    final RenderBox? child = childAfter(after);
-    if (child != null && indexOf(child) == index) {
-      child.layout(childConstraints, parentUsesSize: parentUsesSize);
-      return child;
-    }
-    return null;
+    return childAfter(after);
   }
 
   // ref [RenderSliverMultiBoxAdaptor], but modified

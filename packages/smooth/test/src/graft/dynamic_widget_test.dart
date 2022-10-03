@@ -15,8 +15,9 @@ void main() {
           that.addInitialChild(index: 'a');
           that.firstChild!.layout(constraints);
 
-          that.insertAndLayoutChild(constraints,
+          final b = that.insertChild(constraints,
               index: 'b', after: that.firstChild!);
+          b!.layout(constraints);
         },
         onPaint: (that) =>
             childrenNamesWhenPaint = that.childrenTestWidgetNames,
@@ -41,7 +42,9 @@ void main() {
           expect(b.name, 'b');
           b.layout(constraints);
 
-          that.insertAndLayoutChild(constraints, index: 'c', after: b);
+          final c = that.insertChild(constraints, index: 'c', after: b);
+          c!.layout(constraints);
+
           expect(that.childrenTestWidgetNames, ['a', 'b', 'c']);
 
           that.collectGarbage(['a']);
