@@ -299,6 +299,8 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
     final child = childFromIndex(slot)!;
     child.layout(constraints);
 
+    pack.mainSubTreeData(slot).size = child.size;
+
     assert(!_hasLayoutChildrenSlots.contains(slot));
     _hasLayoutChildrenSlots.add(slot);
   }
