@@ -106,77 +106,81 @@ void main() {
     // TODO when both aux tree and main tree child are touchable etc #5957
   });
 
-  testWidgets('simplest', (tester) async {
-    debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
-    final timeInfo = TimeInfo();
-    final capturer = WindowRenderCapturer.autoDispose();
+  group('simplest', () {
+    for (final enableGraft in [false, true]) {
+      testWidgets(enableGraft ? 'graft' : 'classical', (tester) async {
+        debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
+        final timeInfo = TimeInfo();
+        final capturer = WindowRenderCapturer.autoDispose();
 
-    final colors = [
-      Colors.red,
-      Colors.green,
-      Colors.blue,
-    ];
+        final colors = [
+          Colors.red,
+          Colors.green,
+          Colors.blue,
+        ];
 
-    // TODO remove this "set state" hack, after #5955 fixed
-    late StateSetter outerWidgetSetState;
-    await tester.pumpWidget(StatefulBuilder(builder: (_, setState) {
-      outerWidgetSetState = setState;
-      return SmoothScope(
-        // only for debug
-        // child: Directionality(
-        //   textDirection: TextDirection.ltr,
-        //   child: ListView.builder(
-        //     itemCount: 3,
-        //     // NOTE deliberately disable it to test accurately
-        //     cacheExtent: 0,
-        //     itemBuilder: (_, index) {
-        //       debugPrint('ListView.itemBuilder called ($index)');
-        //       return Container(height: 60, color: colors[index]);
-        //     },
-        //   ),
-        // ),
-        child: GraftBuilder<int>(
-          auxiliaryTreeBuilder: (_) => Directionality(
-            textDirection: TextDirection.ltr,
-            child: ListView.builder(
-              itemCount: 3,
-              // NOTE deliberately disable it to test accurately
-              cacheExtent: 0,
-              itemBuilder: (_, index) {
-                debugPrint('ListView.itemBuilder called ($index)');
-                return GraftAdapterInAuxiliaryTree(slot: index);
-              },
-            ),
-          ),
-          mainTreeChildBuilder: (_, slot) => Container(
-            height: 60,
-            color: colors[slot],
-          ),
-        ),
-      );
-    }));
-    await capturer
-        .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
-      await tester.createScreenImage((im) => im
-        ..fillRect(const Rectangle(0, 0, 50, 60), colors[0])
-        ..fillRect(const Rectangle(0, 60, 50, 40), colors[1])),
-    ]);
+        const itemCount = 3;
+        const cacheExtent =
+            0.0; // NOTE deliberately disable it to test accurately
 
-    expect(tester.getRect(find.byType(Scrollable)),
-        const Rect.fromLTWH(0, 0, 50, 100));
-    await tester.drag(find.byType(Scrollable), const Offset(0, -50));
-    outerWidgetSetState(() {}); // temporary hack #5955
-    await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
+        // TODO remove this "set state" hack, after #5955 fixed
+        late StateSetter outerWidgetSetState;
+        await tester.pumpWidget(StatefulBuilder(builder: (_, setState) {
+          outerWidgetSetState = setState;
+          return SmoothScope(
+            child: enableGraft
+                ? GraftBuilder<int>(
+                    auxiliaryTreeBuilder: (_) => Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: ListView.builder(
+                        itemCount: itemCount,
+                        cacheExtent: cacheExtent,
+                        itemBuilder: (_, index) {
+                          debugPrint('ListView.itemBuilder called ($index)');
+                          return GraftAdapterInAuxiliaryTree(slot: index);
+                        },
+                      ),
+                    ),
+                    mainTreeChildBuilder: (_, slot) =>
+                        Container(height: 60, color: colors[slot]),
+                  )
+                : Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: ListView.builder(
+                      itemCount: itemCount,
+                      cacheExtent: cacheExtent,
+                      itemBuilder: (_, index) {
+                        debugPrint('ListView.itemBuilder called ($index)');
+                        return Container(height: 60, color: colors[index]);
+                      },
+                    ),
+                  ),
+          );
+        }));
+        await capturer
+            .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
+          await tester.createScreenImage((im) => im
+            ..fillRect(const Rectangle(0, 0, 50, 60), colors[0])
+            ..fillRect(const Rectangle(0, 60, 50, 40), colors[1])),
+        ]);
 
-    await capturer
-        .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
-      await tester.createScreenImage((im) => im
-        ..fillRect(const Rectangle(0, 0, 50, 10), colors[0])
-        ..fillRect(const Rectangle(0, 10, 50, 60), colors[1])
-        ..fillRect(const Rectangle(0, 70, 50, 30), colors[2])),
-    ]);
+        expect(tester.getRect(find.byType(Scrollable)),
+            const Rect.fromLTWH(0, 0, 50, 100));
+        await tester.drag(find.byType(Scrollable), const Offset(0, -50));
+        outerWidgetSetState(() {}); // temporary hack #5955
+        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
 
-    debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
+        await capturer
+            .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
+          await tester.createScreenImage((im) => im
+            ..fillRect(const Rectangle(0, 0, 50, 10), colors[0])
+            ..fillRect(const Rectangle(0, 10, 50, 60), colors[1])
+            ..fillRect(const Rectangle(0, 70, 50, 30), colors[2])),
+        ]);
+
+        debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
+      });
+    }
   });
 }
 
