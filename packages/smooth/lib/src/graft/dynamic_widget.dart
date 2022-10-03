@@ -369,7 +369,7 @@ abstract class RenderDynamic extends RenderBox
       //   insert(child, after: after);
       //   childParentData._keptAlive = false;
       // } else {
-      _childManager.createChild(index, after: after);
+      childManager.createChild(index, after: after);
       // }
     });
   }
@@ -386,7 +386,7 @@ abstract class RenderDynamic extends RenderBox
     //   childParentData._keptAlive = true;
     // } else {
     assert(child.parent == this);
-    _childManager.removeChild(child);
+    childManager.removeChild(child);
     assert(child.parent == null);
     // }
   }
