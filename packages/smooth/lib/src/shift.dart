@@ -10,7 +10,7 @@ class SmoothShift extends StatefulWidget {
 }
 
 class _SmoothShiftState extends State<SmoothShift> {
-  var offset = Offset.zero;
+  var offset = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class _SmoothShiftState extends State<SmoothShift> {
       onPointerMove: _handlePointerMove,
       behavior: HitTestBehavior.translucent,
       child: Transform.translate(
-        offset: offset,
+        offset: Offset(0, offset),
         child: widget.child,
       ),
     );
@@ -30,7 +30,7 @@ class _SmoothShiftState extends State<SmoothShift> {
     setState(() {
       // very naive, and is WRONG!
       // just to confirm, we can (1) receive (2) display events
-      offset += e.localDelta;
+      offset += e.localDelta.dy;
     });
   }
 }
