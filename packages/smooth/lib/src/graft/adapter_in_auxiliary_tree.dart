@@ -82,7 +82,7 @@ class RenderGraftAdapterInAuxiliaryTree<S extends Object> extends RenderBox {
     // size = realSize ?? _fallbackSize(constraints);
 
     // #5942
-    pack.adapterInMainTreeController.layoutChild(slot);
+    pack.adapterInMainTreeController.layoutChild(slot, constraints);
     size = pack.mainSubTreeData(slot).size!;
     // temporarily disable for debugging #5949
     // size = pack.mainSubTreeData(slot).size ?? _fallbackSize(constraints);

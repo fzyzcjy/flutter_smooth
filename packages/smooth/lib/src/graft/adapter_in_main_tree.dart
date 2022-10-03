@@ -21,7 +21,8 @@ class GraftAdapterInMainTreeController<S extends Object> {
 
   void buildChild(S slot) => _renderBox!._buildChild(slot);
 
-  void layoutChild(S slot) => _renderBox!._layoutChild(slot);
+  void layoutChild(S slot, BoxConstraints constraintsFromAuxTree) =>
+      _renderBox!._layoutChild(slot, constraintsFromAuxTree);
 }
 
 class GraftAdapterInMainTree<S extends Object> extends StatelessWidget {
@@ -294,7 +295,7 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
   }
 
   // see diagram in #5942, also ref [LayoutBuilder] and [RenderSliver]
-  void _layoutChild(S slot) {
+  void _layoutChild(S slot, BoxConstraints constraintsFromAuxTree) {
     assert(_debugMainTreeChildrenLayoutActive);
 
     // https://github.com/fzyzcjy/yplusplus/issues/5949#issuecomment-1265013358
@@ -310,7 +311,7 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
       final child = childFromIndex(slot)!;
 
       // TODO [parentUsesSize] causes unneeded relayout? #5951
-      child.layout(constraints, parentUsesSize: true);
+      child.layout(constraintsFromAuxTree, parentUsesSize: true);
 
       // need to use [Size.copy] instead of the direct size object (which
       // is indeed [_DebugSize], in order to workaround:
