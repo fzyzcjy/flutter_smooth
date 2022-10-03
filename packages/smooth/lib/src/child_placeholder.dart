@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smooth/src/adapter_in_auxiliary_tree.dart';
-import 'package:smooth/src/auxiliary_tree_pack.dart';
+import 'package:smooth/src/graft/adapter_in_auxiliary_tree.dart';
+import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 
 // class SmoothChildPlaceholderRegistry {
 //   late final slots = UnmodifiableListView(_slots);

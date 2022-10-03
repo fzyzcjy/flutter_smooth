@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:smooth/src/auxiliary_tree_pack.dart';
-import 'package:smooth/src/auxiliary_tree_root_view.dart';
+import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
+import 'package:smooth/src/graft/auxiliary_tree_root_view.dart';
 
 class AdapterInMainTreeController {
   _RenderAdapterInMainTreeInner? _renderBox;
@@ -17,9 +17,9 @@ class AdapterInMainTreeController {
     _renderBox = null;
   }
 
-  void buildChild(Object slot) => _renderBox!._buildChild(slot: slot);
+  void buildChild(Object slot) => _renderBox!._buildChild(slot);
 
-  void layoutChild(Object slot) => _renderBox!._layoutChild(slot: slot);
+  void layoutChild(Object slot) => _renderBox!._layoutChild(slot);
 }
 
 class AdapterInMainTree extends StatelessWidget {

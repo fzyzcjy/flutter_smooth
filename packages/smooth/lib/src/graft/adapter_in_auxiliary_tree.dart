@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:smooth/src/auxiliary_tree_pack.dart';
+import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 
 class AdapterInAuxiliaryTree extends StatelessWidget {
   final AuxiliaryTreePack pack;

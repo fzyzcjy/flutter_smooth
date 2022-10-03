@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smooth/src/auxiliary_tree_pack.dart';
+import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 
 class SmoothBuilder extends StatefulWidget {
   final Widget Function(BuildContext context, Widget child) builder;

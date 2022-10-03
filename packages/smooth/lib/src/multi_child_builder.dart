@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smooth/src/adapter_in_main_tree.dart';
-import 'package:smooth/src/auxiliary_tree_pack.dart';
+import 'package:smooth/src/graft/adapter_in_main_tree.dart';
+import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 
 // TODO merge with classical [SmoothBuilder]
 class SmoothMultiChildBuilder extends StatefulWidget {

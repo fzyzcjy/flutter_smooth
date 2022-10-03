@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:smooth/src/adapter_in_main_tree.dart';
-import 'package:smooth/src/auxiliary_tree_root_view.dart';
+import 'package:smooth/src/graft/adapter_in_main_tree.dart';
+import 'package:smooth/src/graft/auxiliary_tree_root_view.dart';
 import 'package:smooth/src/remove_sub_tree_widget.dart';
 import 'package:smooth/src/service_locator.dart';
 
