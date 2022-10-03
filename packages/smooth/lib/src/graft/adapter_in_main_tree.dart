@@ -93,12 +93,7 @@ class _GraftAdapterInMainTreeInner<S extends Object> extends DynamicWidget<S> {
   }
 }
 
-class _AdapterParentData<S extends Object> extends DynamicParentData<S> {
-  S get slot => _slot!;
-  S? _slot;
-
-  set slot(S value) => _slot = value;
-}
+class _AdapterParentData<S extends Object> extends DynamicParentData<S> {}
 
 class _RenderGraftAdapterInMainTreeInner<S extends Object>
     extends RenderDynamic<S> with _MainTreeChildrenLayoutActor<S> {
@@ -231,7 +226,7 @@ class _RenderGraftAdapterInMainTreeInner<S extends Object>
     var child = firstChild;
     while (child != null) {
       final childParentData = child.parentData! as _AdapterParentData<S>;
-      final slot = childParentData.slot;
+      final slot = childParentData.index!;
 
       usedSlots.add(slot);
       _paintSubTreeToPackLayer(
