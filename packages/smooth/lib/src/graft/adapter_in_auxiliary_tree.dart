@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 
@@ -85,18 +83,20 @@ class _RenderGraftAdapterInAuxiliaryTree<S extends Object> extends RenderBox {
 
     // #5942
     pack.adapterInMainTreeController.layoutChild(slot);
-    size = pack.mainSubTreeData(slot).size ?? _fallbackSize(constraints);
+    size = pack.mainSubTreeData(slot).size!;
+    // temporarily disable for debugging #5949
+    // size = pack.mainSubTreeData(slot).size ?? _fallbackSize(constraints);
   }
 
-  static Size _fallbackSize(BoxConstraints constraints) {
-    final raw = constraints.biggest;
-    // NOTE make it finite size, since a size cannot be infinite
-    // https://github.com/fzyzcjy/yplusplus/issues/5930#issuecomment-1264641509
-    return Size(
-      min(raw.width, double.maxFinite),
-      min(raw.height, double.maxFinite),
-    );
-  }
+  // static Size _fallbackSize(BoxConstraints constraints) {
+  //   final raw = constraints.biggest;
+  //   // NOTE make it finite size, since a size cannot be infinite
+  //   // https://github.com/fzyzcjy/yplusplus/issues/5930#issuecomment-1264641509
+  //   return Size(
+  //     min(raw.width, double.maxFinite),
+  //     min(raw.height, double.maxFinite),
+  //   );
+  // }
 
   // TODO correct?
   @override
