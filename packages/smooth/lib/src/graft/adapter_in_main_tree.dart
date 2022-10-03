@@ -93,8 +93,7 @@ class _GraftAdapterInMainTreeInner<S extends Object> extends DynamicWidget<S> {
   }
 }
 
-class _AdapterParentData<S extends Object>
-    extends ContainerBoxParentData<RenderBox> {
+class _AdapterParentData<S extends Object> extends DynamicParentData<S> {
   S get slot => _slot!;
   S? _slot;
 

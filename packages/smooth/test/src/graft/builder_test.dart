@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:smooth/smooth.dart';
 import 'package:smooth/src/graft/adapter_in_auxiliary_tree.dart';
 import 'package:smooth/src/graft/builder.dart';
 import 'package:smooth_dev/smooth_dev.dart';
@@ -23,22 +24,24 @@ void main() {
       Colors.blue,
     ];
 
-    await tester.pumpWidget(GraftBuilder(
-      auxiliaryTreeBuilder: (_) => Directionality(
-        textDirection: TextDirection.ltr,
-        child: ListView.builder(
-          itemCount: 3,
-          // NOTE deliberately disable it to test accurately
-          cacheExtent: 0,
-          itemBuilder: (_, index) {
-            debugPrint('ListView.itemBuilder called ($index)');
-            return GraftAdapterInAuxiliaryTree(slot: index);
-          },
+    await tester.pumpWidget(SmoothScope(
+      child: GraftBuilder(
+        auxiliaryTreeBuilder: (_) => Directionality(
+          textDirection: TextDirection.ltr,
+          child: ListView.builder(
+            itemCount: 3,
+            // NOTE deliberately disable it to test accurately
+            cacheExtent: 0,
+            itemBuilder: (_, index) {
+              debugPrint('ListView.itemBuilder called ($index)');
+              return GraftAdapterInAuxiliaryTree(slot: index);
+            },
+          ),
         ),
-      ),
-      mainTreeChildBuilder: (_, slot) => Container(
-        height: 60,
-        color: colors[slot as int],
+        mainTreeChildBuilder: (_, slot) => Container(
+          height: 60,
+          color: colors[slot as int],
+        ),
       ),
     ));
     await capturer
