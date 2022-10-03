@@ -31,8 +31,7 @@ class DynamicElement extends RenderObjectElement
   @override
   RenderDynamic get renderObject => super.renderObject as RenderDynamic;
 
-  // no need to mimic [SliverMultiBoxAdaptorElement.update],
-  // since we do not have a changeable delegate object
+  // no need to mimic this, since its logic is for a changeable delegate object
   // void update(covariant SliverMultiBoxAdaptorWidget newWidget) {}
 
   // ref [SliverMultiBoxAdaptorElement]
@@ -66,11 +65,11 @@ class DynamicElement extends RenderObjectElement
           _childElements[index] = newChild;
           final parentData =
               newChild.renderObject!.parentData! as DynamicParentData;
-          if (index == 0) {
-            parentData.layoutOffset = 0.0;
-          } else if (indexToLayoutOffset.containsKey(index)) {
-            parentData.layoutOffset = indexToLayoutOffset[index];
-          }
+          // if (index == 0) {
+          //   parentData.layoutOffset = 0.0;
+          // } else if (indexToLayoutOffset.containsKey(index)) {
+          //   parentData.layoutOffset = indexToLayoutOffset[index];
+          // }
           if (!parentData.keptAlive) {
             _currentBeforeChild = newChild.renderObject as RenderBox?;
           }
@@ -87,15 +86,15 @@ class DynamicElement extends RenderObjectElement
         final childParentData = _childElements[index]!.renderObject?.parentData
             as DynamicParentData?;
 
-        if (childParentData != null && childParentData.layoutOffset != null) {
-          indexToLayoutOffset[index] = childParentData.layoutOffset!;
-        }
+        // if (childParentData != null && childParentData.layoutOffset != null) {
+        //   indexToLayoutOffset[index] = childParentData.layoutOffset!;
+        // }
 
         if (newIndex != null && newIndex != index) {
-          // The layout offset of the child being moved is no longer accurate.
-          if (childParentData != null) {
-            childParentData.layoutOffset = null;
-          }
+          // // The layout offset of the child being moved is no longer accurate.
+          // if (childParentData != null) {
+          //   childParentData.layoutOffset = null;
+          // }
 
           newChildren[newIndex] = _childElements[index];
           if (_replaceMovedChildren) {
@@ -150,22 +149,8 @@ class DynamicElement extends RenderObjectElement
     });
   }
 
-  // ref [SliverMultiBoxAdaptorElement]
-  @override
-  Element? updateChild(Element? child, Widget? newWidget, Object? newSlot) {
-    final oldParentData = child?.renderObject?.parentData as DynamicParentData?;
-    final newChild = super.updateChild(child, newWidget, newSlot);
-    final newParentData =
-        newChild?.renderObject?.parentData as DynamicParentData?;
-
-    // Preserve the old layoutOffset if the renderObject was swapped out.
-    if (oldParentData != newParentData &&
-        oldParentData != null &&
-        newParentData != null) {
-      newParentData.layoutOffset = oldParentData.layoutOffset;
-    }
-    return newChild;
-  }
+  // no need to mimic this, since its logic is for `parentData.layoutOffset`
+  // Element? updateChild(Element? child, Widget? newWidget, Object? newSlot)
 
   // ref [SliverMultiBoxAdaptorElement]
   @override
@@ -257,28 +242,9 @@ class DynamicElement extends RenderObjectElement
     _childElements.values.cast<Element>().toList().forEach(visitor);
   }
 
-  @override
-  void debugVisitOnstageChildren(ElementVisitor visitor) {
-    _childElements.values.cast<Element>().where((Element child) {
-      final parentData = child.renderObject!.parentData! as DynamicParentData;
-      final double itemExtent;
-      switch (renderObject.constraints.axis) {
-        case Axis.horizontal:
-          itemExtent = child.renderObject!.paintBounds.width;
-          break;
-        case Axis.vertical:
-          itemExtent = child.renderObject!.paintBounds.height;
-          break;
-      }
-
-      return parentData.layoutOffset != null &&
-          parentData.layoutOffset! <
-              renderObject.constraints.scrollOffset +
-                  renderObject.constraints.remainingPaintExtent &&
-          parentData.layoutOffset! + itemExtent >
-              renderObject.constraints.scrollOffset;
-    }).forEach(visitor);
-  }
+// no need to mimic this, since in SliverList there exist out-of-screen
+// things which are offstage, but we do not have that
+// void debugVisitOnstageChildren(ElementVisitor visitor)
 }
 
 class DynamicParentData extends ParentData
