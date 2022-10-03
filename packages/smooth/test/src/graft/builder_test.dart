@@ -56,8 +56,11 @@ void main() {
             buildChild: (onTap) => touchable.build(
               onTap: onTap,
               child: GraftBuilder<int>(
-                auxiliaryTreeBuilder: (_) =>
-                    const GraftAdapterInAuxiliaryTree(slot: 42),
+                // TODO allow [GraftAdapterInAuxiliaryTree] be in build phase, then no need for [LayoutBuilder] #5958
+                auxiliaryTreeBuilder: (_) => LayoutBuilder(
+                  builder: (_, __) =>
+                      const GraftAdapterInAuxiliaryTree(slot: 42),
+                ),
                 mainTreeChildBuilder: (_, slot) =>
                     Container(color: Colors.blue),
               ),
@@ -71,7 +74,11 @@ void main() {
             buildChild: (onTap) => GraftBuilder<int>(
               auxiliaryTreeBuilder: (_) => touchable.build(
                 onTap: onTap,
-                child: const GraftAdapterInAuxiliaryTree(slot: 42),
+                // TODO allow [GraftAdapterInAuxiliaryTree] be in build phase, then no need for [LayoutBuilder] #5958
+                child: LayoutBuilder(
+                  builder: (_, __) =>
+                      const GraftAdapterInAuxiliaryTree(slot: 42),
+                ),
               ),
               mainTreeChildBuilder: (_, slot) => Container(color: Colors.blue),
             ),
@@ -82,8 +89,10 @@ void main() {
           await _body(
             tester,
             buildChild: (onTap) => GraftBuilder<int>(
-              auxiliaryTreeBuilder: (_) =>
-                  const GraftAdapterInAuxiliaryTree(slot: 42),
+              // TODO allow [GraftAdapterInAuxiliaryTree] be in build phase, then no need for [LayoutBuilder] #5958
+              auxiliaryTreeBuilder: (_) => LayoutBuilder(
+                builder: (_, __) => const GraftAdapterInAuxiliaryTree(slot: 42),
+              ),
               mainTreeChildBuilder: (_, slot) => touchable.build(
                 onTap: onTap,
                 child: Container(color: Colors.blue),
