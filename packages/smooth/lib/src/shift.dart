@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smooth/src/binding.dart';
 
 class SmoothShift extends StatefulWidget {
   final Widget child;
@@ -15,6 +16,14 @@ class _SmoothShiftState extends State<SmoothShift> {
   @override
   Widget build(BuildContext context) {
     print('hi $runtimeType build offset=$offset');
+
+    // TODO should we put it in `build`?
+    SmoothSchedulerBindingMixin.instance.addPostMainTreeFlushLayoutCallback(() {
+      print('hi $runtimeType addPostMainTreeFlushLayoutCallback.callback');
+      if (offset == 0) return;
+      setState(() => offset = 0);
+    });
+
     return Listener(
       onPointerMove: _handlePointerMove,
       behavior: HitTestBehavior.translucent,

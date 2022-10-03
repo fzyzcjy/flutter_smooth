@@ -16,6 +16,25 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     super.handleBeginFrame(rawTimeStamp);
   }
 
+  // ref: [SchedulerBinding._postFrameCallbacks]
+  final _postMainTreeFlushLayoutCallbacks = <VoidCallback>[];
+
+  void addPostMainTreeFlushLayoutCallback(VoidCallback callback) =>
+      _postMainTreeFlushLayoutCallbacks.add(callback);
+
+  // ref: [SchedulerBinding._invokeFrameCallbackS]
+  void _invokePostMainTreeFlushLayoutCallbacks() {
+    final localCallbacks = List.of(_postMainTreeFlushLayoutCallbacks);
+    _postMainTreeFlushLayoutCallbacks.clear();
+    for (final callback in localCallbacks) {
+      try {
+        callback();
+      } catch (e, s) {
+        FlutterError.reportError(FlutterErrorDetails(exception: e, stack: s));
+      }
+    }
+  }
+
   static SmoothSchedulerBindingMixin get instance {
     final raw = WidgetsBinding.instance;
     assert(raw is SmoothSchedulerBindingMixin,
@@ -49,6 +68,9 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
   void _handleAfterFlushLayout() {
     // print('handleAfterFlushLayout');
 
+    SmoothSchedulerBindingMixin.instance
+        ._invokePostMainTreeFlushLayoutCallbacks();
+
     final serviceLocator = ServiceLocator.maybeInstance;
     if (serviceLocator == null) return;
 
@@ -59,9 +81,12 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     for (final pack in serviceLocator.auxiliaryTreeRegistry.trees) {
       pack.runPipeline(
         currentSmoothFrameTimeStamp,
-        // NOTE this is skip-able
+        // NOTE originally, this is skip-able
         // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261691891
-        skipIfTimeStampUnchanged: true,
+        // but, since the `addPostMainTreeFlushLayoutCallback` may trigger
+        // some setState, we can no longer skip it
+        // https://github.com/fzyzcjy/yplusplus/issues/5917#issuecomment-1265361649
+        skipIfTimeStampUnchanged: false,
         debugReason: 'SmoothPipelineOwner.handleAfterFlushLayout',
       );
     }
