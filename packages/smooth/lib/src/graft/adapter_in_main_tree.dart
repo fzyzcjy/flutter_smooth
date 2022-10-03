@@ -312,9 +312,10 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
       // TODO [parentUsesSize] causes unneeded relayout? #5951
       child.layout(constraints, parentUsesSize: true);
 
-      print(
-          'hi this=$this RenderObject.debugActiveLayout=${RenderObject.debugActiveLayout}');
-      pack.mainSubTreeData(slot).size = child.size;
+      // need to use [Size.copy] instead of the direct size object (which
+      // is indeed [_DebugSize], in order to workaround:
+      // https://github.com/fzyzcjy/yplusplus/issues/5949#issuecomment-1265016660
+      pack.mainSubTreeData(slot).size = Size.copy(child.size);
 
       assert(!_hasLayoutChildrenSlots.contains(slot));
       _hasLayoutChildrenSlots.add(slot);
