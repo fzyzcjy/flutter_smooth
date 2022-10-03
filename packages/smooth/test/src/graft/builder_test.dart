@@ -34,39 +34,44 @@ void main() {
       Colors.blue,
     ];
 
-    await tester.pumpWidget(SmoothScope(
-      // only for debug
-      // child: Directionality(
-      //   textDirection: TextDirection.ltr,
-      //   child: ListView.builder(
-      //     itemCount: 3,
-      //     // NOTE deliberately disable it to test accurately
-      //     cacheExtent: 0,
-      //     itemBuilder: (_, index) {
-      //       debugPrint('ListView.itemBuilder called ($index)');
-      //       return Container(height: 60, color: colors[index]);
-      //     },
-      //   ),
-      // ),
-      child: GraftBuilder<int>(
-        auxiliaryTreeBuilder: (_) => Directionality(
-          textDirection: TextDirection.ltr,
-          child: ListView.builder(
-            itemCount: 3,
-            // NOTE deliberately disable it to test accurately
-            cacheExtent: 0,
-            itemBuilder: (_, index) {
-              debugPrint('ListView.itemBuilder called ($index)');
-              return GraftAdapterInAuxiliaryTree(slot: index);
-            },
+    // TODO remove this "set state" hack, after #5955 fixed
+    late StateSetter outerWidgetSetState;
+    await tester.pumpWidget(StatefulBuilder(builder: (_, setState) {
+      outerWidgetSetState = setState;
+      return SmoothScope(
+        // only for debug
+        // child: Directionality(
+        //   textDirection: TextDirection.ltr,
+        //   child: ListView.builder(
+        //     itemCount: 3,
+        //     // NOTE deliberately disable it to test accurately
+        //     cacheExtent: 0,
+        //     itemBuilder: (_, index) {
+        //       debugPrint('ListView.itemBuilder called ($index)');
+        //       return Container(height: 60, color: colors[index]);
+        //     },
+        //   ),
+        // ),
+        child: GraftBuilder<int>(
+          auxiliaryTreeBuilder: (_) => Directionality(
+            textDirection: TextDirection.ltr,
+            child: ListView.builder(
+              itemCount: 3,
+              // NOTE deliberately disable it to test accurately
+              cacheExtent: 0,
+              itemBuilder: (_, index) {
+                debugPrint('ListView.itemBuilder called ($index)');
+                return GraftAdapterInAuxiliaryTree(slot: index);
+              },
+            ),
+          ),
+          mainTreeChildBuilder: (_, slot) => Container(
+            height: 60,
+            color: colors[slot],
           ),
         ),
-        mainTreeChildBuilder: (_, slot) => Container(
-          height: 60,
-          color: colors[slot],
-        ),
-      ),
-    ));
+      );
+    }));
     await capturer
         .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
       await tester.createScreenImage((im) => im
@@ -75,7 +80,9 @@ void main() {
     ]);
 
     await tester.drag(find.byType(Scrollable), const Offset(0, -50));
+    outerWidgetSetState(() {}); // temporary hack #5955
     await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
+
     await capturer
         .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
       await tester.createScreenImage((im) => im
