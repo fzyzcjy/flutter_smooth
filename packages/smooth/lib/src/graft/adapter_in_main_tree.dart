@@ -265,6 +265,7 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
 
   /// Whether we are doing layout for main tree children
   var _debugMainTreeChildrenLayoutActive = false;
+  final _hasLayoutChildrenSlots = <S>{};
 
   void _mainTreeChildrenLayout() {
     // #5942
@@ -273,9 +274,9 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
       return true;
     }());
     try {
+      _hasLayoutChildrenSlots.clear();
       pack.pipelineOwner.flushLayout();
-     
-      TODO_gc;
+      _collectGarbage(_hasLayoutChildrenSlots);
     } finally {
       assert(() {
         _debugMainTreeChildrenLayoutActive = false;
@@ -296,6 +297,25 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
     assert(_debugMainTreeChildrenLayoutActive);
     final child = childFromIndex(slot)!;
     child.layout(constraints);
+
+    assert(!_hasLayoutChildrenSlots.contains(slot));
+    _hasLayoutChildrenSlots.add(slot);
+  }
+
+  void _collectGarbage(Set<S> whitelistSlots) {
+    final slotsToRemove = <S>[];
+
+    var child = firstChild;
+    while (child != null) {
+      final childParentData = child.parentData! as DynamicParentData<S>;
+      final slot = childParentData.index;
+
+      if (!whitelistSlots.contains(slot)) slotsToRemove.add(slot!);
+
+      child = childParentData.nextSibling;
+    }
+
+    collectGarbage(slotsToRemove);
   }
 }
 
