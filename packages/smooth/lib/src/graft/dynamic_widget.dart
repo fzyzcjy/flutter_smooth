@@ -57,70 +57,30 @@ class DynamicElement<S extends Object> extends RenderObjectElement
     bool childrenUpdated = false;
     assert(_currentlyUpdatingChildIndex == null);
     try {
-      final newChildren = SplayTreeMap<S, Element?>();
       final widgetTyped = widget as DynamicWidget<S>;
       void processElement(S index) {
         _currentlyUpdatingChildIndex = index;
         if (_childElements[index] != null &&
-            _childElements[index] != newChildren[index]) {
+            _childElements[index] != _childElements[index]) {
           // This index has an old child that isn't used anywhere and should be deactivated.
           _childElements[index] =
               updateChild(_childElements[index], null, index);
           childrenUpdated = true;
         }
-        final newChild =
-            updateChild(newChildren[index], _build(index, widgetTyped), index);
+        final newChild = updateChild(
+            _childElements[index], _build(index, widgetTyped), index);
         if (newChild != null) {
           childrenUpdated =
               childrenUpdated || _childElements[index] != newChild;
           _childElements[index] = newChild;
-          final parentData =
-              newChild.renderObject!.parentData! as DynamicParentData<S>;
-          // if (index == 0) {
-          //   parentData.layoutOffset = 0.0;
-          // } else if (indexToLayoutOffset.containsKey(index)) {
-          //   parentData.layoutOffset = indexToLayoutOffset[index];
-          // }
-          // if (!parentData.keptAlive) {
           _currentBeforeChild = newChild.renderObject as RenderBox?;
-          // }
         } else {
           childrenUpdated = true;
           _childElements.remove(index);
         }
       }
 
-      for (final index in _childElements.keys.toList()) {
-        // final key = _childElements[index]!.widget.key;
-        // final newIndex =
-        //     key == null ? null : widgetTyped.delegate.findIndexByKey(key);
-        // final childParentData = _childElements[index]!.renderObject?.parentData
-        //     as DynamicParentData?;
-
-        // if (childParentData != null && childParentData.layoutOffset != null) {
-        //   indexToLayoutOffset[index] = childParentData.layoutOffset!;
-        // }
-
-        // if (newIndex != null && newIndex != index) {
-        //   // // The layout offset of the child being moved is no longer accurate.
-        //   // if (childParentData != null) {
-        //   //   childParentData.layoutOffset = null;
-        //   // }
-        //
-        //   newChildren[newIndex] = _childElements[index];
-        //   if (_replaceMovedChildren) {
-        //     // We need to make sure the original index gets processed.
-        //     newChildren.putIfAbsent(index, () => null);
-        //   }
-        //   // We do not want the remapped child to get deactivated during processElement.
-        //   _childElements.remove(index);
-        // } else {
-        newChildren.putIfAbsent(index, () => _childElements[index]);
-        // }
-      }
-
-      // renderObject.debugChildIntegrityEnabled = false; // Moving children will temporary violate the integrity.
-      newChildren.keys.forEach(processElement);
+      _childElements.keys.forEach(processElement);
     } finally {
       _currentlyUpdatingChildIndex = null;
       // renderObject.debugChildIntegrityEnabled = true;
