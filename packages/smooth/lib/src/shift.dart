@@ -14,6 +14,7 @@ class _SmoothShiftState extends State<SmoothShift> {
 
   @override
   Widget build(BuildContext context) {
+    print('hi $runtimeType build offset=$offset');
     return Listener(
       onPointerMove: _handlePointerMove,
       child: Transform.translate(
@@ -24,6 +25,7 @@ class _SmoothShiftState extends State<SmoothShift> {
   }
 
   void _handlePointerMove(PointerMoveEvent e) {
+    print('hi $runtimeType _handlePointerMove e=$e');
     setState(() {
       // very naive, and is WRONG!
       // just to confirm, we can (1) receive (2) display events
