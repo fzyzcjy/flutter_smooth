@@ -26,11 +26,11 @@ abstract class RenderDynamicChildManager<S extends Object> {
 
   void didAdoptChild(RenderBox child);
 
-  void didStartLayout() {}
+  void didStartLayout();
 
-  void didFinishLayout() {}
+  void didFinishLayout();
 
-  bool debugAssertChildListLocked() => true;
+  bool debugAssertChildListLocked();
 }
 
 // ref [SliverMultiBoxAdaptorElement] - the whole class is copied and (largely)
