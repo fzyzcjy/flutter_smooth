@@ -39,9 +39,9 @@ class _GraftAdapterInAuxiliaryTreeInner<S extends Object>
 
   @override
   // ignore: library_private_types_in_public_api
-  _RenderGraftAdapterInAuxiliaryTree<S> createRenderObject(
+  RenderGraftAdapterInAuxiliaryTree<S> createRenderObject(
           BuildContext context) =>
-      _RenderGraftAdapterInAuxiliaryTree(
+      RenderGraftAdapterInAuxiliaryTree(
         pack: pack,
         slot: slot,
       );
@@ -50,15 +50,15 @@ class _GraftAdapterInAuxiliaryTreeInner<S extends Object>
   void updateRenderObject(
       BuildContext context,
       // ignore: library_private_types_in_public_api
-      _RenderGraftAdapterInAuxiliaryTree<S> renderObject) {
+      RenderGraftAdapterInAuxiliaryTree<S> renderObject) {
     renderObject
       ..pack = pack
       ..slot = slot;
   }
 }
 
-class _RenderGraftAdapterInAuxiliaryTree<S extends Object> extends RenderBox {
-  _RenderGraftAdapterInAuxiliaryTree({
+class RenderGraftAdapterInAuxiliaryTree<S extends Object> extends RenderBox {
+  RenderGraftAdapterInAuxiliaryTree({
     required this.pack,
     required this.slot,
   });

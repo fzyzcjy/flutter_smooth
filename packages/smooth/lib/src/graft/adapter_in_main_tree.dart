@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:smooth/src/graft/adapter_in_auxiliary_tree.dart';
 import 'package:smooth/src/graft/auxiliary_tree_pack.dart';
 import 'package:smooth/src/graft/auxiliary_tree_root_view.dart';
 import 'package:smooth/src/graft/dynamic_widget.dart';
@@ -296,15 +297,33 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
   void _layoutChild(S slot) {
     assert(_debugMainTreeChildrenLayoutActive);
 
-    final child = childFromIndex(slot)!;
+    // https://github.com/fzyzcjy/yplusplus/issues/5949#issuecomment-1265013358
+    RenderObject? debugPreviousActiveLayout;
+    assert(() {
+      assert(
+          RenderObject.debugActiveLayout is RenderGraftAdapterInAuxiliaryTree);
+      debugPreviousActiveLayout = RenderObject.debugActiveLayout;
+      RenderObject.debugActiveLayout = this;
+      return true;
+    }());
+    try {
+      final child = childFromIndex(slot)!;
 
-    // TODO [parentUsesSize] causes unneeded relayout? #5951
-    child.layout(constraints, parentUsesSize: true);
+      // TODO [parentUsesSize] causes unneeded relayout? #5951
+      child.layout(constraints, parentUsesSize: true);
 
-    pack.mainSubTreeData(slot).size = child.size;
+      print(
+          'hi this=$this RenderObject.debugActiveLayout=${RenderObject.debugActiveLayout}');
+      pack.mainSubTreeData(slot).size = child.size;
 
-    assert(!_hasLayoutChildrenSlots.contains(slot));
-    _hasLayoutChildrenSlots.add(slot);
+      assert(!_hasLayoutChildrenSlots.contains(slot));
+      _hasLayoutChildrenSlots.add(slot);
+    } finally {
+      assert(() {
+        RenderObject.debugActiveLayout = debugPreviousActiveLayout;
+        return true;
+      }());
+    }
   }
 
   void _collectGarbage(Set<S> whitelistSlots) {
