@@ -279,14 +279,14 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> {
   void _buildChild(S slot) {
     assert(_debugMainTreeChildrenLayoutActive);
 
-    TODO;
+    throw UnimplementedError;
   }
 
   // see diagram in #5942
   void _layoutChild(S slot) {
     assert(_debugMainTreeChildrenLayoutActive);
 
-    TODO;
+    throw UnimplementedError;
   }
 }
 
