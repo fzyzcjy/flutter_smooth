@@ -266,6 +266,7 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
   /// Whether we are doing layout for main tree children
   var _debugMainTreeChildrenLayoutActive = false;
   final _hasLayoutChildrenSlots = <S>{};
+  RenderBox? _lastBuildChild;
 
   void _mainTreeChildrenLayout() {
     // #5942
@@ -275,7 +276,10 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
     }());
     try {
       _hasLayoutChildrenSlots.clear();
+      _lastBuildChild = null;
+
       pack.pipelineOwner.flushLayout();
+
       _collectGarbage(_hasLayoutChildrenSlots);
     } finally {
       assert(() {
@@ -289,7 +293,9 @@ mixin _MainTreeChildrenLayoutActor<S extends Object> on RenderDynamic<S> {
   void _buildChild(S slot) {
     assert(_debugMainTreeChildrenLayoutActive);
 
-    TODO;
+    createOrUpdateChild(index: slot, after: _lastBuildChild);
+
+    _lastBuildChild = childFromIndex(slot);
   }
 
   // see diagram in #5942, also ref [LayoutBuilder] and [RenderSliver]
