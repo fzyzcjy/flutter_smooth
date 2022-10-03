@@ -14,6 +14,8 @@ class ExampleListViewPage extends StatefulWidget {
 }
 
 class _ExampleListViewPageState extends State<ExampleListViewPage> {
+  var workload = 10;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +26,18 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
         children: [
           const CounterWidget(prefix: 'Plain: '),
           Expanded(child: widget.enableSmooth ? _buildSmooth() : _buildPlain()),
+          Row(
+            children: [
+              for (final value in [1, 10, 20, 50, 100, 200])
+                SizedBox(
+                  width: 48,
+                  child: TextButton(
+                    onPressed: () => setState(() => workload = value),
+                    child: Text('$value'),
+                  ),
+                ),
+            ],
+          ),
         ],
       ),
     );
@@ -44,9 +58,6 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
   }
 
   Widget _buildRow(BuildContext context, int index) {
-    // const workload = 10;
-    const workload = 200;
-
     return ListTile(
       dense: true,
       visualDensity: VisualDensity.compact,

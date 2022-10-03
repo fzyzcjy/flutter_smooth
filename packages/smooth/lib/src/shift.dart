@@ -20,7 +20,7 @@ class _SmoothShiftState extends State<SmoothShift> {
     _hasPendingCallback = true;
 
     SmoothSchedulerBindingMixin.instance.addStartDrawFrameCallback(() {
-      print('hi $runtimeType addStartDrawFrameCallback.callback');
+      // print('hi $runtimeType addStartDrawFrameCallback.callback');
 
       _hasPendingCallback = false;
 
@@ -31,7 +31,7 @@ class _SmoothShiftState extends State<SmoothShift> {
 
   @override
   Widget build(BuildContext context) {
-    print('hi $runtimeType build offset=$_offset');
+    // print('hi $runtimeType build offset=$_offset');
 
     _maybeSchedulePostMainTreeFlushLayoutCallback();
 
@@ -46,7 +46,7 @@ class _SmoothShiftState extends State<SmoothShift> {
   }
 
   void _handlePointerMove(PointerMoveEvent e) {
-    print('hi $runtimeType _handlePointerMove e=$e');
+    // print('hi $runtimeType _handlePointerMove embedderId=${e.embedderId} e=$e');
     setState(() {
       // very naive, and is WRONG!
       // just to confirm, we can (1) receive (2) display events
