@@ -49,7 +49,7 @@ void main() {
     });
 
     group('when user drags ListView, should be smooth', () {
-      testWidgets('simple', (tester) async {
+      testWidgets('simple integration test', (tester) async {
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
         final timeInfo = TimeInfo();
         final capturer = WindowRenderCapturer.autoDispose();
@@ -79,7 +79,8 @@ void main() {
                 const LayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
                 AlwaysLayoutBuilder(onPerformLayout: () {
                   if (!mainInterestFrame) return;
-                  debugPrint('action: addEvent move(y=15)');
+                  debugPrint('action: elapse 16.5ms + addEvent move(y=15)');
+                  binding.elapseBlocking(const Duration(microseconds: 16500));
                   gesture.addEvent(gesture.pointer.move(const Offset(25, 15)));
                 }),
               ],
@@ -105,16 +106,14 @@ void main() {
         mainInterestFrame = false;
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
-          // drag y=50->20
-          await tester.createScreenImage((im) => im
-            ..fillRect(const Rectangle(0, 0, 50, 30), Colors.primaries[0])
-            ..fillRect(const Rectangle(0, 30, 50, 60), Colors.primaries[1])
-            ..fillRect(const Rectangle(0, 90, 50, 10), Colors.primaries[2])),
-          // drag y=50->15
-          await tester.createScreenImage((im) => im
-            ..fillRect(const Rectangle(0, 0, 50, 25), Colors.primaries[0])
-            ..fillRect(const Rectangle(0, 25, 50, 60), Colors.primaries[1])
-            ..fillRect(const Rectangle(0, 85, 50, 15), Colors.primaries[2])),
+          // NOTE this is repeated twice, because the "drag to y=15" is
+          // dispatched *after* preemptRender, so preempt render never knows it
+          for (var iter = 0; iter < 2; ++iter)
+            // drag y=50->20
+            await tester.createScreenImage((im) => im
+              ..fillRect(const Rectangle(0, 0, 50, 30), Colors.primaries[0])
+              ..fillRect(const Rectangle(0, 30, 50, 60), Colors.primaries[1])
+              ..fillRect(const Rectangle(0, 90, 50, 10), Colors.primaries[2])),
         ]);
 
         debugPrint('action: addEvent move(y=10)');
@@ -132,7 +131,7 @@ void main() {
         debugPrint('action: pump');
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
         await capturer
-            .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
+            .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
           // drag y=50->10
           await tester.createScreenImage((im) => im
             ..fillRect(const Rectangle(0, 0, 50, 20), Colors.primaries[0])
