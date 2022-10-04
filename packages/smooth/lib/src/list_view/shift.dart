@@ -112,7 +112,7 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
     _ticker?.dispose();
 
     // re-create ticker, because the [Simulation] wants zero timestamp
-    _ticker = Ticker(_tick)..start();
+    _ticker = createTicker(_tick)..start();
   }
 
   void _tick(Duration elapsed) {
