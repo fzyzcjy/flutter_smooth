@@ -32,6 +32,7 @@ abstract class _SmoothShiftBase extends State<SmoothShift>
 
     return Transform.translate(
       offset: Offset(0, offset),
+      transformHitTests: false,
       child: widget.child,
     );
   }
