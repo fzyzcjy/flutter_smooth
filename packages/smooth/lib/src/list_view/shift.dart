@@ -138,7 +138,7 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
     final smoothValue = lastSimulationInfo.clonedSimulation.x(elapsedInSeconds);
 
     setState(() {
-      _offsetFromBallistic = smoothValue - plainValue;
+      _offsetFromBallistic = -(smoothValue - plainValue);
     });
 
     print(
