@@ -50,8 +50,6 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   double? _positionWhenPrevStartDrawFrame;
   double? _currPosition;
 
-  var _hasPendingCallback = false;
-
   double get _offsetFromPointerEvent {
     if (_currPosition == null) return 0;
 
@@ -74,20 +72,46 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   @override
   double get offset => super.offset + _offsetFromPointerEvent;
 
-  void _maybeScheduleStartDrawFrameCallback() {
-    if (_hasPendingCallback) return;
-    _hasPendingCallback = true;
+  var _hasPendingStartDrawFrameCallback = false;
+  var _hasPendingAfterFlushLayoutCallback = false;
+  var _hasPendingPostFrameCallback = false;
 
-    SmoothSchedulerBindingMixin.instance.addStartDrawFrameCallback(() {
-      setState(() {
-        _hasPendingCallback = false;
-        _positionWhenPrevStartDrawFrame = _positionWhenCurrStartDrawFrame;
-        _positionWhenCurrStartDrawFrame = _currPosition;
+  void _maybeAddCallbacks() {
+    if (!_hasPendingStartDrawFrameCallback) {
+      _hasPendingStartDrawFrameCallback = true;
+      SmoothSchedulerBindingMixin.instance.addStartDrawFrameCallback(() {
+        _hasPendingStartDrawFrameCallback = false;
+        setState(() {
+          _positionWhenPrevStartDrawFrame = _positionWhenCurrStartDrawFrame;
+          _positionWhenCurrStartDrawFrame = _currPosition;
+        });
+
+        print('hi $runtimeType addStartDrawFrameCallback.callback (after) '
+            '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame _currPosition=$_currPosition');
       });
+    }
 
-      print('hi $runtimeType addStartDrawFrameCallback.callback (after) '
-          '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame _currPosition=$_currPosition');
-    });
+    if (!_hasPendingAfterFlushLayoutCallback) {
+      _hasPendingAfterFlushLayoutCallback = true;
+      SmoothRendererBindingMixin.instance.addAfterFlushLayoutCallback(() {
+        _hasPendingAfterFlushLayoutCallback = false;
+        // TODO too hacky, optimize this
+        // just to make widget rebuild, because
+        // [_offsetFromPointerEvent] changes calculation method based
+        // on whether it is in AfterFlushLayout
+        setState(() {});
+      });
+    }
+
+    if (!_hasPendingPostFrameCallback) {
+      _hasPendingPostFrameCallback = true;
+      SmoothRendererBindingMixin.instance.addPostFrameCallback((_) {
+        _hasPendingPostFrameCallback = false;
+        // TODO too hacky, optimize this
+        // rebuild b/c same reason as [addAfterFlushLayoutCallback]
+        setState(() {});
+      });
+    }
   }
 
   void _handlePointerDown(PointerDownEvent e) {
@@ -116,7 +140,7 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
 
   @override
   Widget build(BuildContext context) {
-    _maybeScheduleStartDrawFrameCallback();
+    _maybeAddCallbacks();
 
     return Listener(
       onPointerDown: _handlePointerDown,
