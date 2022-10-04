@@ -54,8 +54,14 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
 
   double get _offsetFromPointerEvent {
     if (_currPosition == null) return 0;
-    return _currPosition! -
-        (_positionWhenPrevStartDrawFrame ?? _pointerDownPosition!);
+
+    // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
+    final basePosition = SmoothRendererBindingMixin
+            .instance.executingRunPipelineBecauseOfAfterFlushLayout
+        ? _positionWhenCurrStartDrawFrame
+        : _positionWhenPrevStartDrawFrame;
+
+    return _currPosition! - (basePosition ?? _pointerDownPosition!);
   }
 
   @override
