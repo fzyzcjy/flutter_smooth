@@ -14,8 +14,8 @@ void main() {
       devicePixelRatioTestValue: 1,
     );
 
-    for (final smooth in [false, true]) {
-      group('simplest construction', () {
+    group('simplest construction', () {
+      for (final smooth in [false, true]) {
         testWidgets(smooth ? 'smooth' : 'plain', (tester) async {
           final capturer = WindowRenderCapturer.autoDispose();
 
@@ -40,7 +40,7 @@ void main() {
               ..fillRect(const Rectangle(0, 60, 50, 40), Colors.primaries[1])),
           ]);
         });
-      });
-    }
+      }
+    });
   });
 }
