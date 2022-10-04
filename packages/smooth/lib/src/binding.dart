@@ -54,6 +54,9 @@ mixin SmoothRendererBindingMixin on RendererBinding {
   PipelineOwner get pipelineOwner => _smoothPipelineOwner;
   late final _smoothPipelineOwner = _SmoothPipelineOwner(super.pipelineOwner);
 
+  bool get executingRunPipelineBecauseOfAfterFlushLayout =>
+      _smoothPipelineOwner.executingRunPipelineBecauseOfAfterFlushLayout;
+
   static SmoothRendererBindingMixin get instance {
     final raw = WidgetsBinding.instance;
     assert(raw is SmoothRendererBindingMixin,
@@ -71,6 +74,10 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     _handleAfterFlushLayout();
   }
 
+  bool get executingRunPipelineBecauseOfAfterFlushLayout =>
+      _executingRunPipelineBecauseOfAfterFlushLayout;
+  var _executingRunPipelineBecauseOfAfterFlushLayout = false;
+
   void _handleAfterFlushLayout() {
     // print('handleAfterFlushLayout');
 
@@ -81,17 +88,22 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     final currentSmoothFrameTimeStamp =
         serviceLocator.preemptStrategy.currentSmoothFrameTimeStamp;
 
-    for (final pack in serviceLocator.auxiliaryTreeRegistry.trees) {
-      pack.runPipeline(
-        currentSmoothFrameTimeStamp,
-        // NOTE originally, this is skip-able
-        // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261691891
-        // but, because of logic like:
-        // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
-        // we cannot skip it anymore.
-        skipIfTimeStampUnchanged: false,
-        debugReason: 'SmoothPipelineOwner.handleAfterFlushLayout',
-      );
+    _executingRunPipelineBecauseOfAfterFlushLayout = true;
+    try {
+      for (final pack in serviceLocator.auxiliaryTreeRegistry.trees) {
+        pack.runPipeline(
+          currentSmoothFrameTimeStamp,
+          // NOTE originally, this is skip-able
+          // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261691891
+          // but, because of logic like:
+          // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
+          // we cannot skip it anymore.
+          skipIfTimeStampUnchanged: false,
+          debugReason: 'SmoothPipelineOwner.handleAfterFlushLayout',
+        );
+      }
+    } finally {
+      _executingRunPipelineBecauseOfAfterFlushLayout = false;
     }
   }
 }
