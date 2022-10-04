@@ -16,6 +16,21 @@ class SmoothListView extends StatefulWidget {
     required this.itemBuilder,
   });
 
+  static Widget maybeBuilder({
+    required bool smooth,
+    required int itemCount,
+    required NullableIndexedWidgetBuilder itemBuilder,
+  }) =>
+      smooth
+          ? SmoothListView.builder(
+              itemCount: itemCount,
+              itemBuilder: itemBuilder,
+            )
+          : ListView.builder(
+              itemCount: itemCount,
+              itemBuilder: itemBuilder,
+            );
+
   @override
   State<SmoothListView> createState() => _SmoothListViewState();
 }
