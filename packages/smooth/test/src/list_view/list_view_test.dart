@@ -69,6 +69,9 @@ void main() {
             ..fillRect(const Rectangle(0, 60, 50, 40), Colors.primaries[1])),
         ]);
 
+        final gesture = await tester
+            .startGesture(tester.getCenter(find.byType(SmoothListView)));
+
         TODO_simulate_extra_pointer_move_event;
 
         TODO_simulate_preempt_render;
@@ -80,6 +83,8 @@ void main() {
         ]);
 
         TODO_the_extra_events_will_be_normal_events;
+
+        await gesture.up();
 
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: TODO));
         await capturer
