@@ -51,17 +51,20 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
     _hasPendingCallback = true;
 
     SmoothSchedulerBindingMixin.instance.addStartDrawFrameCallback(() {
-      // print('hi $runtimeType addStartDrawFrameCallback.callback');
+      print(
+          'hi $runtimeType addStartDrawFrameCallback.callback set _offsetFromPointerEvent:=0');
 
       _hasPendingCallback = false;
 
-      if (offset == 0) return;
+      if (_offsetFromPointerEvent == 0) return;
       setState(() => _offsetFromPointerEvent = 0);
     });
   }
 
   void _handlePointerMove(PointerMoveEvent e) {
-    // print('hi $runtimeType _handlePointerMove embedderId=${e.embedderId} e=$e');
+    print(
+        'hi $runtimeType _handlePointerMove e.localDelta=${e.localDelta.dy} e=$e');
+
     setState(() {
       // very naive, and is WRONG!
       // just to confirm, we can (1) receive (2) display events
@@ -76,6 +79,9 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
     return Listener(
       onPointerMove: _handlePointerMove,
       behavior: HitTestBehavior.translucent,
+      // for debug
+      onPointerDown: (e) => print('hi $runtimeType see PointerDownEvent $e'),
+      onPointerUp: (e) => print('hi $runtimeType see PointerUpEvent $e'),
       child: super.build(context),
     );
   }
@@ -145,7 +151,8 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
       _offsetFromBallistic = -(smoothValue - plainValue);
     });
 
-    print(
-        'hi ${describeIdentity(this)}._tick offset=$offset smoothValue=$smoothValue plainValue=$plainValue elapsed=$elapsed');
+    print('hi ${describeIdentity(this)}._tick '
+        'set _offsetFromBallistic=$_offsetFromBallistic '
+        'since smoothValue=$smoothValue plainValue=$plainValue elapsed=$elapsed');
   }
 }
