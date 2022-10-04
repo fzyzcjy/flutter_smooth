@@ -75,6 +75,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
         width: 32,
         height: 32,
         child: CircleAvatar(
+          backgroundColor: Colors.primaries[index % Colors.primaries.length],
           child: Text(
             'G$index',
             style: const TextStyle(fontSize: 12),
