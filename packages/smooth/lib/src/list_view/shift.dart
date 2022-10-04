@@ -80,6 +80,7 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
     if (!_hasPendingStartDrawFrameCallback) {
       _hasPendingStartDrawFrameCallback = true;
       SmoothSchedulerBindingMixin.instance.addStartDrawFrameCallback(() {
+        if (!mounted) return;
         _hasPendingStartDrawFrameCallback = false;
         setState(() {
           _positionWhenPrevStartDrawFrame = _positionWhenCurrStartDrawFrame;
