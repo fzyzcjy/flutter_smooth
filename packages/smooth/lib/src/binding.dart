@@ -86,9 +86,9 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
         currentSmoothFrameTimeStamp,
         // NOTE originally, this is skip-able
         // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261691891
-        // but, since the `addPostMainTreeFlushLayoutCallback` may trigger
-        // some setState, we can no longer skip it
-        // https://github.com/fzyzcjy/yplusplus/issues/5917#issuecomment-1265361649
+        // but, because of logic like:
+        // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
+        // we cannot skip it anymore.
         skipIfTimeStampUnchanged: false,
         debugReason: 'SmoothPipelineOwner.handleAfterFlushLayout',
       );

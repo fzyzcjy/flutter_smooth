@@ -18,6 +18,7 @@ class SmoothShift extends StatefulWidget {
   State<SmoothShift> createState() => _SmoothShiftState();
 }
 
+// try to use mixin to maximize performance
 class _SmoothShiftState = _SmoothShiftBase
     with _SmoothShiftFromPointerEvent, _SmoothShiftFromBallistic;
 
@@ -38,7 +39,11 @@ abstract class _SmoothShiftBase extends State<SmoothShift>
   }
 }
 
-// try to use mixin to maximize performance
+// NOTE about this weird timing, see
+// * https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266944825
+// * https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
+// for detailed reasons
+// (to do: copy it here)
 mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   double? _pointerDownPosition;
   double? _positionWhenCurrStartDrawFrame;
@@ -47,10 +52,6 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
 
   var _hasPendingCallback = false;
 
-  // NOTE about this weird timing, see
-  // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266944825
-  // for detailed reasons
-  // (to do: copy it here)
   double get _offsetFromPointerEvent {
     if (_currPosition == null) return 0;
     return _currPosition! -
