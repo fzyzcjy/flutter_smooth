@@ -14,7 +14,7 @@ import 'test_tools/animation.dart';
 import 'test_tools/widgets.dart';
 
 void main() {
-  SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
 
   group('SmoothBuilder', () {
     group('use never PreemptStrategy.never', () {
@@ -44,7 +44,6 @@ void main() {
     });
 
     group('render output test', () {
-      final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
       binding.window.setUpTearDown(
         physicalSizeTestValue: const Size(100, 50),
         devicePixelRatioTestValue: 1,
@@ -224,7 +223,6 @@ void main() {
     });
 
     group('randomized test', () {
-      final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
       binding.window.setUpTearDown(
         physicalSizeTestValue: const Size(50, 200),
         devicePixelRatioTestValue: 1,
