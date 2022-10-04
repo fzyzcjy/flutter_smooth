@@ -83,7 +83,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
         ),
       ),
       title: Text(
-        'Foo contact from $index-th local contact',
+        'Item $index',
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Stack(
@@ -105,7 +105,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
                 ),
               ),
             ),
-          Text('subtitle\n' * (3 + Random().nextInt(3))),
+          Text('a\n' * (3 + Random().nextInt(3))),
         ],
       ),
     );
