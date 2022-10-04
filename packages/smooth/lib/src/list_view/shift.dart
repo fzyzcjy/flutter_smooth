@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/binding.dart';
@@ -29,7 +28,7 @@ abstract class _SmoothShiftBase extends State<SmoothShift>
   @override
   @mustCallSuper
   Widget build(BuildContext context) {
-    print('hi $runtimeType build offset=$offset');
+    // print('hi $runtimeType build offset=$offset');
 
     return Transform.translate(
       offset: Offset(0, offset),
@@ -54,19 +53,18 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   double get _offsetFromPointerEvent {
     if (_currPosition == null) return 0;
 
-    final binding = SmoothRendererBindingMixin.instance;
-
     // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
     final basePosition = basePositionUseCurrOrPrev
         ? _positionWhenCurrStartDrawFrame
         : _positionWhenPrevStartDrawFrame;
 
-    print('hi $runtimeType get _offsetFromPointerEvent '
-        '_currPosition=$_currPosition '
-        'executingRunPipelineBecauseOfAfterFlushLayout=${binding.executingRunPipelineBecauseOfAfterFlushLayout} '
-        '_positionWhenCurrStartDrawFrame=$_positionWhenCurrStartDrawFrame '
-        '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame '
-        '_pointerDownPosition=$_pointerDownPosition');
+    // final binding = SmoothRendererBindingMixin.instance;
+    // print('hi $runtimeType get _offsetFromPointerEvent '
+    //     '_currPosition=$_currPosition '
+    //     'executingRunPipelineBecauseOfAfterFlushLayout=${binding.executingRunPipelineBecauseOfAfterFlushLayout} '
+    //     '_positionWhenCurrStartDrawFrame=$_positionWhenCurrStartDrawFrame '
+    //     '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame '
+    //     '_pointerDownPosition=$_pointerDownPosition');
     return _currPosition! - (basePosition ?? _pointerDownPosition!);
   }
 
@@ -86,8 +84,8 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
           _positionWhenCurrStartDrawFrame = _currPosition;
         });
 
-        print('hi $runtimeType addStartDrawFrameCallback.callback (after) '
-            '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame _currPosition=$_currPosition');
+        // print('hi $runtimeType addStartDrawFrameCallback.callback (after) '
+        //     '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame _currPosition=$_currPosition');
       });
     }
   }
@@ -99,8 +97,8 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   }
 
   void _handlePointerMove(PointerMoveEvent e) {
-    print(
-        'hi $runtimeType _handlePointerMove e.localPosition=${e.localPosition.dy} e=$e');
+    // print(
+    //     'hi $runtimeType _handlePointerMove e.localPosition=${e.localPosition.dy} e=$e');
 
     setState(() {
       _currPosition = e.localPosition.dy;
@@ -220,8 +218,8 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
       _offsetFromBallistic = -(smoothValue - plainValue);
     });
 
-    print('hi ${describeIdentity(this)}._tick '
-        'set _offsetFromBallistic=$_offsetFromBallistic '
-        'since smoothValue=$smoothValue plainValue=$plainValue elapsed=$elapsed');
+    // print('hi ${describeIdentity(this)}._tick '
+    //     'set _offsetFromBallistic=$_offsetFromBallistic '
+    //     'since smoothValue=$smoothValue plainValue=$plainValue elapsed=$elapsed');
   }
 }

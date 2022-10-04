@@ -16,7 +16,7 @@ class _GestureVisualizerByListenerState
   Offset? position;
 
   void _updatePosition(Offset? value) {
-    print('_GestureVisualizerByListenerState position=$value');
+    // print('_GestureVisualizerByListenerState position=$value');
     setState(() => position = value);
   }
 
