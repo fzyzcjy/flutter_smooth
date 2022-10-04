@@ -1,70 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/enhanced_padding.dart';
 
-class SmoothListView extends StatefulWidget {
-  final int itemCount;
-  final NullableIndexedWidgetBuilder itemBuilder;
-  final double? cacheExtent;
-
-  const SmoothListView.builder({
-    super.key,
-    this.cacheExtent,
-    required this.itemCount,
-    required this.itemBuilder,
-  });
-
-  @override
-  State<SmoothListView> createState() => _SmoothListViewState();
-}
-
-class _SmoothListViewState extends State<SmoothListView> {
-  final controller = _SmoothScrollController();
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final cacheExtent =
-        widget.cacheExtent ?? RenderAbstractViewport.defaultCacheExtent;
-    final effectiveItemCount = widget.itemCount + 2;
-
-    return SmoothBuilder(
-      builder: (context, child) => ClipRect(
-        child: SmoothShift(
-          child: child,
-        ),
-      ),
-      child: EnhancedPadding(
-        enableAllowNegativePadding: true,
-        padding: EdgeInsets.only(
-          top: -cacheExtent,
-          bottom: -cacheExtent,
-        ),
-        child: ListView.builder(
-          controller: controller,
-          // NOTE set [cacheExtent] here to zero, because we will use overflow box
-          cacheExtent: 0,
-          itemCount: effectiveItemCount,
-          itemBuilder: (context, index) {
-            if (index == 0 || index == effectiveItemCount - 1) {
-              return SizedBox(height: cacheExtent);
-            }
-            return widget.itemBuilder(context, index - 1);
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class _SmoothScrollController extends ScrollController {
+class SmoothScrollController extends ScrollController {
   // ref [super.createScrollPosition], except for return custom sub-class
   @override
   ScrollPosition createScrollPosition(
@@ -72,7 +10,7 @@ class _SmoothScrollController extends ScrollController {
     ScrollContext context,
     ScrollPosition? oldPosition,
   ) {
-    return _SmoothScrollPositionWithSingleContext(
+    return SmoothScrollPositionWithSingleContext(
       physics: physics,
       context: context,
       initialPixels: initialScrollOffset,
@@ -83,9 +21,12 @@ class _SmoothScrollController extends ScrollController {
   }
 }
 
-class _SmoothScrollPositionWithSingleContext
+class SmoothScrollPositionWithSingleContext
     extends ScrollPositionWithSingleContext {
-  _SmoothScrollPositionWithSingleContext({
+  static SmoothScrollPositionWithSingleContext of(ScrollableState state) =>
+      state.position as SmoothScrollPositionWithSingleContext;
+
+  SmoothScrollPositionWithSingleContext({
     required super.physics,
     required super.context,
     super.initialPixels,
@@ -114,6 +55,7 @@ class _SmoothScrollPositionWithSingleContext
             SchedulerBinding.instance.currentFrameTimeStamp + kOneFrame,
       );
       // NOTE MODIFIED end
+
       beginActivity(BallisticScrollActivity(
         this,
         simulation,
@@ -124,11 +66,6 @@ class _SmoothScrollPositionWithSingleContext
       goIdle();
     }
   }
-}
-
-extension on ScrollableState {
-  _SmoothScrollPositionWithSingleContext get positionTyped =>
-      position as _SmoothScrollPositionWithSingleContext;
 }
 
 class SimulationInfo {
