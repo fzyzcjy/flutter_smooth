@@ -23,7 +23,7 @@ class _SmoothShiftState = _SmoothShiftBase
 
 abstract class _SmoothShiftBase extends State<SmoothShift>
     with TickerProviderStateMixin {
-  var offset = 0.0;
+  double get offset => 0;
 
   @override
   @mustCallSuper
@@ -40,7 +40,11 @@ abstract class _SmoothShiftBase extends State<SmoothShift>
 
 // try to use mixin to maximize performance
 mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
+  var _offsetFromPointerEvent = 0.0;
   var _hasPendingCallback = false;
+
+  @override
+  double get offset => super.offset + _offsetFromPointerEvent;
 
   void _maybeSchedulePostMainTreeFlushLayoutCallback() {
     if (_hasPendingCallback) return;
@@ -52,7 +56,7 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
       _hasPendingCallback = false;
 
       if (offset == 0) return;
-      setState(() => offset = 0);
+      setState(() => _offsetFromPointerEvent = 0);
     });
   }
 
@@ -61,7 +65,7 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
     setState(() {
       // very naive, and is WRONG!
       // just to confirm, we can (1) receive (2) display events
-      offset += e.localDelta.dy;
+      _offsetFromPointerEvent += e.localDelta.dy;
     });
   }
 
@@ -78,7 +82,11 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
 }
 
 mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
+  double _offsetFromBallistic = 0;
   Ticker? _ticker;
+
+  @override
+  double get offset => super.offset + _offsetFromBallistic;
 
   @override
   void initState() {
@@ -128,7 +136,7 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
     final smoothValue = lastSimulationInfo.clonedSimulation.x(elapsedInSeconds);
 
     setState(() {
-      offset = smoothValue - plainValue;
+      _offsetFromBallistic = smoothValue - plainValue;
     });
 
     print(
