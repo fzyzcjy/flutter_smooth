@@ -124,6 +124,8 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   }
 
   void _tick(Duration elapsed) {
+    if (!mounted) return;
+
     final lastSimulationInfo = _position.lastSimulationInfo.value;
     if (lastSimulationInfo == null) return;
 
