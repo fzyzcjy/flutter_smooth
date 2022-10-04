@@ -23,8 +23,9 @@ class SmoothScrollController extends ScrollController {
 
 class SmoothScrollPositionWithSingleContext
     extends ScrollPositionWithSingleContext {
-  static SmoothScrollPositionWithSingleContext of(ScrollableState state) =>
-      state.position as SmoothScrollPositionWithSingleContext;
+  static SmoothScrollPositionWithSingleContext of(
+          ScrollController controller) =>
+      controller.position as SmoothScrollPositionWithSingleContext;
 
   SmoothScrollPositionWithSingleContext({
     required super.physics,

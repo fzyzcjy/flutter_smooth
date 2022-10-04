@@ -38,6 +38,7 @@ class _SmoothListViewState extends State<SmoothListView> {
     return SmoothBuilder(
       builder: (context, child) => ClipRect(
         child: SmoothShift(
+          scrollController: controller,
           child: child,
         ),
       ),

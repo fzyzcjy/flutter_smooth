@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/binding.dart';
+import 'package:smooth/src/list_view/controller.dart';
 
 class SmoothShift extends StatefulWidget {
+  final ScrollController scrollController;
   final Widget child;
 
-  const SmoothShift({super.key, required this.child});
+  const SmoothShift({
+    super.key,
+    required this.scrollController,
+    required this.child,
+  });
 
   @override
   State<SmoothShift> createState() => _SmoothShiftState();
@@ -84,6 +90,22 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   }
 
   void _tick(Duration elapsed) {
-    TODO;
+    final position =
+        SmoothScrollPositionWithSingleContext.of(widget.scrollController);
+    final lastSimulation = position.lastSimulation;
+    if (lastSimulation == null) {
+      return;
+    }
+
+    // ref: [AnimationController._tick]
+    final elapsedInSeconds =
+        elapsed.inMicroseconds.toDouble() / Duration.microsecondsPerSecond;
+    final smoothValue = lastSimulation.simulation.x(elapsedInSeconds);
+
+    final plainValue = TODO;
+
+    setState(() {
+      offset = smoothValue - plainValue;
+    });
   }
 }
