@@ -99,7 +99,7 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
         // just to make widget rebuild, because
         // [_offsetFromPointerEvent] changes calculation method based
         // on whether it is in AfterFlushLayout
-        setState(() {});
+        if (mounted) setState(() {});
       });
     }
 
@@ -109,7 +109,7 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
         _hasPendingPostFrameCallback = false;
         // TODO too hacky, optimize this
         // rebuild b/c same reason as [addAfterFlushLayoutCallback]
-        setState(() {});
+        if (mounted) setState(() {});
       });
     }
   }
