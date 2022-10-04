@@ -10,9 +10,25 @@ class SmoothShift extends StatefulWidget {
   State<SmoothShift> createState() => _SmoothShiftState();
 }
 
-class _SmoothShiftState extends State<SmoothShift> {
-  var _offset = 0.0;
+class _SmoothShiftState extends _SmoothShiftBase
+    with _SmoothShiftFromPointerEvent {}
 
+abstract class _SmoothShiftBase extends State<SmoothShift> {
+  var offset = 0.0;
+
+  @override
+  @mustCallSuper
+  Widget build(BuildContext context) {
+    // print('hi $runtimeType build offset=$offset');
+    return Transform.translate(
+      offset: Offset(0, offset),
+      child: widget.child,
+    );
+  }
+}
+
+// try to use mixin to maximize performance
+mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   var _hasPendingCallback = false;
 
   void _maybeSchedulePostMainTreeFlushLayoutCallback() {
@@ -24,25 +40,9 @@ class _SmoothShiftState extends State<SmoothShift> {
 
       _hasPendingCallback = false;
 
-      if (_offset == 0) return;
-      setState(() => _offset = 0);
+      if (offset == 0) return;
+      setState(() => offset = 0);
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // print('hi $runtimeType build offset=$_offset');
-
-    _maybeSchedulePostMainTreeFlushLayoutCallback();
-
-    return Listener(
-      onPointerMove: _handlePointerMove,
-      behavior: HitTestBehavior.translucent,
-      child: Transform.translate(
-        offset: Offset(0, _offset),
-        child: widget.child,
-      ),
-    );
   }
 
   void _handlePointerMove(PointerMoveEvent e) {
@@ -50,7 +50,18 @@ class _SmoothShiftState extends State<SmoothShift> {
     setState(() {
       // very naive, and is WRONG!
       // just to confirm, we can (1) receive (2) display events
-      _offset += e.localDelta.dy;
+      offset += e.localDelta.dy;
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _maybeSchedulePostMainTreeFlushLayoutCallback();
+
+    return Listener(
+      onPointerMove: _handlePointerMove,
+      behavior: HitTestBehavior.translucent,
+      child: super.build(context),
+    );
   }
 }
