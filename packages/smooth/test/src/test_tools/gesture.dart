@@ -1,38 +1,19 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-extension ExtWidgetTesterGesture on WidgetTester {
-  // ref [startGesture]
-  Future<TestSmoothGesture> startSmoothGesture(Offset downLocation) async {
-    final result = await createGesture();
-    await result.down(downLocation);
-    return result;
-  }
-}
-
 // ref [TestGesture]
 class TestSmoothGesture {
-  TestSmoothGesture() : _pointer = TestPointer();
+  final _eventsToPlainDispatch = <PointerEvent>[];
 
-  // ref [TestGesture]
-  final TestPointer _pointer;
-
-  // ref [TestGesture]
-  void down(Offset downLocation, {Duration timeStamp = Duration.zero}) {
-    _dispatcher(_pointer.down(downLocation, timeStamp: timeStamp));
+  void addEvent(PointerEvent event) {
+    _eventsToPlainDispatch.add(event);
+    TestWidgetsFlutterBinding.instance.debugOverrideEnginePendingEvents
+        .add(event);
   }
 
-  // ref [TestGesture]
-  void moveTo(Offset location, {Duration timeStamp = Duration.zero}) {
-    assert(_pointer.isDown);
-    _dispatcher(_pointer.move(location, timeStamp: timeStamp));
-  }
-
-  // ref [TestGesture]
-  void up({Duration timeStamp = Duration.zero}) {
-    assert(_pointer.isDown);
-    _dispatcher(_pointer.up(timeStamp: timeStamp));
-    assert(!_pointer.isDown);
+  void plainDispatchAll() {
+    _eventsToPlainDispatch.forEach(_dispatcher);
+    _eventsToPlainDispatch.clear();
   }
 
   void _dispatcher(PointerEvent event) {
