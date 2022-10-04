@@ -82,7 +82,7 @@ void main() {
           TODO,
         ]);
 
-        TODO_the_extra_events_will_be_normal_events;
+        await gesture.moveBy(offset);
 
         await gesture.up();
 
