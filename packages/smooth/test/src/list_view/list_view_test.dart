@@ -54,7 +54,8 @@ void main() {
         final timeInfo = TimeInfo();
         final capturer = WindowRenderCapturer.autoDispose();
 
-        var mainInterestFrame = false;
+        var interestFrame = false;
+        Offset? moveOffsetBeforePreemptPoint, moveOffsetAfterPreemptPoint;
         final gesture = TestSmoothGesture();
 
         debugPrint('action: pumpWidget');
@@ -71,17 +72,19 @@ void main() {
                   ),
                 ),
                 AlwaysLayoutBuilder(onPerformLayout: () {
-                  if (!mainInterestFrame) return;
-                  debugPrint('action: elapse 16.5ms + addEvent move(y=20)');
+                  if (!interestFrame) return;
+                  debugPrint('action: elapse + addEvent before PreemptPoint');
                   binding.elapseBlocking(const Duration(microseconds: 16500));
-                  gesture.addEvent(gesture.pointer.move(const Offset(25, 20)));
+                  gesture.addEvent(
+                      gesture.pointer.move(moveOffsetBeforePreemptPoint!));
                 }),
                 const LayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
                 AlwaysLayoutBuilder(onPerformLayout: () {
-                  if (!mainInterestFrame) return;
-                  debugPrint('action: elapse 16.5ms + addEvent move(y=15)');
+                  if (!interestFrame) return;
+                  debugPrint('action: elapse + addEvent after PreemptPoint');
                   binding.elapseBlocking(const Duration(microseconds: 16500));
-                  gesture.addEvent(gesture.pointer.move(const Offset(25, 15)));
+                  gesture.addEvent(
+                      gesture.pointer.move(moveOffsetAfterPreemptPoint!));
                 }),
               ],
             ),
@@ -101,9 +104,12 @@ void main() {
         await gesture.plainDispatchAll();
 
         debugPrint('action: pump');
-        mainInterestFrame = true;
+        interestFrame = true;
+        moveOffsetBeforePreemptPoint = const Offset(25, 20);
+        moveOffsetAfterPreemptPoint = const Offset(25, 15);
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
-        mainInterestFrame = false;
+        interestFrame = false;
+
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
           // NOTE this is repeated twice, because the "drag to y=15" is
@@ -122,21 +128,37 @@ void main() {
         debugPrint('action: plainDispatchAll');
         await gesture.plainDispatchAll();
 
+        debugPrint('action: pump');
+        interestFrame = true;
+        moveOffsetBeforePreemptPoint = const Offset(25, 5);
+        moveOffsetAfterPreemptPoint = const Offset(25, 0);
+        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
+        interestFrame = false;
+
+        await capturer
+            .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
+          for (var iter = 0; iter < 2; ++iter)
+            // drag y=50->5
+            await tester.createScreenImage((im) => im
+              ..fillRect(const Rectangle(0, 0, 50, 15), Colors.primaries[0])
+              ..fillRect(const Rectangle(0, 15, 50, 60), Colors.primaries[1])
+              ..fillRect(const Rectangle(0, 75, 50, 25), Colors.primaries[2])),
+        ]);
+
         debugPrint('action: addEvent up');
         gesture.addEvent(gesture.pointer.up());
 
         debugPrint('action: plainDispatchAll');
         await gesture.plainDispatchAll();
 
-        debugPrint('action: pump');
-        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
+        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 5));
         await capturer
-            .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
-          // drag y=50->10
+            .expectAndReset(tester, expectTestFrameNumber: 5, expectImages: [
+          // drag y=50->0
           await tester.createScreenImage((im) => im
-            ..fillRect(const Rectangle(0, 0, 50, 20), Colors.primaries[0])
-            ..fillRect(const Rectangle(0, 20, 50, 60), Colors.primaries[1])
-            ..fillRect(const Rectangle(0, 80, 50, 20), Colors.primaries[2])),
+            ..fillRect(const Rectangle(0, 0, 50, 10), Colors.primaries[0])
+            ..fillRect(const Rectangle(0, 10, 50, 60), Colors.primaries[1])
+            ..fillRect(const Rectangle(0, 70, 50, 30), Colors.primaries[2])),
         ]);
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
