@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:smooth/smooth.dart';
 
 class SmoothScrollController extends ScrollController {
   // ref [super.createScrollPosition], except for return custom sub-class
@@ -58,9 +56,6 @@ class SmoothScrollPositionWithSingleContext
       _lastSimulationInfo = SimulationInfo(
         realSimulation: simulation,
         clonedSimulation: physics.createBallisticSimulation(this, velocity)!,
-        // TODO correct? should we "+kOneFrame"?
-        startTimeStamp:
-            SchedulerBinding.instance.currentFrameTimeStamp + kOneFrame,
       );
       // NOTE MODIFIED end
 
@@ -80,14 +75,9 @@ class SimulationInfo {
   final MemorizedSimulation realSimulation;
   final Simulation clonedSimulation;
 
-  /// When the [clonedSimulation] is used in the animation in [BallisticScrollActivity],
-  /// what is the start time stamp of that animation.
-  final Duration startTimeStamp;
-
   const SimulationInfo({
     required this.realSimulation,
     required this.clonedSimulation,
-    required this.startTimeStamp,
   });
 }
 
