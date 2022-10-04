@@ -84,6 +84,7 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
 mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   double _offsetFromBallistic = 0;
   Ticker? _ticker;
+  SmoothScrollPositionWithSingleContext? _position;
 
   @override
   double get offset => super.offset + _offsetFromBallistic;
@@ -95,7 +96,9 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
     // https://github.com/fzyzcjy/yplusplus/issues/5918#issuecomment-1266553640
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _position.lastSimulationInfo.addListener(_handleLastSimulationChanged);
+      _position =
+          SmoothScrollPositionWithSingleContext.of(widget.scrollController);
+      _position!.lastSimulationInfo.addListener(_handleLastSimulationChanged);
     });
   }
 
@@ -104,17 +107,18 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
     super.didUpdateWidget(oldWidget);
     assert(oldWidget.scrollController == widget.scrollController,
         'for simplicity, not yet implemented change of `scrollController`');
+    assert(
+        SmoothScrollPositionWithSingleContext.of(widget.scrollController) ==
+            _position,
+        'for simplicity, SmoothScrollPositionWithSingleContext cannot yet be changed');
   }
 
   @override
   void dispose() {
-    _position.lastSimulationInfo.removeListener(_handleLastSimulationChanged);
+    _position?.lastSimulationInfo.removeListener(_handleLastSimulationChanged);
     _ticker?.dispose();
     super.dispose();
   }
-
-  SmoothScrollPositionWithSingleContext get _position =>
-      SmoothScrollPositionWithSingleContext.of(widget.scrollController);
 
   void _handleLastSimulationChanged() {
     _ticker?.dispose();
@@ -126,7 +130,7 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   void _tick(Duration elapsed) {
     if (!mounted) return;
 
-    final lastSimulationInfo = _position.lastSimulationInfo.value;
+    final lastSimulationInfo = _position!.lastSimulationInfo.value;
     if (lastSimulationInfo == null) return;
 
     final plainValue = lastSimulationInfo.realSimulation.lastX;
