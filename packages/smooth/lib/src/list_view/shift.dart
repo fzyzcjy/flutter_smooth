@@ -81,7 +81,8 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   @override
   void initState() {
     super.initState();
-    _ticker = createTicker(_tick);
+    _ticker = createTicker(_tick) //
+      ..start();
   }
 
   @override
@@ -91,15 +92,21 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   }
 
   void _tick(Duration elapsed) {
+    // print('hi ${describeIdentity(this)}._tick start');
+
     final position =
         SmoothScrollPositionWithSingleContext.of(widget.scrollController);
     final lastSimulation = position.lastSimulationInfo;
     if (lastSimulation == null) {
+      print(
+          'hi ${describeIdentity(this)}._tick early return since lastSimulation==null');
       return;
     }
 
     final plainValue = lastSimulation.realSimulation.lastX;
     if (plainValue == null) {
+      print(
+          'hi ${describeIdentity(this)}._tick early return since plainValue==null');
       return;
     }
 
