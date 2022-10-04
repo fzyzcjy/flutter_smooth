@@ -40,7 +40,7 @@ class Actor {
     final binding = WidgetsFlutterBinding.ensureInitialized();
     final start = clock.now();
     Timeline.timeSync('PreemptRender', () {
-      // print('$runtimeType preemptRender start');
+      print('$runtimeType preemptRender start');
 
       // print('preemptRender '
       //     'lastVsyncInfo=$lastVsyncInfo '
