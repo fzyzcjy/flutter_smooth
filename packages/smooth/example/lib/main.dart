@@ -3,7 +3,6 @@
 import 'package:example/example_enter_page_animation/page.dart';
 import 'package:example/example_gesture/example_gesture_page.dart';
 import 'package:example/example_list_view/example_list_view_page.dart';
-import 'package:example/experiments/experiment_list_view.dart';
 import 'package:example/utils/debug_plain_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -20,8 +19,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ExperimentListView();
-
     // [ExcludeSemantics], because our demo contains a ton of text, much
     // more than normal app
     return ExcludeSemantics(
