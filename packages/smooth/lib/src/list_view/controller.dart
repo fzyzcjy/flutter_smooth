@@ -113,4 +113,7 @@ class ProxySimulation extends Simulation {
 
   @override
   bool isDone(double time) => inner.isDone(time);
+
+  @override
+  String toString() => 'ProxySimulation($inner)';
 }

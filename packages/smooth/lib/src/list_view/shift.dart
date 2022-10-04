@@ -28,7 +28,8 @@ abstract class _SmoothShiftBase extends State<SmoothShift>
   @override
   @mustCallSuper
   Widget build(BuildContext context) {
-    // print('hi $runtimeType build offset=$offset');
+    print('hi $runtimeType build offset=$offset');
+
     return Transform.translate(
       offset: Offset(0, offset),
       child: widget.child,
