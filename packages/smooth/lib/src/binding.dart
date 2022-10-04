@@ -52,30 +52,10 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
 mixin SmoothRendererBindingMixin on RendererBinding {
   @override
   PipelineOwner get pipelineOwner => _smoothPipelineOwner;
-  late final _smoothPipelineOwner =
-      _SmoothPipelineOwner(super.pipelineOwner, this);
+  late final _smoothPipelineOwner = _SmoothPipelineOwner(super.pipelineOwner);
 
-  bool get executingRunPipelineBecauseOfAfterFlushLayout =>
+  ValueListenable<bool> get executingRunPipelineBecauseOfAfterFlushLayout =>
       _smoothPipelineOwner.executingRunPipelineBecauseOfAfterFlushLayout;
-
-  // ref: [SchedulerBinding._postFrameCallbacks]
-  final _afterFlushLayoutCallbacks = <VoidCallback>[];
-
-  void addAfterFlushLayoutCallback(VoidCallback callback) =>
-      _afterFlushLayoutCallbacks.add(callback);
-
-  // ref: [SchedulerBinding._invokeFrameCallbackS]
-  void _invokeAfterFlushLayoutCallbacks() {
-    final localCallbacks = List.of(_afterFlushLayoutCallbacks);
-    _afterFlushLayoutCallbacks.clear();
-    for (final callback in localCallbacks) {
-      try {
-        callback();
-      } catch (e, s) {
-        FlutterError.reportError(FlutterErrorDetails(exception: e, stack: s));
-      }
-    }
-  }
 
   static SmoothRendererBindingMixin get instance {
     final raw = WidgetsBinding.instance;
@@ -86,9 +66,7 @@ mixin SmoothRendererBindingMixin on RendererBinding {
 }
 
 class _SmoothPipelineOwner extends ProxyPipelineOwner {
-  final SmoothRendererBindingMixin _parent;
-
-  _SmoothPipelineOwner(super.inner, this._parent);
+  _SmoothPipelineOwner(super.inner);
 
   @override
   void flushLayout() {
@@ -96,23 +74,21 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     _handleAfterFlushLayout();
   }
 
-  bool get executingRunPipelineBecauseOfAfterFlushLayout =>
+  ValueListenable<bool> get executingRunPipelineBecauseOfAfterFlushLayout =>
       _executingRunPipelineBecauseOfAfterFlushLayout;
-  var _executingRunPipelineBecauseOfAfterFlushLayout = false;
+  final _executingRunPipelineBecauseOfAfterFlushLayout = ValueNotifier(false);
 
   void _handleAfterFlushLayout() {
     // print('handleAfterFlushLayout');
 
     final serviceLocator = ServiceLocator.maybeInstance;
     if (serviceLocator == null) return;
-   
-    _parent._invokeAfterFlushLayoutCallbacks();
 
     serviceLocator.preemptStrategy.refresh();
     final currentSmoothFrameTimeStamp =
         serviceLocator.preemptStrategy.currentSmoothFrameTimeStamp;
 
-    _executingRunPipelineBecauseOfAfterFlushLayout = true;
+    _executingRunPipelineBecauseOfAfterFlushLayout.value = true;
     try {
       for (final pack in serviceLocator.auxiliaryTreeRegistry.trees) {
         pack.runPipeline(
@@ -127,7 +103,7 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
         );
       }
     } finally {
-      _executingRunPipelineBecauseOfAfterFlushLayout = false;
+      _executingRunPipelineBecauseOfAfterFlushLayout.value = false;
     }
   }
 }

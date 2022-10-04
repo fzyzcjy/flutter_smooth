@@ -49,6 +49,7 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   double? _positionWhenCurrStartDrawFrame;
   double? _positionWhenPrevStartDrawFrame;
   double? _currPosition;
+  bool basePositionUseCurrOrPrev = false;
 
   double get _offsetFromPointerEvent {
     if (_currPosition == null) return 0;
@@ -56,7 +57,7 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
     final binding = SmoothRendererBindingMixin.instance;
 
     // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
-    final basePosition = binding.executingRunPipelineBecauseOfAfterFlushLayout
+    final basePosition = basePositionUseCurrOrPrev
         ? _positionWhenCurrStartDrawFrame
         : _positionWhenPrevStartDrawFrame;
 
@@ -73,8 +74,6 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   double get offset => super.offset + _offsetFromPointerEvent;
 
   var _hasPendingStartDrawFrameCallback = false;
-  var _hasPendingAfterFlushLayoutCallback = false;
-  var _hasPendingPostFrameCallback = false;
 
   void _maybeAddCallbacks() {
     if (!_hasPendingStartDrawFrameCallback) {
@@ -89,28 +88,6 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
 
         print('hi $runtimeType addStartDrawFrameCallback.callback (after) '
             '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame _currPosition=$_currPosition');
-      });
-    }
-
-    if (!_hasPendingAfterFlushLayoutCallback) {
-      _hasPendingAfterFlushLayoutCallback = true;
-      SmoothRendererBindingMixin.instance.addAfterFlushLayoutCallback(() {
-        _hasPendingAfterFlushLayoutCallback = false;
-        // TODO too hacky, optimize this
-        // just to make widget rebuild, because
-        // [_offsetFromPointerEvent] changes calculation method based
-        // on whether it is in AfterFlushLayout
-        if (mounted) setState(() {});
-      });
-    }
-
-    if (!_hasPendingPostFrameCallback) {
-      _hasPendingPostFrameCallback = true;
-      SmoothRendererBindingMixin.instance.addPostFrameCallback((_) {
-        _hasPendingPostFrameCallback = false;
-        // TODO too hacky, optimize this
-        // rebuild b/c same reason as [addAfterFlushLayoutCallback]
-        if (mounted) setState(() {});
       });
     }
   }
@@ -137,6 +114,31 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
       _positionWhenPrevStartDrawFrame = null;
       _currPosition = null;
     });
+  }
+
+  void _handleExecutingRunPipelineBecauseOfAfterFlushLayoutChanged() {
+    setState(() {
+      basePositionUseCurrOrPrev = SmoothRendererBindingMixin
+          .instance.executingRunPipelineBecauseOfAfterFlushLayout.value;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    SmoothRendererBindingMixin
+        .instance.executingRunPipelineBecauseOfAfterFlushLayout
+        .addListener(
+            _handleExecutingRunPipelineBecauseOfAfterFlushLayoutChanged);
+  }
+
+  @override
+  void dispose() {
+    SmoothRendererBindingMixin
+        .instance.executingRunPipelineBecauseOfAfterFlushLayout
+        .removeListener(
+            _handleExecutingRunPipelineBecauseOfAfterFlushLayoutChanged);
+    super.dispose();
   }
 
   @override
