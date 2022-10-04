@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ExperimentListView extends StatefulWidget {
@@ -27,13 +26,13 @@ class _ExperimentListViewState extends State<ExperimentListView> {
 }
 
 class _MyScrollController extends ScrollController {
+  // ref [super.createScrollPosition], except for return custom sub-class
   @override
   ScrollPosition createScrollPosition(
     ScrollPhysics physics,
     ScrollContext context,
     ScrollPosition? oldPosition,
   ) {
-    // ref [super.createScrollPosition]
     return _MyScrollPositionWithSingleContext(
       physics: physics,
       context: context,
@@ -56,15 +55,20 @@ class _MyScrollPositionWithSingleContext
     super.debugLabel,
   });
 
+  // why "cloned": because [Simulation]'s doc says, some subclasses will change
+  // state when called, and must only call with monotonic timestamps.
+  Simulation? get lastSimulationCloned => _lastSimulationCloned;
+  Simulation? _lastSimulationCloned;
+
+  // ref [super.createScrollPosition], except for marked regions
   @override
   void goBallistic(double velocity) {
-    // ref [super.createScrollPosition]
     assert(hasPixels);
     final simulation = physics.createBallisticSimulation(this, velocity);
     if (simulation != null) {
-      // TODO do something here?
-      print('hi ${describeIdentity(this)}.goBallistic simulation=$simulation');
-
+      // NOTE MODIFIED start
+      _lastSimulationCloned = physics.createBallisticSimulation(this, velocity);
+      // NOTE MODIFIED end
       beginActivity(BallisticScrollActivity(
         this,
         simulation,
@@ -75,4 +79,9 @@ class _MyScrollPositionWithSingleContext
       goIdle();
     }
   }
+}
+
+extension on ScrollableState {
+  _MyScrollPositionWithSingleContext get positionTyped =>
+      position as _MyScrollPositionWithSingleContext;
 }
