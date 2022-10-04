@@ -22,7 +22,7 @@ class _SmoothShiftState = _SmoothShiftBase
     with _SmoothShiftFromPointerEvent, _SmoothShiftFromBallistic;
 
 abstract class _SmoothShiftBase extends State<SmoothShift>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   var offset = 0.0;
 
   @override
