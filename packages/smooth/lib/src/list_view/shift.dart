@@ -40,10 +40,10 @@ abstract class _SmoothShiftBase extends State<SmoothShift>
 
 // try to use mixin to maximize performance
 mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
-  // double? _pointerDownPosition;
-  var _positionWhenCurrStartDrawFrame = 0.0;
-  var _positionWhenPrevStartDrawFrame = 0.0;
-  var _currPosition = 0.0;
+  double? _pointerDownPosition;
+  double? _positionWhenCurrStartDrawFrame;
+  double? _positionWhenPrevStartDrawFrame;
+  double? _currPosition;
 
   var _hasPendingCallback = false;
 
@@ -51,8 +51,11 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266944825
   // for detailed reasons
   // (to do: copy it here)
-  double get _offsetFromPointerEvent =>
-      _currPosition - _positionWhenPrevStartDrawFrame;
+  double get _offsetFromPointerEvent {
+    if (_currPosition == null) return 0;
+    return _currPosition! -
+        (_positionWhenPrevStartDrawFrame ?? _pointerDownPosition!);
+  }
 
   @override
   double get offset => super.offset + _offsetFromPointerEvent;
@@ -74,9 +77,9 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   }
 
   void _handlePointerDown(PointerDownEvent e) {
-    // setState(() {
-    //   _pointerDownPosition = e.localPosition.dy;
-    // });
+    setState(() {
+      _pointerDownPosition = e.localPosition.dy;
+    });
   }
 
   void _handlePointerMove(PointerMoveEvent e) {
@@ -84,14 +87,17 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
         'hi $runtimeType _handlePointerMove e.localPosition=${e.localPosition.dy} e=$e');
 
     setState(() {
-      _currPosition += e.localPosition.dy;
+      _currPosition = e.localPosition.dy;
     });
   }
 
   void _handlePointerUpOrCancel(PointerEvent e) {
-    // setState(() {
-    //   _pointerDownPosition = null;
-    // });
+    setState(() {
+      _pointerDownPosition = null;
+      _positionWhenCurrStartDrawFrame = null;
+      _positionWhenPrevStartDrawFrame = null;
+      _currPosition = null;
+    });
   }
 
   @override
