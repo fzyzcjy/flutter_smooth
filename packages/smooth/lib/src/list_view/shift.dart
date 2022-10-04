@@ -81,7 +81,12 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   @override
   void initState() {
     super.initState();
-    _position.lastSimulationInfo.addListener(_handleLastSimulationChanged);
+
+    // https://github.com/fzyzcjy/yplusplus/issues/5918#issuecomment-1266553640
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _position.lastSimulationInfo.addListener(_handleLastSimulationChanged);
+    });
   }
 
   @override
