@@ -36,21 +36,28 @@ class SmoothScrollPositionWithSingleContext
     super.debugLabel,
   });
 
-  SimulationInfo? get lastSimulation => _lastSimulation;
-  SimulationInfo? _lastSimulation;
+  SimulationInfo? get lastSimulationInfo => _lastSimulationInfo;
+  SimulationInfo? _lastSimulationInfo;
 
   // ref [super.createScrollPosition], except for marked regions
   @override
   void goBallistic(double velocity) {
     assert(hasPixels);
-    final simulation = physics.createBallisticSimulation(this, velocity);
+
+    // NOTE MODIFIED start
+    // use [MemorizedSimulation] to wrap
+    final simulation = MemorizedSimulation.wrap(
+        physics.createBallisticSimulation(this, velocity));
+    // NOTE MODIFIED end
+
     if (simulation != null) {
       // NOTE MODIFIED start
       // NOTE need to create a *new* simulation, not the old one.
       //      Because [Simulation]'s doc says, some subclasses will change
       //      state when called, and must only call with monotonic timestamps.
-      _lastSimulation = SimulationInfo(
-        simulation: physics.createBallisticSimulation(this, velocity)!,
+      _lastSimulationInfo = SimulationInfo(
+        realSimulation: simulation,
+        clonedSimulation: physics.createBallisticSimulation(this, velocity)!,
         // TODO correct? should we "+kOneFrame"?
         startTimeStamp:
             SchedulerBinding.instance.currentFrameTimeStamp + kOneFrame,
@@ -70,14 +77,48 @@ class SmoothScrollPositionWithSingleContext
 }
 
 class SimulationInfo {
-  final Simulation simulation;
+  final MemorizedSimulation realSimulation;
+  final Simulation clonedSimulation;
 
-  /// When the [simulation] is used in the animation in [BallisticScrollActivity],
+  /// When the [clonedSimulation] is used in the animation in [BallisticScrollActivity],
   /// what is the start time stamp of that animation.
   final Duration startTimeStamp;
 
   const SimulationInfo({
-    required this.simulation,
+    required this.realSimulation,
+    required this.clonedSimulation,
     required this.startTimeStamp,
   });
+}
+
+class MemorizedSimulation extends ProxySimulation {
+  MemorizedSimulation(super.inner);
+
+  static MemorizedSimulation? wrap(Simulation? inner) =>
+      inner == null ? null : MemorizedSimulation(inner);
+
+  double? get lastX => _lastX;
+  double? _lastX;
+
+  @override
+  double x(double time) {
+    final ans = super.x(time);
+    _lastX = ans;
+    return ans;
+  }
+}
+
+class ProxySimulation extends Simulation {
+  final Simulation inner;
+
+  ProxySimulation(this.inner);
+
+  @override
+  double x(double time) => inner.x(time);
+
+  @override
+  double dx(double time) => inner.dx(time);
+
+  @override
+  bool isDone(double time) => inner.isDone(time);
 }

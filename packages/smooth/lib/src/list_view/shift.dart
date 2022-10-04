@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/binding.dart';
@@ -92,20 +93,26 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   void _tick(Duration elapsed) {
     final position =
         SmoothScrollPositionWithSingleContext.of(widget.scrollController);
-    final lastSimulation = position.lastSimulation;
+    final lastSimulation = position.lastSimulationInfo;
     if (lastSimulation == null) {
+      return;
+    }
+
+    final plainValue = lastSimulation.realSimulation.lastX;
+    if (plainValue == null) {
       return;
     }
 
     // ref: [AnimationController._tick]
     final elapsedInSeconds =
         elapsed.inMicroseconds.toDouble() / Duration.microsecondsPerSecond;
-    final smoothValue = lastSimulation.simulation.x(elapsedInSeconds);
-
-    final plainValue = TODO;
+    final smoothValue = lastSimulation.clonedSimulation.x(elapsedInSeconds);
 
     setState(() {
       offset = smoothValue - plainValue;
     });
+
+    print(
+        'hi ${describeIdentity(this)}._tick offset=$offset smoothValue=$smoothValue plainValue=$plainValue elapsed=$elapsed');
   }
 }
