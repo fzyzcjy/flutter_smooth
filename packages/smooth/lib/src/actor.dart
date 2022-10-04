@@ -107,11 +107,7 @@ class Actor {
     //     'pointer=$pointer '
     //     'hitTest=${gestureBinding.hitTests[pointer]!}');
 
-    final pendingPacket =
-        PlatformDispatcher.pointerDataPacketStorageReadPendingAndClear();
-    // ref: [GestureBinding._handlePointerDataPacket]
-    final pendingEvents = PointerEventConverter.expand(
-        pendingPacket.data, window.devicePixelRatio);
+    final pendingEvents = gestureBinding.readEnginePendingEventsAndClear();
     // print(
     //     'pendingPacket.len=${pendingPacket.data.length} pendingPacket.data=${pendingPacket.data}');
 
