@@ -40,48 +40,70 @@ abstract class _SmoothShiftBase extends State<SmoothShift>
 
 // try to use mixin to maximize performance
 mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
-  var _offsetFromPointerEvent = 0.0;
+  // double? _pointerDownPosition;
+  var _positionWhenCurrStartDrawFrame = 0.0;
+  var _positionWhenPrevStartDrawFrame = 0.0;
+  var _currPosition = 0.0;
+
   var _hasPendingCallback = false;
+
+  // NOTE about this weird timing, see
+  // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266944825
+  // for detailed reasons
+  // (to do: copy it here)
+  double get _offsetFromPointerEvent =>
+      _currPosition - _positionWhenPrevStartDrawFrame;
 
   @override
   double get offset => super.offset + _offsetFromPointerEvent;
 
-  void _maybeSchedulePostMainTreeFlushLayoutCallback() {
+  void _maybeScheduleStartDrawFrameCallback() {
     if (_hasPendingCallback) return;
     _hasPendingCallback = true;
 
     SmoothSchedulerBindingMixin.instance.addStartDrawFrameCallback(() {
-      print(
-          'hi $runtimeType addStartDrawFrameCallback.callback set _offsetFromPointerEvent:=0');
+      setState(() {
+        _hasPendingCallback = false;
+        _positionWhenPrevStartDrawFrame = _positionWhenCurrStartDrawFrame;
+        _positionWhenCurrStartDrawFrame = _currPosition;
+      });
 
-      _hasPendingCallback = false;
-
-      if (_offsetFromPointerEvent == 0) return;
-      setState(() => _offsetFromPointerEvent = 0);
+      print('hi $runtimeType addStartDrawFrameCallback.callback (after) '
+          '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame _currPosition=$_currPosition');
     });
+  }
+
+  void _handlePointerDown(PointerDownEvent e) {
+    // setState(() {
+    //   _pointerDownPosition = e.localPosition.dy;
+    // });
   }
 
   void _handlePointerMove(PointerMoveEvent e) {
     print(
-        'hi $runtimeType _handlePointerMove e.localDelta=${e.localDelta.dy} e=$e');
+        'hi $runtimeType _handlePointerMove e.localPosition=${e.localPosition.dy} e=$e');
 
     setState(() {
-      // very naive, and is WRONG!
-      // just to confirm, we can (1) receive (2) display events
-      _offsetFromPointerEvent += e.localDelta.dy;
+      _currPosition += e.localPosition.dy;
     });
+  }
+
+  void _handlePointerUpOrCancel(PointerEvent e) {
+    // setState(() {
+    //   _pointerDownPosition = null;
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    _maybeSchedulePostMainTreeFlushLayoutCallback();
+    _maybeScheduleStartDrawFrameCallback();
 
     return Listener(
+      onPointerDown: _handlePointerDown,
       onPointerMove: _handlePointerMove,
+      onPointerUp: _handlePointerUpOrCancel,
+      onPointerCancel: _handlePointerUpOrCancel,
       behavior: HitTestBehavior.translucent,
-      // for debug
-      onPointerDown: (e) => print('hi $runtimeType see PointerDownEvent $e'),
-      onPointerUp: (e) => print('hi $runtimeType see PointerUpEvent $e'),
       child: super.build(context),
     );
   }
