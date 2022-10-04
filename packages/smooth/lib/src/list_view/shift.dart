@@ -76,13 +76,12 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
 }
 
 mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
-  late final Ticker _ticker;
+  Ticker? _ticker;
 
   @override
   void initState() {
     super.initState();
-    _ticker = createTicker(_tick) //
-      ..start();
+    _position.lastSimulationInfo.addListener(_handleLastSimulationChanged);
   }
 
   @override
@@ -94,33 +93,32 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
 
   @override
   void dispose() {
-    _ticker.dispose();
+    _position.lastSimulationInfo.removeListener(_handleLastSimulationChanged);
+    _ticker?.dispose();
     super.dispose();
   }
 
+  SmoothScrollPositionWithSingleContext get _position =>
+      SmoothScrollPositionWithSingleContext.of(widget.scrollController);
+
+  void _handleLastSimulationChanged() {
+    _ticker?.dispose();
+
+    // re-create ticker, because the [Simulation] wants zero timestamp
+    _ticker = Ticker(_tick)..start();
+  }
+
   void _tick(Duration elapsed) {
-    // print('hi ${describeIdentity(this)}._tick start');
+    final lastSimulationInfo = _position.lastSimulationInfo.value;
+    if (lastSimulationInfo == null) return;
 
-    final position =
-        SmoothScrollPositionWithSingleContext.of(widget.scrollController);
-    final lastSimulation = position.lastSimulationInfo;
-    if (lastSimulation == null) {
-      print(
-          'hi ${describeIdentity(this)}._tick early return since lastSimulation==null');
-      return;
-    }
-
-    final plainValue = lastSimulation.realSimulation.lastX;
-    if (plainValue == null) {
-      print(
-          'hi ${describeIdentity(this)}._tick early return since plainValue==null');
-      return;
-    }
+    final plainValue = lastSimulationInfo.realSimulation.lastX;
+    if (plainValue == null) return;
 
     // ref: [AnimationController._tick]
     final elapsedInSeconds =
         elapsed.inMicroseconds.toDouble() / Duration.microsecondsPerSecond;
-    final smoothValue = lastSimulation.clonedSimulation.x(elapsedInSeconds);
+    final smoothValue = lastSimulationInfo.clonedSimulation.x(elapsedInSeconds);
 
     setState(() {
       offset = smoothValue - plainValue;

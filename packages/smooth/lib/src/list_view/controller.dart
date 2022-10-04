@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SmoothScrollController extends ScrollController {
@@ -34,8 +35,9 @@ class SmoothScrollPositionWithSingleContext
     super.debugLabel,
   });
 
-  SimulationInfo? get lastSimulationInfo => _lastSimulationInfo;
-  SimulationInfo? _lastSimulationInfo;
+  ValueListenable<SimulationInfo?> get lastSimulationInfo =>
+      _lastSimulationInfo;
+  final _lastSimulationInfo = ValueNotifier<SimulationInfo?>(null);
 
   // ref [super.createScrollPosition], except for marked regions
   @override
@@ -53,7 +55,7 @@ class SmoothScrollPositionWithSingleContext
       // NOTE need to create a *new* simulation, not the old one.
       //      Because [Simulation]'s doc says, some subclasses will change
       //      state when called, and must only call with monotonic timestamps.
-      _lastSimulationInfo = SimulationInfo(
+      _lastSimulationInfo.value = SimulationInfo(
         realSimulation: simulation,
         clonedSimulation: physics.createBallisticSimulation(this, velocity)!,
       );
