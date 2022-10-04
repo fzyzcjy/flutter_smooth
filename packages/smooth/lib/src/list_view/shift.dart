@@ -86,6 +86,13 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   }
 
   @override
+  void didUpdateWidget(covariant SmoothShift oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    assert(oldWidget.scrollController == widget.scrollController,
+        'for simplicity, not yet implemented change of `scrollController`');
+  }
+
+  @override
   void dispose() {
     _ticker.dispose();
     super.dispose();
