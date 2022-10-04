@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/binding.dart';
 
 class SmoothShift extends StatefulWidget {
@@ -10,10 +11,11 @@ class SmoothShift extends StatefulWidget {
   State<SmoothShift> createState() => _SmoothShiftState();
 }
 
-class _SmoothShiftState extends _SmoothShiftBase
-    with _SmoothShiftFromPointerEvent {}
+class _SmoothShiftState = _SmoothShiftBase
+    with _SmoothShiftFromPointerEvent, _SmoothShiftFromBallistic;
 
-abstract class _SmoothShiftBase extends State<SmoothShift> {
+abstract class _SmoothShiftBase extends State<SmoothShift>
+    with SingleTickerProviderStateMixin {
   var offset = 0.0;
 
   @override
@@ -63,5 +65,25 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
       behavior: HitTestBehavior.translucent,
       child: super.build(context),
     );
+  }
+}
+
+mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
+  late final Ticker _ticker;
+
+  @override
+  void initState() {
+    super.initState();
+    _ticker = createTicker(_tick);
+  }
+
+  @override
+  void dispose() {
+    _ticker.dispose();
+    super.dispose();
+  }
+
+  void _tick(Duration elapsed) {
+    TODO;
   }
 }
