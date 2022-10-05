@@ -25,7 +25,12 @@ class ExampleSimpleAnimationPage extends StatelessWidget {
                   ? SmoothPreemptPoint(child: Container())
                   : Container(),
             ),
-          const CounterWidget(),
+          smooth
+              ? SmoothBuilder(
+                  builder: (_, __) => const CounterWidget(),
+                  child: Container(),
+                )
+              : const CounterWidget(),
         ],
       ),
     );
