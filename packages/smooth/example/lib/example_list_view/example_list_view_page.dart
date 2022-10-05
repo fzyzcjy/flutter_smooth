@@ -40,7 +40,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
           Expanded(child: widget.enableSmooth ? _buildSmooth() : _buildPlain()),
           Row(
             children: [
-              for (final value in [1, 10, 20, 50, 100, 200])
+              for (final value in [0, 1, 10, 20, 50, 100, 200])
                 SizedBox(
                   width: 48,
                   child: TextButton(
@@ -88,7 +88,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
         // just for easy video checking
         color: index % 10 == 0 ? Colors.green : null,
         child: Text(
-          'Item $index',
+          '$index',
           overflow: TextOverflow.ellipsis,
         ),
       ),
