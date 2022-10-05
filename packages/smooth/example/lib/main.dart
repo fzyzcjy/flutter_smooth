@@ -5,6 +5,7 @@ import 'package:example/example_gesture/example_gesture_page.dart';
 import 'package:example/example_list_view/example_list_view_page.dart';
 import 'package:example/example_simple_animation/example_simple_animation_page.dart';
 import 'package:example/utils/debug_plain_animation.dart';
+import 'package:example/utils/simple_pointer_event_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
@@ -73,6 +74,13 @@ class MyApp extends StatelessWidget {
                         context,
                         MaterialPageRoute<dynamic>(
                             builder: (_) => const DebugPlainAnimationPage())),
+                  ),
+                  ListTile(
+                    title: const Text('SimplePointerEventPage'),
+                    onTap: () => Navigator.push<dynamic>(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                            builder: (_) => const SimplePointerEventPage())),
                   ),
                 ],
               ),
