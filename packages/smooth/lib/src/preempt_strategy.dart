@@ -11,7 +11,7 @@ abstract class PreemptStrategy {
   const factory PreemptStrategy.never() = _PreemptStrategyNever;
 
   /// Should we run `preemptRender` now
-  bool shouldAct({Object? debugToken});
+  bool shouldAct({String? debugReason});
 
   /// Fancy version of [SchedulerBinding.currentFrameTimeStamp],
   /// by considering both plain-old frames and *also extra frames*
@@ -51,7 +51,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
   }) : _timeInfoCalculator = _TimeInfoCalculator(dependency);
 
   @override
-  bool shouldAct({Object? debugToken}) {
+  bool shouldAct({String? debugReason}) {
     final now = dependency.now();
     final nowTimeStamp = _timeInfoCalculator.dateTimeToTimeStamp(now);
     final ans = nowTimeStamp > shouldActTimeStamp;
@@ -60,10 +60,12 @@ class PreemptStrategyNormal implements PreemptStrategy {
     print(
       'shouldAct=$ans '
       'now=$now nowTimeStamp=$nowTimeStamp '
+      'debugReason=$debugReason '
       'shouldActTimeStamp=$shouldActTimeStamp '
       'currentSmoothFrameTimeStamp=$currentSmoothFrameTimeStamp '
       'currentFrameAdjustedVsyncTargetTimeStamp=${_timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp} '
-      'currentPreemptRenderVsyncTargetTimeStamp=$_currentPreemptRenderVsyncTargetTimeStamp',
+      'currentPreemptRenderVsyncTargetTimeStamp=$_currentPreemptRenderVsyncTargetTimeStamp '
+      'diffDateTimeToTimeStamp=${_timeInfoCalculator.diffDateTimeToTimeStamp}',
     );
     // }
 
@@ -145,7 +147,8 @@ class _TimeInfoCalculator {
         (_diffDateTimeToTimeStampCached - dependency.diffDateTimeToTimeStamp)
                 .abs() <
             1000,
-        '_diffDateTimeToTimeStampCached=$_diffDateTimeToTimeStampCached too differ from dependency.diffDateTimeToTimeStamp=$dependency.diffDateTimeToTimeStamp');
+        '_diffDateTimeToTimeStampCached=$_diffDateTimeToTimeStampCached too differ from '
+        'dependency.diffDateTimeToTimeStamp=${dependency.diffDateTimeToTimeStamp}');
     return _diffDateTimeToTimeStampCached;
   }
 
@@ -176,7 +179,7 @@ class _PreemptStrategyNever implements PreemptStrategy {
   const _PreemptStrategyNever();
 
   @override
-  bool shouldAct({Object? debugToken}) => false;
+  bool shouldAct({String? debugReason}) => false;
 
   @override
   void refresh() {}

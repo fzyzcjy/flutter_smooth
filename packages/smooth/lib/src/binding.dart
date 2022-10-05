@@ -14,11 +14,25 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
     _beginFrameDateTime = clock.now();
+
+    print('hi $runtimeType.handleBeginFrame '
+        'lastVsyncInfo=${lastVsyncInfo()} '
+        'rawTimeStamp=$rawTimeStamp _beginFrameDateTime=$_beginFrameDateTime');
+
     super.handleBeginFrame(rawTimeStamp);
   }
 
   @override
   void handleDrawFrame() {
+    {
+      print('hi $runtimeType.handleDrawFrame '
+          'lastVsyncInfo=${lastVsyncInfo()} '
+          '_beginFrameDateTime=$_beginFrameDateTime');
+      // just to see logs
+      ServiceLocator.instance.preemptStrategy
+          .shouldAct(debugReason: 'debug extra call in handleDrawFrame');
+    }
+
     _invokeStartDrawFrameCallbacks();
     super.handleDrawFrame();
   }
