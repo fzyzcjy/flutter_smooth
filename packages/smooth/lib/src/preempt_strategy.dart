@@ -140,7 +140,17 @@ class _TimeInfoCalculator {
 
   /// Converting between a [DateTime] (representing real-world time)
   /// and an "adjusted TimeStamp" such as [SchedulerBinding.currentFrameTimeStamp]
-  late final diffDateTimeToTimeStamp = dependency.diffDateTimeToTimeStamp;
+  int get diffDateTimeToTimeStamp {
+    assert(
+        (_diffDateTimeToTimeStampCached - dependency.diffDateTimeToTimeStamp)
+                .abs() <
+            1000,
+        '_diffDateTimeToTimeStampCached=$_diffDateTimeToTimeStampCached too differ from dependency.diffDateTimeToTimeStamp=$dependency.diffDateTimeToTimeStamp');
+    return _diffDateTimeToTimeStampCached;
+  }
+
+  late final _diffDateTimeToTimeStampCached =
+      dependency.diffDateTimeToTimeStamp;
 
   // must not use this, see #5899
   // int get diffDateTimeToTimeStamp =>
