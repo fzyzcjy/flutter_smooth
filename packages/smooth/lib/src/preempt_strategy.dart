@@ -57,16 +57,16 @@ class PreemptStrategyNormal implements PreemptStrategy {
     final ans = nowTimeStamp > shouldActTimeStamp;
 
     // if (ans) {
-    print(
-      'shouldAct=$ans '
-      'now=$now nowTimeStamp=$nowTimeStamp '
-      'debugReason=$debugReason '
-      'shouldActTimeStamp=$shouldActTimeStamp '
-      'currentSmoothFrameTimeStamp=$currentSmoothFrameTimeStamp '
-      'currentFrameAdjustedVsyncTargetTimeStamp=${_timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp} '
-      'currentPreemptRenderVsyncTargetTimeStamp=$_currentPreemptRenderVsyncTargetTimeStamp '
-      'diffDateTimeToTimeStamp=${_timeInfoCalculator.diffDateTimeToTimeStamp}',
-    );
+    // print(
+    //   'shouldAct=$ans '
+    //   'now=$now nowTimeStamp=$nowTimeStamp '
+    //   'debugReason=$debugReason '
+    //   'shouldActTimeStamp=$shouldActTimeStamp '
+    //   'currentSmoothFrameTimeStamp=$currentSmoothFrameTimeStamp '
+    //   'currentFrameAdjustedVsyncTargetTimeStamp=${_timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp} '
+    //   'currentPreemptRenderVsyncTargetTimeStamp=$_currentPreemptRenderVsyncTargetTimeStamp '
+    //   'diffDateTimeToTimeStamp=${_timeInfoCalculator.diffDateTimeToTimeStamp}',
+    // );
     // }
 
     return ans;
