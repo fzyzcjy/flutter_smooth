@@ -94,8 +94,8 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
       ),
       subtitle: Stack(
         children: [
-          for (var i = 0; i < workload; ++i)
-            SmoothPreemptPoint(
+          for (var i = 0; i < workload * 10; ++i)
+            LayoutPreemptPointWidget(
               child: SizedBox(
                 height: 36,
                 child: OverflowBox(
@@ -104,7 +104,8 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
                   child: Opacity(
                     opacity: 0,
                     child: Text(
-                      '+91 88888 8800$index ' * 100,
+                      // https://github.com/fzyzcjy/yplusplus/issues/6020#issuecomment-1268464366
+                      '+91 88888 8800$index ' * 10,
                       style: const TextStyle(fontSize: 3),
                     ),
                   ),
