@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:example/utils/debug_plain_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth/smooth.dart';
 
@@ -24,19 +23,28 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
       ),
       body: Column(
         children: [
-          if (false) ...[
-            const CounterWidget(prefix: 'Plain: '),
-            SizedBox(
-              height: 36,
-              child: SmoothBuilder(
-                builder: (_, __) => const Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: CounterWidget(prefix: 'Smooth: '),
+          SizedBox(
+            height: 16,
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: _SimpleCounter(name: 'Plain'),
+                  ),
                 ),
-                child: Container(),
-              ),
+                Expanded(
+                  child: SmoothBuilder(
+                    builder: (_, __) => const Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: _SimpleCounter(name: 'Smooth'),
+                    ),
+                    child: Container(),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
           Expanded(child: widget.enableSmooth ? _buildSmooth() : _buildPlain()),
           Row(
             children: [
@@ -115,6 +123,48 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
           Text('a\n' * (3 + Random().nextInt(3))),
         ],
       ),
+    );
+  }
+}
+
+class _SimpleCounter extends StatefulWidget {
+  final String name;
+
+  const _SimpleCounter({required this.name});
+
+  @override
+  State<_SimpleCounter> createState() => _SimpleCounterState();
+}
+
+class _SimpleCounterState extends State<_SimpleCounter>
+    with SingleTickerProviderStateMixin {
+  late final _controller =
+      AnimationController(duration: const Duration(seconds: 1), vsync: this);
+  var _count = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (_, __) {
+        _count++;
+        return Text(
+          '${widget.name} ${_count.toString().padRight(5)}',
+          style: const TextStyle(color: Colors.black, fontSize: 16),
+        );
+      },
     );
   }
 }
