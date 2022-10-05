@@ -29,7 +29,7 @@ class Actor {
 
     final shouldAct = ServiceLocator.instance.preemptStrategy
         .shouldAct(debugToken: debugToken);
-    print('Actor.maybePreemptRender shouldAct=$shouldAct now=${clock.now()}');
+    // print('Actor.maybePreemptRender shouldAct=$shouldAct now=${clock.now()}');
 
     if (shouldAct) {
       _preemptRender();
