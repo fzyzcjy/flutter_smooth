@@ -29,8 +29,9 @@ class _AlwaysRebuildDummyWidget extends StatefulWidget {
 class _AlwaysRebuildDummyWidgetState extends State<_AlwaysRebuildDummyWidget> {
   @override
   Widget build(BuildContext context) {
-    // deliberately make each frame a bit more than 16.67ms
-    sleep(const Duration(milliseconds: 17));
+    // by experiment, on my test device, this makes whole UI frame >16.67ms
+    // ONLY works for my test device; for your device need to change!
+    sleep(const Duration(milliseconds: 14));
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
