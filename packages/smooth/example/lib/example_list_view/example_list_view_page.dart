@@ -84,9 +84,13 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
           ),
         ),
       ),
-      title: Text(
-        'Item $index',
-        overflow: TextOverflow.ellipsis,
+      title: Container(
+        // just for easy video checking
+        color: index % 10 == 0 ? Colors.green : null,
+        child: Text(
+          'Item $index',
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
       subtitle: Stack(
         children: [
