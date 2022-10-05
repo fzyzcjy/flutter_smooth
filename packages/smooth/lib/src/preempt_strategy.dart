@@ -93,6 +93,8 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
   @override
   void refresh() {
+    _timeInfoCalculator.invalidateCache();
+
     final now = dependency.now();
     final nowTimeStamp = _timeInfoCalculator.dateTimeToTimeStamp(now);
 
@@ -143,17 +145,25 @@ class _TimeInfoCalculator {
   /// Converting between a [DateTime] (representing real-world time)
   /// and an "adjusted TimeStamp" such as [SchedulerBinding.currentFrameTimeStamp]
   int get diffDateTimeToTimeStamp {
+    _diffDateTimeToTimeStampCached ??= dependency.diffDateTimeToTimeStamp;
+
     assert(
-        (_diffDateTimeToTimeStampCached - dependency.diffDateTimeToTimeStamp)
+        (_diffDateTimeToTimeStampCached! - dependency.diffDateTimeToTimeStamp)
                 .abs() <
             1000,
         '_diffDateTimeToTimeStampCached=$_diffDateTimeToTimeStampCached too differ from '
         'dependency.diffDateTimeToTimeStamp=${dependency.diffDateTimeToTimeStamp}');
-    return _diffDateTimeToTimeStampCached;
+
+    return _diffDateTimeToTimeStampCached!;
   }
 
-  late final _diffDateTimeToTimeStampCached =
-      dependency.diffDateTimeToTimeStamp;
+  int? _diffDateTimeToTimeStampCached;
+
+  // must refresh cache periodically, otherwise has seen this be very weird
+  // https://github.com/fzyzcjy/yplusplus/issues/6001#issuecomment-1267992227
+  void invalidateCache() {
+    _diffDateTimeToTimeStampCached = null;
+  }
 
   // must not use this, see #5899
   // int get diffDateTimeToTimeStamp =>
