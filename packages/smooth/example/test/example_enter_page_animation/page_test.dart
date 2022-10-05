@@ -46,17 +46,20 @@ void main() {
         final capturer = WindowRenderCapturer.autoDispose();
 
         await tester.pumpWidget(SmoothScope(
-          child: ExampleEnterPageAnimationPage(
-            listTileCount: arg.listTileCount,
-            wrapListTile: ({required child}) => SpyBuilder(
-              onBuild: () => binding.elapseBlocking(arg.listTileBuildTime,
-                  reason: 'ListTile build'),
-              onPerformLayout: () => binding.elapseBlocking(
-                  arg.listTileLayoutTime,
-                  reason: 'ListTile layout'),
-              child: ColoredBox(
-                color: Colors.green,
-                child: child,
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: ExampleEnterPageAnimationPage(
+              listTileCount: arg.listTileCount,
+              wrapListTile: ({required child}) => SpyBuilder(
+                onBuild: () => binding.elapseBlocking(arg.listTileBuildTime,
+                    reason: 'ListTile build'),
+                onPerformLayout: () => binding.elapseBlocking(
+                    arg.listTileLayoutTime,
+                    reason: 'ListTile layout'),
+                child: ColoredBox(
+                  color: Colors.green,
+                  child: child,
+                ),
               ),
             ),
           ),
