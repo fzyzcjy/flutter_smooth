@@ -121,6 +121,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
 Duration _maxDuration(Duration a, Duration b) => a > b ? a : b;
 
+// TODO remove this class since it no longer does calculations
 class _TimeInfoCalculator {
   final PreemptStrategyDependency dependency;
 

@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/binding.dart'; // ignore: implementation_imports
@@ -88,6 +89,30 @@ mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
     }
     super.elapseBlocking(duration);
   }
+
+  @override
+  AdjustedLastVsyncInfo lastVsyncInfo() {
+    // NOTE: this calculation is ONLY valid if beginFrameDateTime
+    // is equal to vsync tick time. This does NOT hold for non-testing
+    // environments, because of the NotRespectVsync feature
+    // also see: #5899
+
+    // we need to *add one frame*, because [(adjusted) VsyncTargetTime] means
+    // the end of current plain-old frame, while [beginFrameDateTime] means
+    // the clock when plain-old frame starts.
+    final currentFrameVsyncTargetDateTime =
+        SmoothSchedulerBindingMixin.instance.beginFrameDateTime
+            // NOTE this add one frame
+            .add(kOneFrame);
+
+    final diffDateTimeTimePoint =
+        currentFrameVsyncTargetDateTime.microsecondsSinceEpoch -
+            SchedulerBinding.instance.currentFrameTimeStamp.inMicroseconds;
+
+    return _TestAdjustedLastVsyncInfo(
+      diffDateTimeTimePoint: diffDateTimeTimePoint,
+    );
+  }
 }
 
 typedef OnWindowRender = void Function(ui.Scene scene);
@@ -105,4 +130,17 @@ class SmoothTestWindow extends ProxyTestWindow implements TestWindow {
     onRender(scene);
     super.render(scene);
   }
+}
+
+class _TestAdjustedLastVsyncInfo implements AdjustedLastVsyncInfo {
+  @override
+  final int diffDateTimeTimePoint;
+
+  const _TestAdjustedLastVsyncInfo({required this.diffDateTimeTimePoint});
+
+  @override
+  Duration get vsyncTargetTimeAdjusted => throw UnimplementedError();
+
+  @override
+  Duration get vsyncTargetTimeRaw => throw UnimplementedError();
 }
