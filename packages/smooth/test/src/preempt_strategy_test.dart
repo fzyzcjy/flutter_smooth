@@ -6,6 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/preempt_strategy.dart';
 import 'package:smooth/src/simple_date_time.dart';
+import 'package:smooth_dev/smooth_dev.dart';
 
 import 'preempt_strategy_test.mocks.dart';
 
@@ -309,9 +310,15 @@ extension on MockPreemptStrategyDependency {
   void mock({
     required DateTime now,
     required Duration currentFrameTimeStamp,
-    required int diffDateTimeToTimeStamp,
-    // required DateTime beginFrameDateTime,
+    required DateTime beginFrameDateTime,
   }) {
+    final diffDateTimeToTimeStamp =
+        SmoothSchedulerBindingTestMixin.calcDiffDateTimeTimePoint(
+      beginFrameDateTime: beginFrameDateTime,
+      currentFrameTimeStamp: currentFrameTimeStamp,
+      beginFrameEqualsVsyncTickTime: true,
+    );
+
     when(this.now()).thenReturn(now.toSimple());
     when(this.currentFrameTimeStamp).thenReturn(currentFrameTimeStamp);
     when(this.diffDateTimeToTimeStamp).thenReturn(diffDateTimeToTimeStamp);

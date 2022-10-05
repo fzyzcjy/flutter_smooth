@@ -92,26 +92,37 @@ mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
 
   @override
   AdjustedLastVsyncInfo lastVsyncInfo() {
+    return _TestAdjustedLastVsyncInfo(
+      diffDateTimeTimePoint: calcDiffDateTimeTimePoint(
+        beginFrameDateTime:
+            SmoothSchedulerBindingMixin.instance.beginFrameDateTime,
+        currentFrameTimeStamp: SchedulerBinding.instance.currentFrameTimeStamp,
+        // NOTE only true in widget testing environment
+        beginFrameEqualsVsyncTickTime: true,
+      ),
+    );
+  }
+
+  static int calcDiffDateTimeTimePoint({
+    required DateTime beginFrameDateTime,
+    required Duration currentFrameTimeStamp,
+    required bool beginFrameEqualsVsyncTickTime,
+  }) {
     // NOTE: this calculation is ONLY valid if beginFrameDateTime
     // is equal to vsync tick time. This does NOT hold for non-testing
     // environments, because of the NotRespectVsync feature
     // also see: #5899
+    assert(beginFrameEqualsVsyncTickTime);
 
     // we need to *add one frame*, because [(adjusted) VsyncTargetTime] means
     // the end of current plain-old frame, while [beginFrameDateTime] means
     // the clock when plain-old frame starts.
-    final currentFrameVsyncTargetDateTime =
-        SmoothSchedulerBindingMixin.instance.beginFrameDateTime
-            // NOTE this add one frame
-            .add(kOneFrame);
+    final currentFrameVsyncTargetDateTime = beginFrameDateTime
+        // NOTE this add one frame
+        .add(kOneFrame);
 
-    final diffDateTimeTimePoint =
-        currentFrameVsyncTargetDateTime.microsecondsSinceEpoch -
-            SchedulerBinding.instance.currentFrameTimeStamp.inMicroseconds;
-
-    return _TestAdjustedLastVsyncInfo(
-      diffDateTimeTimePoint: diffDateTimeTimePoint,
-    );
+    return currentFrameVsyncTargetDateTime.microsecondsSinceEpoch -
+        currentFrameTimeStamp.inMicroseconds;
   }
 }
 
