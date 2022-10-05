@@ -3,7 +3,7 @@
 import 'package:example/example_enter_page_animation/page.dart';
 import 'package:example/example_gesture/example_gesture_page.dart';
 import 'package:example/example_list_view/example_list_view_page.dart';
-import 'package:example/example_simple_animation/example_simple_animation_page.dart';
+import 'package:example/example_vsync/example_vsync_page.dart';
 import 'package:example/utils/debug_plain_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -57,16 +57,13 @@ class MyApp extends StatelessWidget {
                               builder: (_) => ExampleListViewPage(
                                   enableSmooth: enableSmooth))),
                     ),
-                  for (final enableSmooth in [false, true])
-                    ListTile(
-                      title: Text(
-                          'Example: Simple animation (${enableSmooth ? 'smooth' : 'plain'})'),
-                      onTap: () => Navigator.push<dynamic>(
-                          context,
-                          MaterialPageRoute<dynamic>(
-                              builder: (_) => ExampleSimpleAnimationPage(
-                                  smooth: enableSmooth))),
-                    ),
+                  ListTile(
+                    title: const Text('Example: Vsync'),
+                    onTap: () => Navigator.push<dynamic>(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                            builder: (_) => const ExampleVsyncPage())),
+                  ),
                   ListTile(
                     title: const Text('Show debug widget'),
                     onTap: () => Navigator.push<dynamic>(

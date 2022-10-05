@@ -11,7 +11,7 @@ abstract class PreemptStrategy {
   const factory PreemptStrategy.never() = _PreemptStrategyNever;
 
   /// Should we run `preemptRender` now
-  bool shouldAct({String? debugReason});
+  bool shouldAct({Object? debugToken});
 
   /// Fancy version of [SchedulerBinding.currentFrameTimeStamp],
   /// by considering both plain-old frames and *also extra frames*
@@ -29,12 +29,8 @@ class PreemptStrategyDependency {
   Duration get currentFrameTimeStamp =>
       SmoothSchedulerBindingMixin.instance.currentFrameTimeStamp;
 
-  int get diffDateTimeToTimeStamp =>
-      SchedulerBinding.instance.lastVsyncInfo().diffDateTimeTimePoint;
-
-// must not use this, see #5899
-// DateTime get beginFrameDateTime =>
-//     SmoothSchedulerBindingMixin.instance.beginFrameDateTime;
+  DateTime get beginFrameDateTime =>
+      SmoothSchedulerBindingMixin.instance.beginFrameDateTime;
 }
 
 @visibleForTesting
@@ -51,22 +47,20 @@ class PreemptStrategyNormal implements PreemptStrategy {
   }) : _timeInfoCalculator = _TimeInfoCalculator(dependency);
 
   @override
-  bool shouldAct({String? debugReason}) {
+  bool shouldAct({Object? debugToken}) {
     final now = dependency.now();
     final nowTimeStamp = _timeInfoCalculator.dateTimeToTimeStamp(now);
     final ans = nowTimeStamp > shouldActTimeStamp;
 
     // if (ans) {
-    // print(
-    //   'shouldAct=$ans '
-    //   'now=$now nowTimeStamp=$nowTimeStamp '
-    //   'debugReason=$debugReason '
-    //   'shouldActTimeStamp=$shouldActTimeStamp '
-    //   'currentSmoothFrameTimeStamp=$currentSmoothFrameTimeStamp '
-    //   'currentFrameAdjustedVsyncTargetTimeStamp=${_timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp} '
-    //   'currentPreemptRenderVsyncTargetTimeStamp=$_currentPreemptRenderVsyncTargetTimeStamp '
-    //   'diffDateTimeToTimeStamp=${_timeInfoCalculator.diffDateTimeToTimeStamp}',
-    // );
+    //   print(
+    //     'shouldAct=true '
+    //     'now=$now nowTimeStamp=$nowTimeStamp '
+    //     'shouldActTimeStamp=$shouldActTimeStamp '
+    //     'currentSmoothFrameTimeStamp=$currentSmoothFrameTimeStamp '
+    //     'currentFrameAdjustedVsyncTargetTimeStamp=${_timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp} '
+    //     'currentPreemptRenderVsyncTargetTimeStamp=$_currentPreemptRenderVsyncTargetTimeStamp',
+    //   );
     // }
 
     return ans;
@@ -93,8 +87,6 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
   @override
   void refresh() {
-    _timeInfoCalculator.invalidateCache();
-
     final now = dependency.now();
     final nowTimeStamp = _timeInfoCalculator.dateTimeToTimeStamp(now);
 
@@ -125,11 +117,10 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
 Duration _maxDuration(Duration a, Duration b) => a > b ? a : b;
 
-// TODO remove this class since it no longer does calculations
 class _TimeInfoCalculator {
   final PreemptStrategyDependency dependency;
 
-  _TimeInfoCalculator(this.dependency);
+  const _TimeInfoCalculator(this.dependency);
 
   /// The adjusted VsyncTargetTime for current plain-old frame
   /// "adjust" means [SchedulerBinding._adjustForEpoch]
@@ -144,38 +135,16 @@ class _TimeInfoCalculator {
 
   /// Converting between a [DateTime] (representing real-world time)
   /// and an "adjusted TimeStamp" such as [SchedulerBinding.currentFrameTimeStamp]
-  int get diffDateTimeToTimeStamp {
-    _diffDateTimeToTimeStampCached ??= dependency.diffDateTimeToTimeStamp;
+  int get diffDateTimeToTimeStamp =>
+      _currentFrameVsyncTargetDateTime.microsecondsSinceEpoch -
+      currentFrameAdjustedVsyncTargetTimeStamp.inMicroseconds;
 
-    assert(
-        (_diffDateTimeToTimeStampCached! - dependency.diffDateTimeToTimeStamp)
-                .abs() <
-            1000,
-        '_diffDateTimeToTimeStampCached=$_diffDateTimeToTimeStampCached too differ from '
-        'dependency.diffDateTimeToTimeStamp=${dependency.diffDateTimeToTimeStamp}');
-
-    return _diffDateTimeToTimeStampCached!;
-  }
-
-  int? _diffDateTimeToTimeStampCached;
-
-  // must refresh cache periodically, otherwise has seen this be very weird
-  // https://github.com/fzyzcjy/yplusplus/issues/6001#issuecomment-1267992227
-  void invalidateCache() {
-    _diffDateTimeToTimeStampCached = null;
-  }
-
-  // must not use this, see #5899
-  // int get diffDateTimeToTimeStamp =>
-  //     _currentFrameVsyncTargetDateTime.microsecondsSinceEpoch -
-  //         currentFrameAdjustedVsyncTargetTimeStamp.inMicroseconds;
-  //
-  // // we need to *add one frame*, because [(adjusted) VsyncTargetTime] means
-  // // the end of current plain-old frame, while [beginFrameDateTime] means
-  // // the clock when plain-old frame starts.
-  // DateTime get _currentFrameVsyncTargetDateTime =>
-  //     // NOTE this add one frame
-  //     dependency.beginFrameDateTime.add(kOneFrame);
+  // we need to *add one frame*, because [(adjusted) VsyncTargetTime] means
+  // the end of current plain-old frame, while [beginFrameDateTime] means
+  // the clock when plain-old frame starts.
+  DateTime get _currentFrameVsyncTargetDateTime =>
+      // NOTE this add one frame
+      dependency.beginFrameDateTime.add(kOneFrame);
 
   // SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
   //     SimpleDateTime.fromMicrosecondsSinceEpoch(
@@ -189,7 +158,7 @@ class _PreemptStrategyNever implements PreemptStrategy {
   const _PreemptStrategyNever();
 
   @override
-  bool shouldAct({String? debugReason}) => false;
+  bool shouldAct({Object? debugToken}) => false;
 
   @override
   void refresh() {}

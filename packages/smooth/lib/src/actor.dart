@@ -27,7 +27,8 @@ class Actor {
 
     // _maybePreemptRenderCallCount++;
 
-    final shouldAct = ServiceLocator.instance.preemptStrategy.shouldAct();
+    final shouldAct = ServiceLocator.instance.preemptStrategy
+        .shouldAct(debugToken: debugToken);
     // print('Actor.maybePreemptRender shouldAct=$shouldAct');
 
     if (shouldAct) {
@@ -53,8 +54,7 @@ class Actor {
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
 
-      assert(ServiceLocator.instance.preemptStrategy
-          .shouldAct(debugReason: 'for assertion'));
+      assert(ServiceLocator.instance.preemptStrategy.shouldAct());
       ServiceLocator.instance.preemptStrategy.refresh();
 
       final smoothFrameTimeStamp =

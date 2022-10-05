@@ -7,32 +7,17 @@ import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
-  // TODO move to test binding mixin? #5899
   DateTime get beginFrameDateTime => _beginFrameDateTime!;
   DateTime? _beginFrameDateTime;
 
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
     _beginFrameDateTime = clock.now();
-
-    // print('hi $runtimeType.handleBeginFrame '
-    //     'lastVsyncInfo=${lastVsyncInfo()} '
-    //     'rawTimeStamp=$rawTimeStamp _beginFrameDateTime=$_beginFrameDateTime');
-
     super.handleBeginFrame(rawTimeStamp);
   }
 
   @override
   void handleDrawFrame() {
-    // {
-    //   print('hi $runtimeType.handleDrawFrame '
-    //       'lastVsyncInfo=${lastVsyncInfo()} '
-    //       '_beginFrameDateTime=$_beginFrameDateTime');
-    //   // just to see logs
-    //   ServiceLocator.instance.preemptStrategy
-    //       .shouldAct(debugReason: 'debug extra call in handleDrawFrame');
-    // }
-
     _invokeStartDrawFrameCallbacks();
     super.handleDrawFrame();
   }
