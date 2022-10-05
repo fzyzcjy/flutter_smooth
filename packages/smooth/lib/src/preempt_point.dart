@@ -23,7 +23,6 @@ class SmoothPreemptPoint extends StatelessWidget {
   }
 }
 
-@visibleForTesting
 class BuildPreemptPointWidget extends StatelessWidget {
   final Object? debugToken;
   final Widget child;
@@ -41,7 +40,6 @@ class BuildPreemptPointWidget extends StatelessWidget {
   }
 }
 
-@visibleForTesting
 class LayoutPreemptPointWidget extends SingleChildRenderObjectWidget {
   final Object? debugToken;
 
