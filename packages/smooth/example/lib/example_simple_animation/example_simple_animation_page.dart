@@ -18,9 +18,9 @@ class ExampleSimpleAnimationPage extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          for (var i = 0; i < 5; ++i)
+          for (var i = 0; i < 20; ++i)
             _SleepAndAlwaysRebuildWidget(
-              sleepDuration: const Duration(milliseconds: 4),
+              sleepDuration: const Duration(milliseconds: 1),
               builder: (_) => smooth //
                   ? SmoothPreemptPoint(child: Container())
                   : Container(),
