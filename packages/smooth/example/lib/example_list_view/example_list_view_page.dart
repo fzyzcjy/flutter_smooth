@@ -94,7 +94,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
       ),
       subtitle: Stack(
         children: [
-          for (var i = 0; i < workload * 20; ++i)
+          for (var i = 0; i < workload * 10; ++i)
             LayoutPreemptPointWidget(
               child: SizedBox(
                 height: 36,
@@ -105,7 +105,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
                     opacity: 0,
                     child: Text(
                       // https://github.com/fzyzcjy/yplusplus/issues/6020#issuecomment-1268464366
-                      '+91 88888 8800$index ' * 5,
+                      '+91 88888 8800$index ' * 10,
                       style: const TextStyle(fontSize: 3),
                     ),
                   ),
