@@ -28,19 +28,9 @@ class _FakeDuration_0 extends _i1.SmartFake implements Duration {
         );
 }
 
-class _FakeDateTime_1 extends _i1.SmartFake implements DateTime {
-  _FakeDateTime_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeSimpleDateTime_2 extends _i1.SmartFake
+class _FakeSimpleDateTime_1 extends _i1.SmartFake
     implements _i2.SimpleDateTime {
-  _FakeSimpleDateTime_2(
+  _FakeSimpleDateTime_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -67,31 +57,25 @@ class MockPreemptStrategyDependency extends _i1.Mock
         ),
       ) as Duration);
   @override
-  DateTime get beginFrameDateTime => (super.noSuchMethod(
-        Invocation.getter(#beginFrameDateTime),
-        returnValue: _FakeDateTime_1(
-          this,
-          Invocation.getter(#beginFrameDateTime),
-        ),
-        returnValueForMissingStub: _FakeDateTime_1(
-          this,
-          Invocation.getter(#beginFrameDateTime),
-        ),
-      ) as DateTime);
+  int get diffDateTimeToTimeStamp => (super.noSuchMethod(
+        Invocation.getter(#diffDateTimeToTimeStamp),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as int);
   @override
   _i2.SimpleDateTime now() => (super.noSuchMethod(
         Invocation.method(
           #now,
           [],
         ),
-        returnValue: _FakeSimpleDateTime_2(
+        returnValue: _FakeSimpleDateTime_1(
           this,
           Invocation.method(
             #now,
             [],
           ),
         ),
-        returnValueForMissingStub: _FakeSimpleDateTime_2(
+        returnValueForMissingStub: _FakeSimpleDateTime_1(
           this,
           Invocation.method(
             #now,

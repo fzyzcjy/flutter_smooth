@@ -309,11 +309,13 @@ extension on MockPreemptStrategyDependency {
   void mock({
     required DateTime now,
     required Duration currentFrameTimeStamp,
-    required DateTime beginFrameDateTime,
+    required int diffDateTimeToTimeStamp,
+    // required DateTime beginFrameDateTime,
   }) {
     when(this.now()).thenReturn(now.toSimple());
     when(this.currentFrameTimeStamp).thenReturn(currentFrameTimeStamp);
-    when(this.beginFrameDateTime).thenReturn(beginFrameDateTime);
+    when(this.diffDateTimeToTimeStamp).thenReturn(diffDateTimeToTimeStamp);
+    // when(this.beginFrameDateTime).thenReturn(beginFrameDateTime);
   }
 }
 

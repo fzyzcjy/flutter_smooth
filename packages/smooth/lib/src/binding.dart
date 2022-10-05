@@ -1,4 +1,3 @@
-import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -7,14 +6,14 @@ import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
-  DateTime get beginFrameDateTime => _beginFrameDateTime!;
-  DateTime? _beginFrameDateTime;
-
-  @override
-  void handleBeginFrame(Duration? rawTimeStamp) {
-    _beginFrameDateTime = clock.now();
-    super.handleBeginFrame(rawTimeStamp);
-  }
+  // DateTime get beginFrameDateTime => _beginFrameDateTime!;
+  // DateTime? _beginFrameDateTime;
+  //
+  // @override
+  // void handleBeginFrame(Duration? rawTimeStamp) {
+  //   _beginFrameDateTime = clock.now();
+  //   super.handleBeginFrame(rawTimeStamp);
+  // }
 
   @override
   void handleDrawFrame() {

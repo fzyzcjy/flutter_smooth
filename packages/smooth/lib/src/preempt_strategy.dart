@@ -29,8 +29,12 @@ class PreemptStrategyDependency {
   Duration get currentFrameTimeStamp =>
       SmoothSchedulerBindingMixin.instance.currentFrameTimeStamp;
 
-  DateTime get beginFrameDateTime =>
-      SmoothSchedulerBindingMixin.instance.beginFrameDateTime;
+  int get diffDateTimeToTimeStamp =>
+      SchedulerBinding.instance.lastVsyncInfo().diffDateTimeTimePoint;
+
+// must not use this, see #5899
+// DateTime get beginFrameDateTime =>
+//     SmoothSchedulerBindingMixin.instance.beginFrameDateTime;
 }
 
 @visibleForTesting
@@ -120,7 +124,7 @@ Duration _maxDuration(Duration a, Duration b) => a > b ? a : b;
 class _TimeInfoCalculator {
   final PreemptStrategyDependency dependency;
 
-  const _TimeInfoCalculator(this.dependency);
+  _TimeInfoCalculator(this.dependency);
 
   /// The adjusted VsyncTargetTime for current plain-old frame
   /// "adjust" means [SchedulerBinding._adjustForEpoch]
@@ -135,16 +139,19 @@ class _TimeInfoCalculator {
 
   /// Converting between a [DateTime] (representing real-world time)
   /// and an "adjusted TimeStamp" such as [SchedulerBinding.currentFrameTimeStamp]
-  int get diffDateTimeToTimeStamp =>
-      _currentFrameVsyncTargetDateTime.microsecondsSinceEpoch -
-      currentFrameAdjustedVsyncTargetTimeStamp.inMicroseconds;
+  late final diffDateTimeToTimeStamp = dependency.diffDateTimeToTimeStamp;
 
-  // we need to *add one frame*, because [(adjusted) VsyncTargetTime] means
-  // the end of current plain-old frame, while [beginFrameDateTime] means
-  // the clock when plain-old frame starts.
-  DateTime get _currentFrameVsyncTargetDateTime =>
-      // NOTE this add one frame
-      dependency.beginFrameDateTime.add(kOneFrame);
+  // must not use this, see #5899
+  // int get diffDateTimeToTimeStamp =>
+  //     _currentFrameVsyncTargetDateTime.microsecondsSinceEpoch -
+  //         currentFrameAdjustedVsyncTargetTimeStamp.inMicroseconds;
+  //
+  // // we need to *add one frame*, because [(adjusted) VsyncTargetTime] means
+  // // the end of current plain-old frame, while [beginFrameDateTime] means
+  // // the clock when plain-old frame starts.
+  // DateTime get _currentFrameVsyncTargetDateTime =>
+  //     // NOTE this add one frame
+  //     dependency.beginFrameDateTime.add(kOneFrame);
 
   // SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
   //     SimpleDateTime.fromMicrosecondsSinceEpoch(
