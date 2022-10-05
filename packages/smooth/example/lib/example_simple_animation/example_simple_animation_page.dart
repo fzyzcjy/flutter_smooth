@@ -18,10 +18,10 @@ class ExampleSimpleAnimationPage extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          for (var i = 0; i < 20; ++i)
+          for (var i = 0; i < 5; ++i)
             _SleepAndAlwaysRebuildWidget(
-              sleepDuration: const Duration(milliseconds: 1),
-              child: smooth //
+              sleepDuration: const Duration(milliseconds: 4),
+              builder: (_) => smooth //
                   ? SmoothPreemptPoint(child: Container())
                   : Container(),
             ),
@@ -34,10 +34,12 @@ class ExampleSimpleAnimationPage extends StatelessWidget {
 
 class _SleepAndAlwaysRebuildWidget extends StatefulWidget {
   final Duration sleepDuration;
-  final Widget child;
+  final WidgetBuilder builder;
 
-  const _SleepAndAlwaysRebuildWidget(
-      {required this.sleepDuration, required this.child});
+  const _SleepAndAlwaysRebuildWidget({
+    required this.sleepDuration,
+    required this.builder,
+  });
 
   @override
   State<_SleepAndAlwaysRebuildWidget> createState() =>
@@ -55,6 +57,6 @@ class _SleepAndAlwaysRebuildWidgetState
       setState(() {});
     });
 
-    return widget.child;
+    return widget.builder(context);
   }
 }
