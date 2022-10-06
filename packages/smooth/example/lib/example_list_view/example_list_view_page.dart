@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
+import 'package:smooth/src/service_locator.dart';
 
 class ExampleListViewPage extends StatefulWidget {
   final bool enableSmooth;
@@ -102,27 +106,38 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
       ),
       subtitle: Stack(
         children: [
-          SizedBox(
-            height: 36,
-            // simulate slow build/layout; do not paint it, since much more
-            // than realistic number of text
-            child: Opacity(
-              opacity: 0,
-              child: OverflowBox(
-                child: Stack(
-                  children: [
-                    for (var i = 0; i < workload * 10; ++i)
-                      LayoutPreemptPointWidget(
-                        child: Text(
-                          // https://github.com/fzyzcjy/yplusplus/issues/6020#issuecomment-1268464366
-                          '+91 88888 8800$index ' * 10,
-                          style: const TextStyle(fontSize: 3),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
+          // https://github.com/fzyzcjy/yplusplus/issues/6022#issuecomment-1269158088
+          // SizedBox(
+          //   height: 36,
+          //   // simulate slow build/layout; do not paint it, since much more
+          //   // than realistic number of text
+          //   child: Opacity(
+          //     opacity: 0,
+          //     child: OverflowBox(
+          //       child: Stack(
+          //         children: [
+          //           for (var i = 0; i < workload * 10; ++i)
+          //             LayoutPreemptPointWidget(
+          //               child: Text(
+          //                 // https://github.com/fzyzcjy/yplusplus/issues/6020#issuecomment-1268464366
+          //                 '+91 88888 8800$index ' * 10,
+          //                 style: const TextStyle(fontSize: 3),
+          //               ),
+          //             ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // https://github.com/fzyzcjy/yplusplus/issues/6022#issuecomment-1269158088
+          _AlwaysLayoutBuilder(
+            onPerformLayout: () {
+              for (var i = 0; i < workload * 10; ++i) {
+                sleep(const Duration(microseconds: 400));
+                ServiceLocator.instance.actor.maybePreemptRender();
+              }
+            },
+            child: Container(),
           ),
           Text('a\n' * (3 + Random().nextInt(3))),
         ],
@@ -170,5 +185,44 @@ class _SimpleCounterState extends State<_SimpleCounter>
         );
       },
     );
+  }
+}
+
+class _AlwaysLayoutBuilder extends SingleChildRenderObjectWidget {
+  final VoidCallback? onPerformLayout;
+
+  const _AlwaysLayoutBuilder({
+    this.onPerformLayout,
+    super.child,
+  });
+
+  @override
+  _RenderAlwaysLayoutBuilder createRenderObject(BuildContext context) =>
+      _RenderAlwaysLayoutBuilder(
+        onPerformLayout: onPerformLayout,
+      );
+
+  @override
+  void updateRenderObject(
+      BuildContext context, _RenderAlwaysLayoutBuilder renderObject) {
+    renderObject.onPerformLayout = onPerformLayout;
+  }
+}
+
+class _RenderAlwaysLayoutBuilder extends RenderProxyBox {
+  _RenderAlwaysLayoutBuilder({
+    required this.onPerformLayout,
+    RenderBox? child,
+  }) : super(child);
+
+  VoidCallback? onPerformLayout;
+
+  @override
+  void performLayout() {
+    // print('$runtimeType.performLayout');
+
+    super.performLayout();
+    onPerformLayout?.call();
+    SchedulerBinding.instance.addPostFrameCallback((_) => markNeedsLayout());
   }
 }
