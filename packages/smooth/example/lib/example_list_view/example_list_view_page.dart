@@ -9,8 +9,13 @@ import 'package:smooth/src/service_locator.dart';
 
 class ExampleListViewPage extends StatefulWidget {
   final bool enableSmooth;
+  final bool leaveWhenPointerUp;
 
-  const ExampleListViewPage({super.key, required this.enableSmooth});
+  const ExampleListViewPage({
+    super.key,
+    required this.enableSmooth,
+    this.leaveWhenPointerUp = false,
+  });
 
   @override
   State<ExampleListViewPage> createState() => _ExampleListViewPageState();
@@ -26,44 +31,51 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
       appBar: AppBar(
         title: Text('Example (${widget.enableSmooth ? 'smooth' : 'plain'})'),
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 48,
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: _SimpleCounter(name: 'Plain'),
-                  ),
-                ),
-                Expanded(
-                  child: SmoothBuilder(
-                    builder: (_, __) => const Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: _SimpleCounter(name: 'Smooth'),
+      body: Listener(
+        // #6028
+        onPointerUp: widget.leaveWhenPointerUp
+            ? (_) => Navigator.of(context).pop()
+            : null,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 48,
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: _SimpleCounter(name: 'Plain'),
                     ),
-                    child: Container(),
                   ),
-                ),
+                  Expanded(
+                    child: SmoothBuilder(
+                      builder: (_, __) => const Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: _SimpleCounter(name: 'Smooth'),
+                      ),
+                      child: Container(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+                child: widget.enableSmooth ? _buildSmooth() : _buildPlain()),
+            Row(
+              children: [
+                for (final value in [0, 1, 3, 10, 20, 50, 100, 200])
+                  SizedBox(
+                    width: 48,
+                    child: TextButton(
+                      onPressed: () => setState(() => workload = value),
+                      child: Text('$value'),
+                    ),
+                  ),
               ],
             ),
-          ),
-          Expanded(child: widget.enableSmooth ? _buildSmooth() : _buildPlain()),
-          Row(
-            children: [
-              for (final value in [0, 1, 3, 10, 20, 50, 100, 200])
-                SizedBox(
-                  width: 48,
-                  child: TextButton(
-                    onPressed: () => setState(() => workload = value),
-                    child: Text('$value'),
-                  ),
-                ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
