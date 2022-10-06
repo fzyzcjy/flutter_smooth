@@ -24,7 +24,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
       body: Column(
         children: [
           SizedBox(
-            height: 16,
+            height: 48,
             child: Row(
               children: [
                 const Expanded(
@@ -166,7 +166,7 @@ class _SimpleCounterState extends State<_SimpleCounter>
         _count++;
         return Text(
           '${widget.name} ${_count.toString().padRight(5)}',
-          style: const TextStyle(color: Colors.black, fontSize: 16),
+          style: const TextStyle(color: Colors.black, fontSize: 32),
         );
       },
     );
