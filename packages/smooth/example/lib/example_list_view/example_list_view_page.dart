@@ -112,7 +112,11 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
       ),
       title: Container(
         // just for easy video checking
-        color: index % 10 == 0 ? Colors.green : null,
+        color: index % 10 == 0
+            ? Colors.green
+            : index % 5 == 0
+                ? Colors.pink
+                : null,
         child: Text(
           '$index',
           overflow: TextOverflow.ellipsis,
