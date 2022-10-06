@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:clock/clock.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth/src/service_locator.dart';
@@ -99,9 +98,6 @@ class Actor {
   // #5867
   void _hackDispatchExtraPointerEvents() {
     final gestureBinding = GestureBinding.instance;
-
-    final pointer = gestureBinding.hitTests.keys.firstOrNull;
-    if (pointer == null) return;
 
     // print('hackDispatchExtraPointerEvents '
     //     'pointer=$pointer '
