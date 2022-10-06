@@ -256,6 +256,9 @@ class _RenderAlwaysLayoutBuilder extends RenderProxyBox {
 
     super.performLayout();
     onPerformLayout?.call();
-    SchedulerBinding.instance.addPostFrameCallback((_) => markNeedsLayout());
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!attached) return;
+      markNeedsLayout();
+    });
   }
 }
