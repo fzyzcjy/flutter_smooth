@@ -1,3 +1,4 @@
+import 'package:example/example_gesture/gesture_visualizer.dart';
 import 'package:flutter/material.dart';
 
 class SimplePointerEventPage extends StatefulWidget {
@@ -16,14 +17,16 @@ class _SimplePointerEventPageState extends State<SimplePointerEventPage> {
       appBar: AppBar(
         title: const Text('SimplePointerEventPage'),
       ),
-      body: Listener(
-        onPointerMove: (_) => setState(() => count++),
-        child: ColoredBox(
-          color: Colors.white,
-          child: Center(
-            child: Text(
-              '#event=$count',
-              style: const TextStyle(fontSize: 30),
+      body: GestureVisualizerByListener(
+        child: Listener(
+          onPointerMove: (_) => setState(() => count++),
+          child: ColoredBox(
+            color: Colors.white,
+            child: Center(
+              child: Text(
+                '#event=$count',
+                style: const TextStyle(fontSize: 30),
+              ),
             ),
           ),
         ),
