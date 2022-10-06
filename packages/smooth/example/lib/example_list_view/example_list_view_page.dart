@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:math';
 
@@ -200,22 +201,28 @@ class _SimpleCounterState extends State<_SimpleCounter>
         }
         _prevAnimationValue = currAnimationValue;
 
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              widget.name,
-              style: const TextStyle(color: Colors.black, fontSize: 11),
-            ),
-            Text(
-              // ignore: prefer_interpolation_to_compose_strings
-              (_buildCount % 1000).toString().padRight(3) +
-                  '|' +
-                  (_animationValueChangeCount % 1000).toString().padRight(3),
-              style: const TextStyle(color: Colors.black, fontSize: 32),
-            ),
-          ],
-        );
+        // #6029
+
+        return Timeline.timeSync(
+            '$_buildCount.$_animationValueChangeCount.${widget.name}.SimpleCounter',
+            () {
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                widget.name,
+                style: const TextStyle(color: Colors.black, fontSize: 11),
+              ),
+              Text(
+                // ignore: prefer_interpolation_to_compose_strings
+                (_buildCount % 1000).toString().padRight(3) +
+                    '|' +
+                    (_animationValueChangeCount % 1000).toString().padRight(3),
+                style: const TextStyle(color: Colors.black, fontSize: 32),
+              ),
+            ],
+          );
+        });
       },
     );
   }
