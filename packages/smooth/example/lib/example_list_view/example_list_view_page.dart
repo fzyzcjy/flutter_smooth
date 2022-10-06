@@ -102,24 +102,28 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
       ),
       subtitle: Stack(
         children: [
-          for (var i = 0; i < workload * 10; ++i)
-            LayoutPreemptPointWidget(
-              child: SizedBox(
-                height: 36,
-                child: OverflowBox(
-                  // simulate slow build/layout; do not paint it, since much more
-                  // than realistic number of text
-                  child: Opacity(
-                    opacity: 0,
-                    child: Text(
-                      // https://github.com/fzyzcjy/yplusplus/issues/6020#issuecomment-1268464366
-                      '+91 88888 8800$index ' * 10,
-                      style: const TextStyle(fontSize: 3),
-                    ),
-                  ),
+          SizedBox(
+            height: 36,
+            // simulate slow build/layout; do not paint it, since much more
+            // than realistic number of text
+            child: Opacity(
+              opacity: 0,
+              child: OverflowBox(
+                child: Stack(
+                  children: [
+                    for (var i = 0; i < workload * 10; ++i)
+                      LayoutPreemptPointWidget(
+                        child: Text(
+                          // https://github.com/fzyzcjy/yplusplus/issues/6020#issuecomment-1268464366
+                          '+91 88888 8800$index ' * 10,
+                          style: const TextStyle(fontSize: 3),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
+          ),
           Text('a\n' * (3 + Random().nextInt(3))),
         ],
       ),
