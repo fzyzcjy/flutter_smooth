@@ -192,9 +192,18 @@ class _SimpleCounterState extends State<_SimpleCounter>
       animation: _controller,
       builder: (_, __) {
         _count++;
-        return Text(
-          '${widget.name} ${_count.toString().padRight(5)}',
-          style: const TextStyle(color: Colors.black, fontSize: 32),
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              widget.name,
+              style: const TextStyle(color: Colors.black, fontSize: 11),
+            ),
+            Text(
+              (_count % 1000).toString().padRight(5),
+              style: const TextStyle(color: Colors.black, fontSize: 32),
+            ),
+          ],
         );
       },
     );
