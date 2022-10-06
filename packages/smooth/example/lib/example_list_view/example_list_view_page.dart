@@ -172,7 +172,8 @@ class _SimpleCounterState extends State<_SimpleCounter>
     with SingleTickerProviderStateMixin {
   late final _controller =
       AnimationController(duration: const Duration(seconds: 1), vsync: this);
-  var _count = 0;
+  double? _prevAnimationValue;
+  var _buildCount = 0, _animationValueChangeCount = 0;
 
   @override
   void initState() {
@@ -191,7 +192,14 @@ class _SimpleCounterState extends State<_SimpleCounter>
     return AnimatedBuilder(
       animation: _controller,
       builder: (_, __) {
-        _count++;
+        _buildCount++;
+
+        final currAnimationValue = _controller.value;
+        if (_prevAnimationValue != currAnimationValue) {
+          _animationValueChangeCount++;
+        }
+        _prevAnimationValue = currAnimationValue;
+
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -200,7 +208,10 @@ class _SimpleCounterState extends State<_SimpleCounter>
               style: const TextStyle(color: Colors.black, fontSize: 11),
             ),
             Text(
-              (_count % 1000).toString().padRight(5),
+              // ignore: prefer_interpolation_to_compose_strings
+              (_buildCount % 1000).toString().padRight(3) +
+                  '|' +
+                  (_animationValueChangeCount % 1000).toString().padRight(3),
               style: const TextStyle(color: Colors.black, fontSize: 32),
             ),
           ],
