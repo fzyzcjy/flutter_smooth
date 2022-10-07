@@ -160,11 +160,6 @@ void main() {
 
         gesture.addEvent(gesture.pointer.move(const Offset(25, 30)));
         await gesture.plainDispatchAll();
-        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2));
-        await capturer
-            .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
-          await t.createExpectImage(50 - 30),
-        ]);
 
         debugPrint('action: pump');
         t
@@ -183,10 +178,10 @@ void main() {
             binding.elapseBlocking(const Duration(microseconds: 16500));
             gesture.addEvent(gesture.pointer.move(const Offset(25, 10)));
           };
-        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
+        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2));
 
         await capturer
-            .expectAndReset(tester, expectTestFrameNumber: 5, expectImages: [
+            .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
           await t.createExpectImage(50 - 20),
           await t.createExpectImage(50 - 15),
           // extra smooth frame after finalize phase
