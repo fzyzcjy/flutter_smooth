@@ -53,21 +53,14 @@ void main() {
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
         final timeInfo = TimeInfo();
         final capturer = WindowRenderCapturer.autoDispose();
-        final t = _SmoothListViewTester();
+        final t = _SmoothListViewTester(tester);
         final gesture = TestSmoothGesture();
-
-        Future<ui.Image> _createExpectImage(int offset) =>
-            tester.createScreenImage((im) => im
-              ..fillRect(Rectangle(0, 0 - offset, 50, 60), Colors.primaries[0])
-              ..fillRect(Rectangle(0, 60 - offset, 50, 60), Colors.primaries[1])
-              ..fillRect(
-                  Rectangle(0, 120 - offset, 50, 60), Colors.primaries[2]));
 
         debugPrint('action: pumpWidget');
         await tester.pumpWidget(t.build());
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
-          await _createExpectImage(0),
+          await t.createExpectImage(0),
         ]);
 
         debugPrint('action: addEvent down');
@@ -92,13 +85,11 @@ void main() {
 
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
-          // drag y=50->20
-          await _createExpectImage(30),
+          await t.createExpectImage(50 - 20),
           // NOTE the "drag to y=15" is dispatched *after* preemptRender, but
           // we do know it
           // https://github.com/fzyzcjy/yplusplus/issues/6050#issuecomment-1271182805
-          // drag y=50->15
-          await _createExpectImage(35),
+          await t.createExpectImage(50 - 15),
         ]);
 
         debugPrint('action: addEvent move(y=10)');
@@ -123,10 +114,8 @@ void main() {
 
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
-          // drag y=50->5
-          await _createExpectImage(45),
-          // drag y=50->0
-          await _createExpectImage(50),
+          await t.createExpectImage(50 - 5),
+          await t.createExpectImage(50 - 0),
         ]);
 
         debugPrint('action: addEvent up');
@@ -138,8 +127,7 @@ void main() {
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 5));
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 5, expectImages: [
-          // drag y=50->0
-          await _createExpectImage(50),
+          await t.createExpectImage(50 - 0),
         ]);
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
@@ -149,9 +137,19 @@ void main() {
 }
 
 class _SmoothListViewTester {
+  final WidgetTester tester;
+
+  _SmoothListViewTester(this.tester);
+
   final onBeforePreemptPoint = OnceCallable();
   final onAfterPreemptPoint = OnceCallable();
   final onPaint = OnceCallable();
+
+  Future<ui.Image> createExpectImage(int offset) =>
+      tester.createScreenImage((im) => im
+        ..fillRect(Rectangle(0, 0 - offset, 50, 60), Colors.primaries[0])
+        ..fillRect(Rectangle(0, 60 - offset, 50, 60), Colors.primaries[1])
+        ..fillRect(Rectangle(0, 120 - offset, 50, 60), Colors.primaries[2]));
 
   Widget build() {
     return SmoothScope(
