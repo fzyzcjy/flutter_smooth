@@ -82,8 +82,8 @@ class AuxiliaryTreePack {
     //     'hi $runtimeType.runPipeline debugReason=$debugReason layer=${rootView.layer}');
 
     Timeline.timeSync('AuxTree.RunPipeline', () {
-      SimpleLog.instance
-          .log('AuxiliaryTreePack.runPipeline timeStamp=$timeStamp');
+      SimpleLog.instance.log(
+          'AuxiliaryTreePack.runPipeline timeStamp=$timeStamp debugReason=$debugReason');
       // print(
       //     '$runtimeType runPipeline start timeStamp=$timeStamp debugReason=$debugReason');
 

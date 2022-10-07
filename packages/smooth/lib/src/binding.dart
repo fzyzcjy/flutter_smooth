@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -46,11 +48,24 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     }
   }
 
+  @override
+  ui.SingletonFlutterWindow get window => _SmoothWindow(super.window);
+
   static SmoothSchedulerBindingMixin get instance {
     final raw = WidgetsBinding.instance;
     assert(raw is SmoothSchedulerBindingMixin,
         'Please use a WidgetsBinding with SmoothSchedulerBindingMixin');
     return raw as SmoothSchedulerBindingMixin;
+  }
+}
+
+class _SmoothWindow extends ProxySingletonFlutterWindow {
+  _SmoothWindow(super.inner);
+
+  @override
+  void render(ui.Scene scene) {
+    SimpleLog.instance.log('window.render');
+    super.render(scene);
   }
 }
 
