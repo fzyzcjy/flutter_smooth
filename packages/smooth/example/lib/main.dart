@@ -116,6 +116,10 @@ class MyApp extends StatelessWidget {
                         MaterialPageRoute<dynamic>(
                             builder: (_) => const SimplePointerEventPage())),
                   ),
+                  ListTile(
+                    title: const Text('Dump logs'),
+                    onTap: SimpleLog.instance.dumpAndReset,
+                  ),
                 ],
               ),
             ),
