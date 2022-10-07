@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/smooth.dart';
 import 'package:smooth/src/event_dispatcher.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
@@ -65,18 +64,10 @@ mixin SmoothWidgetsBindingMixin on WidgetsBinding {
     final serviceLocator = ServiceLocator.maybeInstance;
     if (serviceLocator == null) return;
 
-    // the one refreshed by AfterLayout
-    final prevSmoothFrameTimeStamp =
-        serviceLocator.preemptStrategy.currentSmoothFrameTimeStamp;
-    final nowTimeStamp = serviceLocator.preemptStrategy.nowTimeStamp;
-    // see #6042, and logical thinking...
-    final shouldPreemptRender = prevSmoothFrameTimeStamp < nowTimeStamp;
-
     // TODO refactor later #6051
-    if (shouldPreemptRender) {
-      // indeed, `preemptStrategy.refresh()` will not give what we want...
-      final smoothFrameTimeStamp = prevSmoothFrameTimeStamp + kOneFrame;
-
+    final smoothFrameTimeStamp =
+        serviceLocator.preemptStrategy.shouldActAtEndOfDrawFrame();
+    if (smoothFrameTimeStamp != null) {
       serviceLocator.actor
           .preemptRenderRaw(smoothFrameTimeStamp: smoothFrameTimeStamp);
     }

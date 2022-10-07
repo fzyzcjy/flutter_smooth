@@ -13,11 +13,12 @@ abstract class PreemptStrategy {
   /// Should we run `preemptRender` now
   bool shouldAct({Object? debugToken});
 
+  /// returns act smoothFrameTimeStamp
+  Duration? shouldActAtEndOfDrawFrame();
+
   /// Fancy version of [SchedulerBinding.currentFrameTimeStamp],
   /// by considering both plain-old frames and *also extra frames*
   Duration get currentSmoothFrameTimeStamp;
-
-  Duration get nowTimeStamp;
 
   /// Be called when `preemptRender` is run
   void refresh();
@@ -71,6 +72,21 @@ class PreemptStrategyNormal implements PreemptStrategy {
     return ans;
   }
 
+  @override
+  Duration? shouldActAtEndOfDrawFrame() {
+    // the one refreshed by AfterLayout
+    final prevSmoothFrameTimeStamp = currentSmoothFrameTimeStamp;
+    final now = dependency.now();
+    final nowTimeStamp = timeInfoCalculator.dateTimeToTimeStamp(now);
+    // see #6042, and logical thinking...
+    final shouldPreemptRender = prevSmoothFrameTimeStamp < nowTimeStamp;
+    if (!shouldPreemptRender) return null;
+
+    // indeed, `preemptStrategy.refresh()` will not give what we want...
+    final smoothFrameTimeStamp = prevSmoothFrameTimeStamp + kOneFrame;
+    return smoothFrameTimeStamp;
+  }
+
   // this threshold is not sensitive. see design doc.
   static const kActThresh = Duration(milliseconds: 2);
 
@@ -89,10 +105,6 @@ class PreemptStrategyNormal implements PreemptStrategy {
       _currentPreemptRenderVsyncTargetTimeStamp,
     );
   }
-
-  @override
-  Duration get nowTimeStamp =>
-      timeInfoCalculator.dateTimeToTimeStamp(dependency.now());
 
   @override
   void refresh() {
@@ -170,12 +182,12 @@ class _PreemptStrategyNever implements PreemptStrategy {
   bool shouldAct({Object? debugToken}) => false;
 
   @override
+  Duration? shouldActAtEndOfDrawFrame() => null;
+
+  @override
   void refresh() {}
 
   @override
   Duration get currentSmoothFrameTimeStamp =>
       SchedulerBinding.instance.currentFrameTimeStamp;
-
-  @override
-  Duration get nowTimeStamp => throw UnimplementedError; // temporary
 }
