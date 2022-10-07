@@ -132,6 +132,53 @@ void main() {
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
       });
+
+      // #6061
+      testWidgets('when submit extra smooth frame after finalize phase',
+          (tester) async {
+        debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
+        final timeInfo = TimeInfo();
+        final capturer = WindowRenderCapturer.autoDispose();
+        final t = _SmoothListViewTester(tester);
+        final gesture = TestSmoothGesture();
+
+        await tester.pumpWidget(t.build());
+        await capturer
+            .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
+          await t.createExpectImage(0),
+        ]);
+        gesture.addEvent(gesture.pointer.down(const Offset(25, 50)));
+        await gesture.plainDispatchAll();
+
+        debugPrint('action: pump');
+        t
+          ..onBeforePreemptPoint.once = () {
+            debugPrint('action: elapse + addEvent before PreemptPoint');
+            binding.elapseBlocking(const Duration(microseconds: 16500));
+            gesture.addEvent(gesture.pointer.move(const Offset(25, 20)));
+          }
+          ..onAfterPreemptPoint.once = () {
+            debugPrint('action: elapse + addEvent after PreemptPoint');
+            binding.elapseBlocking(const Duration(microseconds: 16500));
+            gesture.addEvent(gesture.pointer.move(const Offset(25, 15)));
+          }
+          ..onPaint.once = () {
+            debugPrint('action: elapse on paint');
+            binding.elapseBlocking(const Duration(microseconds: 16500));
+            gesture.addEvent(gesture.pointer.move(const Offset(25, 10)));
+          };
+        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
+
+        await capturer
+            .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
+          await t.createExpectImage(50 - 20),
+          await t.createExpectImage(50 - 15),
+          // extra smooth frame after finalize phase
+          await t.createExpectImage(50 - 10),
+        ]);
+
+        debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
+      });
     });
   });
 }
