@@ -151,6 +151,7 @@ void main() {
 class _SmoothListViewTester {
   final onBeforePreemptPoint = OnceCallable();
   final onAfterPreemptPoint = OnceCallable();
+  final onPaint = OnceCallable();
 
   Widget build() {
     return SmoothScope(
@@ -165,6 +166,7 @@ class _SmoothListViewTester {
                 color: Colors.primaries[index],
               ),
             ),
+            AlwaysPaintBuilder(onPaint: onPaint),
             AlwaysLayoutBuilder(onPerformLayout: onBeforePreemptPoint),
             const LayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
             AlwaysLayoutBuilder(onPerformLayout: onAfterPreemptPoint),
