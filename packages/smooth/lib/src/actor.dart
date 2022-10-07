@@ -31,17 +31,21 @@ class Actor {
     // print('Actor.maybePreemptRender shouldAct=$shouldAct now=${clock.now()}');
 
     if (shouldAct) {
-      _preemptRender();
+      ServiceLocator.instance.preemptStrategy.refresh();
+      final smoothFrameTimeStamp =
+          ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp;
+
+      preemptRenderRaw(smoothFrameTimeStamp: smoothFrameTimeStamp);
     }
   }
 
-  void _preemptRender() {
+  void preemptRenderRaw({required Duration smoothFrameTimeStamp}) {
     final binding = WidgetsFlutterBinding.ensureInitialized();
     final start = clock.now();
     Timeline.timeSync('PreemptRender', () {
-      // print('$runtimeType preemptRender start');
+      // print('$runtimeType _preemptRender start');
 
-      // print('preemptRender '
+      // print('_preemptRender '
       //     'lastVsyncInfo=$lastVsyncInfo '
       //     'currentFrameTimeStamp=${binding.currentFrameTimeStamp} '
       //     'now=$now '
@@ -53,11 +57,6 @@ class Actor {
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
 
-      assert(ServiceLocator.instance.preemptStrategy.shouldAct());
-      ServiceLocator.instance.preemptStrategy.refresh();
-
-      final smoothFrameTimeStamp =
-          ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp;
       _preemptModifyLayerTree(smoothFrameTimeStamp);
 
       final builder = SceneBuilder();
@@ -79,7 +78,7 @@ class Actor {
     });
     _times.add(clock.now().difference(start));
 
-    // print('$runtimeType preemptRender end');
+    // print('$runtimeType _preemptRender end');
   }
 
   void _preemptModifyLayerTree(Duration timeStamp) {

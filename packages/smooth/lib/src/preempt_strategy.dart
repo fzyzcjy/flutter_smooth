@@ -17,6 +17,8 @@ abstract class PreemptStrategy {
   /// by considering both plain-old frames and *also extra frames*
   Duration get currentSmoothFrameTimeStamp;
 
+  Duration get nowTimeStamp;
+
   /// Be called when `preemptRender` is run
   void refresh();
 }
@@ -36,7 +38,7 @@ class PreemptStrategyDependency {
 @visibleForTesting
 class PreemptStrategyNormal implements PreemptStrategy {
   final PreemptStrategyDependency dependency;
-  final _TimeInfoCalculator _timeInfoCalculator;
+  final TimeInfoCalculator timeInfoCalculator;
 
   /// the VsyncTargetTime used by last preempt render
   var _currentPreemptRenderVsyncTargetTimeStamp =
@@ -44,12 +46,12 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
   PreemptStrategyNormal({
     this.dependency = const PreemptStrategyDependency(),
-  }) : _timeInfoCalculator = _TimeInfoCalculator(dependency);
+  }) : timeInfoCalculator = TimeInfoCalculator(dependency);
 
   @override
   bool shouldAct({Object? debugToken}) {
     final now = dependency.now();
-    final nowTimeStamp = _timeInfoCalculator.dateTimeToTimeStamp(now);
+    final nowTimeStamp = timeInfoCalculator.dateTimeToTimeStamp(now);
     final ans = nowTimeStamp > shouldActTimeStamp;
 
     // if (ans) {
@@ -74,7 +76,7 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
   Duration get shouldActTimeStamp {
     final nextActVsyncTimeStamp = _maxDuration(
-      _timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp,
+      timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp,
       _currentPreemptRenderVsyncTargetTimeStamp + kOneFrame,
     );
     return nextActVsyncTimeStamp - kActThresh;
@@ -83,19 +85,23 @@ class PreemptStrategyNormal implements PreemptStrategy {
   @override
   Duration get currentSmoothFrameTimeStamp {
     return _maxDuration(
-      _timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp,
+      timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp,
       _currentPreemptRenderVsyncTargetTimeStamp,
     );
   }
 
   @override
+  Duration get nowTimeStamp =>
+      timeInfoCalculator.dateTimeToTimeStamp(dependency.now());
+
+  @override
   void refresh() {
     final now = dependency.now();
-    final nowTimeStamp = _timeInfoCalculator.dateTimeToTimeStamp(now);
+    final nowTimeStamp = timeInfoCalculator.dateTimeToTimeStamp(now);
 
     final nextVsync = vsyncLaterThan(
       time: nowTimeStamp,
-      baseVsync: _timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp,
+      baseVsync: timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp,
     );
 
     final shouldShiftOneFrame =
@@ -120,10 +126,10 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
 Duration _maxDuration(Duration a, Duration b) => a > b ? a : b;
 
-class _TimeInfoCalculator {
+class TimeInfoCalculator {
   final PreemptStrategyDependency dependency;
 
-  const _TimeInfoCalculator(this.dependency);
+  const TimeInfoCalculator(this.dependency);
 
   /// The adjusted VsyncTargetTime for current plain-old frame
   /// "adjust" means [SchedulerBinding._adjustForEpoch]
@@ -169,4 +175,7 @@ class _PreemptStrategyNever implements PreemptStrategy {
   @override
   Duration get currentSmoothFrameTimeStamp =>
       SchedulerBinding.instance.currentFrameTimeStamp;
+
+  @override
+  Duration get nowTimeStamp => throw UnimplementedError; // temporary
 }
