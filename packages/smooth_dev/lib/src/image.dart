@@ -32,7 +32,11 @@ extension ExtImage on image.Image {
   void fillAll(Color color) => fill(color.toImageColor());
 
   void fillRect(Rectangle<int> bounds, Color color) {
-    if (!bounds.intersects(Rectangle(0, 0, width, height))) return;
+    final intersection = bounds.intersection(Rectangle(0, 0, width, height));
+    if (intersection == null ||
+        intersection.width == 0 ||
+        intersection.height == 0) return;
+
     image.fillRect(this, bounds.left, bounds.top, bounds.right, bounds.bottom,
         color.toImageColor());
   }
