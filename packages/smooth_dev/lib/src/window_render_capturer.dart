@@ -34,6 +34,8 @@ class WindowRenderCapturer {
   }
 
   void _onWindowRender(ui.Scene scene) {
+    // debugPrintStack(label: 'WindowRenderCapturer.onWindowRender');
+   
     final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
     final image = scene.toImageSync(
         binding.window.logicalWidth, binding.window.logicalHeight);
