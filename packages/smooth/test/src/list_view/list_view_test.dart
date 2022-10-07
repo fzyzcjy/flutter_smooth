@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -53,6 +54,13 @@ void main() {
         final timeInfo = TimeInfo();
         final capturer = WindowRenderCapturer.autoDispose();
 
+        Future<ui.Image> _createExpectImage(int offset) =>
+            tester.createScreenImage((im) => im
+              ..fillRect(Rectangle(0, 0 - offset, 50, 60), Colors.primaries[0])
+              ..fillRect(Rectangle(0, 60 - offset, 50, 60), Colors.primaries[1])
+              ..fillRect(
+                  Rectangle(0, 120 - offset, 50, 60), Colors.primaries[2]));
+
         var interestFrame = false;
         Offset? moveOffsetBeforePreemptPoint, moveOffsetAfterPreemptPoint;
         final gesture = TestSmoothGesture();
@@ -91,9 +99,7 @@ void main() {
         ));
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
-          await tester.createScreenImage((im) => im
-            ..fillRect(const Rectangle(0, 0, 50, 60), Colors.primaries[0])
-            ..fillRect(const Rectangle(0, 60, 50, 40), Colors.primaries[1])),
+          await _createExpectImage(0),
         ]);
 
         debugPrint('action: addEvent down');
@@ -112,18 +118,12 @@ void main() {
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
           // drag y=50->20
-          await tester.createScreenImage((im) => im
-            ..fillRect(const Rectangle(0, 0, 50, 30), Colors.primaries[0])
-            ..fillRect(const Rectangle(0, 30, 50, 60), Colors.primaries[1])
-            ..fillRect(const Rectangle(0, 90, 50, 10), Colors.primaries[2])),
+          await _createExpectImage(30),
           // NOTE the "drag to y=15" is dispatched *after* preemptRender, but
           // we do know it
           // https://github.com/fzyzcjy/yplusplus/issues/6050#issuecomment-1271182805
           // drag y=50->15
-          await tester.createScreenImage((im) => im
-            ..fillRect(const Rectangle(0, 0, 50, 25), Colors.primaries[0])
-            ..fillRect(const Rectangle(0, 25, 50, 60), Colors.primaries[1])
-            ..fillRect(const Rectangle(0, 85, 50, 15), Colors.primaries[2])),
+          await _createExpectImage(35),
         ]);
 
         debugPrint('action: addEvent move(y=10)');
@@ -142,15 +142,9 @@ void main() {
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
           // drag y=50->5
-          await tester.createScreenImage((im) => im
-            ..fillRect(const Rectangle(0, 0, 50, 15), Colors.primaries[0])
-            ..fillRect(const Rectangle(0, 15, 50, 60), Colors.primaries[1])
-            ..fillRect(const Rectangle(0, 75, 50, 25), Colors.primaries[2])),
+          await _createExpectImage(45),
           // drag y=50->0
-          await tester.createScreenImage((im) => im
-            ..fillRect(const Rectangle(0, 0, 50, 10), Colors.primaries[0])
-            ..fillRect(const Rectangle(0, 10, 50, 60), Colors.primaries[1])
-            ..fillRect(const Rectangle(0, 70, 50, 30), Colors.primaries[2])),
+          await _createExpectImage(50),
         ]);
 
         debugPrint('action: addEvent up');
@@ -163,10 +157,7 @@ void main() {
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 5, expectImages: [
           // drag y=50->0
-          await tester.createScreenImage((im) => im
-            ..fillRect(const Rectangle(0, 0, 50, 10), Colors.primaries[0])
-            ..fillRect(const Rectangle(0, 10, 50, 60), Colors.primaries[1])
-            ..fillRect(const Rectangle(0, 70, 50, 30), Colors.primaries[2])),
+          await _createExpectImage(50),
         ]);
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
