@@ -52,16 +52,28 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
 
 mixin SmoothWidgetsBindingMixin on WidgetsBinding {
   @override
-  void drawFrame() {
-    super.drawFrame();
-    TODO;
-  }
+  BuildOwner? get buildOwner => _smoothBuildOwner;
+  late final _smoothBuildOwner = _SmoothBuildOwner(super.buildOwner!);
 
   static SmoothWidgetsBindingMixin get instance {
     final raw = WidgetsBinding.instance;
     assert(raw is SmoothWidgetsBindingMixin,
         'Please use a WidgetsBinding with SmoothWidgetsBindingMixin');
     return raw as SmoothWidgetsBindingMixin;
+  }
+}
+
+class _SmoothBuildOwner extends ProxyBuildOwner {
+  _SmoothBuildOwner(super.inner);
+
+  @override
+  void finalizeTree() {
+    super.finalizeTree();
+    _handleAfterFinalizeTree();
+  }
+
+  void _handleAfterFinalizeTree() {
+    TDOO;
   }
 }
 
