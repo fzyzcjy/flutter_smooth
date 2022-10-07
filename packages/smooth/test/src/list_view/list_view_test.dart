@@ -53,6 +53,8 @@ void main() {
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
         final timeInfo = TimeInfo();
         final capturer = WindowRenderCapturer.autoDispose();
+        final t = _SmoothListViewTester();
+        final gesture = TestSmoothGesture();
 
         Future<ui.Image> _createExpectImage(int offset) =>
             tester.createScreenImage((im) => im
@@ -61,42 +63,8 @@ void main() {
               ..fillRect(
                   Rectangle(0, 120 - offset, 50, 60), Colors.primaries[2]));
 
-        var interestFrame = false;
-        Offset? moveOffsetBeforePreemptPoint, moveOffsetAfterPreemptPoint;
-        final gesture = TestSmoothGesture();
-
         debugPrint('action: pumpWidget');
-        await tester.pumpWidget(SmoothScope(
-          child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: Stack(
-              children: [
-                SmoothListView.builder(
-                  itemCount: 100,
-                  itemBuilder: (_, index) => Container(
-                    height: 60,
-                    color: Colors.primaries[index],
-                  ),
-                ),
-                AlwaysLayoutBuilder(onPerformLayout: () {
-                  if (!interestFrame) return;
-                  debugPrint('action: elapse + addEvent before PreemptPoint');
-                  binding.elapseBlocking(const Duration(microseconds: 16500));
-                  gesture.addEvent(
-                      gesture.pointer.move(moveOffsetBeforePreemptPoint!));
-                }),
-                const LayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
-                AlwaysLayoutBuilder(onPerformLayout: () {
-                  if (!interestFrame) return;
-                  debugPrint('action: elapse + addEvent after PreemptPoint');
-                  binding.elapseBlocking(const Duration(microseconds: 16500));
-                  gesture.addEvent(
-                      gesture.pointer.move(moveOffsetAfterPreemptPoint!));
-                }),
-              ],
-            ),
-          ),
-        ));
+        await tester.pumpWidget(t.build());
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
           await _createExpectImage(0),
@@ -109,11 +77,18 @@ void main() {
         await gesture.plainDispatchAll();
 
         debugPrint('action: pump');
-        interestFrame = true;
-        moveOffsetBeforePreemptPoint = const Offset(25, 20);
-        moveOffsetAfterPreemptPoint = const Offset(25, 15);
+        t
+          ..onBeforePreemptPoint.once = () {
+            debugPrint('action: elapse + addEvent before PreemptPoint');
+            binding.elapseBlocking(const Duration(microseconds: 16500));
+            gesture.addEvent(gesture.pointer.move(const Offset(25, 20)));
+          }
+          ..onAfterPreemptPoint.once = () {
+            debugPrint('action: elapse + addEvent after PreemptPoint');
+            binding.elapseBlocking(const Duration(microseconds: 16500));
+            gesture.addEvent(gesture.pointer.move(const Offset(25, 15)));
+          };
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
-        interestFrame = false;
 
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
@@ -133,11 +108,18 @@ void main() {
         await gesture.plainDispatchAll();
 
         debugPrint('action: pump');
-        interestFrame = true;
-        moveOffsetBeforePreemptPoint = const Offset(25, 5);
-        moveOffsetAfterPreemptPoint = const Offset(25, 0);
+        t
+          ..onBeforePreemptPoint.once = () {
+            debugPrint('action: elapse + addEvent before PreemptPoint');
+            binding.elapseBlocking(const Duration(microseconds: 16500));
+            gesture.addEvent(gesture.pointer.move(const Offset(25, 5)));
+          }
+          ..onAfterPreemptPoint.once = () {
+            debugPrint('action: elapse + addEvent after PreemptPoint');
+            binding.elapseBlocking(const Duration(microseconds: 16500));
+            gesture.addEvent(gesture.pointer.move(const Offset(25, 0)));
+          };
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
-        interestFrame = false;
 
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
@@ -164,4 +146,46 @@ void main() {
       });
     });
   });
+}
+
+class _SmoothListViewTester {
+  final onBeforePreemptPoint = OnceCallable();
+  final onAfterPreemptPoint = OnceCallable();
+
+  Widget build() {
+    return SmoothScope(
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Stack(
+          children: [
+            SmoothListView.builder(
+              itemCount: 100,
+              itemBuilder: (_, index) => Container(
+                height: 60,
+                color: Colors.primaries[index],
+              ),
+            ),
+            AlwaysLayoutBuilder(onPerformLayout: onBeforePreemptPoint),
+            const LayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
+            AlwaysLayoutBuilder(onPerformLayout: onAfterPreemptPoint),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// TODO move
+class OnceCallable {
+  VoidCallback? _callable;
+
+  set once(VoidCallback value) {
+    assert(_callable == null);
+    _callable = value;
+  }
+
+  void call() {
+    _callable?.call();
+    _callable = null;
+  }
 }
