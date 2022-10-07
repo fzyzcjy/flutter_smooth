@@ -10,12 +10,16 @@ import 'package:smooth/src/service_locator.dart';
 
 class ExampleListViewPage extends StatefulWidget {
   final bool enableSmooth;
+  final bool enableDebugHeader;
   final bool leaveWhenPointerUp;
+  final int? initialWorkload;
 
   const ExampleListViewPage({
     super.key,
     required this.enableSmooth,
+    this.enableDebugHeader = false,
     this.leaveWhenPointerUp = false,
+    this.initialWorkload,
   });
 
   @override
@@ -24,7 +28,7 @@ class ExampleListViewPage extends StatefulWidget {
 
 class _ExampleListViewPageState extends State<ExampleListViewPage> {
   // #6025
-  var workload = 3;
+  late var workload = widget.initialWorkload ?? 3;
 
   @override
   Widget build(BuildContext context) {
@@ -39,28 +43,29 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
             : null,
         child: Column(
           children: [
-            SizedBox(
-              height: 48,
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: _SimpleCounter(name: 'P'),
-                    ),
-                  ),
-                  Expanded(
-                    child: SmoothBuilder(
-                      builder: (_, __) => const Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: _SimpleCounter(name: 'S'),
+            if (widget.enableDebugHeader)
+              SizedBox(
+                height: 48,
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: _SimpleCounter(name: 'P'),
                       ),
-                      child: Container(),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: SmoothBuilder(
+                        builder: (_, __) => const Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: _SimpleCounter(name: 'S'),
+                        ),
+                        child: Container(),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
             Expanded(
                 child: widget.enableSmooth ? _buildSmooth() : _buildPlain()),
             Row(

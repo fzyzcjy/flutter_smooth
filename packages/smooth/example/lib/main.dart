@@ -51,12 +51,13 @@ class MyApp extends StatelessWidget {
                   for (final enableSmooth in [false, true])
                     ListTile(
                       title: Text(
-                          'Example: ListView (${enableSmooth ? 'smooth' : 'plain'})'),
+                          'Example: ListView (${enableSmooth ? 'smooth' : 'plain'}, debugHeader)'),
                       onTap: () => Navigator.push<dynamic>(
                           context,
                           MaterialPageRoute<dynamic>(
                               builder: (_) => ExampleListViewPage(
-                                  enableSmooth: enableSmooth))),
+                                  enableSmooth: enableSmooth,
+                                  enableDebugHeader: true))),
                     ),
                   ListTile(
                     title: const Text(
@@ -66,6 +67,30 @@ class MyApp extends StatelessWidget {
                         MaterialPageRoute<dynamic>(
                             builder: (_) => const ExampleListViewPage(
                                 enableSmooth: true, leaveWhenPointerUp: true))),
+                  ),
+                  ListTile(
+                    title: const Text('Example: ListView plain + 0 workload'),
+                    onTap: () => Navigator.push<dynamic>(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                            builder: (_) => const ExampleListViewPage(
+                                enableSmooth: false, initialWorkload: 0))),
+                  ),
+                  ListTile(
+                    title: const Text('Example: ListView plain'),
+                    onTap: () => Navigator.push<dynamic>(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                            builder: (_) => const ExampleListViewPage(
+                                enableSmooth: false))),
+                  ),
+                  ListTile(
+                    title: const Text('Example: ListView smooth'),
+                    onTap: () => Navigator.push<dynamic>(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                            builder: (_) =>
+                                const ExampleListViewPage(enableSmooth: true))),
                   ),
                   for (final enableSmooth in [false, true])
                     ListTile(
