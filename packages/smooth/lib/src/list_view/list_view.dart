@@ -39,6 +39,17 @@ class _SmoothListViewState extends State<SmoothListView> {
   final controller = SmoothScrollController();
 
   @override
+  void initState() {
+    super.initState();
+
+    // for debug
+    controller.addListener(() {
+      SimpleLog.instance
+          .log('ScrollController.listener offset=${controller.offset}');
+    });
+  }
+
+  @override
   void dispose() {
     controller.dispose();
     super.dispose();

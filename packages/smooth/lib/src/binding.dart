@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/event_dispatcher.dart';
+import 'package:smooth/src/log.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
 
@@ -13,6 +14,8 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
 
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
+    SimpleLog.instance
+        .log('$runtimeType.handleBeginFrame.start rawTimeStamp=$rawTimeStamp');
     _beginFrameDateTime = clock.now();
     super.handleBeginFrame(rawTimeStamp);
   }
@@ -21,6 +24,7 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   void handleDrawFrame() {
     _invokeStartDrawFrameCallbacks();
     super.handleDrawFrame();
+    SimpleLog.instance.log('$runtimeType.handleDrawFrame.end');
   }
 
   // ref: [SchedulerBinding._postFrameCallbacks]
