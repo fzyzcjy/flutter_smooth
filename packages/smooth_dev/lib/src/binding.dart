@@ -12,6 +12,7 @@ class SmoothAutomatedTestWidgetsFlutterBinding
     with
         SmoothSchedulerBindingMixin,
         SmoothRendererBindingMixin,
+        SmoothWidgetsBindingMixin,
         SmoothSchedulerBindingTestMixin {
   @override
   void initInstances() {

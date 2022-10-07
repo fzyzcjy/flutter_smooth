@@ -50,6 +50,21 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   }
 }
 
+mixin SmoothWidgetsBindingMixin on WidgetsBinding {
+  @override
+  void drawFrame() {
+    super.drawFrame();
+    TODO;
+  }
+
+  static SmoothWidgetsBindingMixin get instance {
+    final raw = WidgetsBinding.instance;
+    assert(raw is SmoothWidgetsBindingMixin,
+        'Please use a WidgetsBinding with SmoothWidgetsBindingMixin');
+    return raw as SmoothWidgetsBindingMixin;
+  }
+}
+
 mixin SmoothRendererBindingMixin on RendererBinding {
   @override
   PipelineOwner get pipelineOwner => _smoothPipelineOwner;
@@ -114,7 +129,10 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
 
 // ref [AutomatedTestWidgetsFlutterBinding]
 class SmoothWidgetsFlutterBinding extends WidgetsFlutterBinding
-    with SmoothSchedulerBindingMixin, SmoothRendererBindingMixin {
+    with
+        SmoothSchedulerBindingMixin,
+        SmoothRendererBindingMixin,
+        SmoothWidgetsBindingMixin {
   @override
   void initInstances() {
     super.initInstances();
