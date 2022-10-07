@@ -52,23 +52,33 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   double? _positionWhenPrevPrevBuild;
   double? _positionWhenPrevBuild;
   double? _currPosition;
-  bool basePositionUseCurrOrPrev = false;
 
   double get _offsetFromPointerEvent {
     if (_currPosition == null) return 0;
+
+    final executingRunPipelineBecauseOfAfterFlushLayout =
+        SmoothRendererBindingMixin
+            .instance.executingRunPipelineBecauseOfAfterFlushLayout.value;
+    final executingRunPipelineBecauseOfAfterDrawFrame =
+        SmoothWidgetsBindingMixin
+            .instance.executingRunPipelineBecauseOfAfterDrawFrame.value;
+   
+    final basePositionUseCurrOrPrev =
+        executingRunPipelineBecauseOfAfterFlushLayout ||
+            executingRunPipelineBecauseOfAfterDrawFrame;
 
     // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
     final basePosition = basePositionUseCurrOrPrev
         ? _positionWhenCurrStartDrawFrame
         : _positionWhenPrevStartDrawFrame;
 
-    // final binding = SmoothRendererBindingMixin.instance;
-    // print('hi $runtimeType get _offsetFromPointerEvent '
-    //     '_currPosition=$_currPosition '
-    //     'executingRunPipelineBecauseOfAfterFlushLayout=${binding.executingRunPipelineBecauseOfAfterFlushLayout} '
-    //     '_positionWhenCurrStartDrawFrame=$_positionWhenCurrStartDrawFrame '
-    //     '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame '
-    //     '_pointerDownPosition=$_pointerDownPosition');
+    print('hi $runtimeType get _offsetFromPointerEvent '
+        '_currPosition=$_currPosition '
+        'executingRunPipelineBecauseOfAfterFlushLayout=$executingRunPipelineBecauseOfAfterFlushLayout '
+        'executingRunPipelineBecauseOfAfterDrawFrame=$executingRunPipelineBecauseOfAfterDrawFrame '
+        '_positionWhenCurrStartDrawFrame=$_positionWhenCurrStartDrawFrame '
+        '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame '
+        '_pointerDownPosition=$_pointerDownPosition');
     return _currPosition! - (basePosition ?? _pointerDownPosition!);
   }
 
@@ -121,10 +131,13 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   }
 
   void _handleExecutingRunPipelineBecauseOfAfterFlushLayoutChanged() {
-    setState(() {
-      basePositionUseCurrOrPrev = SmoothRendererBindingMixin
-          .instance.executingRunPipelineBecauseOfAfterFlushLayout.value;
-    });
+    // basePositionUseCurrOrPrev changes
+    setState(() {});
+  }
+
+  void _handleExecutingRunPipelineBecauseOfAfterDrawFrameChanged() {
+    // basePositionUseCurrOrPrev changes
+    setState(() {});
   }
 
   // #6052
@@ -158,6 +171,9 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
         .instance.executingRunPipelineBecauseOfAfterFlushLayout
         .addListener(
             _handleExecutingRunPipelineBecauseOfAfterFlushLayoutChanged);
+    SmoothWidgetsBindingMixin
+        .instance.executingRunPipelineBecauseOfAfterDrawFrame
+        .addListener(_handleExecutingRunPipelineBecauseOfAfterDrawFrameChanged);
   }
 
   @override
@@ -166,6 +182,10 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
         .instance.executingRunPipelineBecauseOfAfterFlushLayout
         .removeListener(
             _handleExecutingRunPipelineBecauseOfAfterFlushLayoutChanged);
+    SmoothWidgetsBindingMixin
+        .instance.executingRunPipelineBecauseOfAfterDrawFrame
+        .removeListener(
+            _handleExecutingRunPipelineBecauseOfAfterDrawFrameChanged);
     super.dispose();
   }
 

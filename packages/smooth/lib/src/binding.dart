@@ -57,6 +57,10 @@ mixin SmoothWidgetsBindingMixin on WidgetsBinding {
     _handleAfterDrawFrame();
   }
 
+  ValueListenable<bool> get executingRunPipelineBecauseOfAfterDrawFrame =>
+      _executingRunPipelineBecauseOfAfterDrawFrame;
+  final _executingRunPipelineBecauseOfAfterDrawFrame = ValueNotifier(false);
+
   // indeed, roughly after the `finalizeTree`
   void _handleAfterDrawFrame() {
     // print('_handleAfterFinalizeTree');
@@ -68,8 +72,13 @@ mixin SmoothWidgetsBindingMixin on WidgetsBinding {
     final smoothFrameTimeStamp =
         serviceLocator.preemptStrategy.shouldActAtEndOfDrawFrame();
     if (smoothFrameTimeStamp != null) {
-      serviceLocator.actor
-          .preemptRenderRaw(smoothFrameTimeStamp: smoothFrameTimeStamp);
+      _executingRunPipelineBecauseOfAfterDrawFrame.value = true;
+      try {
+        serviceLocator.actor
+            .preemptRenderRaw(smoothFrameTimeStamp: smoothFrameTimeStamp);
+      } finally {
+        _executingRunPipelineBecauseOfAfterDrawFrame.value = false;
+      }
     }
   }
 
