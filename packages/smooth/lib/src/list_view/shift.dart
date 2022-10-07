@@ -113,6 +113,8 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   }
 
   void _handlePointerMove(PointerMoveEvent e) {
+    SimpleLog.instance
+        .log('SmoothShift.handlePointerMove position=${e.localPosition.dy}');
     // print(
     //     'hi $runtimeType _handlePointerMove e.localPosition=${e.localPosition.dy} e=$e');
 
