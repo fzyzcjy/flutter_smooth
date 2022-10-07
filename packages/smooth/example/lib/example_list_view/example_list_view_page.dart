@@ -46,14 +46,14 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
                   const Expanded(
                     child: Align(
                       alignment: Alignment.topCenter,
-                      child: _SimpleCounter(name: 'Plain'),
+                      child: _SimpleCounter(name: 'P'),
                     ),
                   ),
                   Expanded(
                     child: SmoothBuilder(
                       builder: (_, __) => const Directionality(
                         textDirection: TextDirection.ltr,
-                        child: _SimpleCounter(name: 'Smooth'),
+                        child: _SimpleCounter(name: 'S'),
                       ),
                       child: Container(),
                     ),
@@ -215,14 +215,23 @@ class _SimpleCounterState extends State<_SimpleCounter>
             children: [
               Text(
                 widget.name,
-                style: const TextStyle(color: Colors.black, fontSize: 11),
+                style: const TextStyle(color: Colors.black, fontSize: 8),
               ),
               Text(
                 // ignore: prefer_interpolation_to_compose_strings
                 (_buildCount % 1000).toString().padRight(3) +
                     '|' +
                     (_animationValueChangeCount % 1000).toString().padRight(3),
-                style: const TextStyle(color: Colors.black, fontSize: 32),
+                style: const TextStyle(color: Colors.black, fontSize: 26),
+              ),
+              CustomPaint(
+                painter: _SimpleCounterPainter(
+                  index: _buildCount,
+                ),
+                child: const SizedBox(
+                  height: 48,
+                  width: 24.0 * _SimpleCounterPainter.N,
+                ),
               ),
             ],
           );
@@ -230,6 +239,34 @@ class _SimpleCounterState extends State<_SimpleCounter>
       },
     );
   }
+}
+
+class _SimpleCounterPainter extends CustomPainter {
+  final int index;
+
+  _SimpleCounterPainter({required this.index});
+
+  static final _painters = List.generate(
+      N, (i) => Paint()..color = [Colors.red, Colors.green, Colors.blue][i]);
+
+  static const N = 3;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRect(
+      Rect.fromLTWH(
+        size.width / N * (index % N),
+        0,
+        size.width / N,
+        size.height,
+      ),
+      _painters[index % N],
+    );
+  }
+
+  @override
+  bool shouldRepaint(_SimpleCounterPainter oldDelegate) =>
+      oldDelegate.index != index;
 }
 
 class _AlwaysLayoutBuilder extends SingleChildRenderObjectWidget {
