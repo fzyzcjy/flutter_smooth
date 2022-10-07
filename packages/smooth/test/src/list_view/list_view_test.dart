@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/preempt_point.dart';
 import 'package:smooth_dev/smooth_dev.dart';
 
 import '../test_tools/gesture.dart';
@@ -112,14 +111,19 @@ void main() {
 
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
-          // NOTE this is repeated twice, because the "drag to y=15" is
-          // dispatched *after* preemptRender, so preempt render never knows it
-          for (var iter = 0; iter < 2; ++iter)
-            // drag y=50->20
-            await tester.createScreenImage((im) => im
-              ..fillRect(const Rectangle(0, 0, 50, 30), Colors.primaries[0])
-              ..fillRect(const Rectangle(0, 30, 50, 60), Colors.primaries[1])
-              ..fillRect(const Rectangle(0, 90, 50, 10), Colors.primaries[2])),
+          // drag y=50->20
+          await tester.createScreenImage((im) => im
+            ..fillRect(const Rectangle(0, 0, 50, 30), Colors.primaries[0])
+            ..fillRect(const Rectangle(0, 30, 50, 60), Colors.primaries[1])
+            ..fillRect(const Rectangle(0, 90, 50, 10), Colors.primaries[2])),
+          // NOTE the "drag to y=15" is dispatched *after* preemptRender, but
+          // we do know it
+          // https://github.com/fzyzcjy/yplusplus/issues/6050#issuecomment-1271182805
+          // drag y=50->15
+          await tester.createScreenImage((im) => im
+            ..fillRect(const Rectangle(0, 0, 50, 25), Colors.primaries[0])
+            ..fillRect(const Rectangle(0, 25, 50, 60), Colors.primaries[1])
+            ..fillRect(const Rectangle(0, 85, 50, 15), Colors.primaries[2])),
         ]);
 
         debugPrint('action: addEvent move(y=10)');
@@ -137,12 +141,16 @@ void main() {
 
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
-          for (var iter = 0; iter < 2; ++iter)
-            // drag y=50->5
-            await tester.createScreenImage((im) => im
-              ..fillRect(const Rectangle(0, 0, 50, 15), Colors.primaries[0])
-              ..fillRect(const Rectangle(0, 15, 50, 60), Colors.primaries[1])
-              ..fillRect(const Rectangle(0, 75, 50, 25), Colors.primaries[2])),
+          // drag y=50->5
+          await tester.createScreenImage((im) => im
+            ..fillRect(const Rectangle(0, 0, 50, 15), Colors.primaries[0])
+            ..fillRect(const Rectangle(0, 15, 50, 60), Colors.primaries[1])
+            ..fillRect(const Rectangle(0, 75, 50, 25), Colors.primaries[2])),
+          // drag y=50->0
+          await tester.createScreenImage((im) => im
+            ..fillRect(const Rectangle(0, 0, 50, 10), Colors.primaries[0])
+            ..fillRect(const Rectangle(0, 10, 50, 60), Colors.primaries[1])
+            ..fillRect(const Rectangle(0, 70, 50, 30), Colors.primaries[2])),
         ]);
 
         debugPrint('action: addEvent up');
