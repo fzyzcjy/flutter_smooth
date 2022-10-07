@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/preempt_point.dart';
 import 'package:smooth/src/preempt_strategy.dart';
 import 'package:smooth/src/service_locator.dart';
 import 'package:smooth_dev/smooth_dev.dart';
@@ -373,7 +372,7 @@ void main() {
 
       for (final animatingPart in _AnimatingPart.values) {
         group('animatingPart=${animatingPart.name}', () {
-          for (var iter = 0; iter < 100; ++iter) {
+          for (var iter = 0; iter < 10; ++iter) {
             // have to use a brand new `testWidgets` for one experiment
             // because otherwise things like timing will be wrong
             testWidgets('experiment $iter', (tester) async {
