@@ -1,14 +1,19 @@
+import 'dart:collection';
+
 import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:smooth/smooth.dart';
 import 'package:smooth/src/messages_wrapped.dart';
 import 'package:smooth/src/service_locator.dart';
 
 class ExtraEventDispatcher {
+  final _pendingEventManager = _PendingPointerEventManager();
+
   // TODO just prototype, not final code
   // #5867
-  void dispatch() {
+  void dispatch({required Duration smoothFrameTimeStamp}) {
     final gestureBinding = GestureBinding.instance;
 
     final pointerEventDateTimeDiffTimeStamp =
@@ -30,7 +35,14 @@ class ExtraEventDispatcher {
     //     'pointer=$pointer '
     //     'hitTest=${gestureBinding.hitTests[pointer]!}');
 
-    final pendingEvents = gestureBinding.readEnginePendingEventsAndClear();
+    // final pendingEvents = gestureBinding.readEnginePendingEventsAndClear();
+
+    // in order to mimic classical case
+    // details see #6066
+    final pendingEventMaxTimeStamp = smoothFrameTimeStamp - kOneFrame;
+    final pendingEvents =
+        _pendingEventManager.read(maxTimeStamp: pendingEventMaxTimeStamp);
+
     // print(
     //     'pendingPacket.len=${pendingPacket.data.length} pendingPacket.data=${pendingPacket.data}');
 
@@ -82,4 +94,30 @@ class ExtraEventDispatcher {
           'sanityCheckPointerEventTime failed: eventTimeStamp=$eventTimeStamp nowTimeStamp=$nowTimeStamp');
     }
   }
+}
+
+class _PendingPointerEventManager {
+  final _pendingEvents = Queue<PointerEvent>();
+
+  List<PointerEvent> read({required Duration maxTimeStamp}) {
+    final gestureBinding = GestureBinding.instance;
+    _pendingEvents.addAll(gestureBinding.readEnginePendingEventsAndClear());
+
+    assert(_isNonDecreasing(
+        _pendingEvents.map((e) => e.timeStamp.inMicroseconds).toList()));
+
+    final ans = <PointerEvent>[];
+    while (_pendingEvents.isNotEmpty &&
+        _pendingEvents.first.timeStamp < maxTimeStamp) {
+      ans.add(_pendingEvents.removeFirst());
+    }
+    return ans;
+  }
+}
+
+bool _isNonDecreasing(List<int> values) {
+  for (var i = 0; i < values.length - 1; ++i) {
+    if (values[i] > values[i + 1]) return false;
+  }
+  return true;
 }

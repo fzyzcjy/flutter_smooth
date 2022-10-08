@@ -150,12 +150,13 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     final serviceLocator = ServiceLocator.maybeInstance;
     if (serviceLocator == null) return;
 
-    // #6033
-    serviceLocator.extraEventDispatcher.dispatch();
-
     serviceLocator.preemptStrategy.refresh();
     final currentSmoothFrameTimeStamp =
         serviceLocator.preemptStrategy.currentSmoothFrameTimeStamp;
+
+    // #6033
+    serviceLocator.extraEventDispatcher
+        .dispatch(smoothFrameTimeStamp: currentSmoothFrameTimeStamp);
 
     _executingRunPipelineBecauseOfAfterFlushLayout.value = true;
     try {

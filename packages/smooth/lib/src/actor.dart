@@ -51,7 +51,8 @@ class Actor {
       //     'shouldShiftOneFrameForInterestVsyncTarget=$shouldShiftOneFrameForInterestVsyncTarget '
       //     'set-interestVsyncTargetTimeByLastPreemptRender=$interestVsyncTargetTimeByLastPreemptRender');
 
-      ServiceLocator.instance.extraEventDispatcher.dispatch();
+      ServiceLocator.instance.extraEventDispatcher
+          .dispatch(smoothFrameTimeStamp: smoothFrameTimeStamp);
 
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
