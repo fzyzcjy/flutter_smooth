@@ -27,7 +27,7 @@ class ExampleListViewPage extends StatefulWidget {
 
 class _ExampleListViewPageState extends State<ExampleListViewPage> {
   // #6025
-  late var workload = widget.initialWorkload ?? 3;
+  late var workload = widget.initialWorkload ?? 50;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
                 child: widget.enableSmooth ? _buildSmooth() : _buildPlain()),
             Row(
               children: [
-                for (final value in [0, 1, 3, 10, 20, 50, 100, 200])
+                for (final value in [0, 1, 10, 50, 100, 200, 500])
                   SizedBox(
                     width: 48,
                     child: TextButton(
