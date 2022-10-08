@@ -8,7 +8,7 @@ import 'package:smooth/src/service_locator.dart';
 class ExtraEventDispatcher {
   // TODO just prototype, not final code
   // #5867
-  static void dispatchExtraPointerEvents() {
+  void dispatch() {
     final gestureBinding = GestureBinding.instance;
 
     final pointerEventDateTimeDiffTimeStamp =
