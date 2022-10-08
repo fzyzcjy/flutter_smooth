@@ -4,9 +4,11 @@ import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/messages_wrapped.dart';
 import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/simple_date_time.dart';
 
 class ExtraEventDispatcher {
   final _pendingEventManager = _PendingPointerEventManager();
@@ -40,8 +42,8 @@ class ExtraEventDispatcher {
     // in order to mimic classical case
     // details see #6066
     final pendingEventMaxTimeStamp = smoothFrameTimeStamp - kOneFrame;
-    final pendingEvents =
-        _pendingEventManager.read(maxTimeStamp: pendingEventMaxTimeStamp);
+    final pendingEvents = _pendingEventManager.read(
+        maxTimeStampClockScheduler: pendingEventMaxTimeStamp);
 
     // print(
     //     'pendingPacket.len=${pendingPacket.data.length} pendingPacket.data=${pendingPacket.data}');
@@ -99,19 +101,41 @@ class ExtraEventDispatcher {
 class _PendingPointerEventManager {
   final _pendingEvents = Queue<PointerEvent>();
 
-  List<PointerEvent> read({required Duration maxTimeStamp}) {
+  /// [maxTimeStampClockScheduler] has the same clock as [SchedulerBinding.currentFrameTimeStamp]
+  List<PointerEvent> read({required Duration maxTimeStampClockScheduler}) {
     final gestureBinding = GestureBinding.instance;
     _pendingEvents.addAll(gestureBinding.readEnginePendingEventsAndClear());
 
     assert(_isNonDecreasing(
         _pendingEvents.map((e) => e.timeStamp.inMicroseconds).toList()));
 
+    final maxTimeStampClockPointerEvent =
+        timeStampClockSchedulerToClockPointerEvent(maxTimeStampClockScheduler);
+    if (maxTimeStampClockPointerEvent == null) {
+      // not initialized
+      return const [];
+    }
+
     final ans = <PointerEvent>[];
     while (_pendingEvents.isNotEmpty &&
-        _pendingEvents.first.timeStamp < maxTimeStamp) {
+        _pendingEvents.first.timeStamp < maxTimeStampClockPointerEvent) {
       ans.add(_pendingEvents.removeFirst());
     }
     return ans;
+  }
+
+  static Duration? timeStampClockSchedulerToClockPointerEvent(
+      Duration timeClockScheduler) {
+    final pointerEventDateTimeDiffTimeStamp =
+        SmoothHostApiWrapped.instance.pointerEventDateTimeDiffTimeStamp;
+    if (pointerEventDateTimeDiffTimeStamp == null) return null;
+
+    final dateTime = ServiceLocator.instance.preemptStrategy
+        .timeStampToDateTime(timeClockScheduler);
+
+    return Duration(
+        microseconds: dateTime.microsecondsSinceEpoch -
+            pointerEventDateTimeDiffTimeStamp);
   }
 }
 
