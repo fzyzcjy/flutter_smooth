@@ -116,7 +116,7 @@ class _PendingPointerEventManager {
 
     assert(() {
       // be very loose
-      const kThreshold = Duration(milliseconds: 20);
+      const kThreshold = Duration(milliseconds: 100);
 
       final eventTimeStamp = enginePendingEvents.lastOrNull?.timeStamp;
       if (eventTimeStamp != null &&
