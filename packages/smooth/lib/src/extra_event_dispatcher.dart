@@ -8,7 +8,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/messages_wrapped.dart';
 import 'package:smooth/src/service_locator.dart';
-import 'package:smooth/src/simple_date_time.dart';
 
 class ExtraEventDispatcher {
   final _pendingEventManager = _PendingPointerEventManager();
@@ -83,19 +82,6 @@ class ExtraEventDispatcher {
       );
     }
   }
-
-  static void _sanityCheckPointerEventTime({
-    required Duration? eventTimeStamp,
-    required Duration nowTimeStamp,
-  }) {
-    // be very loose
-    const kThreshold = Duration(milliseconds: 20);
-    if (eventTimeStamp != null &&
-        (eventTimeStamp - nowTimeStamp).abs() > kThreshold) {
-      throw AssertionError(
-          'sanityCheckPointerEventTime failed: eventTimeStamp=$eventTimeStamp nowTimeStamp=$nowTimeStamp');
-    }
-  }
 }
 
 class _PendingPointerEventManager {
@@ -103,12 +89,6 @@ class _PendingPointerEventManager {
 
   /// [maxTimeStampClockScheduler] has the same clock as [SchedulerBinding.currentFrameTimeStamp]
   List<PointerEvent> read({required Duration maxTimeStampClockScheduler}) {
-    final gestureBinding = GestureBinding.instance;
-    _pendingEvents.addAll(gestureBinding.readEnginePendingEventsAndClear());
-
-    assert(_isNonDecreasing(
-        _pendingEvents.map((e) => e.timeStamp.inMicroseconds).toList()));
-
     final maxTimeStampClockPointerEvent =
         timeStampClockSchedulerToClockPointerEvent(maxTimeStampClockScheduler);
     if (maxTimeStampClockPointerEvent == null) {
@@ -116,12 +96,40 @@ class _PendingPointerEventManager {
       return const [];
     }
 
+    _fetchFromEngine(
+        sanityCheckLastEventTimeStamp: maxTimeStampClockPointerEvent);
+
     final ans = <PointerEvent>[];
     while (_pendingEvents.isNotEmpty &&
         _pendingEvents.first.timeStamp < maxTimeStampClockPointerEvent) {
       ans.add(_pendingEvents.removeFirst());
     }
     return ans;
+  }
+
+  void _fetchFromEngine({required Duration sanityCheckLastEventTimeStamp}) {
+    final gestureBinding = GestureBinding.instance;
+
+    final enginePendingEvents =
+        gestureBinding.readEnginePendingEventsAndClear();
+
+    assert(() {
+      // be very loose
+      const kThreshold = Duration(milliseconds: 20);
+
+      final eventTimeStamp = enginePendingEvents.lastOrNull?.timeStamp;
+      if (eventTimeStamp != null &&
+          (eventTimeStamp - sanityCheckLastEventTimeStamp).abs() > kThreshold) {
+        throw AssertionError(
+            'sanityCheckPointerEventTime failed: eventTimeStamp=$eventTimeStamp sanityCheckLastEventTimeStamp=$sanityCheckLastEventTimeStamp');
+      }
+      return true;
+    }());
+
+    _pendingEvents.addAll(enginePendingEvents);
+
+    assert(_isNonDecreasing(
+        _pendingEvents.map((e) => e.timeStamp.inMicroseconds).toList()));
   }
 
   static Duration? timeStampClockSchedulerToClockPointerEvent(
