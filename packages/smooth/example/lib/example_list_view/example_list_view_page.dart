@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/service_locator.dart';
 
@@ -129,6 +128,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
       ),
       subtitle: Stack(
         children: [
+          // v1
           // https://github.com/fzyzcjy/yplusplus/issues/6022#issuecomment-1269158088
           // SizedBox(
           //   height: 36,
@@ -152,8 +152,22 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
           //     ),
           //   ),
           // ),
-          // https://github.com/fzyzcjy/yplusplus/issues/6022#issuecomment-1269158088
-          _AlwaysLayoutBuilder(
+
+          // v2 - #6076 find it wrong
+          // // https://github.com/fzyzcjy/yplusplus/issues/6022#issuecomment-1269158088
+          // _AlwaysLayoutBuilder(
+          //   onPerformLayout: () {
+          //     for (var i = 0; i < workload * 10; ++i) {
+          //       sleep(const Duration(microseconds: 400));
+          //       ServiceLocator.instance.actor.maybePreemptRender();
+          //     }
+          //   },
+          //   child: Container(),
+          // ),
+
+          // v3
+          // #6076
+          _NormalLayoutBuilder(
             onPerformLayout: () {
               for (var i = 0; i < workload * 10; ++i) {
                 sleep(const Duration(microseconds: 400));
@@ -275,29 +289,29 @@ class _SimpleCounterPainter extends CustomPainter {
       oldDelegate.index != index;
 }
 
-class _AlwaysLayoutBuilder extends SingleChildRenderObjectWidget {
+class _NormalLayoutBuilder extends SingleChildRenderObjectWidget {
   final VoidCallback? onPerformLayout;
 
-  const _AlwaysLayoutBuilder({
+  const _NormalLayoutBuilder({
     this.onPerformLayout,
     super.child,
   });
 
   @override
-  _RenderAlwaysLayoutBuilder createRenderObject(BuildContext context) =>
-      _RenderAlwaysLayoutBuilder(
+  _RenderNormalLayoutBuilder createRenderObject(BuildContext context) =>
+      _RenderNormalLayoutBuilder(
         onPerformLayout: onPerformLayout,
       );
 
   @override
   void updateRenderObject(
-      BuildContext context, _RenderAlwaysLayoutBuilder renderObject) {
+      BuildContext context, _RenderNormalLayoutBuilder renderObject) {
     renderObject.onPerformLayout = onPerformLayout;
   }
 }
 
-class _RenderAlwaysLayoutBuilder extends RenderProxyBox {
-  _RenderAlwaysLayoutBuilder({
+class _RenderNormalLayoutBuilder extends RenderProxyBox {
+  _RenderNormalLayoutBuilder({
     required this.onPerformLayout,
     RenderBox? child,
   }) : super(child);
@@ -306,13 +320,50 @@ class _RenderAlwaysLayoutBuilder extends RenderProxyBox {
 
   @override
   void performLayout() {
-    // print('$runtimeType.performLayout');
-
     super.performLayout();
     onPerformLayout?.call();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      if (!attached) return;
-      markNeedsLayout();
-    });
+    // this is NOT "always layout builder", so do not mark needs layout
   }
 }
+
+// class _AlwaysLayoutBuilder extends SingleChildRenderObjectWidget {
+//   final VoidCallback? onPerformLayout;
+//
+//   const _AlwaysLayoutBuilder({
+//     this.onPerformLayout,
+//     super.child,
+//   });
+//
+//   @override
+//   _RenderAlwaysLayoutBuilder createRenderObject(BuildContext context) =>
+//       _RenderAlwaysLayoutBuilder(
+//         onPerformLayout: onPerformLayout,
+//       );
+//
+//   @override
+//   void updateRenderObject(
+//       BuildContext context, _RenderAlwaysLayoutBuilder renderObject) {
+//     renderObject.onPerformLayout = onPerformLayout;
+//   }
+// }
+//
+// class _RenderAlwaysLayoutBuilder extends RenderProxyBox {
+//   _RenderAlwaysLayoutBuilder({
+//     required this.onPerformLayout,
+//     RenderBox? child,
+//   }) : super(child);
+//
+//   VoidCallback? onPerformLayout;
+//
+//   @override
+//   void performLayout() {
+//     // print('$runtimeType.performLayout');
+//
+//     super.performLayout();
+//     onPerformLayout?.call();
+//     SchedulerBinding.instance.addPostFrameCallback((_) {
+//       if (!attached) return;
+//       markNeedsLayout();
+//     });
+//   }
+// }
