@@ -51,9 +51,10 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   double? _pointerDownPosition;
   double? _positionWhenCurrStartDrawFrame;
   double? _positionWhenPrevStartDrawFrame;
-  double? _positionWhenPrevPrevBuild;
-  double? _positionWhenPrevBuild;
   double? _currPosition;
+
+  // double? _positionWhenPrevPrevBuild;
+  // double? _positionWhenPrevBuild;
 
   double get _offsetFromPointerEvent {
     if (_currPosition == null) return 0;
@@ -128,8 +129,8 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
       _pointerDownPosition = null;
       _positionWhenCurrStartDrawFrame = null;
       _positionWhenPrevStartDrawFrame = null;
-      _positionWhenPrevPrevBuild = null;
-      _positionWhenPrevBuild = null;
+      // _positionWhenPrevPrevBuild = null;
+      // _positionWhenPrevBuild = null;
       _currPosition = null;
     });
   }
@@ -144,29 +145,30 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
     setState(() {});
   }
 
-  // #6052
-  void _maybePseudoMoveOnBuild() {
-    if (_currPosition == null) return;
-
-    // no pointer events
-    if (_positionWhenPrevBuild == _currPosition) {
-      // very naive interpolation...
-      final double interpolatedShift;
-
-      if (_positionWhenPrevBuild != null &&
-          _positionWhenPrevPrevBuild != null) {
-        interpolatedShift =
-            _positionWhenPrevBuild! - _positionWhenPrevPrevBuild!;
-      } else {
-        interpolatedShift = 0.0;
-      }
-
-      _currPosition = _currPosition! + interpolatedShift;
-    }
-
-    _positionWhenPrevPrevBuild = _positionWhenPrevBuild;
-    _positionWhenPrevBuild = _currPosition;
-  }
+  // remove in #6071
+  // // #6052
+  // void _maybePseudoMoveOnBuild() {
+  //   if (_currPosition == null) return;
+  //
+  //   // no pointer events
+  //   if (_positionWhenPrevBuild == _currPosition) {
+  //     // very naive interpolation...
+  //     final double interpolatedShift;
+  //
+  //     if (_positionWhenPrevBuild != null &&
+  //         _positionWhenPrevPrevBuild != null) {
+  //       interpolatedShift =
+  //           _positionWhenPrevBuild! - _positionWhenPrevPrevBuild!;
+  //     } else {
+  //       interpolatedShift = 0.0;
+  //     }
+  //
+  //     _currPosition = _currPosition! + interpolatedShift;
+  //   }
+  //
+  //   _positionWhenPrevPrevBuild = _positionWhenPrevBuild;
+  //   _positionWhenPrevBuild = _currPosition;
+  // }
 
   @override
   void initState() {
@@ -196,7 +198,7 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   @override
   Widget build(BuildContext context) {
     _maybeAddCallbacks();
-    _maybePseudoMoveOnBuild();
+    // _maybePseudoMoveOnBuild();
 
     return Listener(
       onPointerDown: _handlePointerDown,
