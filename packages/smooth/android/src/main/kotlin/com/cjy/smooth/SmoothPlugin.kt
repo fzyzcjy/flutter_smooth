@@ -2,6 +2,7 @@ package com.cjy.smooth
 
 import androidx.annotation.NonNull
 
+import java.util.Date
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -9,27 +10,20 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
 /** SmoothPlugin */
-class SmoothPlugin: FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
-  private lateinit var channel : MethodChannel
-
+class SmoothPlugin: FlutterPlugin, SmoothHostApi {
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "smooth")
-    channel.setMethodCallHandler(this)
-  }
-
-  override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-    if (call.method == "getPlatformVersion") {
-      result.success("Android ${android.os.Build.VERSION.RELEASE}")
-    } else {
-      result.notImplemented()
-    }
+    // ref: https://github.com/flutter/plugins/blob/master/packages/video_player/video_player/android/src/main/java/io/flutter/plugins/videoplayer/VideoPlayerPlugin.java#L210
+    NativeUtilsHostApi.setup(flutterPluginBinding.binaryMessenger, this)
   }
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-    channel.setMethodCallHandler(null)
+    NativeUtilsHostApi.setup(binding.binaryMessenger, null)
+  }
+
+  override fun pointerEventDateTimeDiffTimeStamp(): Long {
+    // #6069
+    val dateTimeValue = System.currentTimeMillis() * 1000
+    val timeStampValue = SystemClock.uptimeMillis() * 1000
+    return dateTimeValue - timeStampValue
   }
 }
