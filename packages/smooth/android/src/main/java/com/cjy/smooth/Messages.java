@@ -23,7 +23,7 @@ import java.util.HashMap;
 public class Messages {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface SmoothHostApi {
-    @NonNull Long systemUptimeMicroseconds();
+    @NonNull Long pointerEventDateTimeDiffTimeStamp();
 
     /** The codec used by SmoothHostApi. */
     static MessageCodec<Object> getCodec() {
@@ -32,12 +32,12 @@ public class Messages {
     static void setup(BinaryMessenger binaryMessenger, SmoothHostApi api) {
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.SmoothHostApi.systemUptimeMicroseconds", getCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.SmoothHostApi.pointerEventDateTimeDiffTimeStamp", getCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
             try {
-              Long output = api.systemUptimeMicroseconds();
+              Long output = api.pointerEventDateTimeDiffTimeStamp();
               wrapped.put("result", output);
             }
             catch (Error | RuntimeException exception) {

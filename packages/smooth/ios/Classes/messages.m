@@ -42,14 +42,14 @@ void CSSmoothHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<C
   {
     FlutterBasicMessageChannel *channel =
       [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.SmoothHostApi.systemUptimeMicroseconds"
+        initWithName:@"dev.flutter.pigeon.SmoothHostApi.pointerEventDateTimeDiffTimeStamp"
         binaryMessenger:binaryMessenger
         codec:CSSmoothHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(systemUptimeMicrosecondsWithError:)], @"CSSmoothHostApi api (%@) doesn't respond to @selector(systemUptimeMicrosecondsWithError:)", api);
+      NSCAssert([api respondsToSelector:@selector(pointerEventDateTimeDiffTimeStampWithError:)], @"CSSmoothHostApi api (%@) doesn't respond to @selector(pointerEventDateTimeDiffTimeStampWithError:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FlutterError *error;
-        NSNumber *output = [api systemUptimeMicrosecondsWithError:&error];
+        NSNumber *output = [api pointerEventDateTimeDiffTimeStampWithError:&error];
         callback(wrapResult(output, error));
       }];
     }

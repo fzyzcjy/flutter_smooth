@@ -18,9 +18,9 @@ class SmoothHostApi {
 
   static const MessageCodec<Object?> codec = StandardMessageCodec();
 
-  Future<int> systemUptimeMicroseconds() async {
+  Future<int> pointerEventDateTimeDiffTimeStamp() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.SmoothHostApi.systemUptimeMicroseconds', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.SmoothHostApi.pointerEventDateTimeDiffTimeStamp', codec, binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(null) as Map<Object?, Object?>?;
     if (replyMap == null) {

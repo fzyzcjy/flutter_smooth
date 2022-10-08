@@ -17,5 +17,5 @@ import 'package:pigeon/pigeon.dart';
 ))
 @HostApi()
 abstract class SmoothHostApi {
-  int systemUptimeMicroseconds();
+  int pointerEventDateTimeDiffTimeStamp();
 }

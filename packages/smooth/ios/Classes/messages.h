@@ -14,7 +14,7 @@ NSObject<FlutterMessageCodec> *CSSmoothHostApiGetCodec(void);
 
 @protocol CSSmoothHostApi
 /// @return `nil` only when `error != nil`.
-- (nullable NSNumber *)systemUptimeMicrosecondsWithError:(FlutterError *_Nullable *_Nonnull)error;
+- (nullable NSNumber *)pointerEventDateTimeDiffTimeStampWithError:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void CSSmoothHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<CSSmoothHostApi> *_Nullable api);
