@@ -29,8 +29,8 @@ class ExtraEventDispatcher {
         microseconds:
             now.microsecondsSinceEpoch - pointerEventDateTimeDiffTimeStamp);
 
-    print(
-        'pointerEventDateTimeDiffTimeStamp=$pointerEventDateTimeDiffTimeStamp');
+    // print(
+    //     'pointerEventDateTimeDiffTimeStamp=$pointerEventDateTimeDiffTimeStamp');
 
     // print('hackDispatchExtraPointerEvents '
     //     'pointer=$pointer '
@@ -99,6 +99,10 @@ class _PendingPointerEventManager {
         _pendingEvents.first.timeStamp < maxTimeStampClockPointerEvent) {
       ans.add(_pendingEvents.removeFirst());
     }
+
+    SimpleLog.instance.log(
+        'PendingPointerEventManager dequeue (to downstream) ${ans.toBriefString()}');
+
     return ans;
   }
 
@@ -107,6 +111,8 @@ class _PendingPointerEventManager {
 
     final enginePendingEvents =
         gestureBinding.readEnginePendingEventsAndClear();
+    SimpleLog.instance.log(
+        'PendingPointerEventManager enqueue (from engine) ${enginePendingEvents.toBriefString()}');
 
     assert(() {
       // be very loose
@@ -147,4 +153,13 @@ bool _isNonDecreasing(List<int> values) {
     if (values[i] > values[i + 1]) return false;
   }
   return true;
+}
+
+extension on List<PointerEvent> {
+  String toBriefString() => map((e) => e.toBriefString()).toList().toString();
+}
+
+extension on PointerEvent {
+  String toBriefString() =>
+      'PointerEvent(timeStamp: $timeStamp, position: $position)';
 }

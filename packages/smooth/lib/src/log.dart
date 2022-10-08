@@ -12,7 +12,7 @@ class SimpleLog {
   void log(String value) {
     final message = '[${clock.now()}] $value';
     _messages.add(message);
-    debugPrint(message);
+    if (kDebugMode) print(message);
   }
 
   void dumpAndReset() {
