@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:smooth/src/messages_wrapped.dart';
 import 'package:smooth/src/service_locator.dart';
 
 class EventDispatcher {
@@ -7,6 +8,16 @@ class EventDispatcher {
   // #5867
   static void dispatchExtraPointerEvents() {
     final gestureBinding = GestureBinding.instance;
+
+    final pointerEventDateTimeDiffTimeStamp =
+        SmoothHostApiWrapped.instance.pointerEventDateTimeDiffTimeStamp;
+    if (pointerEventDateTimeDiffTimeStamp == null) {
+      // not finish initialization
+      return;
+    }
+   
+    print(
+        'pointerEventDateTimeDiffTimeStamp=$pointerEventDateTimeDiffTimeStamp');
 
     // print('hackDispatchExtraPointerEvents '
     //     'pointer=$pointer '
