@@ -1,3 +1,5 @@
+import 'package:clock/clock.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth/src/messages_wrapped.dart';
@@ -15,7 +17,12 @@ class EventDispatcher {
       // not finish initialization
       return;
     }
-   
+
+    final now = clock.now();
+    final nowTimeStampInPointerEventClock = Duration(
+        microseconds:
+            now.microsecondsSinceEpoch - pointerEventDateTimeDiffTimeStamp);
+
     print(
         'pointerEventDateTimeDiffTimeStamp=$pointerEventDateTimeDiffTimeStamp');
 
@@ -26,6 +33,11 @@ class EventDispatcher {
     final pendingEvents = gestureBinding.readEnginePendingEventsAndClear();
     // print(
     //     'pendingPacket.len=${pendingPacket.data.length} pendingPacket.data=${pendingPacket.data}');
+
+    _sanityCheckPointerEventTime(
+      eventTimeStamp: pendingEvents.lastOrNull?.timeStamp,
+      nowTimeStamp: nowTimeStampInPointerEventClock,
+    );
 
     // // WARN: this fake event is VERY dummy! many fields are not filled in
     // // so a real consumer of pointer event may get VERY confused!
@@ -55,6 +67,19 @@ class EventDispatcher {
               interestPipelineOwners.contains(target.owner);
         },
       );
+    }
+  }
+
+  static void _sanityCheckPointerEventTime({
+    required Duration? eventTimeStamp,
+    required Duration nowTimeStamp,
+  }) {
+    // be very loose
+    const kThreshold = Duration(milliseconds: 20);
+    if (eventTimeStamp != null &&
+        (eventTimeStamp - nowTimeStamp).abs() > kThreshold) {
+      throw AssertionError(
+          'sanityCheckPointerEventTime failed: eventTimeStamp=$eventTimeStamp nowTimeStamp=$nowTimeStamp');
     }
   }
 }
