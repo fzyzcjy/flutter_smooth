@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/event_dispatcher.dart';
+import 'package:smooth/src/extra_event_dispatcher.dart';
 import 'package:smooth/src/log.dart';
 import 'package:smooth/src/messages_wrapped.dart';
 import 'package:smooth/src/proxy.dart';
@@ -152,7 +152,7 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     if (serviceLocator == null) return;
 
     // #6033
-    EventDispatcher.dispatchExtraPointerEvents();
+    ExtraEventDispatcher.dispatchExtraPointerEvents();
 
     serviceLocator.preemptStrategy.refresh();
     final currentSmoothFrameTimeStamp =

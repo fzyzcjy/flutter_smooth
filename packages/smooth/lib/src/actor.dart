@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
-import 'package:smooth/src/event_dispatcher.dart';
+import 'package:smooth/src/extra_event_dispatcher.dart';
 import 'package:smooth/src/service_locator.dart';
 
 class Actor {
@@ -52,7 +52,7 @@ class Actor {
       //     'shouldShiftOneFrameForInterestVsyncTarget=$shouldShiftOneFrameForInterestVsyncTarget '
       //     'set-interestVsyncTargetTimeByLastPreemptRender=$interestVsyncTargetTimeByLastPreemptRender');
 
-      EventDispatcher.dispatchExtraPointerEvents();
+      ExtraEventDispatcher.dispatchExtraPointerEvents();
 
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame

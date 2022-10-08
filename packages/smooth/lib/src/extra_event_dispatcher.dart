@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth/src/messages_wrapped.dart';
 import 'package:smooth/src/service_locator.dart';
 
-class EventDispatcher {
+class ExtraEventDispatcher {
   // TODO just prototype, not final code
   // #5867
   static void dispatchExtraPointerEvents() {
