@@ -22,9 +22,11 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
 
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
-    SimpleLog.instance
-        .log('$runtimeType.handleBeginFrame.start rawTimeStamp=$rawTimeStamp');
     _beginFrameDateTime = clock.now();
+
+    SimpleLog.instance.log('$runtimeType.handleBeginFrame.start '
+        'rawTimeStamp=$rawTimeStamp clock.now=$_beginFrameDateTime');
+
     super.handleBeginFrame(rawTimeStamp);
   }
 
@@ -101,8 +103,9 @@ mixin SmoothWidgetsBindingMixin on WidgetsBinding {
     if (smoothFrameTimeStamp != null) {
       _executingRunPipelineBecauseOfAfterDrawFrame.value = true;
       try {
-        serviceLocator.actor
-            .preemptRenderRaw(smoothFrameTimeStamp: smoothFrameTimeStamp);
+        serviceLocator.actor.preemptRenderRaw(
+            smoothFrameTimeStamp: smoothFrameTimeStamp,
+            debugReason: 'AfterDrawFrame');
       } finally {
         _executingRunPipelineBecauseOfAfterDrawFrame.value = false;
       }

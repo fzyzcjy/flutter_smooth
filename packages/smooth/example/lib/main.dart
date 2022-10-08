@@ -66,7 +66,9 @@ class MyApp extends StatelessWidget {
                         context,
                         MaterialPageRoute<dynamic>(
                             builder: (_) => const ExampleListViewPage(
-                                enableSmooth: true, leaveWhenPointerUp: true))),
+                                enableSmooth: true,
+                                enableDebugHeader: true,
+                                leaveWhenPointerUp: true))),
                   ),
                   ListTile(
                     title: const Text('Example: ListView plain + 0 workload'),

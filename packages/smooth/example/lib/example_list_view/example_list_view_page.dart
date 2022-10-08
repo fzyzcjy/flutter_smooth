@@ -212,9 +212,10 @@ class _SimpleCounterState extends State<_SimpleCounter>
 
         // #6029
 
-        return Timeline.timeSync(
-            '$_buildCount.$_animationValueChangeCount.${widget.name}.SimpleCounter',
-            () {
+        final debugName =
+            '$_buildCount.$_animationValueChangeCount.${widget.name}.SimpleCounter';
+        SimpleLog.instance.log('$debugName build');
+        return Timeline.timeSync(debugName, () {
           return Row(
             mainAxisSize: MainAxisSize.min,
             children: [

@@ -160,6 +160,9 @@ extension on List<PointerEvent> {
 }
 
 extension on PointerEvent {
-  String toBriefString() =>
-      'PointerEvent(timeStamp: $timeStamp, position: $position)';
+  String toBriefString() => 'PointerEvent('
+      'timeStamp: $timeStamp, '
+      'dateTime: $dateTime, '
+      'position: $position'
+      ')';
 }

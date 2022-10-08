@@ -34,11 +34,14 @@ class Actor {
       final smoothFrameTimeStamp =
           ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp;
 
-      preemptRenderRaw(smoothFrameTimeStamp: smoothFrameTimeStamp);
+      preemptRenderRaw(
+          smoothFrameTimeStamp: smoothFrameTimeStamp,
+          debugReason: 'maybePreemptRender');
     }
   }
 
-  void preemptRenderRaw({required Duration smoothFrameTimeStamp}) {
+  void preemptRenderRaw(
+      {required Duration smoothFrameTimeStamp, required String debugReason}) {
     final binding = WidgetsFlutterBinding.ensureInitialized();
     final start = clock.now();
     Timeline.timeSync('PreemptRender', () {
@@ -57,7 +60,7 @@ class Actor {
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
       // ref: RenderView.compositeFrame
 
-      _preemptModifyLayerTree(smoothFrameTimeStamp);
+      _preemptModifyLayerTree(smoothFrameTimeStamp, debugReason: debugReason);
 
       final builder = SceneBuilder();
       // why this layer - from RenderView.compositeFrame
@@ -81,12 +84,13 @@ class Actor {
     // print('$runtimeType _preemptRender end');
   }
 
-  void _preemptModifyLayerTree(Duration timeStamp) {
+  void _preemptModifyLayerTree(Duration timeStamp,
+      {required String debugReason}) {
     for (final pack in ServiceLocator.instance.auxiliaryTreeRegistry.trees) {
       pack.runPipeline(
         timeStamp,
         skipIfTimeStampUnchanged: false,
-        debugReason: 'preemptModifyLayerTree',
+        debugReason: 'preemptModifyLayerTree $debugReason',
       );
     }
   }

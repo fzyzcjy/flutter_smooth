@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:smooth/src/messages.dart';
 
 class SmoothHostApiWrapped {
@@ -15,4 +16,14 @@ class SmoothHostApiWrapped {
   int? get pointerEventDateTimeDiffTimeStamp =>
       _pointerEventDateTimeDiffTimeStamp;
   int? _pointerEventDateTimeDiffTimeStamp;
+}
+
+extension ExtPointerEvent on PointerEvent {
+  DateTime? get dateTime {
+    final pointerEventDateTimeDiffTimeStamp =
+        SmoothHostApiWrapped.instance.pointerEventDateTimeDiffTimeStamp;
+    if (pointerEventDateTimeDiffTimeStamp == null) return null;
+    return DateTime.fromMicrosecondsSinceEpoch(
+        timeStamp.inMicroseconds + pointerEventDateTimeDiffTimeStamp);
+  }
 }
