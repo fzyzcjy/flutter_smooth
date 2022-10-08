@@ -7,10 +7,17 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/event_dispatcher.dart';
 import 'package:smooth/src/log.dart';
+import 'package:smooth/src/messages_wrapped.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
+  @override
+  void initInstances() {
+    super.initInstances();
+    SmoothHostApiWrapped.instance.init();
+  }
+
   DateTime get beginFrameDateTime => _beginFrameDateTime!;
   DateTime? _beginFrameDateTime;
 
