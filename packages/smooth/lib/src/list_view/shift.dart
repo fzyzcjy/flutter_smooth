@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/binding.dart';
 import 'package:smooth/src/list_view/controller.dart';
 import 'package:smooth/src/log.dart';
+import 'package:smooth/src/service_locator.dart';
 
 class SmoothShift extends StatefulWidget {
   final ScrollController scrollController;
@@ -32,7 +33,8 @@ abstract class _SmoothShiftBase extends State<SmoothShift>
   @mustCallSuper
   Widget build(BuildContext context) {
     // print('hi $runtimeType build offset=$offset');
-    SimpleLog.instance.log('SmoothShift.build offset=$offset');
+    SimpleLog.instance.log(
+        'SmoothShift.build offset=$offset currentSmoothFrameTimeStamp=${ServiceLocator.maybeInstance?.preemptStrategy.currentSmoothFrameTimeStamp}');
 
     return Transform.translate(
       offset: Offset(0, offset),
