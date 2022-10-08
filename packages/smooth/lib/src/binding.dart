@@ -54,9 +54,6 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     }
   }
 
-  @override
-  ui.SingletonFlutterWindow get window => _SmoothWindow(super.window);
-
   static SmoothSchedulerBindingMixin get instance {
     final raw = WidgetsBinding.instance;
     assert(raw is SmoothSchedulerBindingMixin,
@@ -65,8 +62,13 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   }
 }
 
-class _SmoothWindow extends ProxySingletonFlutterWindow {
-  _SmoothWindow(super.inner);
+mixin SmoothSchedulerDebugBindingMixin on SchedulerBinding {
+  @override
+  ui.SingletonFlutterWindow get window => _SmoothDebugWindow(super.window);
+}
+
+class _SmoothDebugWindow extends ProxySingletonFlutterWindow {
+  _SmoothDebugWindow(super.inner);
 
   @override
   void render(ui.Scene scene) {
@@ -182,6 +184,7 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
 class SmoothWidgetsFlutterBinding extends WidgetsFlutterBinding
     with
         SmoothSchedulerBindingMixin,
+        SmoothSchedulerDebugBindingMixin,
         SmoothRendererBindingMixin,
         SmoothWidgetsBindingMixin {
   @override
