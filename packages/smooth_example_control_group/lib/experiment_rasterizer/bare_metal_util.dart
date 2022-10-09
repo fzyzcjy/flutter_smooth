@@ -10,6 +10,7 @@ Scene buildSceneFromPainter(void Function(Canvas, Size) painter) {
   final recorder = PictureRecorder();
   final canvas = Canvas(recorder, paintBounds);
 
+  canvas.drawRect(paintBounds, Paint()..color = Colors.white);
   painter(canvas, paintBounds.size);
 
   final picture = recorder.endRecording();
