@@ -101,7 +101,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
     if (index % 10 == 0) rowColor = Colors.green;
 
     return SizedBox(
-      height: 16.0 * (3 + Random().nextInt(3)),
+      height: 96.0 + Random().nextInt(64),
       child: Stack(
         children: [
           // #6076
