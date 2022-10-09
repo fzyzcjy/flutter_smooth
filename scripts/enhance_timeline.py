@@ -2,7 +2,7 @@ import json
 import re
 from argparse import ArgumentParser
 from pathlib import Path
-from typing import Callable, Dict
+from typing import Callable, Dict, List, Tuple
 from zipfile import ZipFile
 
 parser = ArgumentParser()
@@ -14,42 +14,78 @@ path_output = path_input.parent / f'{path_input.stem}_enhanced.json'
 path_output_zipped = path_output.parent / f'{path_output.name}.zip'
 
 data = json.loads(path_input.read_text())
-new_events = []
+
+TraceEvent = Dict
 
 
-def synthesize_long_event(old_event: Dict, synthesize_tid: int, synthesize_duration_us=10000):
-    global new_events
-
-    ts = old_event['ts']
+def synthesize_event(
+        *,
+        name: str,
+        start_us: int,
+        tid: int,
+        duration_us: int = 10000,
+) -> List[TraceEvent]:
     common_args = dict(
-        tid=synthesize_tid,
-        name=old_event['name'],
-        cat=old_event['cat'],
-        pid=old_event['pid'],
+        tid=tid,
+        name=name,
+        cat='synthesized',
+        pid=-1000000,
     )
 
-    new_events += [
-        dict(ts=ts, ph='B', **common_args),
-        dict(ts=ts + synthesize_duration_us, ph='E', **common_args),
+    return [
+        dict(ts=start_us, ph='B', **common_args),
+        dict(ts=start_us + duration_us, ph='E', **common_args),
     ]
 
 
 def synthesize_long_event_matching_filter(filter_event: Callable[[str], bool], synthesize_tid: int):
+    new_events = []
     for e in data['traceEvents']:
         if e['ph'] == 'B' and filter_event(e['name']):
-            synthesize_long_event(e, synthesize_tid=synthesize_tid)
+            new_events += synthesize_event(
+                name=e['name'],
+                start_us=e['ts'],
+                tid=synthesize_tid,
+            )
+    data['traceEvents'] += new_events
 
+
+VsyncRange = Tuple[int, int]
+
+
+def parse_vsync_info() -> List[VsyncRange]:
+    return TODO
+
+
+def modify_vsync_events(vsync_ranges: List[VsyncRange]):
+    # modify existing names
+    for e in data['traceEvents']:
+        if e['name'] == 'VSYNC':
+            e['name'] = 'VSYNC_renamed'
+
+    # add events
+    data['traceEvents'] += [
+        e
+        for start, end in vsync_ranges
+        for e in synthesize_event(
+            name='VSYNC',
+            start_us=start,
+            duration_us=end - start,
+            tid=-1000000,
+        )
+    ]
+
+
+vsync_ranges = parse_vsync_info()
+modify_vsync_events(vsync_ranges)
 
 synthesize_long_event_matching_filter(
     lambda s: re.match(r'.*\.S\.SimpleCounter', s) is not None,
-    synthesize_tid=-999999,
+    synthesize_tid=-999998,
 )
 
-print(f'#old-events={len(data["traceEvents"])} #new-events={len(new_events)}')
-path_output.write_text(json.dumps({
-    **data,
-    'traceEvents': data['traceEvents'] + new_events,
-}))
+print(f'#events={len(data["traceEvents"])}')
+path_output.write_text(json.dumps(data))
 
 with ZipFile(path_output_zipped, 'w') as zipf:
     zipf.write(path_output, arcname=path_output.name)
