@@ -26,46 +26,48 @@ class ExampleListViewPage extends StatelessWidget {
       // appBar: AppBar(
       //   title: Text('Example (${widget.enableSmooth ? 'smooth' : 'plain'})'),
       // ),
-      body: Listener(
-        // #6028
-        onPointerUp:
-            leaveWhenPointerUp ? (_) => Navigator.of(context).pop() : null,
-        child: Column(
-          children: [
-            if (enableDebugHeader)
-              SizedBox(
-                height: 48,
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: _SimpleCounter(name: 'P'),
-                    ),
-                    Expanded(
-                      child: SmoothBuilder(
-                        builder: (_, __) => const Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: _SimpleCounter(name: 'S'),
-                        ),
-                        child: Container(),
+      body: SafeArea(
+        child: Listener(
+          // #6028
+          onPointerUp:
+              leaveWhenPointerUp ? (_) => Navigator.of(context).pop() : null,
+          child: Column(
+            children: [
+              if (enableDebugHeader)
+                SizedBox(
+                  height: 48,
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        child: _SimpleCounter(name: 'P'),
                       ),
-                    ),
-                  ],
+                      Expanded(
+                        child: SmoothBuilder(
+                          builder: (_, __) => const Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: _SimpleCounter(name: 'S'),
+                          ),
+                          child: Container(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            Expanded(child: enableSmooth ? _buildSmooth() : _buildPlain()),
-            // Row(
-            //   children: [
-            //     for (final value in [0, 1, 10, 50, 100, 200, 500])
-            //       SizedBox(
-            //         width: 48,
-            //         child: TextButton(
-            //           onPressed: () => setState(() => workload = value),
-            //           child: Text('$value'),
-            //         ),
-            //       ),
-            //   ],
-            // ),
-          ],
+              Expanded(child: enableSmooth ? _buildSmooth() : _buildPlain()),
+              // Row(
+              //   children: [
+              //     for (final value in [0, 1, 10, 50, 100, 200, 500])
+              //       SizedBox(
+              //         width: 48,
+              //         child: TextButton(
+              //           onPressed: () => setState(() => workload = value),
+              //           child: Text('$value'),
+              //         ),
+              //       ),
+              //   ],
+              // ),
+            ],
+          ),
         ),
       ),
     );
@@ -87,8 +89,8 @@ class ExampleListViewPage extends StatelessWidget {
 
   Widget _buildRow(BuildContext context, int index) {
     Color? rowColor;
-    if (index % 5 == 0) rowColor = Colors.pink;
-    if (index % 10 == 0) rowColor = Colors.green;
+    if (index % 3 == 0) rowColor = Colors.pink;
+    if (index % 6 == 0) rowColor = Colors.green;
 
     return SizedBox(
       height: 96.0 + Random().nextInt(64),
