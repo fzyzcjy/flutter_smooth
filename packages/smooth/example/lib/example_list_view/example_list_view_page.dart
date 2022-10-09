@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:math';
 
@@ -214,7 +215,8 @@ class _SimpleCounterState extends State<_SimpleCounter>
   late final _controller =
       AnimationController(duration: const Duration(seconds: 1), vsync: this);
 
-  late final _painter = _SimpleCounterPainter(repaint: _controller);
+  late final _painter =
+      _SimpleCounterPainter(name: widget.name, repaint: _controller);
 
   @override
   void initState() {
@@ -241,7 +243,9 @@ class _SimpleCounterState extends State<_SimpleCounter>
 }
 
 class _SimpleCounterPainter extends CustomPainter {
-  _SimpleCounterPainter({super.repaint});
+  final String name;
+
+  _SimpleCounterPainter({required this.name, super.repaint});
 
   static final _painters = List.generate(
       N,
@@ -255,18 +259,21 @@ class _SimpleCounterPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    _paintCount++;
+    Timeline.timeSync('$_paintCount.$name.SimpleCounter', () {
+      _paintCount++;
 
-    final xDivide = size.width * 0.6;
-    final lcdBoundLeft = Rect.fromLTRB(0, 0, xDivide / 2, size.height);
-    final lcdBoundRight = Rect.fromLTRB(xDivide / 2, 0, xDivide, size.height);
-    final threeColorBounds = Rect.fromLTRB(xDivide, 0, size.width, size.height);
+      final xDivide = size.width * 0.6;
+      final lcdBoundLeft = Rect.fromLTRB(0, 0, xDivide / 2, size.height);
+      final lcdBoundRight = Rect.fromLTRB(xDivide / 2, 0, xDivide, size.height);
+      final threeColorBounds =
+          Rect.fromLTRB(xDivide, 0, size.width, size.height);
 
-    final painter = _painters[_paintCount % N];
+      final painter = _painters[_paintCount % N];
 
-    _paintLcdNumber(canvas, lcdBoundLeft, painter, (_paintCount ~/ 10) % 10);
-    _paintLcdNumber(canvas, lcdBoundRight, painter, _paintCount % 10);
-    _paintThreeColors(canvas, painter, threeColorBounds);
+      _paintLcdNumber(canvas, lcdBoundLeft, painter, (_paintCount ~/ 10) % 10);
+      _paintLcdNumber(canvas, lcdBoundRight, painter, _paintCount % 10);
+      _paintThreeColors(canvas, painter, threeColorBounds);
+    });
   }
 
   void _paintThreeColors(Canvas canvas, Paint painter, Rect bounds) {
