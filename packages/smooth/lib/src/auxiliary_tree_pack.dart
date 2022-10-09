@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smooth/src/auxiliary_tree_root_view.dart';
-import 'package:smooth/src/log.dart';
 import 'package:smooth/src/remove_sub_tree_widget.dart';
 import 'package:smooth/src/service_locator.dart';
 
@@ -82,8 +81,8 @@ class AuxiliaryTreePack {
     //     'hi $runtimeType.runPipeline debugReason=$debugReason layer=${rootView.layer}');
 
     Timeline.timeSync('AuxTree.RunPipeline', () {
-      SimpleLog.instance.log(
-          'AuxiliaryTreePack.runPipeline timeStamp=$timeStamp debugReason=$debugReason');
+      // SimpleLog.instance.log(
+      //     'AuxiliaryTreePack.runPipeline timeStamp=$timeStamp debugReason=$debugReason');
       // print(
       //     '$runtimeType runPipeline start timeStamp=$timeStamp debugReason=$debugReason');
 

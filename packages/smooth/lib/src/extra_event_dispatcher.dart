@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +23,10 @@ class ExtraEventDispatcher {
       return;
     }
 
-    final now = clock.now();
-    final nowTimeStampInPointerEventClock = Duration(
-        microseconds:
-            now.microsecondsSinceEpoch - pointerEventDateTimeDiffTimeStamp);
+    // final now = clock.now();
+    // final nowTimeStampInPointerEventClock = Duration(
+    //     microseconds:
+    //         now.microsecondsSinceEpoch - pointerEventDateTimeDiffTimeStamp);
 
     // print(
     //     'pointerEventDateTimeDiffTimeStamp=$pointerEventDateTimeDiffTimeStamp');
@@ -100,8 +99,8 @@ class _PendingPointerEventManager {
       ans.add(_pendingEvents.removeFirst());
     }
 
-    SimpleLog.instance.log(
-        'PendingPointerEventManager dequeue (to downstream) ${ans.toBriefString()}');
+    // SimpleLog.instance.log(
+    //     'PendingPointerEventManager dequeue (to downstream) ${ans.toBriefString()}');
 
     return ans;
   }
@@ -111,8 +110,8 @@ class _PendingPointerEventManager {
 
     final enginePendingEvents =
         gestureBinding.readEnginePendingEventsAndClear();
-    SimpleLog.instance.log(
-        'PendingPointerEventManager enqueue (from engine) ${enginePendingEvents.toBriefString()}');
+    // SimpleLog.instance.log(
+    //     'PendingPointerEventManager enqueue (from engine) ${enginePendingEvents.toBriefString()}');
 
     assert(() {
       // be very loose
@@ -155,14 +154,14 @@ bool _isNonDecreasing(List<int> values) {
   return true;
 }
 
-extension on List<PointerEvent> {
-  String toBriefString() => map((e) => e.toBriefString()).toList().toString();
-}
-
-extension on PointerEvent {
-  String toBriefString() => 'PointerEvent('
-      'timeStamp: $timeStamp, '
-      'dateTime: $dateTime, '
-      'position: $position'
-      ')';
-}
+// extension on List<PointerEvent> {
+//   String toBriefString() => map((e) => e.toBriefString()).toList().toString();
+// }
+//
+// extension on PointerEvent {
+//   String toBriefString() => 'PointerEvent('
+//       'timeStamp: $timeStamp, '
+//       'dateTime: $dateTime, '
+//       'position: $position'
+//       ')';
+// }

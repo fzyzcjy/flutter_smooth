@@ -42,11 +42,11 @@ class _SmoothListViewState extends State<SmoothListView> {
   void initState() {
     super.initState();
 
-    // for debug
-    controller.addListener(() {
-      SimpleLog.instance
-          .log('ScrollController.listener offset=${controller.offset}');
-    });
+    // // for debug
+    // controller.addListener(() {
+    //   SimpleLog.instance
+    //       .log('ScrollController.listener offset=${controller.offset}');
+    // });
   }
 
   @override

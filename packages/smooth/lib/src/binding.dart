@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/log.dart';
 import 'package:smooth/src/messages_wrapped.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
@@ -24,8 +23,8 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   void handleBeginFrame(Duration? rawTimeStamp) {
     _beginFrameDateTime = clock.now();
 
-    SimpleLog.instance.log('$runtimeType.handleBeginFrame.start '
-        'rawTimeStamp=$rawTimeStamp clock.now=$_beginFrameDateTime');
+    // SimpleLog.instance.log('$runtimeType.handleBeginFrame.start '
+    //     'rawTimeStamp=$rawTimeStamp clock.now=$_beginFrameDateTime');
 
     super.handleBeginFrame(rawTimeStamp);
   }
@@ -34,7 +33,7 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   void handleDrawFrame() {
     _invokeStartDrawFrameCallbacks();
     super.handleDrawFrame();
-    SimpleLog.instance.log('$runtimeType.handleDrawFrame.end');
+    // SimpleLog.instance.log('$runtimeType.handleDrawFrame.end');
   }
 
   // ref: [SchedulerBinding._postFrameCallbacks]
@@ -73,8 +72,9 @@ class _SmoothDebugWindow extends ProxySingletonFlutterWindow {
   _SmoothDebugWindow(super.inner);
 
   @override
+  // ignore: unnecessary_overrides
   void render(ui.Scene scene) {
-    SimpleLog.instance.log('window.render');
+    // SimpleLog.instance.log('window.render');
     super.render(scene);
   }
 }
