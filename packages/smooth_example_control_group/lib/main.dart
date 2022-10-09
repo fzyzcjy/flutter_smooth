@@ -4,7 +4,8 @@ import 'package:smooth_example_control_group/experiment_rasterizer/experiment_ra
 
 void main() {
   // experimentRasterizerStandard();
-  experimentRasterizerTwoRenderZeroRender();
+  // experimentRasterizerTwoRenderZeroRender();
+  experimentRasterizerAnotherTwoRenderZeroRender();
   // runApp(const MyApp());
 }
 

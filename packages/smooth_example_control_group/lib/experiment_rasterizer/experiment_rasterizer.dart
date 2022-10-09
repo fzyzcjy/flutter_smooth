@@ -39,9 +39,38 @@ void experimentRasterizerTwoRenderZeroRender() {
       });
       window.render(scene);
     }
-  
+
     // roughly make it later than first vsync
     sleep(const Duration(milliseconds: 22));
+
+    PlatformDispatcher.instance.scheduleFrame();
+  }
+
+  PlatformDispatcher.instance
+    ..onBeginFrame = beginFrame
+    ..scheduleFrame();
+}
+
+// https://github.com/fzyzcjy/yplusplus/issues/6092#issuecomment-1272435382
+void experimentRasterizerAnotherTwoRenderZeroRender() {
+  var counter = 0;
+
+  void beginFrame(timeStamp) {
+    sleep(const Duration(milliseconds: 13));
+
+    {
+      final scene = buildSceneFromPainter((canvas, size) {
+        drawChessBoard(canvas, size, counter++);
+      });
+      window.render(scene);
+    }
+
+    {
+      final scene = buildSceneFromPainter((canvas, size) {
+        drawChessBoard(canvas, size, counter++);
+      });
+      window.render(scene);
+    }
 
     PlatformDispatcher.instance.scheduleFrame();
   }
