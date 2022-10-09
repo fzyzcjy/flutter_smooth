@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_example_control_group/experiment_list_view.dart';
+import 'package:smooth_example_control_group/experiment_rasterizer/experiment_rasterizer_standard.dart';
 
 void main() {
-  runApp(const MyApp());
+  experimentRasterizerStandard();
+
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
