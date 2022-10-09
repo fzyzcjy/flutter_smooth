@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:math';
 
@@ -47,7 +48,10 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
                 child: Row(
                   children: [
                     const Expanded(
-                      child: _SimpleCounter(name: 'P'),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: _SimpleCounter(name: 'P'),
+                      ),
                     ),
                     Expanded(
                       child: SmoothBuilder(
@@ -192,8 +196,8 @@ class _SimpleCounterState extends State<_SimpleCounter>
     with SingleTickerProviderStateMixin {
   late final _controller =
       AnimationController(duration: const Duration(seconds: 1), vsync: this);
-
-  late final _painter = _SimpleCounterPainter(repaint: _controller);
+  double? _prevAnimationValue;
+  var _buildCount = 0, _animationValueChangeCount = 0;
 
   @override
   void initState() {
@@ -209,123 +213,80 @@ class _SimpleCounterState extends State<_SimpleCounter>
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _painter,
-      child: const SizedBox(
-        height: 48,
-        width: 24.0 * _SimpleCounterPainter.N,
-      ),
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (_, __) {
+        _buildCount++;
+
+        final currAnimationValue = _controller.value;
+        if (_prevAnimationValue != currAnimationValue) {
+          _animationValueChangeCount++;
+        }
+        _prevAnimationValue = currAnimationValue;
+
+        // #6029
+
+        final debugName =
+            '$_buildCount.$_animationValueChangeCount.${widget.name}.SimpleCounter';
+        // SimpleLog.instance.log('$debugName build');
+        return Timeline.timeSync(debugName, () {
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                widget.name,
+                style: const TextStyle(color: Colors.black, fontSize: 8),
+              ),
+              Text(
+                // ignore: prefer_interpolation_to_compose_strings
+                (_buildCount % 1000).toString().padRight(3) +
+                    '|' +
+                    (_animationValueChangeCount % 1000).toString().padRight(3),
+                style: const TextStyle(color: Colors.black, fontSize: 26),
+              ),
+              CustomPaint(
+                painter: _SimpleCounterPainter(
+                  index: _buildCount,
+                ),
+                child: const SizedBox(
+                  height: 48,
+                  width: 24.0 * _SimpleCounterPainter.N,
+                ),
+              ),
+            ],
+          );
+        });
+      },
     );
   }
 }
 
 class _SimpleCounterPainter extends CustomPainter {
-  _SimpleCounterPainter({super.repaint});
+  final int index;
 
-  static final _painters = {
-    for (final style in PaintingStyle.values)
-      style: List.generate(
-          N,
-          (i) => Paint()
-            ..strokeWidth = 10
-            ..style = style
-            ..color = [Colors.red, Colors.green, Colors.blue][i])
-  };
-  LcdPainter? _lcdPainter;
+  _SimpleCounterPainter({required this.index});
+
+  static final _painters = List.generate(
+      N, (i) => Paint()..color = [Colors.red, Colors.green, Colors.blue][i]);
 
   static const N = 3;
 
-  var _paintCount = 0;
-
   @override
   void paint(Canvas canvas, Size size) {
-    _paintCount++;
-
-    final xDivide = size.width * 0.6;
-    final lcdBounds = Rect.fromLTRB(0, 0, xDivide, size.height);
-    final threeColorBounds = Rect.fromLTRB(xDivide, 0, size.width, size.height);
-
-    _lcdPainter ??= LcdPainter(bounds: lcdBounds);
-
-    _lcdPainter!.paintNumber(
-        canvas, _painters[PaintingStyle.stroke]![_paintCount % N],
-        number: _paintCount % 100);
-
-    _paintThreeColors(canvas, threeColorBounds);
-  }
-
-  void _paintThreeColors(Canvas canvas, Rect bounds) {
     canvas.drawRect(
       Rect.fromLTWH(
-        bounds.left + bounds.size.width / N * (_paintCount % N),
-        bounds.top,
-        bounds.size.width / N,
-        bounds.size.height,
+        size.width / N * (index % N),
+        0,
+        size.width / N,
+        size.height,
       ),
-      _painters[PaintingStyle.fill]![_paintCount % N],
+      _painters[index % N],
     );
   }
 
   @override
-  bool shouldRepaint(_SimpleCounterPainter oldDelegate) => true;
-}
-
-class LcdPainter {
-  static const numDigits = 2;
-
-  final Rect bounds;
-  late final digitWidth = bounds.width / numDigits;
-
-  LcdPainter({
-    required this.bounds,
-  });
-
-  static const _padding = 8.0;
-
-  late final digitPaths = {
-    for (var digit = 0; digit <= 9; ++digit)
-      digit: _paintDigit(
-          const EdgeInsets.all(_padding)
-              .deflateRect(Offset.zero & Size(digitWidth, bounds.height)),
-          digit: digit)
-  };
-
-  void paintNumber(Canvas canvas, Paint paint, {required int number}) {
-    canvas
-      ..translate(bounds.left, 0)
-      ..drawPath(digitPaths[number ~/ 10]!, paint)
-      ..translate(digitWidth, 0)
-      ..drawPath(digitPaths[number % 10]!, paint)
-      ..translate(-digitWidth - bounds.left, 0);
-  }
-
-  static Path _paintDigit(Rect bounds, {required int digit}) {
-    final row1 = const [0, 2, 3, 5, 6, 7, 8, 9].contains(digit);
-    final row2 = const [2, 3, 4, 5, 6, 8, 9].contains(digit);
-    final row3 = const [0, 2, 3, 5, 6, 8, 9].contains(digit);
-    final leftCol1 = const [0, 4, 5, 6, 7, 8, 9].contains(digit);
-    final leftCol2 = const [0, 2, 6, 8].contains(digit);
-    final rightCol1 = const [0, 1, 2, 3, 4, 7, 8, 9].contains(digit);
-    final rightCol2 = const [0, 1, 3, 4, 5, 6, 7, 8, 9].contains(digit);
-
-    final path = Path();
-
-    void drawLine(Offset start, Offset end) => path
-      ..moveTo(start.dx, start.dy)
-      ..lineTo(end.dx, end.dy);
-
-    if (row1) drawLine(bounds.topLeft, bounds.topRight);
-    if (row2) drawLine(bounds.centerLeft, bounds.centerRight);
-    if (row3) drawLine(bounds.bottomLeft, bounds.bottomRight);
-
-    if (leftCol1) drawLine(bounds.topLeft, bounds.centerLeft);
-    if (leftCol2) drawLine(bounds.centerLeft, bounds.bottomLeft);
-
-    if (rightCol1) drawLine(bounds.topRight, bounds.centerRight);
-    if (rightCol2) drawLine(bounds.centerRight, bounds.bottomRight);
-
-    return path;
-  }
+  bool shouldRepaint(_SimpleCounterPainter oldDelegate) =>
+      oldDelegate.index != index;
 }
 
 class _NormalLayoutBuilder extends SingleChildRenderObjectWidget {
