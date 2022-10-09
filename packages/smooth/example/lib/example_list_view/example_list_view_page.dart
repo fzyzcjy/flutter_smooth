@@ -99,11 +99,11 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
     return Container(
       height: 16.0 * (3 + Random().nextInt(3)),
       // just for easy video checking
-      color: index % 10 == 0
-          ? Colors.green
-          : index % 5 == 0
-              ? Colors.pink
-              : null,
+      // color: index % 10 == 0
+      //     ? Colors.green
+      //     : index % 5 == 0
+      //         ? Colors.pink
+      //         : null,
       child: Stack(
         children: [
           // #6076
