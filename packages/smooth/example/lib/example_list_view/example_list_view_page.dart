@@ -259,9 +259,9 @@ class _SimpleCounterPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Timeline.timeSync('$_paintCount.$name.SimpleCounter', () {
-      _paintCount++;
+    _paintCount++;
 
+    Timeline.timeSync('$_paintCount.$name.SimpleCounter', () {
       final xDivide = size.width * 0.6;
       final lcdBoundLeft = Rect.fromLTRB(0, 0, xDivide / 2, size.height);
       final lcdBoundRight = Rect.fromLTRB(xDivide / 2, 0, xDivide, size.height);
