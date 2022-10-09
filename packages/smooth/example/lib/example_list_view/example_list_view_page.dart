@@ -30,17 +30,10 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(
-      title: Text('Example (${widget.enableSmooth ? 'smooth' : 'plain'})'),
-    );
-
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: appBar.preferredSize,
-        child: RepaintBoundary(
-          child: appBar,
-        ),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Example (${widget.enableSmooth ? 'smooth' : 'plain'})'),
+      // ),
       body: Listener(
         // #6028
         onPointerUp: widget.leaveWhenPointerUp
@@ -70,20 +63,18 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
               ),
             Expanded(
                 child: widget.enableSmooth ? _buildSmooth() : _buildPlain()),
-            RepaintBoundary(
-              child: Row(
-                children: [
-                  for (final value in [0, 1, 10, 50, 100, 200, 500])
-                    SizedBox(
-                      width: 48,
-                      child: TextButton(
-                        onPressed: () => setState(() => workload = value),
-                        child: Text('$value'),
-                      ),
-                    ),
-                ],
-              ),
-            ),
+            // Row(
+            //   children: [
+            //     for (final value in [0, 1, 10, 50, 100, 200, 500])
+            //       SizedBox(
+            //         width: 48,
+            //         child: TextButton(
+            //           onPressed: () => setState(() => workload = value),
+            //           child: Text('$value'),
+            //         ),
+            //       ),
+            //   ],
+            // ),
           ],
         ),
       ),
