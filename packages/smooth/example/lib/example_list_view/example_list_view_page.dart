@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:math';
 
@@ -48,10 +47,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
                 child: Row(
                   children: [
                     const Expanded(
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: _SimpleCounter(name: 'P'),
-                      ),
+                      child: _SimpleCounter(name: 'P'),
                     ),
                     Expanded(
                       child: SmoothBuilder(
@@ -196,8 +192,8 @@ class _SimpleCounterState extends State<_SimpleCounter>
     with SingleTickerProviderStateMixin {
   late final _controller =
       AnimationController(duration: const Duration(seconds: 1), vsync: this);
-  double? _prevAnimationValue;
-  var _buildCount = 0, _animationValueChangeCount = 0;
+
+  late final _painter = _SimpleCounterPainter(repaint: _controller);
 
   @override
   void initState() {
@@ -213,80 +209,81 @@ class _SimpleCounterState extends State<_SimpleCounter>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (_, __) {
-        _buildCount++;
-
-        final currAnimationValue = _controller.value;
-        if (_prevAnimationValue != currAnimationValue) {
-          _animationValueChangeCount++;
-        }
-        _prevAnimationValue = currAnimationValue;
-
-        // #6029
-
-        final debugName =
-            '$_buildCount.$_animationValueChangeCount.${widget.name}.SimpleCounter';
-        // SimpleLog.instance.log('$debugName build');
-        return Timeline.timeSync(debugName, () {
-          return Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                widget.name,
-                style: const TextStyle(color: Colors.black, fontSize: 8),
-              ),
-              Text(
-                // ignore: prefer_interpolation_to_compose_strings
-                (_buildCount % 1000).toString().padRight(3) +
-                    '|' +
-                    (_animationValueChangeCount % 1000).toString().padRight(3),
-                style: const TextStyle(color: Colors.black, fontSize: 26),
-              ),
-              CustomPaint(
-                painter: _SimpleCounterPainter(
-                  index: _buildCount,
-                ),
-                child: const SizedBox(
-                  height: 48,
-                  width: 24.0 * _SimpleCounterPainter.N,
-                ),
-              ),
-            ],
-          );
-        });
-      },
+    return CustomPaint(
+      painter: _painter,
+      child: const SizedBox(
+        height: 48,
+        width: 24.0 * _SimpleCounterPainter.N,
+      ),
     );
   }
 }
 
 class _SimpleCounterPainter extends CustomPainter {
-  final int index;
-
-  _SimpleCounterPainter({required this.index});
+  _SimpleCounterPainter({super.repaint});
 
   static final _painters = List.generate(
-      N, (i) => Paint()..color = [Colors.red, Colors.green, Colors.blue][i]);
+      N,
+      (i) => Paint()
+        ..strokeWidth = 10
+        ..color = [Colors.red, Colors.green, Colors.blue][i]);
 
   static const N = 3;
 
+  var _paintCount = 0;
+
   @override
   void paint(Canvas canvas, Size size) {
+    _paintCount++;
+
+    final xDivide = size.width * 0.6;
+    final lcdBoundLeft = Rect.fromLTRB(0, 0, xDivide / 2, size.height);
+    final lcdBoundRight = Rect.fromLTRB(xDivide / 2, 0, xDivide, size.height);
+    final threeColorBounds = Rect.fromLTRB(xDivide, 0, size.width, size.height);
+
+    final painter = _painters[_paintCount % N];
+
+    _paintLcdNumber(canvas, lcdBoundLeft, painter, (_paintCount ~/ 10) % 10);
+    _paintLcdNumber(canvas, lcdBoundRight, painter, _paintCount % 10);
+    _paintThreeColors(canvas, painter, threeColorBounds);
+  }
+
+  void _paintThreeColors(Canvas canvas, Paint painter, Rect bounds) {
     canvas.drawRect(
       Rect.fromLTWH(
-        size.width / N * (index % N),
-        0,
-        size.width / N,
-        size.height,
+        bounds.left + bounds.size.width / N * (_paintCount % N),
+        bounds.top,
+        bounds.size.width / N,
+        bounds.size.height,
       ),
-      _painters[index % N],
+      painter,
     );
   }
 
+  static void _paintLcdNumber(
+      Canvas canvas, Rect bounds, Paint painter, int number) {
+    assert(number >= 0 && number <= 9);
+
+    if (number == 0) {
+      canvas.drawRect(bounds, painter);
+    } else {
+      const K = 3;
+      final x = (number - 1) % K;
+      final y = (number - 1) ~/ K;
+      canvas.drawRect(
+        Rect.fromLTWH(
+          bounds.left + bounds.size.width / K * x,
+          bounds.top + bounds.size.height / K * y,
+          bounds.size.width / K,
+          bounds.size.height / K,
+        ),
+        painter,
+      );
+    }
+  }
+
   @override
-  bool shouldRepaint(_SimpleCounterPainter oldDelegate) =>
-      oldDelegate.index != index;
+  bool shouldRepaint(_SimpleCounterPainter oldDelegate) => true;
 }
 
 class _NormalLayoutBuilder extends SingleChildRenderObjectWidget {
