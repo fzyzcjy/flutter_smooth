@@ -231,6 +231,7 @@ class _SimpleCounterPainter extends CustomPainter {
             ..style = style
             ..color = [Colors.red, Colors.green, Colors.blue][i])
   };
+  LcdPainter? _lcdPainter;
 
   static const N = 3;
 
@@ -244,8 +245,9 @@ class _SimpleCounterPainter extends CustomPainter {
     final lcdBounds = Rect.fromLTRB(0, 0, xDivide, size.height);
     final threeColorBounds = Rect.fromLTRB(xDivide, 0, size.width, size.height);
 
-    final path =
-        LcdPainter.paintNumber(lcdBounds, number: _paintCount, numDigits: 3);
+    _lcdPainter ??= LcdPainter(bounds: lcdBounds, numDigits: 3);
+
+    final path = _lcdPainter!.paintNumber(number: _paintCount);
     canvas.drawPath(path, _painters[PaintingStyle.stroke]![_paintCount % N]);
 
     _paintThreeColors(canvas, threeColorBounds);
@@ -268,24 +270,37 @@ class _SimpleCounterPainter extends CustomPainter {
 }
 
 class LcdPainter {
-  static Path paintNumber(Rect bounds,
-      {required int number, required int numDigits}) {
+  final Rect bounds;
+  final int numDigits;
+
+  LcdPainter({
+    required this.bounds,
+    required this.numDigits,
+  });
+
+  static const _padding = 8.0;
+
+  late final digitPaths = {
+    for (var digit = 0; digit <= 9; ++digit)
+      digit: _paintDigit(
+          const EdgeInsets.all(_padding).deflateRect(
+              Offset.zero & Size(bounds.width / numDigits, bounds.height)),
+          digit: digit)
+  };
+
+  Path paintNumber({required int number}) {
     final digitWidth = bounds.width / numDigits;
     final path = Path();
     for (var i = 0, value = number; i < numDigits; ++i, value ~/= 10) {
-      final digitBoundsRaw = Rect.fromLTWH(
-        bounds.left + digitWidth * (numDigits - i - 1),
-        bounds.top,
-        digitWidth,
-        bounds.height,
+      path.addPath(
+        digitPaths[value % 10]!,
+        Offset(bounds.left + digitWidth * (numDigits - i - 1), 0),
       );
-      final digitBounds = const EdgeInsets.all(8).deflateRect(digitBoundsRaw);
-      _paintDigit(path, digitBounds, digit: value % 10);
     }
     return path;
   }
 
-  static void _paintDigit(Path path, Rect bounds, {required int digit}) {
+  static Path _paintDigit(Rect bounds, {required int digit}) {
     final row1 = const [0, 2, 3, 5, 6, 7, 8, 9].contains(digit);
     final row2 = const [2, 3, 4, 5, 6, 8, 9].contains(digit);
     final row3 = const [0, 2, 3, 5, 6, 8, 9].contains(digit);
@@ -293,6 +308,8 @@ class LcdPainter {
     final leftCol2 = const [0, 2, 6, 8].contains(digit);
     final rightCol1 = const [0, 1, 2, 3, 4, 7, 8, 9].contains(digit);
     final rightCol2 = const [0, 1, 3, 4, 5, 6, 7, 8, 9].contains(digit);
+
+    final path = Path();
 
     void drawLine(Offset start, Offset end) => path
       ..moveTo(start.dx, start.dy)
@@ -307,6 +324,8 @@ class LcdPainter {
 
     if (rightCol1) drawLine(bounds.topRight, bounds.centerRight);
     if (rightCol2) drawLine(bounds.centerRight, bounds.bottomRight);
+
+    return path;
   }
 }
 
