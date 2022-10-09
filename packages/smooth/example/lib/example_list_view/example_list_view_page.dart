@@ -31,9 +31,9 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Example (${widget.enableSmooth ? 'smooth' : 'plain'})'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Example (${widget.enableSmooth ? 'smooth' : 'plain'})'),
+      // ),
       body: Listener(
         // #6028
         onPointerUp: widget.leaveWhenPointerUp
@@ -63,18 +63,18 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
               ),
             Expanded(
                 child: widget.enableSmooth ? _buildSmooth() : _buildPlain()),
-            Row(
-              children: [
-                for (final value in [0, 1, 10, 50, 100, 200, 500])
-                  SizedBox(
-                    width: 48,
-                    child: TextButton(
-                      onPressed: () => setState(() => workload = value),
-                      child: Text('$value'),
-                    ),
-                  ),
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     for (final value in [0, 1, 10, 50, 100, 200, 500])
+            //       SizedBox(
+            //         width: 48,
+            //         child: TextButton(
+            //           onPressed: () => setState(() => workload = value),
+            //           child: Text('$value'),
+            //         ),
+            //       ),
+            //   ],
+            // ),
           ],
         ),
       ),
@@ -99,17 +99,17 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
     return ListTile(
       dense: true,
       visualDensity: VisualDensity.compact,
-      leading: SizedBox(
-        width: 32,
-        height: 32,
-        child: CircleAvatar(
-          backgroundColor: Colors.primaries[index % Colors.primaries.length],
-          child: Text(
-            'G$index',
-            style: const TextStyle(fontSize: 12),
-          ),
-        ),
-      ),
+      // leading: SizedBox(
+      //   width: 32,
+      //   height: 32,
+      //   child: CircleAvatar(
+      //     backgroundColor: Colors.primaries[index % Colors.primaries.length],
+      //     child: Text(
+      //       'G$index',
+      //       style: const TextStyle(fontSize: 12),
+      //     ),
+      //   ),
+      // ),
       title: Container(
         // just for easy video checking
         color: index % 10 == 0
@@ -117,10 +117,14 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
             : index % 5 == 0
                 ? Colors.pink
                 : null,
-        child: Text(
-          '$index',
-          overflow: TextOverflow.ellipsis,
+        child: Container(
+          width: 20,
+          height: 20,
         ),
+        // child: Text(
+        //   '$index',
+        //   overflow: TextOverflow.ellipsis,
+        // ),
       ),
       subtitle: Stack(
         children: [
@@ -172,7 +176,8 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
             },
             child: Container(),
           ),
-          Text('a\n' * (3 + Random().nextInt(3))),
+          SizedBox(height: 16.0 * (3 + Random().nextInt(3))),
+          // Text('a\n' * (3 + Random().nextInt(3))),
         ],
       ),
     );
