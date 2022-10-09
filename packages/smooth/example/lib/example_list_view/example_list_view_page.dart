@@ -245,11 +245,11 @@ class _SimpleCounterPainter extends CustomPainter {
     final lcdBounds = Rect.fromLTRB(0, 0, xDivide, size.height);
     final threeColorBounds = Rect.fromLTRB(xDivide, 0, size.width, size.height);
 
-    _lcdPainter ??= LcdPainter(bounds: lcdBounds, numDigits: 2);
+    _lcdPainter ??= LcdPainter(bounds: lcdBounds);
 
     _lcdPainter!.paintNumber(
         canvas, _painters[PaintingStyle.stroke]![_paintCount % N],
-        number: _paintCount);
+        number: _paintCount % 100);
 
     _paintThreeColors(canvas, threeColorBounds);
   }
@@ -271,13 +271,13 @@ class _SimpleCounterPainter extends CustomPainter {
 }
 
 class LcdPainter {
+  static const numDigits = 2;
+
   final Rect bounds;
-  final int numDigits;
   late final digitWidth = bounds.width / numDigits;
 
   LcdPainter({
     required this.bounds,
-    required this.numDigits,
   });
 
   static const _padding = 8.0;
@@ -291,12 +291,12 @@ class LcdPainter {
   };
 
   void paintNumber(Canvas canvas, Paint paint, {required int number}) {
-    for (var i = 0, value = number; i < numDigits; ++i, value ~/= 10) {
-      final dx = bounds.left + digitWidth * (numDigits - i - 1);
-      canvas.translate(dx, 0);
-      canvas.drawPath(digitPaths[value % 10]!, paint);
-      canvas.translate(-dx, 0);
-    }
+    canvas
+      ..translate(bounds.left, 0)
+      ..drawPath(digitPaths[number ~/ 10]!, paint)
+      ..translate(digitWidth, 0)
+      ..drawPath(digitPaths[number % 10]!, paint)
+      ..translate(-digitWidth - bounds.left, 0);
   }
 
   static Path _paintDigit(Rect bounds, {required int digit}) {
