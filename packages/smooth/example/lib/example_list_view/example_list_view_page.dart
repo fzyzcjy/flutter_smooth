@@ -222,11 +222,15 @@ class _SimpleCounterState extends State<_SimpleCounter>
 class _SimpleCounterPainter extends CustomPainter {
   _SimpleCounterPainter({super.repaint});
 
-  static final _painters = List.generate(
-      N,
-      (i) => Paint()
-        ..strokeWidth = 10
-        ..color = [Colors.red, Colors.green, Colors.blue][i]);
+  static final _painters = {
+    for (final style in PaintingStyle.values)
+      style: List.generate(
+          N,
+          (i) => Paint()
+            ..strokeWidth = 10
+            ..style = style
+            ..color = [Colors.red, Colors.green, Colors.blue][i])
+  };
 
   static const N = 3;
 
@@ -240,8 +244,9 @@ class _SimpleCounterPainter extends CustomPainter {
     final lcdBounds = Rect.fromLTRB(0, 0, xDivide, size.height);
     final threeColorBounds = Rect.fromLTRB(xDivide, 0, size.width, size.height);
 
-    LcdPainter.paintNumber(canvas, lcdBounds, _painters[_paintCount % N],
-        number: _paintCount, numDigits: 3);
+    final path =
+        LcdPainter.paintNumber(lcdBounds, number: _paintCount, numDigits: 3);
+    canvas.drawPath(path, _painters[PaintingStyle.stroke]![_paintCount % N]);
 
     _paintThreeColors(canvas, threeColorBounds);
   }
@@ -254,7 +259,7 @@ class _SimpleCounterPainter extends CustomPainter {
         bounds.size.width / N,
         bounds.size.height,
       ),
-      _painters[_paintCount % N],
+      _painters[PaintingStyle.fill]![_paintCount % N],
     );
   }
 
@@ -263,9 +268,10 @@ class _SimpleCounterPainter extends CustomPainter {
 }
 
 class LcdPainter {
-  static void paintNumber(Canvas canvas, Rect bounds, Paint paint,
+  static Path paintNumber(Rect bounds,
       {required int number, required int numDigits}) {
     final digitWidth = bounds.width / numDigits;
+    final path = Path();
     for (var i = 0, value = number; i < numDigits; ++i, value ~/= 10) {
       final digitBoundsRaw = Rect.fromLTWH(
         bounds.left + digitWidth * (numDigits - i - 1),
@@ -274,12 +280,12 @@ class LcdPainter {
         bounds.height,
       );
       final digitBounds = const EdgeInsets.all(8).deflateRect(digitBoundsRaw);
-      _paintDigit(canvas, digitBounds, paint, digit: value % 10);
+      _paintDigit(path, digitBounds, digit: value % 10);
     }
+    return path;
   }
 
-  static void _paintDigit(Canvas canvas, Rect bounds, Paint paint,
-      {required int digit}) {
+  static void _paintDigit(Path path, Rect bounds, {required int digit}) {
     final row1 = const [0, 2, 3, 5, 6, 7, 8, 9].contains(digit);
     final row2 = const [2, 3, 4, 5, 6, 8, 9].contains(digit);
     final row3 = const [0, 2, 3, 5, 6, 8, 9].contains(digit);
@@ -288,17 +294,19 @@ class LcdPainter {
     final rightCol1 = const [0, 1, 2, 3, 4, 7, 8, 9].contains(digit);
     final rightCol2 = const [0, 1, 3, 4, 5, 6, 7, 8, 9].contains(digit);
 
-    final b = bounds;
+    void drawLine(Offset start, Offset end) => path
+      ..moveTo(start.dx, start.dy)
+      ..lineTo(end.dx, end.dy);
 
-    if (row1) canvas.drawLine(b.topLeft, b.topRight, paint);
-    if (row2) canvas.drawLine(b.centerLeft, b.centerRight, paint);
-    if (row3) canvas.drawLine(b.bottomLeft, b.bottomRight, paint);
+    if (row1) drawLine(bounds.topLeft, bounds.topRight);
+    if (row2) drawLine(bounds.centerLeft, bounds.centerRight);
+    if (row3) drawLine(bounds.bottomLeft, bounds.bottomRight);
 
-    if (leftCol1) canvas.drawLine(b.topLeft, b.centerLeft, paint);
-    if (leftCol2) canvas.drawLine(b.centerLeft, b.bottomLeft, paint);
+    if (leftCol1) drawLine(bounds.topLeft, bounds.centerLeft);
+    if (leftCol2) drawLine(bounds.centerLeft, bounds.bottomLeft);
 
-    if (rightCol1) canvas.drawLine(b.topRight, b.centerRight, paint);
-    if (rightCol2) canvas.drawLine(b.centerRight, b.bottomRight, paint);
+    if (rightCol1) drawLine(bounds.topRight, bounds.centerRight);
+    if (rightCol2) drawLine(bounds.centerRight, bounds.bottomRight);
   }
 }
 
