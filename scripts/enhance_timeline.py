@@ -11,7 +11,6 @@ args = parser.parse_args()
 
 path_input = Path(args.input)
 path_output = path_input.parent / f'{path_input.stem}_enhanced.json'
-path_output_zipped = path_output.parent / f'{path_output.name}.zip'
 
 data = json.loads(path_input.read_text())
 
@@ -87,5 +86,5 @@ synthesize_long_event_matching_filter(
 print(f'#events={len(data["traceEvents"])}')
 path_output.write_text(json.dumps(data))
 
-with ZipFile(path_output_zipped, 'w') as zipf:
-    zipf.write(path_output, arcname=path_output.name)
+with ZipFile(f'{path_input}.zip', 'w') as zipf:
+    zipf.write(path_input, arcname=path_input.name)
