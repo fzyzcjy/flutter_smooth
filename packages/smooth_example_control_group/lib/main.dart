@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_example_control_group/experiment_list_view.dart';
-import 'package:smooth_example_control_group/experiment_rasterizer/experiment_rasterizer_standard.dart';
+import 'package:smooth_example_control_group/experiment_rasterizer/experiment_rasterizer.dart';
 
 void main() {
   experimentRasterizerStandard();
