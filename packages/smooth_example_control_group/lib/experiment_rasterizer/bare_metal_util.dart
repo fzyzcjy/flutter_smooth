@@ -29,7 +29,17 @@ Scene buildSceneFromPainter(void Function(Canvas, Size) painter) {
   return sceneBuilder.build();
 }
 
-void drawChessBoard(Canvas canvas, Rect bounds, int value) {
+void drawChessBoard(Canvas canvas, Size size, int value) {
+  final widthHeight = size.shortestSide - 64;
+  final bounds = Rect.fromCenter(
+    center: (Offset.zero & size).center,
+    width: widthHeight,
+    height: widthHeight,
+  );
+  _drawChessBoardRaw(canvas, bounds, value);
+}
+
+void _drawChessBoardRaw(Canvas canvas, Rect bounds, int value) {
   const cols = 4;
   const rows = 4;
   const colors = [
@@ -49,7 +59,7 @@ void drawChessBoard(Canvas canvas, Rect bounds, int value) {
   canvas.drawRect(
     Rect.fromLTWH(
       bounds.left + gridWidth * x,
-      bounds.top + gridWidth * y,
+      bounds.top + gridHeight * y,
       gridWidth,
       gridHeight,
     ),

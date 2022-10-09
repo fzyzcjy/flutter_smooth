@@ -10,8 +10,7 @@ void experimentRasterizerStandard() {
 
   void beginFrame(timeStamp) {
     final scene = buildSceneFromPainter((canvas, size) {
-      final bounds = const EdgeInsets.all(64).deflateRect(Offset.zero & size);
-      drawChessBoard(canvas, (bounds), counter++);
+      drawChessBoard(canvas, size, counter++);
     });
     window.render(scene);
     PlatformDispatcher.instance.scheduleFrame();
