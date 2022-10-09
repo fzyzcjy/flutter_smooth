@@ -62,20 +62,18 @@ class Actor {
 
       _preemptModifyLayerTree(smoothFrameTimeStamp, debugReason: debugReason);
 
-      Timeline.timeSync('SceneAndRender', () {
-        final builder = SceneBuilder();
-        // why this layer - from RenderView.compositeFrame
-        // ignore: invalid_use_of_protected_member
-        final scene = binding.renderView.layer!.buildScene(builder);
+      final builder = SceneBuilder();
+      // why this layer - from RenderView.compositeFrame
+      // ignore: invalid_use_of_protected_member
+      final scene = binding.renderView.layer!.buildScene(builder);
 
-        Timeline.timeSync('window.render', () {
-          // print(
-          //     'call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
-          WidgetsBinding.instance.window.render(scene);
-        });
-
-        scene.dispose();
+      Timeline.timeSync('window.render', () {
+        // print(
+        //     'call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
+        WidgetsBinding.instance.window.render(scene);
       });
+
+      scene.dispose();
 
       // #5831
       // // #5822
