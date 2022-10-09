@@ -125,7 +125,7 @@ void experimentRasterizerTwoRenderZeroRenderFourthExample() {
       window.render(scene);
     }
 
-    sleep(const Duration(milliseconds: 10));
+    sleep(const Duration(milliseconds: 12));
 
     {
       final scene = buildSceneFromPainter((canvas, size) {
