@@ -6,27 +6,19 @@ import 'package:flutter/rendering.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/service_locator.dart';
 
-class ExampleListViewPage extends StatefulWidget {
+class ExampleListViewPage extends StatelessWidget {
   final bool enableSmooth;
   final bool enableDebugHeader;
   final bool leaveWhenPointerUp;
-  final int? initialWorkload;
+  final int workload;
 
   const ExampleListViewPage({
     super.key,
     required this.enableSmooth,
     this.enableDebugHeader = false,
     this.leaveWhenPointerUp = false,
-    this.initialWorkload,
+    this.workload = 50,
   });
-
-  @override
-  State<ExampleListViewPage> createState() => _ExampleListViewPageState();
-}
-
-class _ExampleListViewPageState extends State<ExampleListViewPage> {
-  // #6025
-  late var workload = widget.initialWorkload ?? 50;
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +28,11 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
       // ),
       body: Listener(
         // #6028
-        onPointerUp: widget.leaveWhenPointerUp
-            ? (_) => Navigator.of(context).pop()
-            : null,
+        onPointerUp:
+            leaveWhenPointerUp ? (_) => Navigator.of(context).pop() : null,
         child: Column(
           children: [
-            if (widget.enableDebugHeader)
+            if (enableDebugHeader)
               SizedBox(
                 height: 48,
                 child: Row(
@@ -61,8 +52,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
                   ],
                 ),
               ),
-            Expanded(
-                child: widget.enableSmooth ? _buildSmooth() : _buildPlain()),
+            Expanded(child: enableSmooth ? _buildSmooth() : _buildPlain()),
             // Row(
             //   children: [
             //     for (final value in [0, 1, 10, 50, 100, 200, 500])
