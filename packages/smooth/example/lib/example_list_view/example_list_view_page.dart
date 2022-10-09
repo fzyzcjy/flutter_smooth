@@ -47,10 +47,7 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
                 child: Row(
                   children: [
                     const Expanded(
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: _SimpleCounter(name: 'P'),
-                      ),
+                      child: _SimpleCounter(name: 'P'),
                     ),
                     Expanded(
                       child: SmoothBuilder(
@@ -226,7 +223,10 @@ class _SimpleCounterPainter extends CustomPainter {
   _SimpleCounterPainter({super.repaint});
 
   static final _painters = List.generate(
-      N, (i) => Paint()..color = [Colors.red, Colors.green, Colors.blue][i]);
+      N,
+      (i) => Paint()
+        ..strokeWidth = 10
+        ..color = [Colors.red, Colors.green, Colors.blue][i]);
 
   static const N = 3;
 
@@ -268,8 +268,12 @@ class LcdPainter {
     final digitWidth = bounds.width / numDigits;
     for (var i = 0, value = number; i < numDigits; ++i, value ~/= 10) {
       final digitBoundsRaw = Rect.fromLTWH(
-          bounds.left + digitWidth * i, bounds.top, digitWidth, bounds.height);
-      final digitBounds = const EdgeInsets.all(4).deflateRect(digitBoundsRaw);
+        bounds.left + digitWidth * (numDigits - i - 1),
+        bounds.top,
+        digitWidth,
+        bounds.height,
+      );
+      final digitBounds = const EdgeInsets.all(8).deflateRect(digitBoundsRaw);
       _paintDigit(canvas, digitBounds, paint, digit: value % 10);
     }
   }
