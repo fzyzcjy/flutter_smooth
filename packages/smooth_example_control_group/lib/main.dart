@@ -6,7 +6,8 @@ void main() {
   // experimentRasterizerStandard();
   // experimentRasterizerTwoRenderZeroRender();
   // experimentRasterizerAnotherTwoRenderZeroRender();
-  experimentRasterizerTwoRenderZeroRenderThirdExample();
+  // experimentRasterizerTwoRenderZeroRenderThirdExample();
+  experimentRasterizerTwoRenderZeroRenderFourthExample();
   // runApp(const MyApp());
 }
 
