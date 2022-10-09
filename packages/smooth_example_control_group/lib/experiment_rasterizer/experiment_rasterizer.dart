@@ -79,3 +79,34 @@ void experimentRasterizerAnotherTwoRenderZeroRender() {
     ..onBeginFrame = beginFrame
     ..scheduleFrame();
 }
+
+// https://github.com/fzyzcjy/yplusplus/issues/6092#issuecomment-1272436276
+void experimentRasterizerTwoRenderZeroRenderThirdExample() {
+  var counter = 0;
+
+  void beginFrame(timeStamp) {
+    sleep(const Duration(milliseconds: 4));
+
+    {
+      final scene = buildSceneFromPainter((canvas, size) {
+        drawChessBoard(canvas, size, counter++);
+      });
+      window.render(scene);
+    }
+
+    {
+      final scene = buildSceneFromPainter((canvas, size) {
+        drawChessBoard(canvas, size, counter++);
+      });
+      window.render(scene);
+    }
+
+    sleep(const Duration(milliseconds: 22));
+
+    PlatformDispatcher.instance.scheduleFrame();
+  }
+
+  PlatformDispatcher.instance
+    ..onBeginFrame = beginFrame
+    ..scheduleFrame();
+}
