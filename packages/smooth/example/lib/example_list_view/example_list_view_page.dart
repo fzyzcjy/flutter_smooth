@@ -96,14 +96,12 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
   }
 
   Widget _buildRow(BuildContext context, int index) {
-    return Container(
+    Color? rowColor;
+    if (index % 5 == 0) rowColor = Colors.pink;
+    if (index % 10 == 0) rowColor = Colors.green;
+
+    return SizedBox(
       height: 16.0 * (3 + Random().nextInt(3)),
-      // just for easy video checking
-      // color: index % 10 == 0
-      //     ? Colors.green
-      //     : index % 5 == 0
-      //         ? Colors.pink
-      //         : null,
       child: Stack(
         children: [
           // #6076
@@ -116,6 +114,11 @@ class _ExampleListViewPageState extends State<ExampleListViewPage> {
             },
             child: Container(),
           ),
+          if (rowColor != null)
+            ColoredBox(
+              color: rowColor,
+              child: const SizedBox(height: 8, width: double.infinity),
+            ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Text('$index'),
