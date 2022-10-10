@@ -59,7 +59,7 @@ class ExampleListViewPage extends StatelessWidget {
               // for normal case, still mimic it is a bit slow to be real
               _AlwaysLayoutBuilder(
                 onPerformLayout: () {
-                  for (var i = 0; i < 7; ++i) {
+                  for (var i = 0; i < 5; ++i) {
                     // NOTE `sleep` does not support microseconds! #6109
                     sleep(const Duration(milliseconds: 1));
                     ServiceLocator.instance.actor.maybePreemptRender();
