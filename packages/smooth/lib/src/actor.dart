@@ -78,7 +78,10 @@ class Actor {
       Timeline.timeSync('window.render', () {
         // print(
         //     'call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
-        WidgetsBinding.instance.window.render(scene);
+        WidgetsBinding.instance.window.render(
+          scene,
+          fallbackVsyncTargetTime: smoothFrameTimeStamp,
+        );
       });
 
       scene.dispose();

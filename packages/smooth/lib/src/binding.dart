@@ -74,10 +74,14 @@ class SmoothSingletonFlutterWindow extends ProxySingletonFlutterWindow {
 
   @override
   void render(ui.Scene scene, {Duration? fallbackVsyncTargetTime}) {
-    assert(fallbackVsyncTargetTime == null,
-        'fallbackVsyncTargetTime do not need to be provided from outside');
-
-    super.render(scene, fallbackVsyncTargetTime: TODO);
+    super.render(
+      scene,
+      fallbackVsyncTargetTime: fallbackVsyncTargetTime ??
+          // NOTE *need* this when [fallbackVsyncTargetTime] is null, because
+          // the plain-old pipeline will call `window.render` and we cannot
+          // control that
+          ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp,
+    );
   }
 }
 
