@@ -17,29 +17,29 @@ class Actor {
   }
 
   void maybePreemptRender({Object? debugToken}) {
-    Timeline.timeSync('MaybePreemptRender', () {
-      if (ServiceLocator.instance.auxiliaryTreeRegistry.trees.isEmpty) {
-        // print('Actor.maybePreemptRender skip since tree empty');
-        // No active smooth widgets
-        return;
-      }
+    // Timeline.timeSync('MaybePreemptRender', () {
+    if (ServiceLocator.instance.auxiliaryTreeRegistry.trees.isEmpty) {
+      // print('Actor.maybePreemptRender skip since tree empty');
+      // No active smooth widgets
+      return;
+    }
 
-      // _maybePreemptRenderCallCount++;
+    // _maybePreemptRenderCallCount++;
 
-      final shouldAct = ServiceLocator.instance.preemptStrategy
-          .shouldAct(debugToken: debugToken);
-      // print('Actor.maybePreemptRender shouldAct=$shouldAct now=${clock.now()}');
+    final shouldAct = ServiceLocator.instance.preemptStrategy
+        .shouldAct(debugToken: debugToken);
+    // print('Actor.maybePreemptRender shouldAct=$shouldAct now=${clock.now()}');
 
-      if (shouldAct) {
-        ServiceLocator.instance.preemptStrategy.refresh();
-        final smoothFrameTimeStamp =
-            ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp;
+    if (shouldAct) {
+      ServiceLocator.instance.preemptStrategy.refresh();
+      final smoothFrameTimeStamp =
+          ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp;
 
-        preemptRenderRaw(
-            smoothFrameTimeStamp: smoothFrameTimeStamp,
-            debugReason: 'maybePreemptRender');
-      }
-    });
+      preemptRenderRaw(
+          smoothFrameTimeStamp: smoothFrameTimeStamp,
+          debugReason: 'maybePreemptRender');
+    }
+    // });
   }
 
   void preemptRenderRaw(

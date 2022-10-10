@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:clock/clock.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
@@ -62,16 +60,16 @@ class PreemptStrategyNormal implements PreemptStrategy {
     final nowTimeStamp = timeInfoCalculator.dateTimeToTimeStamp(now);
     final ans = nowTimeStamp > shouldActTimeStamp;
 
-    // #6117, only for debug
-    Timeline.timeSync(
-      'PreemptStrategy.shouldAct',
-      arguments: <String, Object?>{
-        'now': now.microsecondsSinceEpoch.toString(),
-        'nowTimeStamp': nowTimeStamp.inMicroseconds.toString(),
-        'shouldActTimeStamp': shouldActTimeStamp.inMicroseconds.toString(),
-      },
-      () {},
-    );
+    // // #6117, only for debug
+    // Timeline.timeSync(
+    //   'PreemptStrategy.shouldAct',
+    //   arguments: <String, Object?>{
+    //     'now': now.microsecondsSinceEpoch.toString(),
+    //     'nowTimeStamp': nowTimeStamp.inMicroseconds.toString(),
+    //     'shouldActTimeStamp': shouldActTimeStamp.inMicroseconds.toString(),
+    //   },
+    //   () {},
+    // );
 
     // if (ans) {
     // // this "latency" is an important (?) indicator 36020 #6021
@@ -141,24 +139,24 @@ class PreemptStrategyNormal implements PreemptStrategy {
     _currentPreemptRenderVsyncTargetTimeStamp =
         nextVsync - (shouldShiftOneFrame ? kOneFrame : Duration.zero);
 
-    // #6117, only for debug
-    Timeline.timeSync(
-      'PreemptStrategy.refresh',
-      arguments: <String, Object?>{
-        'now': now.microsecondsSinceEpoch.toString(),
-        'nowTimeStamp': nowTimeStamp.inMicroseconds.toString(),
-        'currentFrameTimeStamp': SmoothSchedulerBindingMixin
-            .instance.currentFrameTimeStamp.inMicroseconds
-            .toString(),
-        'shouldShiftOneFrame': shouldShiftOneFrame,
-        'currentPreemptRenderVsyncTargetTimeStamp':
-            _currentPreemptRenderVsyncTargetTimeStamp.inMicroseconds.toString(),
-        'diffDateTimeToAdjustedFrameTimeStamp': TimeConverter
-            .instance.diffDateTimeToAdjustedFrameTimeStamp
-            .toString(),
-      },
-      () {},
-    );
+    // // #6117, only for debug
+    // Timeline.timeSync(
+    //   'PreemptStrategy.refresh',
+    //   arguments: <String, Object?>{
+    //     'now': now.microsecondsSinceEpoch.toString(),
+    //     'nowTimeStamp': nowTimeStamp.inMicroseconds.toString(),
+    //     'currentFrameTimeStamp': SmoothSchedulerBindingMixin
+    //         .instance.currentFrameTimeStamp.inMicroseconds
+    //         .toString(),
+    //     'shouldShiftOneFrame': shouldShiftOneFrame,
+    //     'currentPreemptRenderVsyncTargetTimeStamp':
+    //         _currentPreemptRenderVsyncTargetTimeStamp.inMicroseconds.toString(),
+    //     'diffDateTimeToAdjustedFrameTimeStamp': TimeConverter
+    //         .instance.diffDateTimeToAdjustedFrameTimeStamp
+    //         .toString(),
+    //   },
+    //   () {},
+    // );
   }
 
   @override

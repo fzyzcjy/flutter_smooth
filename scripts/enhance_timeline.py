@@ -148,7 +148,7 @@ def synthesize_events_preempt_render_large_latency(vsync_positions: List[int]):
         interest_vsync_index = bisect_left(vsync_positions, actual_preempt_render_time + 8000) - 1
         expect_preempt_render_time = vsync_positions[interest_vsync_index] - PREEMPT_RENDER_DELTA
 
-        threshold = 1500
+        threshold = 2500
 
         if actual_preempt_render_time > expect_preempt_render_time + threshold:
             new_events += synthesize_event(
