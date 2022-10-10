@@ -55,15 +55,18 @@ class ExampleListViewPage extends StatelessWidget {
                     ],
                   ),
                 ),
-              Expanded(child: enableSmooth ? _buildSmooth() : _buildPlain()),
               // #6101
               // for normal case, still mimic it is a bit slow to be real
-              _AlwaysLayoutBuilder(onPerformLayout: () {
-                for (var i = 0; i < 10; ++i) {
-                  sleep(const Duration(microseconds: 500));
-                  ServiceLocator.instance.actor.maybePreemptRender();
-                }
-              }),
+              _AlwaysLayoutBuilder(
+                onPerformLayout: () {
+                  for (var i = 0; i < 10; ++i) {
+                    sleep(const Duration(microseconds: 500));
+                    ServiceLocator.instance.actor.maybePreemptRender();
+                  }
+                },
+                child: Container(),
+              ),
+              Expanded(child: enableSmooth ? _buildSmooth() : _buildPlain()),
               // Row(
               //   children: [
               //     for (final value in [0, 1, 10, 50, 100, 200, 500])
