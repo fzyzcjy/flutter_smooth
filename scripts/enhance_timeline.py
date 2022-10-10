@@ -14,7 +14,11 @@ def synthesize_event(
         start_us: int,
         tid: int,
         duration_us: int = 10000,
+        logging=False,
 ) -> List[TraceEvent]:
+    if logging:
+        print(f'Event: {name} @ {start_us}~+{duration_us}')
+
     common_args = dict(
         tid=tid,
         name=name,
@@ -69,8 +73,9 @@ def synthesize_abnormal_raster_in_interval_events(vsync_positions: List[int], ra
 
         event_common_args = dict(
             start_us=vsync_positions[vsync_index],
-            duration_us=vsync_positions[vsync_index + 1],
+            duration_us=vsync_positions[vsync_index + 1] - vsync_positions[vsync_index],
             tid=-999999,
+            logging=True,
         )
         if num_raster_in_vsync_interval == 0:
             new_events += synthesize_event(name='Jank:ZeroRasterEndInVsyncInterval', **event_common_args)
