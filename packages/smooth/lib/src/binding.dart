@@ -65,22 +65,6 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   }
 }
 
-mixin SmoothSchedulerDebugBindingMixin on SchedulerBinding {
-  @override
-  ui.SingletonFlutterWindow get window => _SmoothDebugWindow(super.window);
-}
-
-class _SmoothDebugWindow extends ProxySingletonFlutterWindow {
-  _SmoothDebugWindow(super.inner);
-
-  @override
-  // ignore: unnecessary_overrides
-  void render(ui.Scene scene, {Duration? fallbackVsyncTargetTime}) {
-    // SimpleLog.instance.log('window.render');
-    super.render(scene, fallbackVsyncTargetTime: fallbackVsyncTargetTime);
-  }
-}
-
 mixin SmoothWidgetsBindingMixin on WidgetsBinding {
   @override
   void drawFrame() {
@@ -189,7 +173,6 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
 class SmoothWidgetsFlutterBinding extends WidgetsFlutterBinding
     with
         SmoothSchedulerBindingMixin,
-        SmoothSchedulerDebugBindingMixin,
         SmoothRendererBindingMixin,
         SmoothWidgetsBindingMixin {
   @override
