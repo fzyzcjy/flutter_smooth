@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:clock/clock.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
@@ -58,19 +60,31 @@ class PreemptStrategyNormal implements PreemptStrategy {
     final nowTimeStamp = timeInfoCalculator.dateTimeToTimeStamp(now);
     final ans = nowTimeStamp > shouldActTimeStamp;
 
-    // if (ans) {
-    //   // this "latency" is an important (?) indicator 36020 #6021
-    //   final latency = nowTimeStamp - shouldActTimeStamp;
-    //   print('$runtimeType.shouldAct=true latency=$latency');
-    //   //   print(
-    //   //     'shouldAct=true '
-    //   //     'now=$now nowTimeStamp=$nowTimeStamp '
-    //   //     'shouldActTimeStamp=$shouldActTimeStamp '
-    //   //     'currentSmoothFrameTimeStamp=$currentSmoothFrameTimeStamp '
-    //   //     'currentFrameAdjustedVsyncTargetTimeStamp=${_timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp} '
-    //   //     'currentPreemptRenderVsyncTargetTimeStamp=$_currentPreemptRenderVsyncTargetTimeStamp',
-    //   //   );
-    // }
+    if (ans) {
+      // #6117
+      Timeline.timeSync(
+        'PreemptStrategyShouldAct',
+        arguments: <String, Object?>{
+          'now': now.microsecondsSinceEpoch.toString(),
+          'nowTimeStamp': nowTimeStamp.inMicroseconds.toString(),
+          'shouldActTimeStamp': shouldActTimeStamp.inMicroseconds.toString(),
+        },
+        () {},
+      );
+
+      // // this "latency" is an important (?) indicator 36020 #6021
+      // final latency = nowTimeStamp - shouldActTimeStamp;
+      // print('$runtimeType.shouldAct=true latency=$latency');
+
+      //   //   print(
+      //   //     'shouldAct=true '
+      //   //     'now=$now nowTimeStamp=$nowTimeStamp '
+      //   //     'shouldActTimeStamp=$shouldActTimeStamp '
+      //   //     'currentSmoothFrameTimeStamp=$currentSmoothFrameTimeStamp '
+      //   //     'currentFrameAdjustedVsyncTargetTimeStamp=${_timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp} '
+      //   //     'currentPreemptRenderVsyncTargetTimeStamp=$_currentPreemptRenderVsyncTargetTimeStamp',
+      //   //   );
+    }
 
     return ans;
   }

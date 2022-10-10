@@ -45,6 +45,7 @@ class Actor {
     final binding = WidgetsFlutterBinding.ensureInitialized();
     final arguments = {
       'reason': debugReason,
+      'smoothFrameTimeStamp': smoothFrameTimeStamp.inMicroseconds.toString(),
       // TODO
     };
 
