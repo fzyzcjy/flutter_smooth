@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 from bisect import bisect_left
 from pathlib import Path
 from typing import Callable, List, Dict
-from zipfile import ZipFile
+from zipfile import ZipFile, ZIP_DEFLATED
 
 TraceEvent = Dict
 
@@ -140,7 +140,7 @@ def main():
     print(f'#events={len(data["traceEvents"])}')
     path_output.write_text(json.dumps(data))
 
-    with ZipFile(f'{path_input}.zip', 'w') as zipf:
+    with ZipFile(f'{path_input}.zip', 'w', compression=ZIP_DEFLATED) as zipf:
         zipf.write(path_input, arcname=path_input.name)
 
 
