@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/binding.dart';
 import 'package:smooth/src/constant.dart';
 import 'package:smooth/src/simple_date_time.dart';
+import 'package:smooth/src/time_converter.dart';
 
 abstract class PreemptStrategy {
   factory PreemptStrategy.normal() = PreemptStrategyNormal;
@@ -176,7 +177,8 @@ class TimeInfoCalculator {
     return dependency.currentFrameTimeStamp;
   }
 
-  int get diffDateTimeToTimeStamp => TODO;
+  int get diffDateTimeToTimeStamp =>
+      TimeConverter.instance.diffDateTimeToTimeStamp;
 
   // #6120
   // /// Converting between a [DateTime] (representing real-world time)
