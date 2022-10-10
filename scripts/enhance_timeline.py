@@ -1,6 +1,7 @@
 import json
 import re
 from argparse import ArgumentParser
+from bisect import bisect_left
 from pathlib import Path
 from typing import Callable, List, Dict
 from zipfile import ZipFile
@@ -111,11 +112,27 @@ def synthesize_events_abnormal_raster_in_vsync_interval(vsync_positions: List[in
     return new_events
 
 
+def synthesize_events_no_pending_continuation(vsync_positions: List[int]):
+    new_events = []
+    for e in data['traceEvents']:
+        # this event only exist in our modified code, NOT in master code (yet) in 2022.10.10
+        if e['name'] == 'NoPendingContinuation' and e['ph'] == 'B':
+            vsync_index = bisect_left(vsync_positions, e['ts']) - 1
+            new_events += synthesize_event(
+                name='Waste(NoPendingContinuation)',
+                start_us=vsync_positions[vsync_index],
+                duration_us=vsync_positions[vsync_index + 1] - vsync_positions[vsync_index],
+                tid=ABNORMAL_TID,
+            )
+    return new_events
+
+
 def main():
     vsync_positions = parse_vsync_positions(data)
     raster_end_positions = parse_raster_end_positions(data)
 
     data['traceEvents'] += synthesize_events_abnormal_raster_in_vsync_interval(vsync_positions, raster_end_positions)
+    data['traceEvents'] += synthesize_events_no_pending_continuation(vsync_positions)
 
     data['traceEvents'] += synthesize_long_event_matching_filter(
         lambda s: re.match(r'.*\.S\.SimpleCounter', s) is not None, synthesize_tid=-999998)
