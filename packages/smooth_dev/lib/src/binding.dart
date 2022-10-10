@@ -102,8 +102,8 @@ class SmoothTestWindow extends ProxyTestWindow implements TestWindow {
   });
 
   @override
-  void render(ui.Scene scene) {
+  void render(ui.Scene scene, {Duration? fallbackVsyncTargetTime}) {
     onRender(scene);
-    super.render(scene);
+    super.render(scene, fallbackVsyncTargetTime: fallbackVsyncTargetTime);
   }
 }

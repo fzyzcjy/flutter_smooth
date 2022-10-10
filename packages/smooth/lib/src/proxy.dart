@@ -137,7 +137,8 @@ class ProxyFlutterView implements ui.FlutterView {
   List<ui.DisplayFeature> get displayFeatures => inner.displayFeatures;
 
   @override
-  void render(ui.Scene scene) => inner.render(scene);
+  void render(ui.Scene scene, {Duration? fallbackVsyncTargetTime}) =>
+      inner.render(scene, fallbackVsyncTargetTime: fallbackVsyncTargetTime);
 }
 
 class ProxySingletonFlutterWindow extends ProxyFlutterView

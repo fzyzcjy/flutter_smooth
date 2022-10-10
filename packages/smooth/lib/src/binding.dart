@@ -75,9 +75,9 @@ class _SmoothDebugWindow extends ProxySingletonFlutterWindow {
 
   @override
   // ignore: unnecessary_overrides
-  void render(ui.Scene scene) {
+  void render(ui.Scene scene, {Duration? fallbackVsyncTargetTime}) {
     // SimpleLog.instance.log('window.render');
-    super.render(scene);
+    super.render(scene, fallbackVsyncTargetTime: fallbackVsyncTargetTime);
   }
 }
 
