@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - website
+      - 'website/**'
 
 # ref https://docusaurus.io/docs/deployment#triggering-deployment-with-github-actions
 jobs:
