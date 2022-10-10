@@ -153,8 +153,9 @@ class PreemptStrategyNormal implements PreemptStrategy {
         'shouldShiftOneFrame': shouldShiftOneFrame,
         'currentPreemptRenderVsyncTargetTimeStamp':
             _currentPreemptRenderVsyncTargetTimeStamp.inMicroseconds.toString(),
-        'diffDateTimeToTimeStamp':
-            TimeConverter.instance.diffDateTimeToTimeStamp.toString(),
+        'diffDateTimeToAdjustedFrameTimeStamp': TimeConverter
+            .instance.diffDateTimeToAdjustedFrameTimeStamp
+            .toString(),
       },
       () {},
     );
@@ -196,7 +197,7 @@ class TimeInfoCalculator {
   }
 
   int get diffDateTimeToTimeStamp =>
-      TimeConverter.instance.diffDateTimeToTimeStamp;
+      TimeConverter.instance.diffDateTimeToAdjustedFrameTimeStamp;
 
   // #6120
   // /// Converting between a [DateTime] (representing real-world time)
