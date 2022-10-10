@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/time_converter.dart';
 
 class Actor {
   // var _maybePreemptRenderCallCount = 0;
@@ -80,7 +81,10 @@ class Actor {
         //     'call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
         WidgetsBinding.instance.window.render(
           scene,
-          fallbackVsyncTargetTime: smoothFrameTimeStamp,
+          fallbackVsyncTargetTime: smoothFrameTimeStamp +
+              Duration(
+                  microseconds: TimeConverter
+                      .instance.diffSystemToAdjustedFrameTimeStamp),
         );
       });
 

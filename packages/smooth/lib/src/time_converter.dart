@@ -15,9 +15,11 @@ class TimeConverter {
   }
 
   int get diffDateTimeToAdjustedFrameTimeStamp =>
-      _diffDateTimeToSystemFrameTimeStamp +
-      (SchedulerBinding.instance.currentSystemFrameTimeStamp.inMicroseconds -
-          SchedulerBinding.instance.currentFrameTimeStamp.inMicroseconds);
+      _diffDateTimeToSystemFrameTimeStamp + diffSystemToAdjustedFrameTimeStamp;
+
+  int get diffSystemToAdjustedFrameTimeStamp =>
+      SchedulerBinding.instance.currentSystemFrameTimeStamp.inMicroseconds -
+      SchedulerBinding.instance.currentFrameTimeStamp.inMicroseconds;
 
   int get _diffDateTimeToSystemFrameTimeStamp =>
       __diffDateTimeToSystemFrameTimeStamp ??= _readDiffDateTimeToTimeStamp();

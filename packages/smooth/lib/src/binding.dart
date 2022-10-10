@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/messages_wrapped.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/time_converter.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   @override
@@ -80,7 +81,10 @@ class SmoothSingletonFlutterWindow extends ProxySingletonFlutterWindow {
           // NOTE *need* this when [fallbackVsyncTargetTime] is null, because
           // the plain-old pipeline will call `window.render` and we cannot
           // control that
-          ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp,
+          ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp +
+              Duration(
+                  microseconds: TimeConverter
+                      .instance.diffSystemToAdjustedFrameTimeStamp),
     );
   }
 }
