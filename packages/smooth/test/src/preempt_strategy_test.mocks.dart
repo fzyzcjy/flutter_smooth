@@ -66,18 +66,7 @@ class MockPreemptStrategyDependency extends _i1.Mock
           Invocation.getter(#currentFrameTimeStamp),
         ),
       ) as Duration);
-  @override
-  DateTime get beginFrameDateTime => (super.noSuchMethod(
-        Invocation.getter(#beginFrameDateTime),
-        returnValue: _FakeDateTime_1(
-          this,
-          Invocation.getter(#beginFrameDateTime),
-        ),
-        returnValueForMissingStub: _FakeDateTime_1(
-          this,
-          Invocation.getter(#beginFrameDateTime),
-        ),
-      ) as DateTime);
+
   @override
   _i2.SimpleDateTime now() => (super.noSuchMethod(
         Invocation.method(

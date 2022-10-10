@@ -37,8 +37,9 @@ class PreemptStrategyDependency {
   Duration get currentFrameTimeStamp =>
       SmoothSchedulerBindingMixin.instance.currentFrameTimeStamp;
 
-  DateTime get beginFrameDateTime =>
-      SmoothSchedulerBindingMixin.instance.beginFrameDateTime;
+// should not use this #6120
+// DateTime get beginFrameDateTime =>
+//     SmoothSchedulerBindingMixin.instance.beginFrameDateTime;
 }
 
 @visibleForTesting
@@ -175,22 +176,25 @@ class TimeInfoCalculator {
     return dependency.currentFrameTimeStamp;
   }
 
-  /// Converting between a [DateTime] (representing real-world time)
-  /// and an "adjusted TimeStamp" such as [SchedulerBinding.currentFrameTimeStamp]
-  int get diffDateTimeToTimeStamp =>
-      _currentFrameVsyncTargetDateTime.microsecondsSinceEpoch -
-      currentFrameAdjustedVsyncTargetTimeStamp.inMicroseconds;
+  int get diffDateTimeToTimeStamp => TODO;
 
-  // we need to *add one frame*, because [(adjusted) VsyncTargetTime] means
-  // the end of current plain-old frame, while [beginFrameDateTime] means
-  // the clock when plain-old frame starts.
-  DateTime get _currentFrameVsyncTargetDateTime =>
-      // NOTE this add one frame
-      dependency.beginFrameDateTime.add(kOneFrame);
-
-  // SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
-  //     SimpleDateTime.fromMicrosecondsSinceEpoch(
-  //         timeStamp.inMicroseconds + diffDateTimeToTimeStamp);
+  // #6120
+  // /// Converting between a [DateTime] (representing real-world time)
+  // /// and an "adjusted TimeStamp" such as [SchedulerBinding.currentFrameTimeStamp]
+  // int get diffDateTimeToTimeStamp =>
+  //     _currentFrameVsyncTargetDateTime.microsecondsSinceEpoch -
+  //     currentFrameAdjustedVsyncTargetTimeStamp.inMicroseconds;
+  //
+  // // we need to *add one frame*, because [(adjusted) VsyncTargetTime] means
+  // // the end of current plain-old frame, while [beginFrameDateTime] means
+  // // the clock when plain-old frame starts.
+  // DateTime get _currentFrameVsyncTargetDateTime =>
+  //     // NOTE this add one frame
+  //     dependency.beginFrameDateTime.add(kOneFrame);
+  //
+  // // SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
+  // //     SimpleDateTime.fromMicrosecondsSinceEpoch(
+  // //         timeStamp.inMicroseconds + diffDateTimeToTimeStamp);
 
   Duration dateTimeToTimeStamp(SimpleDateTime dateTime) => Duration(
       microseconds: dateTime.microsecondsSinceEpoch - diffDateTimeToTimeStamp);

@@ -1,6 +1,5 @@
 import 'dart:ui' as ui;
 
-import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -16,18 +15,21 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     SmoothHostApiWrapped.instance.init();
   }
 
-  DateTime get beginFrameDateTime => _beginFrameDateTime!;
-  DateTime? _beginFrameDateTime;
-
-  @override
-  void handleBeginFrame(Duration? rawTimeStamp) {
-    _beginFrameDateTime = clock.now();
-
-    // SimpleLog.instance.log('$runtimeType.handleBeginFrame.start '
-    //     'rawTimeStamp=$rawTimeStamp clock.now=$_beginFrameDateTime');
-
-    super.handleBeginFrame(rawTimeStamp);
-  }
+  // NOTE It is *completely wrong* to use clock.now at handleBeginFrame
+  // because there can be large vsync overhead! #6120
+  //
+  // DateTime get beginFrameDateTime => _beginFrameDateTime!;
+  // DateTime? _beginFrameDateTime;
+  //
+  // @override
+  // void handleBeginFrame(Duration? rawTimeStamp) {
+  //   _beginFrameDateTime = clock.now();
+  //
+  //   // SimpleLog.instance.log('$runtimeType.handleBeginFrame.start '
+  //   //     'rawTimeStamp=$rawTimeStamp clock.now=$_beginFrameDateTime');
+  //
+  //   super.handleBeginFrame(rawTimeStamp);
+  // }
 
   @override
   void handleDrawFrame() {
