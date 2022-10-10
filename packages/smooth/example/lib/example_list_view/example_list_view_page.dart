@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/service_locator.dart';
 
@@ -55,6 +56,14 @@ class ExampleListViewPage extends StatelessWidget {
                   ),
                 ),
               Expanded(child: enableSmooth ? _buildSmooth() : _buildPlain()),
+              // #6101
+              // for normal case, still mimic it is a bit slow to be real
+              _AlwaysLayoutBuilder(onPerformLayout: () {
+                for (var i = 0; i < 10; ++i) {
+                  sleep(const Duration(microseconds: 500));
+                  ServiceLocator.instance.actor.maybePreemptRender();
+                }
+              }),
               // Row(
               //   children: [
               //     for (final value in [0, 1, 10, 50, 100, 200, 500])
@@ -351,44 +360,44 @@ class _RenderNormalLayoutBuilder extends RenderProxyBox {
   }
 }
 
-// class _AlwaysLayoutBuilder extends SingleChildRenderObjectWidget {
-//   final VoidCallback? onPerformLayout;
-//
-//   const _AlwaysLayoutBuilder({
-//     this.onPerformLayout,
-//     super.child,
-//   });
-//
-//   @override
-//   _RenderAlwaysLayoutBuilder createRenderObject(BuildContext context) =>
-//       _RenderAlwaysLayoutBuilder(
-//         onPerformLayout: onPerformLayout,
-//       );
-//
-//   @override
-//   void updateRenderObject(
-//       BuildContext context, _RenderAlwaysLayoutBuilder renderObject) {
-//     renderObject.onPerformLayout = onPerformLayout;
-//   }
-// }
-//
-// class _RenderAlwaysLayoutBuilder extends RenderProxyBox {
-//   _RenderAlwaysLayoutBuilder({
-//     required this.onPerformLayout,
-//     RenderBox? child,
-//   }) : super(child);
-//
-//   VoidCallback? onPerformLayout;
-//
-//   @override
-//   void performLayout() {
-//     // print('$runtimeType.performLayout');
-//
-//     super.performLayout();
-//     onPerformLayout?.call();
-//     SchedulerBinding.instance.addPostFrameCallback((_) {
-//       if (!attached) return;
-//       markNeedsLayout();
-//     });
-//   }
-// }
+class _AlwaysLayoutBuilder extends SingleChildRenderObjectWidget {
+  final VoidCallback? onPerformLayout;
+
+  const _AlwaysLayoutBuilder({
+    this.onPerformLayout,
+    super.child,
+  });
+
+  @override
+  _RenderAlwaysLayoutBuilder createRenderObject(BuildContext context) =>
+      _RenderAlwaysLayoutBuilder(
+        onPerformLayout: onPerformLayout,
+      );
+
+  @override
+  void updateRenderObject(
+      BuildContext context, _RenderAlwaysLayoutBuilder renderObject) {
+    renderObject.onPerformLayout = onPerformLayout;
+  }
+}
+
+class _RenderAlwaysLayoutBuilder extends RenderProxyBox {
+  _RenderAlwaysLayoutBuilder({
+    required this.onPerformLayout,
+    RenderBox? child,
+  }) : super(child);
+
+  VoidCallback? onPerformLayout;
+
+  @override
+  void performLayout() {
+    // print('$runtimeType.performLayout');
+
+    super.performLayout();
+    onPerformLayout?.call();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!attached) return;
+      markNeedsLayout();
+    });
+  }
+}
