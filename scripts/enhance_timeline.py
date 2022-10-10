@@ -137,10 +137,14 @@ def synthesize_events_preempt_render_large_latency(vsync_positions: List[int]):
         if not (e['name'] == 'PreemptRender' and e['ph'] == 'B'):
             continue
 
+        reason = e.get('args', {}).get('reason')
+        # AfterDrawFrame is triggerred not near vsync, but can be in arbitrary location
+        if reason == 'AfterDrawFrame':
+            continue
+
         actual_preempt_render_time = e['ts']
-        expect_preempt_render_time = \
-            vsync_positions[bisect_left(vsync_positions, actual_preempt_render_time) - 1] \
-            - PREEMPT_RENDER_DELTA
+        interest_vsync_index = bisect_left(vsync_positions, actual_preempt_render_time + 8000) - 1
+        expect_preempt_render_time = vsync_positions[interest_vsync_index] - PREEMPT_RENDER_DELTA
 
         threshold = 1500
 

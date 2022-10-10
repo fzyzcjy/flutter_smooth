@@ -43,8 +43,13 @@ class Actor {
   void preemptRenderRaw(
       {required Duration smoothFrameTimeStamp, required String debugReason}) {
     final binding = WidgetsFlutterBinding.ensureInitialized();
+    final arguments = {
+      'reason': debugReason,
+      // TODO
+    };
+
     final start = clock.now();
-    Timeline.timeSync('PreemptRender', () {
+    Timeline.timeSync('PreemptRender', arguments: arguments, () {
       // print('$runtimeType _preemptRender start');
 
       // print('_preemptRender '
