@@ -102,9 +102,9 @@ def synthesize_abnormal_raster_in_interval_events(vsync_positions: List[int], ra
             logging=True,
         )
         if num_raster_in_vsync_interval == 0:
-            new_events += synthesize_event(name='Jank:ZeroRasterEndInVsyncInterval', **event_common_args)
+            new_events += synthesize_event(name='Jank(ZeroRasterEndInVsyncInterval)', **event_common_args)
         elif num_raster_in_vsync_interval >= 2:
-            new_events += synthesize_event(name='Waste:MultiRasterEndInVsyncInterval', **event_common_args)
+            new_events += synthesize_event(name='Waste(MultiRasterEndInVsyncInterval)', **event_common_args)
     return new_events
 
 
