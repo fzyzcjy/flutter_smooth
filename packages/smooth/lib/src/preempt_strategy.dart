@@ -62,31 +62,31 @@ class PreemptStrategyNormal implements PreemptStrategy {
     final nowTimeStamp = timeInfoCalculator.dateTimeToTimeStamp(now);
     final ans = nowTimeStamp > shouldActTimeStamp;
 
-    if (ans) {
-      // #6117
-      Timeline.timeSync(
-        'PreemptStrategyShouldAct',
-        arguments: <String, Object?>{
-          'now': now.microsecondsSinceEpoch.toString(),
-          'nowTimeStamp': nowTimeStamp.inMicroseconds.toString(),
-          'shouldActTimeStamp': shouldActTimeStamp.inMicroseconds.toString(),
-        },
-        () {},
-      );
+    // #6117, only for debug
+    Timeline.timeSync(
+      'PreemptStrategy.shouldAct',
+      arguments: <String, Object?>{
+        'now': now.microsecondsSinceEpoch.toString(),
+        'nowTimeStamp': nowTimeStamp.inMicroseconds.toString(),
+        'shouldActTimeStamp': shouldActTimeStamp.inMicroseconds.toString(),
+      },
+      () {},
+    );
 
-      // // this "latency" is an important (?) indicator 36020 #6021
-      // final latency = nowTimeStamp - shouldActTimeStamp;
-      // print('$runtimeType.shouldAct=true latency=$latency');
+    // if (ans) {
+    // // this "latency" is an important (?) indicator 36020 #6021
+    // final latency = nowTimeStamp - shouldActTimeStamp;
+    // print('$runtimeType.shouldAct=true latency=$latency');
 
-      //   //   print(
-      //   //     'shouldAct=true '
-      //   //     'now=$now nowTimeStamp=$nowTimeStamp '
-      //   //     'shouldActTimeStamp=$shouldActTimeStamp '
-      //   //     'currentSmoothFrameTimeStamp=$currentSmoothFrameTimeStamp '
-      //   //     'currentFrameAdjustedVsyncTargetTimeStamp=${_timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp} '
-      //   //     'currentPreemptRenderVsyncTargetTimeStamp=$_currentPreemptRenderVsyncTargetTimeStamp',
-      //   //   );
-    }
+    //   //   print(
+    //   //     'shouldAct=true '
+    //   //     'now=$now nowTimeStamp=$nowTimeStamp '
+    //   //     'shouldActTimeStamp=$shouldActTimeStamp '
+    //   //     'currentSmoothFrameTimeStamp=$currentSmoothFrameTimeStamp '
+    //   //     'currentFrameAdjustedVsyncTargetTimeStamp=${_timeInfoCalculator.currentFrameAdjustedVsyncTargetTimeStamp} '
+    //   //     'currentPreemptRenderVsyncTargetTimeStamp=$_currentPreemptRenderVsyncTargetTimeStamp',
+    //   //   );
+    // }
 
     return ans;
   }
@@ -140,6 +140,24 @@ class PreemptStrategyNormal implements PreemptStrategy {
 
     _currentPreemptRenderVsyncTargetTimeStamp =
         nextVsync - (shouldShiftOneFrame ? kOneFrame : Duration.zero);
+
+    // #6117, only for debug
+    Timeline.timeSync(
+      'PreemptStrategy.refresh',
+      arguments: <String, Object?>{
+        'now': now.microsecondsSinceEpoch.toString(),
+        'nowTimeStamp': nowTimeStamp.inMicroseconds.toString(),
+        'currentFrameTimeStamp': SmoothSchedulerBindingMixin
+            .instance.currentFrameTimeStamp.inMicroseconds
+            .toString(),
+        'shouldShiftOneFrame': shouldShiftOneFrame,
+        'currentPreemptRenderVsyncTargetTimeStamp':
+            _currentPreemptRenderVsyncTargetTimeStamp.inMicroseconds.toString(),
+        'diffDateTimeToTimeStamp':
+            TimeConverter.instance.diffDateTimeToTimeStamp.toString(),
+      },
+      () {},
+    );
   }
 
   @override
