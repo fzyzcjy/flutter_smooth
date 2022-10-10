@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'website/**'
+      - '.github/workflows/**'
 
 # ref https://docusaurus.io/docs/deployment#triggering-deployment-with-github-actions
 jobs:
