@@ -118,6 +118,8 @@ def synthesize_events_no_pending_continuation(vsync_positions: List[int]):
         # this event only exist in our modified code, NOT in master code (yet) in 2022.10.10
         if e['name'] == 'NoPendingContinuation' and e['ph'] == 'B':
             vsync_index = bisect_left(vsync_positions, e['ts']) - 1
+            if vsync_index >= len(vsync_positions) - 1:
+                continue
             new_events += synthesize_event(
                 name='Waste(NoPendingContinuation)',
                 start_us=vsync_positions[vsync_index],
