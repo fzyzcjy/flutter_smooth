@@ -129,8 +129,8 @@ def synthesize_events_no_pending_continuation(vsync_positions: List[int]):
     return new_events
 
 
-# this is defined in .dart, keep in sync with there!
-PREEMPT_RENDER_DELTA = 1000
+# this is defined as `PreemptStrategyNormal.kActThresh` in .dart, keep in sync with there!
+PREEMPT_RENDER_DELTA = 2 * 1000
 
 
 def synthesize_events_preempt_render_large_latency(vsync_positions: List[int]):
