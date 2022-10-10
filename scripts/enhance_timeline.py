@@ -7,6 +7,30 @@ from zipfile import ZipFile
 
 TraceEvent = Dict
 
+parser = ArgumentParser()
+parser.add_argument('input')
+args = parser.parse_args()
+
+path_input = Path(args.input)
+path_output = path_input.parent / f'{path_input.stem}_enhanced.json'
+
+data = json.loads(path_input.read_text())
+
+
+class TimeConverter:
+    def __init__(self, data):
+        self.min_ts = min(e['ts'] for e in data['traceEvents'])
+
+    def ts_to_relative_time(self, ts: int):
+        return ts - self.min_ts
+
+    def format_time(self, ts: int):
+        relative_time = self.ts_to_relative_time(ts)
+        return relative_time / 1000000
+
+
+time_converter = TimeConverter(data)
+
 
 def synthesize_event(
         *,
@@ -17,7 +41,7 @@ def synthesize_event(
         logging=False,
 ) -> List[TraceEvent]:
     if logging:
-        print(f'Event: {name} @ {start_us}~+{duration_us}')
+        print(f'Event: {name} @ {time_converter.format_time(start_us)} ~ +{duration_us / 1000000}')
 
     common_args = dict(
         tid=tid,
@@ -32,7 +56,7 @@ def synthesize_event(
     ]
 
 
-def synthesize_long_event_matching_filter(data, filter_event: Callable[[str], bool], synthesize_tid: int):
+def synthesize_long_event_matching_filter(filter_event: Callable[[str], bool], synthesize_tid: int):
     new_events = []
     for e in data['traceEvents']:
         if e['ph'] == 'B' and filter_event(e['name']):
@@ -85,22 +109,13 @@ def synthesize_abnormal_raster_in_interval_events(vsync_positions: List[int], ra
 
 
 def main():
-    parser = ArgumentParser()
-    parser.add_argument('input')
-    args = parser.parse_args()
-
-    path_input = Path(args.input)
-    path_output = path_input.parent / f'{path_input.stem}_enhanced.json'
-
-    data = json.loads(path_input.read_text())
-
     vsync_positions = parse_vsync_positions(data)
     raster_end_positions = parse_raster_end_positions(data)
 
     data['traceEvents'] += synthesize_abnormal_raster_in_interval_events(vsync_positions, raster_end_positions)
 
     data['traceEvents'] += synthesize_long_event_matching_filter(
-        data, lambda s: re.match(r'.*\.S\.SimpleCounter', s) is not None, synthesize_tid=-999998)
+        lambda s: re.match(r'.*\.S\.SimpleCounter', s) is not None, synthesize_tid=-999998)
 
     print(f'#events={len(data["traceEvents"])}')
     path_output.write_text(json.dumps(data))
