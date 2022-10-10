@@ -12,14 +12,16 @@ class ExampleListViewPage extends StatelessWidget {
   final bool enableSmooth;
   final bool enableDebugHeader;
   final bool leaveWhenPointerUp;
-  final int workloadMillis;
+  final bool enableNewItemWorkload;
+  final bool enableAlwaysWorkload;
 
   const ExampleListViewPage({
     super.key,
     required this.enableSmooth,
     this.enableDebugHeader = false,
     this.leaveWhenPointerUp = false,
-    this.workloadMillis = 100,
+    this.enableNewItemWorkload = true,
+    this.enableAlwaysWorkload = true,
   });
 
   @override
@@ -57,16 +59,17 @@ class ExampleListViewPage extends StatelessWidget {
                 ),
               // #6101
               // for normal case, still mimic it is a bit slow to be real
-              _AlwaysLayoutBuilder(
-                onPerformLayout: () {
-                  for (var i = 0; i < 5; ++i) {
-                    // NOTE `sleep` does not support microseconds! #6109
-                    sleep(const Duration(milliseconds: 1));
-                    ServiceLocator.instance.actor.maybePreemptRender();
-                  }
-                },
-                child: Container(),
-              ),
+              if (enableAlwaysWorkload)
+                _AlwaysLayoutBuilder(
+                  onPerformLayout: () {
+                    for (var i = 0; i < 5; ++i) {
+                      // NOTE `sleep` does not support microseconds! #6109
+                      sleep(const Duration(milliseconds: 1));
+                      ServiceLocator.instance.actor.maybePreemptRender();
+                    }
+                  },
+                  child: Container(),
+                ),
               Expanded(child: enableSmooth ? _buildSmooth() : _buildPlain()),
               // Row(
               //   children: [
@@ -111,16 +114,17 @@ class ExampleListViewPage extends StatelessWidget {
       child: Stack(
         children: [
           // #6076
-          _NormalLayoutBuilder(
-            onPerformLayout: () {
-              for (var i = 0; i < workloadMillis; ++i) {
-                // NOTE `sleep` does not support microseconds! #6109
-                sleep(const Duration(milliseconds: 1));
-                ServiceLocator.instance.actor.maybePreemptRender();
-              }
-            },
-            child: Container(),
-          ),
+          if (enableNewItemWorkload)
+            _NormalLayoutBuilder(
+              onPerformLayout: () {
+                for (var i = 0; i < 100; ++i) {
+                  // NOTE `sleep` does not support microseconds! #6109
+                  sleep(const Duration(milliseconds: 1));
+                  ServiceLocator.instance.actor.maybePreemptRender();
+                }
+              },
+              child: Container(),
+            ),
           if (rowColor != null)
             ColoredBox(
               color: rowColor,

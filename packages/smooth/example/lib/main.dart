@@ -71,12 +71,16 @@ class MyApp extends StatelessWidget {
                                 leaveWhenPointerUp: true))),
                   ),
                   ListTile(
-                    title: const Text('Example: ListView plain + 0 workload'),
+                    title:
+                        const Text('Example: ListView plain + zero workload'),
                     onTap: () => Navigator.push<dynamic>(
                         context,
                         MaterialPageRoute<dynamic>(
                             builder: (_) => const ExampleListViewPage(
-                                enableSmooth: false, workloadMillis: 0))),
+                                  enableSmooth: false,
+                                  enableAlwaysWorkload: false,
+                                  enableNewItemWorkload: false,
+                                ))),
                   ),
                   ListTile(
                     title: const Text('Example: ListView plain'),
