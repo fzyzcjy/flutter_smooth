@@ -57,11 +57,27 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     }
   }
 
+  @override
+  ui.SingletonFlutterWindow get window =>
+      SmoothSingletonFlutterWindow(super.window);
+
   static SmoothSchedulerBindingMixin get instance {
     final raw = WidgetsBinding.instance;
     assert(raw is SmoothSchedulerBindingMixin,
         'Please use a WidgetsBinding with SmoothSchedulerBindingMixin');
     return raw as SmoothSchedulerBindingMixin;
+  }
+}
+
+class SmoothSingletonFlutterWindow extends ProxySingletonFlutterWindow {
+  SmoothSingletonFlutterWindow(super.inner);
+
+  @override
+  void render(ui.Scene scene, {Duration? fallbackVsyncTargetTime}) {
+    assert(fallbackVsyncTargetTime == null,
+        'fallbackVsyncTargetTime do not need to be provided from outside');
+
+    super.render(scene, fallbackVsyncTargetTime: TODO);
   }
 }
 
