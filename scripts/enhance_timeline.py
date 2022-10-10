@@ -82,7 +82,10 @@ def parse_raster_end_positions(data) -> List[int]:
     ])
 
 
-def synthesize_abnormal_raster_in_interval_events(vsync_positions: List[int], raster_end_positions: List[int]):
+ABNORMAL_TID = -999999
+
+
+def synthesize_events_abnormal_raster_in_vsync_interval(vsync_positions: List[int], raster_end_positions: List[int]):
     new_events = []
     raster_index = 0
     for vsync_index in range(len(vsync_positions) - 1):
@@ -98,7 +101,7 @@ def synthesize_abnormal_raster_in_interval_events(vsync_positions: List[int], ra
         event_common_args = dict(
             start_us=vsync_positions[vsync_index],
             duration_us=vsync_positions[vsync_index + 1] - vsync_positions[vsync_index],
-            tid=-999999,
+            tid=ABNORMAL_TID,
             logging=True,
         )
         if num_raster_in_vsync_interval == 0:
@@ -112,7 +115,7 @@ def main():
     vsync_positions = parse_vsync_positions(data)
     raster_end_positions = parse_raster_end_positions(data)
 
-    data['traceEvents'] += synthesize_abnormal_raster_in_interval_events(vsync_positions, raster_end_positions)
+    data['traceEvents'] += synthesize_events_abnormal_raster_in_vsync_interval(vsync_positions, raster_end_positions)
 
     data['traceEvents'] += synthesize_long_event_matching_filter(
         lambda s: re.match(r'.*\.S\.SimpleCounter', s) is not None, synthesize_tid=-999998)
