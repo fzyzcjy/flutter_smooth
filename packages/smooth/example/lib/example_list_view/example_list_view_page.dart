@@ -12,14 +12,14 @@ class ExampleListViewPage extends StatelessWidget {
   final bool enableSmooth;
   final bool enableDebugHeader;
   final bool leaveWhenPointerUp;
-  final int workload;
+  final int workloadMillis;
 
   const ExampleListViewPage({
     super.key,
     required this.enableSmooth,
     this.enableDebugHeader = false,
     this.leaveWhenPointerUp = false,
-    this.workload = 50,
+    this.workloadMillis = 100,
   });
 
   @override
@@ -113,7 +113,7 @@ class ExampleListViewPage extends StatelessWidget {
           // #6076
           _NormalLayoutBuilder(
             onPerformLayout: () {
-              for (var i = 0; i < workload * 4; ++i) {
+              for (var i = 0; i < workloadMillis; ++i) {
                 // NOTE `sleep` does not support microseconds! #6109
                 sleep(const Duration(milliseconds: 1));
                 ServiceLocator.instance.actor.maybePreemptRender();
