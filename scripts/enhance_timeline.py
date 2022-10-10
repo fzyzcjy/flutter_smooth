@@ -5,15 +5,6 @@ from pathlib import Path
 from typing import Callable, List, Dict
 from zipfile import ZipFile
 
-parser = ArgumentParser()
-parser.add_argument('input')
-args = parser.parse_args()
-
-path_input = Path(args.input)
-path_output = path_input.parent / f'{path_input.stem}_enhanced.json'
-
-data = json.loads(path_input.read_text())
-
 TraceEvent = Dict
 
 
@@ -37,7 +28,7 @@ def synthesize_event(
     ]
 
 
-def synthesize_long_event_matching_filter(filter_event: Callable[[str], bool], synthesize_tid: int):
+def synthesize_long_event_matching_filter(data, filter_event: Callable[[str], bool], synthesize_tid: int):
     new_events = []
     for e in data['traceEvents']:
         if e['ph'] == 'B' and filter_event(e['name']):
@@ -49,13 +40,38 @@ def synthesize_long_event_matching_filter(filter_event: Callable[[str], bool], s
     data['traceEvents'] += new_events
 
 
-synthesize_long_event_matching_filter(
-    lambda s: re.match(r'.*\.S\.SimpleCounter', s) is not None,
-    synthesize_tid=-999999,
-)
+def parse_vsync_positions(data) -> List[int]:
+    vsync_positions = []
+    for e in data['traceEvents']:
+        if e['ph'] == 'B' and e['name'] == 'VSYNC':
+            vsync_positions.append(e['ts'])
+    return sorted(vsync_positions)
 
-print(f'#events={len(data["traceEvents"])}')
-path_output.write_text(json.dumps(data))
 
-with ZipFile(f'{path_input}.zip', 'w') as zipf:
-    zipf.write(path_input, arcname=path_input.name)
+def main():
+    parser = ArgumentParser()
+    parser.add_argument('input')
+    args = parser.parse_args()
+
+    path_input = Path(args.input)
+    path_output = path_input.parent / f'{path_input.stem}_enhanced.json'
+
+    data = json.loads(path_input.read_text())
+
+    vsync_positions = parse_vsync_positions(data)
+
+    synthesize_long_event_matching_filter(
+        data,
+        lambda s: re.match(r'.*\.S\.SimpleCounter', s) is not None,
+        synthesize_tid=-999999,
+    )
+
+    print(f'#events={len(data["traceEvents"])}')
+    path_output.write_text(json.dumps(data))
+
+    with ZipFile(f'{path_input}.zip', 'w') as zipf:
+        zipf.write(path_input, arcname=path_input.name)
+
+
+if __name__ == '__main__':
+    main()
