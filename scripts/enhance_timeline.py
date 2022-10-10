@@ -127,15 +127,43 @@ def synthesize_events_no_pending_continuation(vsync_positions: List[int]):
     return new_events
 
 
+# this is defined in .dart, keep in sync with there!
+PREEMPT_RENDER_DELTA = 1000
+
+
+def synthesize_events_preempt_render_large_latency(vsync_positions: List[int]):
+    new_events = []
+    for e in data['traceEvents']:
+        if not (e['name'] == 'PreemptRender' and e['ph'] == 'B'):
+            continue
+
+        actual_preempt_render_time = e['ts']
+        expect_preempt_render_time = \
+            vsync_positions[bisect_left(vsync_positions, actual_preempt_render_time) - 1] \
+            - PREEMPT_RENDER_DELTA
+
+        threshold = 1500
+
+        if actual_preempt_render_time > expect_preempt_render_time + threshold:
+            new_events += synthesize_event(
+                name='LargeLatency_PreemptRender',
+                start_us=expect_preempt_render_time,
+                duration_us=10000,
+                tid=-999998,
+            )
+    return new_events
+
+
 def main():
     vsync_positions = parse_vsync_positions(data)
     raster_end_positions = parse_raster_end_positions(data)
 
     data['traceEvents'] += synthesize_events_abnormal_raster_in_vsync_interval(vsync_positions, raster_end_positions)
     data['traceEvents'] += synthesize_events_no_pending_continuation(vsync_positions)
+    data['traceEvents'] += synthesize_events_preempt_render_large_latency(vsync_positions)
 
     data['traceEvents'] += synthesize_long_event_matching_filter(
-        lambda s: re.match(r'.*\.S\.SimpleCounter', s) is not None, synthesize_tid=-999998)
+        lambda s: re.match(r'.*\.S\.SimpleCounter', s) is not None, synthesize_tid=-999997)
 
     print(f'#events={len(data["traceEvents"])}')
     path_output.write_text(json.dumps(data))
