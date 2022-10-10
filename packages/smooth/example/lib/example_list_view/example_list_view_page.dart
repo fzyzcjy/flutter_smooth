@@ -59,8 +59,9 @@ class ExampleListViewPage extends StatelessWidget {
               // for normal case, still mimic it is a bit slow to be real
               _AlwaysLayoutBuilder(
                 onPerformLayout: () {
-                  for (var i = 0; i < 10; ++i) {
-                    sleep(const Duration(microseconds: 500));
+                  for (var i = 0; i < 5; ++i) {
+                    // NOTE `sleep` does not support microseconds! #6109
+                    sleep(const Duration(milliseconds: 1));
                     ServiceLocator.instance.actor.maybePreemptRender();
                   }
                 },
@@ -112,8 +113,9 @@ class ExampleListViewPage extends StatelessWidget {
           // #6076
           _NormalLayoutBuilder(
             onPerformLayout: () {
-              for (var i = 0; i < workload * 10; ++i) {
-                sleep(const Duration(microseconds: 400));
+              for (var i = 0; i < workload * 4; ++i) {
+                // NOTE `sleep` does not support microseconds! #6109
+                sleep(const Duration(milliseconds: 1));
                 ServiceLocator.instance.actor.maybePreemptRender();
               }
             },
