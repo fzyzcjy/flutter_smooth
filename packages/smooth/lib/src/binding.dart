@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -75,17 +76,25 @@ class SmoothSingletonFlutterWindow extends ProxySingletonFlutterWindow {
 
   @override
   void render(ui.Scene scene, {Duration? fallbackVsyncTargetTime}) {
-    super.render(
-      scene,
-      fallbackVsyncTargetTime: fallbackVsyncTargetTime ??
-          // NOTE *need* this when [fallbackVsyncTargetTime] is null, because
-          // the plain-old pipeline will call `window.render` and we cannot
-          // control that
-          ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp +
-              Duration(
-                  microseconds: TimeConverter
-                      .instance.diffSystemToAdjustedFrameTimeStamp),
-    );
+    final effectiveFallbackVsyncTargetTime = fallbackVsyncTargetTime ??
+        // NOTE *need* this when [fallbackVsyncTargetTime] is null, because
+        // the plain-old pipeline will call `window.render` and we cannot
+        // control that
+        ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp +
+            Duration(
+                microseconds:
+                    TimeConverter.instance.diffSystemToAdjustedFrameTimeStamp);
+
+    Timeline.timeSync('window.render', arguments: <String, String>{
+      'effectiveFallbackVsyncTargetTime':
+          effectiveFallbackVsyncTargetTime.inMicroseconds.toString()
+    }, () {
+      super.render(
+        scene,
+        // NOTE use the "effective" version
+        fallbackVsyncTargetTime: effectiveFallbackVsyncTargetTime,
+      );
+    });
   }
 }
 

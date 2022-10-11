@@ -76,17 +76,15 @@ class Actor {
       // ignore: invalid_use_of_protected_member
       final scene = binding.renderView.layer!.buildScene(builder);
 
-      Timeline.timeSync('window.render', () {
-        // print(
-        //     'call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
-        WidgetsBinding.instance.window.render(
-          scene,
-          fallbackVsyncTargetTime: smoothFrameTimeStamp +
-              Duration(
-                  microseconds: TimeConverter
-                      .instance.diffSystemToAdjustedFrameTimeStamp),
-        );
-      });
+      // print(
+      //     'call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
+      WidgetsBinding.instance.window.render(
+        scene,
+        fallbackVsyncTargetTime: smoothFrameTimeStamp +
+            Duration(
+                microseconds:
+                    TimeConverter.instance.diffSystemToAdjustedFrameTimeStamp),
+      );
 
       scene.dispose();
 
