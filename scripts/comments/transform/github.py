@@ -1,8 +1,11 @@
+from comments.common import TransformedComment
+
+
 def _transform_comment(comment_raw, retrieve_time, link):
     if comment_raw['isMinimized']:
         return None
 
-    return dict(
+    return TransformedComment(
         author=comment_raw['author']['login'],
         body=comment_raw['body'],
         link=link,  # do not have per-comment link yet
