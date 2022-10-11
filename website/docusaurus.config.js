@@ -131,6 +131,22 @@ const config = {
                 darkTheme: darkCodeTheme,
             },
         }),
+
+    plugins: [
+        // https://github.com/facebook/docusaurus/issues/3272
+        function (context, options) {
+            return {
+                name: 'webpack-configuration-plugin',
+                configureWebpack(config, isServer, utils) {
+                    return {
+                        resolve: {
+                            symlinks: false,
+                        }
+                    };
+                }
+            };
+        },
+    ],
 };
 
 module.exports = config;
