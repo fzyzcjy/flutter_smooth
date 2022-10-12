@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/simple_date_time.dart';
 import 'package:smooth/src/time_converter.dart';
 
 class Actor {
@@ -17,34 +18,44 @@ class Actor {
         'PreemptRender times=[${_times.map((d) => d.inMicroseconds / 1000).toList().join(', ')}]');
   }
 
-  void maybePreemptRender({Object? debugToken}) {
-    // Timeline.timeSync('MaybePreemptRender', () {
-    if (ServiceLocator.instance.auxiliaryTreeRegistry.trees.isEmpty) {
-      // print('Actor.maybePreemptRender skip since tree empty');
-      // No active smooth widgets
+  void maybePreemptRenderBuildOrLayoutPhase() {
+    if (ServiceLocator.maybeInstance == null ||
+        ServiceLocator.instance.auxiliaryTreeRegistry.trees.isEmpty) {
       return;
     }
 
-    // _maybePreemptRenderCallCount++;
+    final timeManager = ServiceLocator.instance.timeManager;
+    final now = clock.nowSimple();
+    final nowTimestamp =
+        TimeConverter.instance.dateTimeToAdjustedFrameTimeStamp(now);
 
-    final shouldAct = ServiceLocator.instance.preemptStrategy
-        .shouldAct(debugToken: debugToken);
-    // print('Actor.maybePreemptRender shouldAct=$shouldAct now=${clock.now()}');
-
-    if (shouldAct) {
-      ServiceLocator.instance.preemptStrategy.refresh();
-      final smoothFrameTimeStamp =
-          ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp;
-
-      preemptRenderRaw(
-          smoothFrameTimeStamp: smoothFrameTimeStamp,
-          debugReason: 'maybePreemptRender');
+    if (timeManager.thresholdActOnBuildOrLayoutPhaseTimeStamp! < nowTimestamp) {
+      _preemptRenderRaw(debugReason: 'maybePreemptRenderBuildOrLayoutPhase');
+      timeManager.afterBuildOrLayoutPhasePreemptRender(now: nowTimestamp);
     }
-    // });
   }
 
-  void preemptRenderRaw(
-      {required Duration smoothFrameTimeStamp, required String debugReason}) {
+  void maybePreemptRenderPostDrawFramePhase() {
+    if (ServiceLocator.maybeInstance == null ||
+        ServiceLocator.instance.auxiliaryTreeRegistry.trees.isEmpty) {
+      return;
+    }
+
+    final timeManager = ServiceLocator.instance.timeManager;
+    final now = clock.nowSimple();
+    final nowTimestamp =
+        TimeConverter.instance.dateTimeToAdjustedFrameTimeStamp(now);
+
+    if (timeManager.thresholdActOnPostDrawFramePhaseTimeStamp! < nowTimestamp) {
+      // NOTE this is "before" not "after"
+      timeManager.beforePostDrawFramePhasePreemptRender(now: nowTimestamp);
+      _preemptRenderRaw(debugReason: 'maybePreemptRenderPostDrawFramePhase');
+    }
+  }
+
+  void _preemptRenderRaw({required String debugReason}) {
+    final smoothFrameTimeStamp =
+        ServiceLocator.instance.timeManager.currentSmoothFrameTimeStamp;
     final binding = WidgetsFlutterBinding.ensureInitialized();
     final arguments = {
       'reason': debugReason,

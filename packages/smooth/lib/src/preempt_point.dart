@@ -24,55 +24,42 @@ class SmoothPreemptPoint extends StatelessWidget {
 }
 
 class BuildPreemptPointWidget extends StatelessWidget {
-  final Object? debugToken;
   final Widget child;
 
   const BuildPreemptPointWidget({
     super.key,
-    this.debugToken,
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
-    ServiceLocator.instance.actor.maybePreemptRender(debugToken: debugToken);
+    ServiceLocator.instance.actor.maybePreemptRenderBuildOrLayoutPhase();
     return child;
   }
 }
 
 class LayoutPreemptPointWidget extends SingleChildRenderObjectWidget {
-  final Object? debugToken;
-
-  const LayoutPreemptPointWidget({
-    super.key,
-    this.debugToken,
-    super.child,
-  });
+  const LayoutPreemptPointWidget({super.key, super.child});
 
   @override
   RenderLayoutPreemptPoint createRenderObject(BuildContext context) =>
-      RenderLayoutPreemptPoint(debugToken: debugToken);
+      RenderLayoutPreemptPoint();
 
   @override
   void updateRenderObject(
-      BuildContext context, RenderLayoutPreemptPoint renderObject) {
-    renderObject.debugToken = debugToken;
-  }
+      BuildContext context, RenderLayoutPreemptPoint renderObject) {}
 }
 
 @visibleForTesting
 class RenderLayoutPreemptPoint extends RenderProxyBox {
   RenderLayoutPreemptPoint({
-    required this.debugToken,
     RenderBox? child,
   }) : super(child);
-
-  Object? debugToken;
 
   @override
   void performLayout() {
     // print('$runtimeType.performLayout');
-    ServiceLocator.instance.actor.maybePreemptRender(debugToken: debugToken);
+    ServiceLocator.instance.actor.maybePreemptRenderBuildOrLayoutPhase();
     super.performLayout();
   }
 }

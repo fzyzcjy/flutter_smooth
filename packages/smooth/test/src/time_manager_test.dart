@@ -25,11 +25,11 @@ void main() {
         thresholdActOnPostDrawFramePhaseTimeStamp: null,
       );
 
-      manager.afterPlainOldRender(
+      manager.afterRunAuxPipelineForPlainOld(
           now: kTenSeconds + const Duration(milliseconds: 15));
 
       manager.expect(
-        phase: SmoothFramePhase.afterPlainOldRender,
+        phase: SmoothFramePhase.afterRunAuxPipelineForPlainOld,
         currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
         // no meaningful value
         thresholdActOnBuildOrLayoutPhaseTimeStamp: null,
@@ -64,12 +64,12 @@ void main() {
         thresholdActOnPostDrawFramePhaseTimeStamp: null,
       );
 
-      manager.afterPlainOldRender(
+      manager.afterRunAuxPipelineForPlainOld(
           // it janks
           now: kTenSeconds + const Duration(milliseconds: 30));
 
       manager.expect(
-        phase: SmoothFramePhase.afterPlainOldRender,
+        phase: SmoothFramePhase.afterRunAuxPipelineForPlainOld,
         currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
         thresholdActOnBuildOrLayoutPhaseTimeStamp: null,
         thresholdActOnPostDrawFramePhaseTimeStamp: kTenSeconds + kOneFrame,
@@ -117,11 +117,11 @@ void main() {
           thresholdActOnPostDrawFramePhaseTimeStamp: null,
         );
 
-        manager.afterPlainOldRender(
+        manager.afterRunAuxPipelineForPlainOld(
             now: timeWhenPreemptRender + const Duration(milliseconds: 2));
 
         manager.expect(
-          phase: SmoothFramePhase.afterPlainOldRender,
+          phase: SmoothFramePhase.afterRunAuxPipelineForPlainOld,
           currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 2,
           thresholdActOnBuildOrLayoutPhaseTimeStamp: null,
           thresholdActOnPostDrawFramePhaseTimeStamp:
@@ -162,11 +162,11 @@ void main() {
           thresholdActOnPostDrawFramePhaseTimeStamp: null,
         );
 
-        manager.afterPlainOldRender(
+        manager.afterRunAuxPipelineForPlainOld(
             now: nowWhenSecondPreemptRender + const Duration(milliseconds: 2));
 
         manager.expect(
-          phase: SmoothFramePhase.afterPlainOldRender,
+          phase: SmoothFramePhase.afterRunAuxPipelineForPlainOld,
           currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 3,
           thresholdActOnBuildOrLayoutPhaseTimeStamp: null,
           thresholdActOnPostDrawFramePhaseTimeStamp:
@@ -197,11 +197,11 @@ void main() {
     test('simple case', () {
       manager.onBeginFrame(
           currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
-      manager.afterPlainOldRender(
+      manager.afterRunAuxPipelineForPlainOld(
           now: kTenSeconds + const Duration(milliseconds: 16));
 
       manager.expect(
-        phase: SmoothFramePhase.afterPlainOldRender,
+        phase: SmoothFramePhase.afterRunAuxPipelineForPlainOld,
         currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
         thresholdActOnBuildOrLayoutPhaseTimeStamp: null,
         thresholdActOnPostDrawFramePhaseTimeStamp: kTenSeconds + kOneFrame,
@@ -229,7 +229,7 @@ void main() {
       manager.afterBuildOrLayoutPhasePreemptRender(
           now: kTenSeconds + const Duration(milliseconds: 16));
 
-      manager.afterPlainOldRender(
+      manager.afterRunAuxPipelineForPlainOld(
           now: kTenSeconds + const Duration(milliseconds: 32));
 
       manager.beforePostDrawFramePhasePreemptRender(
@@ -251,7 +251,7 @@ void main() {
     manager.afterBuildOrLayoutPhasePreemptRender(
         now: kTenSeconds + const Duration(milliseconds: 16));
 
-    manager.afterPlainOldRender(
+    manager.afterRunAuxPipelineForPlainOld(
         now: kTenSeconds + const Duration(milliseconds: 20));
 
     // i.e. threshold *not* have PostDrawFramePhasePreemptRender

@@ -64,7 +64,8 @@ class ExampleListViewPage extends StatelessWidget {
                     for (var i = 0; i < 5; ++i) {
                       // NOTE `sleep` does not support microseconds! #6109
                       sleep(const Duration(milliseconds: 1));
-                      ServiceLocator.instance.actor.maybePreemptRender();
+                      ServiceLocator.instance.actor
+                          .maybePreemptRenderBuildOrLayoutPhase();
                     }
                   },
                   child: Container(),
@@ -123,7 +124,8 @@ class ExampleListViewPage extends StatelessWidget {
                 for (var i = 0; i < 100; ++i) {
                   // NOTE `sleep` does not support microseconds! #6109
                   sleep(const Duration(milliseconds: 1));
-                  ServiceLocator.instance.actor.maybePreemptRender();
+                  ServiceLocator.instance.actor
+                      .maybePreemptRenderBuildOrLayoutPhase();
                 }
               },
               child: Container(),

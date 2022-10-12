@@ -10,6 +10,7 @@ import 'package:smooth/src/messages_wrapped.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
 import 'package:smooth/src/time_converter.dart';
+import 'package:smooth/src/time_manager.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   @override
@@ -33,6 +34,21 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   //
   //   super.handleBeginFrame(rawTimeStamp);
   // }
+
+  @override
+  void handleBeginFrame(Duration? rawTimeStamp) {
+    // mimic how [handleBeginFrame] computes the real [currentFrameTimeStamp]
+    final eagerCurrentFrameTimeStamp =
+        adjustForEpoch(rawTimeStamp ?? currentSystemFrameTimeStamp);
+
+    ServiceLocator.instance.timeManager.onBeginFrame(
+        currentFrameTimeStamp: eagerCurrentFrameTimeStamp,
+        now: TimeManager.normalNow);
+
+    super.handleBeginFrame(rawTimeStamp);
+
+    assert(eagerCurrentFrameTimeStamp == currentFrameTimeStamp);
+  }
 
   @override
   void handleDrawFrame() {
@@ -100,7 +116,7 @@ class SmoothSingletonFlutterWindow extends ProxySingletonFlutterWindow {
         // NOTE *need* this when [fallbackVsyncTargetTime] is null, because
         // the plain-old pipeline will call `window.render` and we cannot
         // control that
-        ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp +
+        ServiceLocator.instance.timeManager.currentSmoothFrameTimeStamp +
             Duration(
                 microseconds:
                     TimeConverter.instance.diffSystemToAdjustedFrameTimeStamp);
@@ -136,18 +152,11 @@ mixin SmoothWidgetsBindingMixin on WidgetsBinding {
     final serviceLocator = ServiceLocator.maybeInstance;
     if (serviceLocator == null) return;
 
-    // TODO refactor later #6051
-    final smoothFrameTimeStamp =
-        serviceLocator.preemptStrategy.shouldActAtEndOfDrawFrame();
-    if (smoothFrameTimeStamp != null) {
-      _executingRunPipelineBecauseOfAfterDrawFrame.value = true;
-      try {
-        serviceLocator.actor.preemptRenderRaw(
-            smoothFrameTimeStamp: smoothFrameTimeStamp,
-            debugReason: 'AfterDrawFrame');
-      } finally {
-        _executingRunPipelineBecauseOfAfterDrawFrame.value = false;
-      }
+    _executingRunPipelineBecauseOfAfterDrawFrame.value = true;
+    try {
+      serviceLocator.actor.maybePreemptRenderPostDrawFramePhase();
+    } finally {
+      _executingRunPipelineBecauseOfAfterDrawFrame.value = false;
     }
   }
 
@@ -194,9 +203,8 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     final serviceLocator = ServiceLocator.maybeInstance;
     if (serviceLocator == null) return;
 
-    serviceLocator.preemptStrategy.refresh();
     final currentSmoothFrameTimeStamp =
-        serviceLocator.preemptStrategy.currentSmoothFrameTimeStamp;
+        serviceLocator.timeManager.currentSmoothFrameTimeStamp;
 
     // #6033
     serviceLocator.extraEventDispatcher
@@ -219,6 +227,9 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     } finally {
       _executingRunPipelineBecauseOfAfterFlushLayout.value = false;
     }
+
+    serviceLocator.timeManager
+        .afterRunAuxPipelineForPlainOld(now: TimeManager.normalNow);
   }
 }
 

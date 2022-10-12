@@ -57,7 +57,7 @@ class _RenderAdapterInMainTree extends RenderBox
     // NOTE need to be *after* setting pack.rootView.configuration
     // hack, just for prototype
     pack.runPipeline(
-      ServiceLocator.instance.preemptStrategy.currentSmoothFrameTimeStamp,
+      ServiceLocator.instance.timeManager.currentSmoothFrameTimeStamp,
       skipIfTimeStampUnchanged: false,
       debugReason: 'RenderAdapterInMainTree.performLayout',
     );

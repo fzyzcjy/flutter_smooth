@@ -14,7 +14,7 @@ enum SmoothFramePhase {
   afterBuildOrLayoutPhasePreemptRender,
 
   /// The plain-old pipeline renders (i.e. about to submit window.render)
-  afterPlainOldRender,
+  afterRunAuxPipelineForPlainOld,
 
   /// PostDrawFrame phase preemptRender happens
   ///
@@ -28,7 +28,7 @@ class TimeManager {
 
   TimeManager();
 
-  SmoothFramePhase phase = SmoothFramePhase.afterPlainOldRender;
+  SmoothFramePhase phase = SmoothFramePhase.afterRunAuxPipelineForPlainOld;
 
   /// Fancy version of [SchedulerBinding.currentFrameTimeStamp],
   /// by considering both plain-old frames and also smooth extra frames.
@@ -51,7 +51,7 @@ class TimeManager {
   }
 
   Duration? get thresholdActOnPostDrawFramePhaseTimeStamp {
-    if (phase != SmoothFramePhase.afterPlainOldRender) return null;
+    if (phase != SmoothFramePhase.afterRunAuxPipelineForPlainOld) return null;
     return currentSmoothFrameTimeStamp;
   }
 
@@ -60,7 +60,7 @@ class TimeManager {
     required Duration now,
   }) {
     assert(phase == SmoothFramePhase.onOrAfterPostDrawFramePhasePreemptRender ||
-        phase == SmoothFramePhase.afterPlainOldRender);
+        phase == SmoothFramePhase.afterRunAuxPipelineForPlainOld);
     phase = SmoothFramePhase.initial;
 
     _currentSmoothFrameTimeStamp = currentFrameTimeStamp;
@@ -75,20 +75,20 @@ class TimeManager {
     _currentSmoothFrameTimeStamp = _currentSmoothFrameTimeStamp! + kOneFrame;
   }
 
-  void afterPlainOldRender({required Duration now}) {
+  void afterRunAuxPipelineForPlainOld({required Duration now}) {
     assert(phase == SmoothFramePhase.initial ||
         phase == SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender);
-    phase = SmoothFramePhase.afterPlainOldRender;
+    phase = SmoothFramePhase.afterRunAuxPipelineForPlainOld;
   }
 
   void beforePostDrawFramePhasePreemptRender({required Duration now}) {
-    assert(phase == SmoothFramePhase.afterPlainOldRender);
+    assert(phase == SmoothFramePhase.afterRunAuxPipelineForPlainOld);
     assert(thresholdActOnPostDrawFramePhaseTimeStamp! <= now);
     phase = SmoothFramePhase.onOrAfterPostDrawFramePhasePreemptRender;
 
     _currentSmoothFrameTimeStamp = _currentSmoothFrameTimeStamp! + kOneFrame;
   }
 
-  static Duration normalNowTimeStamp() => TimeConverter.instance
+  static Duration get normalNow => TimeConverter.instance
       .dateTimeToAdjustedFrameTimeStamp(clock.nowSimple());
 }

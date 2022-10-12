@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth/src/actor.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/extra_event_dispatcher.dart';
-import 'package:smooth/src/preempt_strategy.dart';
+import 'package:smooth/src/time_manager.dart';
 
 class ServiceLocator {
   static ServiceLocator? get maybeInstance => _instance;
@@ -16,34 +16,34 @@ class ServiceLocator {
 
   factory ServiceLocator.normal() => ServiceLocator.raw(
         actor: Actor(),
-        preemptStrategy: PreemptStrategy.normal(),
+        timeManager: TimeManager(),
         auxiliaryTreeRegistry: AuxiliaryTreeRegistry(),
         extraEventDispatcher: ExtraEventDispatcher(),
       );
 
   ServiceLocator.raw({
     required this.actor,
-    required this.preemptStrategy,
+    required this.timeManager,
     required this.auxiliaryTreeRegistry,
     required this.extraEventDispatcher,
   });
 
   ServiceLocator copyWith({
     Actor? actor,
-    PreemptStrategy? preemptStrategy,
+    TimeManager? timeManager,
     AuxiliaryTreeRegistry? auxiliaryTreeRegistry,
     ExtraEventDispatcher? extraEventDispatcher,
   }) =>
       ServiceLocator.raw(
         actor: actor ?? this.actor,
-        preemptStrategy: preemptStrategy ?? this.preemptStrategy,
+        timeManager: timeManager ?? this.timeManager,
         auxiliaryTreeRegistry:
             auxiliaryTreeRegistry ?? this.auxiliaryTreeRegistry,
         extraEventDispatcher: extraEventDispatcher ?? this.extraEventDispatcher,
       );
 
   final Actor actor;
-  final PreemptStrategy preemptStrategy;
+  final TimeManager timeManager;
   final AuxiliaryTreeRegistry auxiliaryTreeRegistry;
   final ExtraEventDispatcher extraEventDispatcher;
 }
