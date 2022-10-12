@@ -55,10 +55,7 @@ class TimeManager {
     return currentSmoothFrameTimeStamp;
   }
 
-  void onBeginFrame({
-    required Duration currentFrameTimeStamp,
-    required Duration now,
-  }) {
+  void onBeginFrame({required Duration currentFrameTimeStamp}) {
     assert(phase == SmoothFramePhase.onOrAfterPostDrawFramePhasePreemptRender ||
         phase == SmoothFramePhase.afterRunAuxPipelineForPlainOld);
     phase = SmoothFramePhase.initial;

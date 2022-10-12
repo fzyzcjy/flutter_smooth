@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:ui' as ui;
 
-import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -42,21 +41,11 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
     // mimic how [handleBeginFrame] computes the real [currentFrameTimeStamp]
-    final eagerSystemFrameTimeStamp =
-        rawTimeStamp ?? currentSystemFrameTimeStamp;
     final eagerCurrentFrameTimeStamp =
-        adjustForEpoch(eagerSystemFrameTimeStamp);
-    final diffSystemToAdjustedFrameTimeStamp =
-        (eagerCurrentFrameTimeStamp - eagerSystemFrameTimeStamp).inMicroseconds;
+        adjustForEpoch(rawTimeStamp ?? currentSystemFrameTimeStamp);
 
-    final now = clock.now();
-    final nowTimeStamp = Duration(
-        microseconds: now.microsecondsSinceEpoch -
-            TimeConverter.instance.diffDateTimeToSystemFrameTimeStamp +
-            diffSystemToAdjustedFrameTimeStamp);
-
-    ServiceLocator.instance.timeManager.onBeginFrame(
-        currentFrameTimeStamp: eagerCurrentFrameTimeStamp, now: nowTimeStamp);
+    ServiceLocator.instance.timeManager
+        .onBeginFrame(currentFrameTimeStamp: eagerCurrentFrameTimeStamp);
 
     super.handleBeginFrame(rawTimeStamp);
 

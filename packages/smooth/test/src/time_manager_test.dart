@@ -14,7 +14,7 @@ void main() {
     test('simple', () {
       manager.onBeginFrame(
         currentFrameTimeStamp: kTenSeconds + kOneFrame,
-        now: kTenSeconds,
+        // now: kTenSeconds,
       );
 
       manager.expect(
@@ -38,7 +38,7 @@ void main() {
 
       manager.onBeginFrame(
         currentFrameTimeStamp: kTenSeconds + kOneFrame * 2,
-        now: kTenSeconds + kOneFrame,
+        // now: kTenSeconds + kOneFrame,
       );
 
       manager.expect(
@@ -53,7 +53,7 @@ void main() {
     test('when jank', () {
       manager.onBeginFrame(
         currentFrameTimeStamp: kTenSeconds + kOneFrame,
-        now: kTenSeconds,
+        // now: kTenSeconds,
       );
 
       manager.expect(
@@ -77,7 +77,7 @@ void main() {
 
       manager.onBeginFrame(
         currentFrameTimeStamp: kTenSeconds + kOneFrame * 3,
-        now: kTenSeconds + kOneFrame,
+        // now: kTenSeconds + kOneFrame,
       );
 
       manager.expect(
@@ -94,7 +94,9 @@ void main() {
     group('inside one plain-old frame, when has one preemptRender', () {
       void _body({required Duration timeWhenPreemptRender}) {
         manager.onBeginFrame(
-            currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
+          currentFrameTimeStamp: kTenSeconds + kOneFrame,
+          // now: kTenSeconds,
+        );
         manager.expect(
           phase: SmoothFramePhase.initial,
           currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
@@ -146,7 +148,9 @@ void main() {
     group('inside one plain-old frame, when has two preemptRender', () {
       void _body({required Duration nowWhenSecondPreemptRender}) {
         manager.onBeginFrame(
-            currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
+          currentFrameTimeStamp: kTenSeconds + kOneFrame,
+          // now: kTenSeconds,
+        );
 
         manager.afterBuildOrLayoutPhasePreemptRender(
             now: kTenSeconds + const Duration(microseconds: 16500));
@@ -196,7 +200,9 @@ void main() {
   group('when has PostDrawFramePhasePreemptRender', () {
     test('simple case', () {
       manager.onBeginFrame(
-          currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
+        currentFrameTimeStamp: kTenSeconds + kOneFrame,
+        // now: kTenSeconds,
+      );
       manager.afterRunAuxPipelineForPlainOld(
           now: kTenSeconds + const Duration(milliseconds: 16));
 
@@ -224,7 +230,9 @@ void main() {
       () {
     test('simple case', () {
       manager.onBeginFrame(
-          currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
+        currentFrameTimeStamp: kTenSeconds + kOneFrame,
+        // now: kTenSeconds,
+      );
 
       manager.afterBuildOrLayoutPhasePreemptRender(
           now: kTenSeconds + const Duration(milliseconds: 16));
@@ -246,7 +254,9 @@ void main() {
 
   test('reproduce #6128', () {
     manager.onBeginFrame(
-        currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
+      currentFrameTimeStamp: kTenSeconds + kOneFrame,
+      // now: kTenSeconds,
+    );
 
     manager.afterBuildOrLayoutPhasePreemptRender(
         now: kTenSeconds + const Duration(milliseconds: 16));
