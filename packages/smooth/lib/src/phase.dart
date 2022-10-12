@@ -4,7 +4,7 @@ enum SmoothFramePhase {
 
   /// Build/Layout phase preemptRender happens
   /// This can happen zero to many times in one frame
-  buildLayoutPhasePreemptRender,
+  buildOrLayoutPhasePreemptRender,
 
   /// The plain-old pipeline renders (i.e. about to submit window.render)
   plainOldRender,
