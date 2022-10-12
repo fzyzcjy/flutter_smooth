@@ -32,8 +32,10 @@ const sidebars = {
             items: [
                 'benchmark/fps',
                 'benchmark/linearity',
+                'benchmark/jank',
                 'benchmark/latency',
                 'benchmark/waste',
+                'benchmark/devtool',
             ],
         },
         'design',
