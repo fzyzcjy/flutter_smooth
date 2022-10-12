@@ -8,8 +8,7 @@ from typing import Dict
 
 import matplotlib.pyplot as plt
 import pandas as pd
-
-from timeline.common import parse_vsync_positions, parse_raster_end_positions
+from timeline.common import parse_frame_infos
 
 TraceEvent = Dict
 
@@ -24,8 +23,7 @@ else:
 # %%
 
 data = json.loads(Path(path_input).read_text())
-vsync_positions = parse_vsync_positions(data)
-raster_end_positions = parse_raster_end_positions(data)
+frame_infos = parse_frame_infos(data)
 
 scroll_controller_offsets = pd.DataFrame([
     dict(ts=e['ts'], offset=e['args']['offset']) for e in data['traceEvents']
