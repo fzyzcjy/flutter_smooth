@@ -24,7 +24,7 @@ if 0:
     args = parser.parse_args()
     path_input = args.input
 else:
-    path_input = '/Users/tom/Downloads/dart_devtools_2022-10-12_09_38_36.566.json'
+    path_input = '/Users/tom/Downloads/dart_devtools_2022-10-12_10_22_45.079.json'
 
 # %%
 
@@ -78,7 +78,7 @@ plt.scatter(_transform_ts(smooth_shift_offsets.ts), smooth_shift_offsets.offset,
             s=2, label='Smooth', c='C4')
 # plt.vlines(vsync_positions, -300, 300, linewidths=.1, label='Vsync')
 
-plt.plot(_transform_ts(df_frame.vsync_target_time),
+plt.plot(_transform_ts(df_frame.display_screen_time),
          df_frame.scroll_controller_offset - df_frame.smooth_shift_offset,
          '-o', markersize=2, label='offset')
 
