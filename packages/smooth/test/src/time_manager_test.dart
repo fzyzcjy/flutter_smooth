@@ -1,9 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_test/flutter_test.dart' as flutter_test;
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/phase.dart';
 import 'package:smooth/src/time_manager.dart';
 
 void main() {
@@ -31,6 +29,9 @@ void main() {
         currentFrameTimeStamp: kTenSeconds + kOneFrame,
         now: kTenSeconds,
       );
+
+      manager.afterPlainOldRender(
+          now: kTenSeconds + const Duration(milliseconds: 15));
 
       manager.onBeginFrame(
         currentFrameTimeStamp: kTenSeconds + kOneFrame * 2,
@@ -120,75 +121,8 @@ void main() {
       });
     });
 
-    group('when second plain-old frame begins', () {
-      for (final nowWhenPreemptRenderShift in const [
-        Duration(milliseconds: 16),
-        Duration(milliseconds: 17),
-      ]) {
-        test(
-            'when have one preemptRender previously (nowWhenSecondPreemptRenderShift=$nowWhenPreemptRenderShift)',
-            () {
-          manager.onBeginFrame(
-              currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
-
-          manager.afterBuildOrLayoutPhasePreemptRender(
-              now: nowWhenPreemptRenderShift);
-
-          manager.onBeginFrame(
-              currentFrameTimeStamp: kTenSeconds + kOneFrame * 10,
-              now: nowWhenPreemptRenderShift + const Duration(microseconds: 1));
-
-          manager.expect(
-            phase: SmoothFramePhase.initial,
-            currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 10,
-            shouldActOnBuildOrLayoutPhaseTimeStamp:
-                kTenSeconds + kOneFrame * 11 - kActThresh,
-          );
-        });
-      }
-
-      for (final nowWhenSecondPreemptRenderShift in const [
-        Duration(milliseconds: 16),
-        Duration(milliseconds: 17),
-      ]) {
-        test(
-            'when have two preemptRender previously (nowWhenSecondPreemptRenderShift=$nowWhenSecondPreemptRenderShift)',
-            () {
-          dependency.mock(
-            now: startDateTime.add(const Duration(milliseconds: 16)),
-            currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
-            beginFrameDateTime: startDateTime,
-          );
-          manager.refresh();
-
-          dependency.mock(
-            now: startDateTime.add(kOneFrame + nowWhenSecondPreemptRenderShift),
-            currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
-            beginFrameDateTime: startDateTime,
-          );
-          manager.refresh();
-
-          // the "*2" is because, we have *two* preemptRender above
-          // so we assume the first plain-old frame runs for 2/60s
-          dependency.mock(
-            now: startDateTime
-                .add(kOneFrame * 2 + const Duration(milliseconds: 1)),
-            // second frame
-            currentFrameTimeStamp:
-                firstFrameTargetVsyncTimeStamp + kOneFrame * 2,
-            beginFrameDateTime: startDateTime.add(kOneFrame * 2),
-          );
-
-          manager.expect(
-            currentSmoothFrameTimeStamp:
-                firstFrameTargetVsyncTimeStamp + kOneFrame * 2,
-            shouldActTimeStamp:
-                firstFrameTargetVsyncTimeStamp + kOneFrame * 2 - kActThresh,
-            shouldAct: false,
-          );
-        });
-      }
-    });
+    // these are not tested, since when onBeginFrame, old data will be cleared
+    // group('when second plain-old frame begins', () {});
   });
 
   group('when has afterDrawFrame phase preempt render', () {
