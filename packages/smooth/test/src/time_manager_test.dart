@@ -10,59 +10,34 @@ void main() {
   const kTenSeconds = Duration(seconds: 10);
   const kActThresh = TimeManager.kActThresh;
 
-  late Duration now;
-  late TimeManager strategy;
-  setUp(() {
-    now = kTenSeconds;
-    strategy = TimeManager(nowTimeStamp: () => now);
-  });
+  late TimeManager manager;
+  setUp(() => manager = TimeManager());
 
   group('when has no preempt render', () {
-    group('when initial, i.e. only call onBeginFrame', () {
-      test('when now=begin-of-frame', () {
-        strategy.onBeginFrame(kTenSeconds + kOneFrame);
-        now = kTenSeconds + const Duration(microseconds: 1);
+    test('when initial', () {
+      manager.onBeginFrame(
+          currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
 
-        strategy.expect(
-          phase: SmoothFramePhase.initial,
-          currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
-          shouldActOnBuildOrLayoutPhaseTimeStamp:
-              kTenSeconds + kOneFrame - kActThresh,
-        );
-      });
-
-      test('when now=near-end-of-frame', () {
-        strategy.onBeginFrame(kTenSeconds + kOneFrame);
-        now = kTenSeconds + const Duration(milliseconds: 16);
-
-        strategy.expect(
-          phase: SmoothFramePhase.initial,
-          currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
-          shouldActOnBuildOrLayoutPhaseTimeStamp:
-              kTenSeconds + kOneFrame - kActThresh,
-        );
-      });
-
-      test('when now=long-later', () {
-        strategy.onBeginFrame(kTenSeconds + kOneFrame);
-        now = kTenSeconds + const Duration(seconds: 100);
-
-        strategy.expect(
-          phase: SmoothFramePhase.initial,
-          currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
-          shouldActOnBuildOrLayoutPhaseTimeStamp:
-              kTenSeconds + kOneFrame - kActThresh,
-        );
-      });
+      manager.expect(
+        phase: SmoothFramePhase.initial,
+        currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
+        shouldActOnBuildOrLayoutPhaseTimeStamp:
+            kTenSeconds + kOneFrame - kActThresh,
+      );
     });
 
     test('when two frames', () {
-      strategy.onBeginFrame(kTenSeconds + kOneFrame);
-      now = kTenSeconds + kOneFrame;
-      strategy.onBeginFrame(kTenSeconds + kOneFrame * 2);
-      now = kTenSeconds + kOneFrame + const Duration(milliseconds: 1);
+      manager.onBeginFrame(
+        currentFrameTimeStamp: kTenSeconds + kOneFrame,
+        now: kTenSeconds,
+      );
 
-      strategy.expect(
+      manager.onBeginFrame(
+        currentFrameTimeStamp: kTenSeconds + kOneFrame * 2,
+        now: kTenSeconds + kOneFrame,
+      );
+
+      manager.expect(
         phase: SmoothFramePhase.initial,
         currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 2,
         shouldActOnBuildOrLayoutPhaseTimeStamp:
@@ -73,72 +48,74 @@ void main() {
 
   group('when has build/layout phase preempt render', () {
     group('inside one plain-old frame, when has one preemptRender', () {
-      void _body({required DateTime now}) {
-        dependency.mock(
-          now: now,
-          currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
-          beginFrameDateTime: startDateTime,
+      void _body({required Duration timeWhenPreemptRender}) {
+        manager.onBeginFrame(
+            currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
+        manager.expect(
+          phase: SmoothFramePhase.initial,
+          currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
+          shouldActOnBuildOrLayoutPhaseTimeStamp:
+              kTenSeconds + kOneFrame - kActThresh,
         );
-        strategy.refresh();
 
-        strategy.expect(
-          currentSmoothFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
-          shouldActTimeStamp:
-              firstFrameTargetVsyncTimeStamp + kOneFrame - kActThresh,
-          shouldAct: false,
+        manager.afterBuildOrLayoutPhasePreemptRender(
+            now: timeWhenPreemptRender);
+
+        manager.expect(
+          phase: SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender,
+          // since now is "after" the preemptRender, when talking about timestamps,
+          // we should mimic it as if we are having a second 60FPS plain old
+          // frame.
+          currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 2,
+          shouldActOnBuildOrLayoutPhaseTimeStamp:
+              kTenSeconds + kOneFrame * 2 - kActThresh,
         );
       }
 
       test('when preemptRender is just before vsync', () {
-        _body(now: startDateTime.add(const Duration(milliseconds: 16)));
+        _body(
+          timeWhenPreemptRender: kTenSeconds + const Duration(milliseconds: 16),
+        );
       });
 
       test('when preemptRender is just after vsync', () {
-        _body(now: startDateTime.add(const Duration(milliseconds: 17)));
+        _body(
+          timeWhenPreemptRender: kTenSeconds + const Duration(milliseconds: 17),
+        );
       });
     });
 
-    group(
-        'inside one plain-old frame, when has two preemptRender, and focus on the second',
-        () {
-      void _body({required DateTime nowWhenSecondPreemptRender}) {
-        dependency.mock(
-          now: startDateTime.add(const Duration(milliseconds: 16)),
-          currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
-          beginFrameDateTime: startDateTime,
-        );
-        strategy.refresh();
+    // let's focus on the second preemptRender
+    group('inside one plain-old frame, when has two preemptRender', () {
+      void _body({required Duration nowWhenSecondPreemptRender}) {
+        manager.onBeginFrame(
+            currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
 
-        dependency.mock(
-          now: nowWhenSecondPreemptRender,
-          // NOTE [currentFrameTimeStamp] and [beginFrameDateTime] are
-          // unchanged, because they are unchanged in one plain-old frame
-          // even if there are multiple extra preempt frames
-          currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
-          beginFrameDateTime: startDateTime,
-        );
-        strategy.refresh();
+        manager.afterBuildOrLayoutPhasePreemptRender(
+            now: kTenSeconds + const Duration(microseconds: 16500));
 
-        strategy.expect(
-          currentSmoothFrameTimeStamp:
-              firstFrameTargetVsyncTimeStamp + kOneFrame,
-          shouldActTimeStamp:
-              firstFrameTargetVsyncTimeStamp + kOneFrame * 2 - kActThresh,
-          shouldAct: false,
+        manager.afterBuildOrLayoutPhasePreemptRender(
+            now: nowWhenSecondPreemptRender);
+
+        manager.expect(
+          phase: SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender,
+          currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 3,
+          shouldActOnBuildOrLayoutPhaseTimeStamp:
+              kTenSeconds + kOneFrame * 3 - kActThresh,
         );
       }
 
       test('when second preemptRender is just before vsync', () {
         _body(
           nowWhenSecondPreemptRender:
-              startDateTime.add(kOneFrame + const Duration(milliseconds: 16)),
+              kTenSeconds + kOneFrame + const Duration(milliseconds: 16),
         );
       });
 
       test('when second preemptRender is just after vsync', () {
         _body(
           nowWhenSecondPreemptRender:
-              startDateTime.add(kOneFrame + const Duration(milliseconds: 17)),
+              kTenSeconds + kOneFrame + const Duration(milliseconds: 17),
         );
       });
     });
@@ -151,26 +128,21 @@ void main() {
         test(
             'when have one preemptRender previously (nowWhenSecondPreemptRenderShift=$nowWhenPreemptRenderShift)',
             () {
-          dependency.mock(
-            now: startDateTime.add(nowWhenPreemptRenderShift),
-            currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
-            beginFrameDateTime: startDateTime,
-          );
-          strategy.refresh();
+          manager.onBeginFrame(
+              currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
 
-          dependency.mock(
-            now: startDateTime.add(kOneFrame + const Duration(milliseconds: 1)),
-            // second frame
-            currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp + kOneFrame,
-            beginFrameDateTime: startDateTime.add(kOneFrame),
-          );
+          manager.afterBuildOrLayoutPhasePreemptRender(
+              now: nowWhenPreemptRenderShift);
 
-          strategy.expect(
-            currentSmoothFrameTimeStamp:
-                firstFrameTargetVsyncTimeStamp + kOneFrame,
-            shouldActTimeStamp:
-                firstFrameTargetVsyncTimeStamp + kOneFrame - kActThresh,
-            shouldAct: false,
+          manager.onBeginFrame(
+              currentFrameTimeStamp: kTenSeconds + kOneFrame * 10,
+              now: nowWhenPreemptRenderShift + const Duration(microseconds: 1));
+
+          manager.expect(
+            phase: SmoothFramePhase.initial,
+            currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 10,
+            shouldActOnBuildOrLayoutPhaseTimeStamp:
+                kTenSeconds + kOneFrame * 11 - kActThresh,
           );
         });
       }
@@ -187,14 +159,14 @@ void main() {
             currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
             beginFrameDateTime: startDateTime,
           );
-          strategy.refresh();
+          manager.refresh();
 
           dependency.mock(
             now: startDateTime.add(kOneFrame + nowWhenSecondPreemptRenderShift),
             currentFrameTimeStamp: firstFrameTargetVsyncTimeStamp,
             beginFrameDateTime: startDateTime,
           );
-          strategy.refresh();
+          manager.refresh();
 
           // the "*2" is because, we have *two* preemptRender above
           // so we assume the first plain-old frame runs for 2/60s
@@ -207,7 +179,7 @@ void main() {
             beginFrameDateTime: startDateTime.add(kOneFrame * 2),
           );
 
-          strategy.expect(
+          manager.expect(
             currentSmoothFrameTimeStamp:
                 firstFrameTargetVsyncTimeStamp + kOneFrame * 2,
             shouldActTimeStamp:
