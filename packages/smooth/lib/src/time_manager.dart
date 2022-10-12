@@ -19,7 +19,7 @@ enum SmoothFramePhase {
   ///
   /// This can happen zero or one time in one frame.
   /// If it does not happen, this variant will not appear.
-  afterPostDrawFramePhasePreemptRender,
+  onOrAfterPostDrawFramePhasePreemptRender,
 }
 
 class TimeManager {
@@ -36,26 +36,39 @@ class TimeManager {
   /// how we mimic the [SchedulerBinding.currentFrameTimeStamp].
   Duration get currentSmoothFrameTimeStamp => TODO;
 
-  Duration get shouldActOnBuildOrLayoutPhaseTimeStamp => TODO;
+  /// When now > this timestamp, should act; otherwise, should not act.
+  ///
+  /// null means invalid (e.g. we are in a phase that has no meaningful value)
+  Duration? get thresholdActOnBuildOrLayoutPhaseTimeStamp {
+    if (!(phase == SmoothFramePhase.initial ||
+        phase == SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender)) {
+      return null;
+    }
 
-  Duration get shouldActOnPostDrawFramePhaseTimeStamp => TODO;
+    return TODO;
+  }
+
+  Duration? get thresholdActOnPostDrawFramePhaseTimeStamp {
+    if (phase != SmoothFramePhase.afterPlainOldRender) return null;
+
+    return TODO;
+  }
 
   void onBeginFrame({
     required Duration currentFrameTimeStamp,
     required Duration now,
   }) {
-    assert(phase == SmoothFramePhase.afterPostDrawFramePhasePreemptRender ||
+    assert(phase == SmoothFramePhase.onOrAfterPostDrawFramePhasePreemptRender ||
         phase == SmoothFramePhase.afterPlainOldRender);
     phase = SmoothFramePhase.initial;
 
     TODO;
   }
 
-  /// Please call it *after* the preemptRender finishes
   void afterBuildOrLayoutPhasePreemptRender({required Duration now}) {
     assert(phase == SmoothFramePhase.initial ||
         phase == SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender);
-    assert(shouldActOnBuildOrLayoutPhaseTimeStamp <= now);
+    assert(thresholdActOnBuildOrLayoutPhaseTimeStamp! <= now);
     phase = SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender;
 
     TODO;
@@ -69,11 +82,10 @@ class TimeManager {
     TODO;
   }
 
-  /// Please call it *after* the preemptRender finishes
-  void afterPostDrawFramePhasePreemptRender({required Duration now}) {
+  void beforePostDrawFramePhasePreemptRender({required Duration now}) {
     assert(phase == SmoothFramePhase.afterPlainOldRender);
-    assert(shouldActOnPostDrawFramePhaseTimeStamp <= now);
-    phase = SmoothFramePhase.afterPostDrawFramePhasePreemptRender;
+    assert(thresholdActOnPostDrawFramePhaseTimeStamp! <= now);
+    phase = SmoothFramePhase.onOrAfterPostDrawFramePhasePreemptRender;
 
     TODO;
   }

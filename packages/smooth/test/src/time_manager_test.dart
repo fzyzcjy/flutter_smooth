@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_test/flutter_test.dart' as flutter_test;
-import 'package:mockito/mockito.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/time_manager.dart';
 
@@ -11,27 +10,31 @@ void main() {
   late TimeManager manager;
   setUp(() => manager = TimeManager());
 
-  group('when has no preempt render', () {
-    test('when initial', () {
-      manager.onBeginFrame(
-          currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
-
-      manager.expect(
-        phase: SmoothFramePhase.initial,
-        currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
-        shouldActOnBuildOrLayoutPhaseTimeStamp:
-            kTenSeconds + kOneFrame - kActThresh,
-      );
-    });
-
-    test('when two frames', () {
+  group('when has no preemptRender', () {
+    test('simple', () {
       manager.onBeginFrame(
         currentFrameTimeStamp: kTenSeconds + kOneFrame,
         now: kTenSeconds,
       );
 
+      manager.expect(
+        phase: SmoothFramePhase.initial,
+        currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
+        thresholdActOnBuildOrLayoutPhaseTimeStamp:
+            kTenSeconds + kOneFrame - kActThresh,
+        thresholdActOnPostDrawFramePhaseTimeStamp: null,
+      );
+
       manager.afterPlainOldRender(
           now: kTenSeconds + const Duration(milliseconds: 15));
+
+      manager.expect(
+        phase: SmoothFramePhase.afterPlainOldRender,
+        currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
+        // no meaningful value
+        thresholdActOnBuildOrLayoutPhaseTimeStamp: null,
+        thresholdActOnPostDrawFramePhaseTimeStamp: kTenSeconds + kOneFrame,
+      );
 
       manager.onBeginFrame(
         currentFrameTimeStamp: kTenSeconds + kOneFrame * 2,
@@ -41,13 +44,53 @@ void main() {
       manager.expect(
         phase: SmoothFramePhase.initial,
         currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 2,
-        shouldActOnBuildOrLayoutPhaseTimeStamp:
+        thresholdActOnBuildOrLayoutPhaseTimeStamp:
             kTenSeconds + kOneFrame * 2 - kActThresh,
+        thresholdActOnPostDrawFramePhaseTimeStamp: null,
+      );
+    });
+
+    test('when jank', () {
+      manager.onBeginFrame(
+        currentFrameTimeStamp: kTenSeconds + kOneFrame,
+        now: kTenSeconds,
+      );
+
+      manager.expect(
+        phase: SmoothFramePhase.initial,
+        currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
+        thresholdActOnBuildOrLayoutPhaseTimeStamp:
+            kTenSeconds + kOneFrame - kActThresh,
+        thresholdActOnPostDrawFramePhaseTimeStamp: null,
+      );
+
+      manager.afterPlainOldRender(
+          // it janks
+          now: kTenSeconds + const Duration(milliseconds: 30));
+
+      manager.expect(
+        phase: SmoothFramePhase.afterPlainOldRender,
+        currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
+        thresholdActOnBuildOrLayoutPhaseTimeStamp: null,
+        thresholdActOnPostDrawFramePhaseTimeStamp: kTenSeconds + kOneFrame,
+      );
+
+      manager.onBeginFrame(
+        currentFrameTimeStamp: kTenSeconds + kOneFrame * 3,
+        now: kTenSeconds + kOneFrame,
+      );
+
+      manager.expect(
+        phase: SmoothFramePhase.initial,
+        currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 3,
+        thresholdActOnBuildOrLayoutPhaseTimeStamp:
+            kTenSeconds + kOneFrame * 3 - kActThresh,
+        thresholdActOnPostDrawFramePhaseTimeStamp: null,
       );
     });
   });
 
-  group('when has build/layout phase preempt render', () {
+  group('when has BuildOrLayoutPhasePreemptRender', () {
     group('inside one plain-old frame, when has one preemptRender', () {
       void _body({required Duration timeWhenPreemptRender}) {
         manager.onBeginFrame(
@@ -55,8 +98,9 @@ void main() {
         manager.expect(
           phase: SmoothFramePhase.initial,
           currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
-          shouldActOnBuildOrLayoutPhaseTimeStamp:
+          thresholdActOnBuildOrLayoutPhaseTimeStamp:
               kTenSeconds + kOneFrame - kActThresh,
+          thresholdActOnPostDrawFramePhaseTimeStamp: null,
         );
 
         manager.afterBuildOrLayoutPhasePreemptRender(
@@ -65,11 +109,23 @@ void main() {
         manager.expect(
           phase: SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender,
           // since now is "after" the preemptRender, when talking about timestamps,
-          // we should mimic it as if we are having a second 60FPS plain old
+          // we threshold mimic it as if we are having a second 60FPS plain old
           // frame.
           currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 2,
-          shouldActOnBuildOrLayoutPhaseTimeStamp:
+          thresholdActOnBuildOrLayoutPhaseTimeStamp:
               kTenSeconds + kOneFrame * 2 - kActThresh,
+          thresholdActOnPostDrawFramePhaseTimeStamp: null,
+        );
+
+        manager.afterPlainOldRender(
+            now: timeWhenPreemptRender + const Duration(milliseconds: 2));
+
+        manager.expect(
+          phase: SmoothFramePhase.afterPlainOldRender,
+          currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 2,
+          thresholdActOnBuildOrLayoutPhaseTimeStamp: null,
+          thresholdActOnPostDrawFramePhaseTimeStamp:
+              kTenSeconds + kOneFrame * 2,
         );
       }
 
@@ -101,8 +157,20 @@ void main() {
         manager.expect(
           phase: SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender,
           currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 3,
-          shouldActOnBuildOrLayoutPhaseTimeStamp:
+          thresholdActOnBuildOrLayoutPhaseTimeStamp:
               kTenSeconds + kOneFrame * 3 - kActThresh,
+          thresholdActOnPostDrawFramePhaseTimeStamp: null,
+        );
+
+        manager.afterPlainOldRender(
+            now: nowWhenSecondPreemptRender + const Duration(milliseconds: 2));
+
+        manager.expect(
+          phase: SmoothFramePhase.afterPlainOldRender,
+          currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 3,
+          thresholdActOnBuildOrLayoutPhaseTimeStamp: null,
+          thresholdActOnPostDrawFramePhaseTimeStamp:
+              kTenSeconds + kOneFrame * 3,
         );
       }
 
@@ -125,37 +193,89 @@ void main() {
     // group('when second plain-old frame begins', () {});
   });
 
-  group('when has afterDrawFrame phase preempt render', () {
-    TODO;
+  group('when has PostDrawFramePhasePreemptRender', () {
+    test('simple case', () {
+      manager.onBeginFrame(
+          currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
+      manager.afterPlainOldRender(
+          now: kTenSeconds + const Duration(milliseconds: 16));
+
+      manager.expect(
+        phase: SmoothFramePhase.afterPlainOldRender,
+        currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame,
+        thresholdActOnBuildOrLayoutPhaseTimeStamp: null,
+        thresholdActOnPostDrawFramePhaseTimeStamp: kTenSeconds + kOneFrame,
+      );
+
+      manager.beforePostDrawFramePhasePreemptRender(
+          now: kTenSeconds + const Duration(milliseconds: 17));
+
+      manager.expect(
+        phase: SmoothFramePhase.onOrAfterPostDrawFramePhasePreemptRender,
+        currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 2,
+        thresholdActOnBuildOrLayoutPhaseTimeStamp: null,
+        thresholdActOnPostDrawFramePhaseTimeStamp: null,
+      );
+    });
+  });
+
+  group(
+      'when has BuildOrLayoutPhasePreemptRender and PostDrawFramePhasePreemptRender',
+      () {
+    test('simple case', () {
+      manager.onBeginFrame(
+          currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
+
+      manager.afterBuildOrLayoutPhasePreemptRender(
+          now: kTenSeconds + const Duration(milliseconds: 16));
+
+      manager.afterPlainOldRender(
+          now: kTenSeconds + const Duration(milliseconds: 32));
+
+      manager.beforePostDrawFramePhasePreemptRender(
+          now: kTenSeconds + const Duration(milliseconds: 34));
+
+      manager.expect(
+        phase: SmoothFramePhase.onOrAfterPostDrawFramePhasePreemptRender,
+        currentSmoothFrameTimeStamp: kTenSeconds + kOneFrame * 3,
+        thresholdActOnBuildOrLayoutPhaseTimeStamp: null,
+        thresholdActOnPostDrawFramePhaseTimeStamp: null,
+      );
+    });
   });
 
   test('reproduce #6128', () {
-    TODO;
-  });
-}
+    manager.onBeginFrame(
+        currentFrameTimeStamp: kTenSeconds + kOneFrame, now: kTenSeconds);
 
-extension on MockTimeManagerDependency {
-  void mock({
-    required Duration nowTimeStamp,
-    required Duration currentFrameTimeStamp,
-  }) {
-    when(this.nowTimeStamp).thenReturn(nowTimeStamp);
-    when(this.currentFrameTimeStamp).thenReturn(currentFrameTimeStamp);
-  }
+    manager.afterBuildOrLayoutPhasePreemptRender(
+        now: kTenSeconds + const Duration(milliseconds: 16));
+
+    manager.afterPlainOldRender(
+        now: kTenSeconds + const Duration(milliseconds: 20));
+
+    // i.e. threshold *not* have PostDrawFramePhasePreemptRender
+    expect(manager.thresholdActOnPostDrawFramePhaseTimeStamp,
+        kTenSeconds + kOneFrame * 2);
+  });
 }
 
 extension on TimeManager {
   void expect({
     required SmoothFramePhase phase,
     required Duration currentSmoothFrameTimeStamp,
-    required Duration shouldActOnBuildOrLayoutPhaseTimeStamp,
+    required Duration? thresholdActOnBuildOrLayoutPhaseTimeStamp,
+    required Duration? thresholdActOnPostDrawFramePhaseTimeStamp,
   }) {
     flutter_test.expect(this.phase, phase, reason: 'phase');
     flutter_test.expect(
         this.currentSmoothFrameTimeStamp, currentSmoothFrameTimeStamp,
         reason: 'currentSmoothFrameTimeStamp');
-    flutter_test.expect(this.shouldActOnBuildOrLayoutPhaseTimeStamp,
-        shouldActOnBuildOrLayoutPhaseTimeStamp,
-        reason: 'shouldActOnBuildOrLayoutPhaseTimeStamp');
+    flutter_test.expect(this.thresholdActOnBuildOrLayoutPhaseTimeStamp,
+        thresholdActOnBuildOrLayoutPhaseTimeStamp,
+        reason: 'thresholdActOnBuildOrLayoutPhaseTimeStamp');
+    flutter_test.expect(this.thresholdActOnPostDrawFramePhaseTimeStamp,
+        thresholdActOnPostDrawFramePhaseTimeStamp,
+        reason: 'thresholdActOnPostDrawFramePhaseTimeStamp');
   }
 }
