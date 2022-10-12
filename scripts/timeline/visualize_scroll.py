@@ -8,6 +8,7 @@ import matplotlib
 
 matplotlib.use("MacOSX")
 
+import numpy as np
 import json
 from pathlib import Path
 from typing import Dict
@@ -40,6 +41,12 @@ smooth_shift_offsets = pd.DataFrame([
     if e['ph'] == 'B' and e['name'] == 'SmoothShift'
 ]).sort_values('ts')
 
+min_ts = min(e['ts'] for e in data['traceEvents'])
+
+
+def _transform_ts(ts):
+    return (ts - min_ts) / 1000000
+
 
 def _compute_smooth_shift(row):
     i = smooth_shift_offsets.ts.searchsorted(row.ts_window_render) - 1
@@ -53,28 +60,24 @@ def _compute_scroll_controller_offset_nearest(row):
     return scroll_controller_offsets.offset[i]
 
 
-def _compute_scroll_controller_offset_alternative(row):
-    # NOTE "-2" not "-1"
-    i = scroll_controller_offsets.ts.searchsorted(row.ts_window_render) - 2
-    if i < 0: return 0
-    return scroll_controller_offsets.offset[i]
-
-
 df_frame['smooth_shift_offset'] = df_frame.apply(_compute_smooth_shift, axis=1)
 df_frame['scroll_controller_offset_nearest'] = df_frame.apply(_compute_scroll_controller_offset_nearest, axis=1)
-df_frame['scroll_controller_offset_alternative'] = df_frame.apply(_compute_scroll_controller_offset_alternative, axis=1)
 
 plt.clf()
 plt.tight_layout()
 
-plt.scatter(scroll_controller_offsets.ts, scroll_controller_offsets.offset, s=1, label='ScrollController', c='C3')
-plt.scatter(smooth_shift_offsets.ts, smooth_shift_offsets.offset, s=1, label='Smooth', c='C4')
+plt.scatter(_transform_ts(scroll_controller_offsets.ts), scroll_controller_offsets.offset,
+            s=2, label='ScrollController', c='C3')
+plt.scatter(_transform_ts(smooth_shift_offsets.ts), smooth_shift_offsets.offset,
+            s=2, label='Smooth', c='C4')
 # plt.vlines(vsync_positions, -300, 300, linewidths=.1, label='Vsync')
 
-plt.plot(df_frame.vsync_target_time, df_frame.scroll_controller_offset_nearest - df_frame.smooth_shift_offset,
-         label='offset nearest')
-plt.plot(df_frame.vsync_target_time, df_frame.scroll_controller_offset_alternative - df_frame.smooth_shift_offset,
-         label='offset alternative')
+plt.plot(_transform_ts(df_frame.vsync_target_time),
+         df_frame.scroll_controller_offset_nearest - df_frame.smooth_shift_offset,
+         '-o', markersize=2, label='offset nearest')
+plt.plot(np.array(_transform_ts(df_frame.vsync_target_time)[:-1]),
+         np.array(df_frame.scroll_controller_offset_nearest[1:]) - np.array(df_frame.smooth_shift_offset[:-1]),
+         '-o', markersize=2, label='offset alternative')
 
 plt.legend(loc="upper left")
 plt.show()
