@@ -25,7 +25,7 @@ if 0:
     args = parser.parse_args()
     path_input = args.input
 else:
-    path_input = '/Users/tom/Downloads/dart_devtools_2022-10-12_21_06_30.980.json'
+    path_input = '/Users/tom/Downloads/dart_devtools_2022-10-12_21_42_24.465.json'
 
 # %%
 
