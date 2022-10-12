@@ -66,8 +66,15 @@ df_frame['scroll_controller_offset_alternative'] = df_frame.apply(_compute_scrol
 
 plt.clf()
 plt.tight_layout()
-plt.scatter(scroll_controller_offsets.ts, scroll_controller_offsets.offset, s=1, label='ScrollController')
-plt.scatter(smooth_shift_offsets.ts, smooth_shift_offsets.offset, s=1, label='Smooth')
+
+plt.scatter(scroll_controller_offsets.ts, scroll_controller_offsets.offset, s=1, label='ScrollController', c='C3')
+plt.scatter(smooth_shift_offsets.ts, smooth_shift_offsets.offset, s=1, label='Smooth', c='C4')
 # plt.vlines(vsync_positions, -300, 300, linewidths=.1, label='Vsync')
+
+plt.plot(df_frame.vsync_target_time, df_frame.scroll_controller_offset_nearest - df_frame.smooth_shift_offset,
+         label='offset nearest')
+plt.plot(df_frame.vsync_target_time, df_frame.scroll_controller_offset_alternative - df_frame.smooth_shift_offset,
+         label='offset alternative')
+
 plt.legend(loc="upper left")
 plt.show()
