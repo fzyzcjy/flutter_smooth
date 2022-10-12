@@ -94,7 +94,8 @@ mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
 
 typedef OnWindowRender = void Function(ui.Scene scene);
 
-class SmoothTestWindow extends ProxyTestWindow implements TestWindow {
+class SmoothTestWindow extends ProxyTestWindow
+    with SmoothSingletonFlutterWindowMixin {
   final OnWindowRender onRender;
 
   const SmoothTestWindow(

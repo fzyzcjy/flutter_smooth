@@ -17,6 +17,9 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   void initInstances() {
     super.initInstances();
     SmoothHostApiWrapped.instance.init();
+
+    assert(window is SmoothSingletonFlutterWindow,
+        'must use SmoothSingletonFlutterWindow for smooth to run correctly');
   }
 
   // NOTE It is *completely wrong* to use clock.now at handleBeginFrame
@@ -76,10 +79,6 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     }
   }
 
-  @override
-  ui.SingletonFlutterWindow get window =>
-      SmoothSingletonFlutterWindow(super.window);
-
   static SmoothSchedulerBindingMixin get instance {
     final raw = WidgetsBinding.instance;
     assert(raw is SmoothSchedulerBindingMixin,
@@ -107,9 +106,7 @@ mixin SmoothGestureBindingMixin on GestureBinding {
   }
 }
 
-class SmoothSingletonFlutterWindow extends ProxySingletonFlutterWindow {
-  SmoothSingletonFlutterWindow(super.inner);
-
+mixin SmoothSingletonFlutterWindowMixin on ui.SingletonFlutterWindow {
   @override
   void render(ui.Scene scene, {Duration? fallbackVsyncTargetTime}) {
     final effectiveFallbackVsyncTargetTime = fallbackVsyncTargetTime ??
@@ -132,6 +129,11 @@ class SmoothSingletonFlutterWindow extends ProxySingletonFlutterWindow {
       );
     });
   }
+}
+
+class SmoothSingletonFlutterWindow extends ProxySingletonFlutterWindow
+    with SmoothSingletonFlutterWindowMixin {
+  SmoothSingletonFlutterWindow(super.inner);
 }
 
 mixin SmoothWidgetsBindingMixin on WidgetsBinding {
@@ -245,6 +247,10 @@ class SmoothWidgetsFlutterBinding extends WidgetsFlutterBinding
     super.initInstances();
     _instance = this;
   }
+
+  @override
+  SmoothSingletonFlutterWindow get window =>
+      SmoothSingletonFlutterWindow(super.window);
 
   static SmoothWidgetsFlutterBinding get instance =>
       BindingBase.checkInstance(_instance);
