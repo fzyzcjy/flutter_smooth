@@ -84,7 +84,7 @@ ax1.scatter(_transform_ts(smooth_shift_offsets.ts), smooth_shift_offsets.offset,
 ax1.plot(_transform_ts(df_frame.display_screen_time), df_frame.felt_offset, '-o', markersize=2, label='offset')
 
 ax2 = ax1.twinx()
-ax2.plot(_transform_ts(df_frame.display_screen_time)[:-1],
+ax2.plot(_transform_ts(df_frame.display_screen_time)[1:],
          np.array(df_frame.felt_offset[1:]) - np.array(df_frame.felt_offset[:-1]),
          '-o', markersize=2, label='delta(offset)', c='C1')
 
