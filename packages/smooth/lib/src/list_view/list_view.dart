@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smooth/smooth.dart';
@@ -42,11 +44,14 @@ class _SmoothListViewState extends State<SmoothListView> {
   void initState() {
     super.initState();
 
-    // // for debug
-    // controller.addListener(() {
-    //   SimpleLog.instance
-    //       .log('ScrollController.listener offset=${controller.offset}');
-    // });
+    // for debug, e.g. #6150
+    controller.addListener(() {
+      Timeline.timeSync(
+        'ScrollController.listener',
+        arguments: <String, Object?>{'offset': controller.offset},
+        () {},
+      );
+    });
   }
 
   @override

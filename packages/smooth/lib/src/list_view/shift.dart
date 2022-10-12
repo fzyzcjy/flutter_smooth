@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/binding.dart';
@@ -34,11 +36,14 @@ abstract class _SmoothShiftBase extends State<SmoothShift>
     // SimpleLog.instance.log(
     //     'SmoothShift.build offset=$offset currentSmoothFrameTimeStamp=${ServiceLocator.maybeInstance?.preemptStrategy.currentSmoothFrameTimeStamp}');
 
-    return Transform.translate(
-      offset: Offset(0, offset),
-      transformHitTests: false,
-      child: widget.child,
-    );
+    return Timeline.timeSync('SmoothShift',
+        arguments: <String, Object?>{'offset': offset}, () {
+      return Transform.translate(
+        offset: Offset(0, offset),
+        transformHitTests: false,
+        child: widget.child,
+      );
+    });
   }
 }
 
