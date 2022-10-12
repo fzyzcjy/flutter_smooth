@@ -25,9 +25,6 @@ abstract class PreemptStrategy {
 
   /// Be called when `preemptRender` is run
   void refresh();
-
-  // TODO move
-  SimpleDateTime timeStampToDateTime(Duration timeStamp);
 }
 
 class PreemptStrategyDependency {
@@ -178,9 +175,9 @@ class PreemptStrategyNormal implements PreemptStrategy {
     );
   }
 
-  @override
-  SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
-      timeInfoCalculator.timeStampToDateTime(timeStamp);
+  // @override
+  // SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
+  //     timeInfoCalculator.timeStampToDateTime(timeStamp);
 
   @visibleForTesting
   static Duration vsyncLaterThan({
@@ -258,7 +255,7 @@ class _PreemptStrategyNever implements PreemptStrategy {
   Duration get currentSmoothFrameTimeStamp =>
       SchedulerBinding.instance.currentFrameTimeStamp;
 
-  @override
-  SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
-      throw UnimplementedError();
+// @override
+// SimpleDateTime timeStampToDateTime(Duration timeStamp) =>
+//     throw UnimplementedError();
 }

@@ -22,6 +22,10 @@ class TimeConverter {
       microseconds:
           t.microsecondsSinceEpoch - diffDateTimeToAdjustedFrameTimeStamp);
 
+  SimpleDateTime adjustedFrameTimeStampToDateTime(Duration d) =>
+      SimpleDateTime.fromMicrosecondsSinceEpoch(
+          d.inMicroseconds + diffDateTimeToAdjustedFrameTimeStamp);
+
   int get diffSystemToAdjustedFrameTimeStamp =>
       SchedulerBinding.instance.currentSystemFrameTimeStamp.inMicroseconds -
       SchedulerBinding.instance.currentFrameTimeStamp.inMicroseconds;
