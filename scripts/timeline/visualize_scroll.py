@@ -1,3 +1,9 @@
+try:
+    get_ipython().magic('%load_ext autoreload')
+    get_ipython().magic('%autoreload 2')
+except:
+    pass  # ignore
+
 import matplotlib
 
 matplotlib.use("MacOSX")
@@ -23,7 +29,7 @@ else:
 # %%
 
 data = json.loads(Path(path_input).read_text())
-frame_infos = parse_frame_infos(data)
+frame_infos = pd.DataFrame(parse_frame_infos(data))
 
 scroll_controller_offsets = pd.DataFrame([
     dict(ts=e['ts'], offset=e['args']['offset']) for e in data['traceEvents']
