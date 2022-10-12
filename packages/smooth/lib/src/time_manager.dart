@@ -28,7 +28,7 @@ class TimeManager {
 
   TimeManager();
 
-  SmoothFramePhase phase = SmoothFramePhase.initial;
+  SmoothFramePhase phase = SmoothFramePhase.afterPlainOldRender;
 
   /// Fancy version of [SchedulerBinding.currentFrameTimeStamp],
   /// by considering both plain-old frames and also smooth extra frames.
