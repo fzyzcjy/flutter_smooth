@@ -16,7 +16,7 @@ class TimeConverter {
   }
 
   int get diffDateTimeToAdjustedFrameTimeStamp =>
-      _diffDateTimeToSystemFrameTimeStamp + diffSystemToAdjustedFrameTimeStamp;
+      diffDateTimeToSystemFrameTimeStamp + diffSystemToAdjustedFrameTimeStamp;
 
   Duration dateTimeToAdjustedFrameTimeStamp(SimpleDateTime t) => Duration(
       microseconds:
@@ -30,7 +30,7 @@ class TimeConverter {
       SchedulerBinding.instance.currentSystemFrameTimeStamp.inMicroseconds -
       SchedulerBinding.instance.currentFrameTimeStamp.inMicroseconds;
 
-  int get _diffDateTimeToSystemFrameTimeStamp =>
+  int get diffDateTimeToSystemFrameTimeStamp =>
       __diffDateTimeToSystemFrameTimeStamp ??= _readDiffDateTimeToTimeStamp();
   int? __diffDateTimeToSystemFrameTimeStamp;
 
