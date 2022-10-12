@@ -25,11 +25,42 @@ if 0:
     args = parser.parse_args()
     path_input = args.input
 else:
-    path_input = '/Users/tom/Downloads/dart_devtools_2022-10-12_10_22_45.079.json'
+    path_input = '/Users/tom/Downloads/dart_devtools_2022-10-12_14_25_17.860.json'
 
 # %%
 
+DEVICE_ASPECT_RATIO = 2.0
+
 data = json.loads(Path(path_input).read_text())
+
+####################
+
+df_framework_pointer_events = pd.DataFrame([
+    dict(
+        timeline_ts=e['ts'],
+        pointer_event_ts=int(e['args']['eventDateTime']),
+        pointer_event_raw_time_stamp=int(e['args']['eventTimeStamp']),
+        position=e['args']['eventPositionDy'],
+    )
+    for e in data['traceEvents']
+    if e['ph'] == 'B' and e['name'] == 'dispatchEvent'
+])
+
+diff_pointer_event_date_time_to_time_stamp = \
+    np.average(df_framework_pointer_events.pointer_event_ts - df_framework_pointer_events.pointer_event_raw_time_stamp)
+df_engine_pointer_events = pd.DataFrame([
+    dict(
+        timeline_ts=e['ts'],
+        pointer_event_ts=int(info_item['time_stamp']) + diff_pointer_event_date_time_to_time_stamp,
+        position=int(info_item['physical_y']) / DEVICE_ASPECT_RATIO,
+    )
+    for e in data['traceEvents']
+    if e['ph'] == 'B' and e['name'] == 'Shell::OnPlatformViewDispatchPointerDataPacket'
+    for info_item in json.loads(e['args']['info'])
+])
+
+####################
+
 df_frame = pd.DataFrame(parse_frame_infos(data))
 
 scroll_controller_offsets = pd.DataFrame([
@@ -71,15 +102,25 @@ df_frame['smooth_shift_offset'] = df_frame.apply(_compute_smooth_shift, axis=1)
 df_frame['scroll_controller_offset'] = df_frame.apply(_compute_scroll_controller_offset, axis=1)
 df_frame['felt_offset'] = df_frame.scroll_controller_offset - df_frame.smooth_shift_offset
 
+####################
+
 plt.clf()
 plt.tight_layout()
 ax1 = plt.gca()
 
 ax1.scatter(_transform_ts(scroll_controller_offsets.ts), scroll_controller_offsets.offset,
-            s=2, label='ScrollController', c='C3')
+            s=3, label='ScrollController', c='C3')
 ax1.scatter(_transform_ts(smooth_shift_offsets.ts), smooth_shift_offsets.offset,
-            s=2, label='Smooth', c='C4')
+            s=3, label='Smooth', c='C4')
 # ax1.vlines(vsync_positions, -300, 300, linewidths=.1, label='Vsync')
+
+ax1.scatter(_transform_ts(df_framework_pointer_events.timeline_ts), df_framework_pointer_events.position,
+            s=3, label='PtrEvent Framework @ TimelineTs', c='C5')
+ax1.scatter(_transform_ts(df_framework_pointer_events.pointer_event_raw_time_stamp),
+            df_framework_pointer_events.position,
+            s=3, label='PtrEvent Framework @ PtrEventTs', c='C6')
+ax1.scatter(_transform_ts(df_engine_pointer_events.timeline_ts), df_engine_pointer_events.position,
+            s=3, label='PtrEvent Engine @ TimelineTs', c='C7')
 
 ax1.plot(_transform_ts(df_frame.display_screen_time), df_frame.felt_offset, '-o', markersize=2, label='offset')
 
