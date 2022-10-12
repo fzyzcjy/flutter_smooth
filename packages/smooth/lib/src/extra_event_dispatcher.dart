@@ -13,6 +13,9 @@ import 'package:smooth/src/time_converter.dart';
 class ExtraEventDispatcher {
   final _pendingEventManager = _PendingPointerEventManager();
 
+  void handleMainTreePointerEvent(PointerEvent e) =>
+      _pendingEventManager.handleMainTreePointerEvent(e);
+
   // TODO just prototype, not final code
   // #5867
   void dispatch({required Duration smoothFrameTimeStamp}) {
@@ -82,6 +85,10 @@ class ExtraEventDispatcher {
 
 class _PendingPointerEventManager {
   final _pendingEvents = Queue<PointerEvent>();
+
+  void handleMainTreePointerEvent(PointerEvent e) {
+    TODO;
+  }
 
   /// [maxTimeStampClockScheduler] has the same clock as [SchedulerBinding.currentFrameTimeStamp]
   List<PointerEvent> read({required Duration maxTimeStampClockScheduler}) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth/src/actor.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/extra_event_dispatcher.dart';
+import 'package:smooth/src/global_widget.dart';
 import 'package:smooth/src/time_manager.dart';
 
 class ServiceLocator {
@@ -82,5 +83,9 @@ class _SmoothScopeState extends State<SmoothScope> {
   }
 
   @override
-  Widget build(BuildContext context) => widget.child;
+  Widget build(BuildContext context) {
+    return SmoothMainTreeGlobalWidget(
+      child: widget.child,
+    );
+  }
 }
