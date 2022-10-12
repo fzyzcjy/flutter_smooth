@@ -15,7 +15,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from timeline.common import parse_frame_infos, find_before, is_enclosed_by
+from timeline.common import parse_frame_infos, find_before, is_enclosed_by, parse_vsync_positions
 
 TraceEvent = Dict
 
@@ -32,6 +32,7 @@ else:
 DEVICE_ASPECT_RATIO = 2.0
 
 data = json.loads(Path(path_input).read_text())
+vsync_positions = parse_vsync_positions(data)
 
 ####################
 
@@ -112,7 +113,7 @@ ax1.scatter(_transform_ts(scroll_controller_offsets.ts), scroll_controller_offse
             s=3, label='ScrollController', c='C3')
 ax1.scatter(_transform_ts(smooth_shift_offsets.ts), smooth_shift_offsets.offset,
             s=3, label='Smooth', c='C4')
-# ax1.vlines(vsync_positions, -300, 300, linewidths=.1, label='Vsync')
+ax1.vlines(_transform_ts(np.array(vsync_positions)), -200, 500, linewidths=.1, label='Vsync')
 
 ax1.scatter(_transform_ts(df_framework_pointer_events.timeline_ts), df_framework_pointer_events.position,
             s=3, label='PtrEvent Framework @ TimelineTs', c='C5')
