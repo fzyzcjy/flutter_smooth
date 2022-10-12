@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
@@ -100,6 +101,11 @@ class _PendingPointerEventManager {
       ans.add(_pendingEvents.removeFirst());
     }
 
+    Timeline.timeSync(
+      'PendingPointerEventManager.dequeue',
+      arguments: <String, Object?>{'ans': ans.toBriefString()},
+      () => null,
+    );
     // SimpleLog.instance.log(
     //     'PendingPointerEventManager dequeue (to downstream) ${ans.toBriefString()}');
 
@@ -111,6 +117,14 @@ class _PendingPointerEventManager {
 
     final enginePendingEvents =
         gestureBinding.readEnginePendingEventsAndClear();
+
+    Timeline.timeSync(
+      'PendingPointerEventManager.enqueue',
+      arguments: <String, Object?>{
+        'enginePendingEvents': enginePendingEvents.toBriefString()
+      },
+      () => null,
+    );
     // SimpleLog.instance.log(
     //     'PendingPointerEventManager enqueue (from engine) ${enginePendingEvents.toBriefString()}');
 
@@ -155,14 +169,14 @@ bool _isNonDecreasing(List<int> values) {
   return true;
 }
 
-// extension on List<PointerEvent> {
-//   String toBriefString() => map((e) => e.toBriefString()).toList().toString();
-// }
-//
-// extension on PointerEvent {
-//   String toBriefString() => 'PointerEvent('
-//       'timeStamp: $timeStamp, '
-//       'dateTime: $dateTime, '
-//       'position: $position'
-//       ')';
-// }
+extension on List<PointerEvent> {
+  String toBriefString() => map((e) => e.toBriefString()).toList().toString();
+}
+
+extension on PointerEvent {
+  String toBriefString() => 'PointerEvent('
+      'timeStamp: $timeStamp, '
+      'dateTime: $dateTime, '
+      'position: $position'
+      ')';
+}
