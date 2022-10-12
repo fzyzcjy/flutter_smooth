@@ -30,27 +30,18 @@ class MockActor extends _i1.Mock implements _i2.Actor {
         returnValueForMissingStub: null,
       );
   @override
-  void maybePreemptRender({Object? debugToken}) => super.noSuchMethod(
+  void maybePreemptRenderBuildOrLayoutPhase() => super.noSuchMethod(
         Invocation.method(
-          #maybePreemptRender,
+          #maybePreemptRenderBuildOrLayoutPhase,
           [],
-          {#debugToken: debugToken},
         ),
         returnValueForMissingStub: null,
       );
   @override
-  void preemptRenderRaw({
-    required Duration? smoothFrameTimeStamp,
-    required String? debugReason,
-  }) =>
-      super.noSuchMethod(
+  void maybePreemptRenderPostDrawFramePhase() => super.noSuchMethod(
         Invocation.method(
-          #preemptRenderRaw,
+          #maybePreemptRenderPostDrawFramePhase,
           [],
-          {
-            #smoothFrameTimeStamp: smoothFrameTimeStamp,
-            #debugReason: debugReason,
-          },
         ),
         returnValueForMissingStub: null,
       );

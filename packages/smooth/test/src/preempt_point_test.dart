@@ -12,23 +12,23 @@ void main() {
 
   group('$BuildPreemptPointWidget', () {
     testWidgets('when build, should call maybePreemptRender', (tester) async {
-      verifyNever(actor.maybePreemptRender());
+      verifyNever(actor.maybePreemptRenderBuildOrLayoutPhase());
       await tester.pumpWidget(SmoothScope(
         serviceLocator: ServiceLocator.normal().copyWith(actor: actor),
         child: BuildPreemptPointWidget(child: Container()),
       ));
-      verify(actor.maybePreemptRender()).called(1);
+      verify(actor.maybePreemptRenderBuildOrLayoutPhase()).called(1);
     });
   });
 
   group('$LayoutPreemptPointWidget', () {
     testWidgets('when layout, should call maybePreemptRender', (tester) async {
-      verifyNever(actor.maybePreemptRender());
+      verifyNever(actor.maybePreemptRenderBuildOrLayoutPhase());
       await tester.pumpWidget(SmoothScope(
         serviceLocator: ServiceLocator.normal().copyWith(actor: actor),
         child: LayoutPreemptPointWidget(child: Container()),
       ));
-      verify(actor.maybePreemptRender()).called(1);
+      verify(actor.maybePreemptRenderBuildOrLayoutPhase()).called(1);
     });
   });
 }
