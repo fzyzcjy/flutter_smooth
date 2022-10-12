@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Callable, List, Dict
 from zipfile import ZipFile, ZIP_DEFLATED
 
+from timeline.common import parse_vsync_positions, parse_raster_end_positions
+
 TraceEvent = Dict
 
 parser = ArgumentParser()
@@ -67,20 +69,6 @@ def synthesize_long_event_matching_filter(filter_event: Callable[[str], bool], s
                 tid=synthesize_tid,
             )
     return new_events
-
-
-def parse_vsync_positions(data) -> List[int]:
-    return sorted([
-        e['ts'] for e in data['traceEvents']
-        if e['ph'] == 'B' and e['name'] == 'VSYNC'
-    ])
-
-
-def parse_raster_end_positions(data) -> List[int]:
-    return sorted([
-        e['ts'] for e in data['traceEvents']
-        if e['ph'] == 'E' and e['name'] == 'GPURasterizer::Draw'
-    ])
 
 
 ABNORMAL_TID = -999999
