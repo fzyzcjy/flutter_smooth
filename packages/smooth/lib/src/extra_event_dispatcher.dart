@@ -86,8 +86,10 @@ class ExtraEventDispatcher {
 class _PendingPointerEventManager {
   final _pendingEvents = Queue<PointerEvent>();
 
-  void handleMainTreePointerEvent(PointerEvent e) {
-    TODO;
+  void handleMainTreePointerEvent(PointerEvent mainTreePointerEvent) {
+    // #6165
+    _pendingEvents.removeWhere(
+        (e) => _isRoughlySamePointerEvent(e, mainTreePointerEvent));
   }
 
   /// [maxTimeStampClockScheduler] has the same clock as [SchedulerBinding.currentFrameTimeStamp]
@@ -167,6 +169,12 @@ class _PendingPointerEventManager {
         microseconds: dateTime.microsecondsSinceEpoch -
             pointerEventDateTimeDiffTimeStamp);
   }
+
+  // #6165
+  static bool _isRoughlySamePointerEvent(PointerEvent a, PointerEvent b) =>
+      a.pointer == b.pointer &&
+      a.timeStamp == b.timeStamp &&
+      a.position == b.position;
 }
 
 bool _isNonDecreasing(List<int> values) {
