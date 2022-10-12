@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:flutter/foundation.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/simple_date_time.dart';
 import 'package:smooth/src/time_converter.dart';
@@ -69,7 +70,17 @@ class TimeManager {
     assert(thresholdActOnBuildOrLayoutPhaseTimeStamp! <= now);
     phase = SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender;
 
-    _currentSmoothFrameTimeStamp = _currentSmoothFrameTimeStamp! + kOneFrame;
+    // https://github.com/fzyzcjy/yplusplus/issues/6162#issuecomment-1276068643
+    final nextVsync =
+        vsyncLaterThan(time: now, baseVsync: _currentSmoothFrameTimeStamp!);
+    final nextVsyncInFarFuture =
+        nextVsync - now > const Duration(milliseconds: 12);
+    final newSmoothFrameTimeStamp =
+        nextVsync + (nextVsyncInFarFuture ? Duration.zero : kOneFrame);
+
+    assert(newSmoothFrameTimeStamp > _currentSmoothFrameTimeStamp!,
+        'newSmoothFrameTimeStamp=$newSmoothFrameTimeStamp should be greater than _currentSmoothFrameTimeStamp=$_currentSmoothFrameTimeStamp');
+    _currentSmoothFrameTimeStamp = newSmoothFrameTimeStamp;
   }
 
   void afterRunAuxPipelineForPlainOld({required Duration now}) {
@@ -88,4 +99,16 @@ class TimeManager {
 
   static Duration get normalNow => TimeConverter.instance
       .dateTimeToAdjustedFrameTimeStamp(clock.nowSimple());
+
+  @visibleForTesting
+  static Duration vsyncLaterThan({
+    required Duration time,
+    required Duration baseVsync,
+  }) {
+    final diffMicroseconds = time.inMicroseconds - baseVsync.inMicroseconds;
+    return baseVsync +
+        Duration(
+          microseconds: (diffMicroseconds / kOneFrameUs).ceil() * kOneFrameUs,
+        );
+  }
 }
