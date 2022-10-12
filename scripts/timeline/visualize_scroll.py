@@ -11,6 +11,7 @@ matplotlib.use("MacOSX")
 import json
 from pathlib import Path
 from typing import Dict
+import numpy as np
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -68,6 +69,7 @@ def _compute_scroll_controller_offset(row):
 
 df_frame['smooth_shift_offset'] = df_frame.apply(_compute_smooth_shift, axis=1)
 df_frame['scroll_controller_offset'] = df_frame.apply(_compute_scroll_controller_offset, axis=1)
+df_frame['felt_offset'] = df_frame.scroll_controller_offset - df_frame.smooth_shift_offset
 
 plt.clf()
 plt.tight_layout()
@@ -78,9 +80,10 @@ plt.scatter(_transform_ts(smooth_shift_offsets.ts), smooth_shift_offsets.offset,
             s=2, label='Smooth', c='C4')
 # plt.vlines(vsync_positions, -300, 300, linewidths=.1, label='Vsync')
 
-plt.plot(_transform_ts(df_frame.display_screen_time),
-         df_frame.scroll_controller_offset - df_frame.smooth_shift_offset,
-         '-o', markersize=2, label='offset')
+plt.plot(_transform_ts(df_frame.display_screen_time), df_frame.felt_offset, '-o', markersize=2, label='offset')
+plt.plot(_transform_ts(df_frame.display_screen_time)[:-1],
+         np.array(df_frame.felt_offset[1:]) - np.array(df_frame.felt_offset[:-1]),
+         '-o', markersize=2, label='delta(offset)')
 
 plt.legend(loc="upper left")
 plt.show()
