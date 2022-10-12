@@ -80,6 +80,22 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
         ? _positionWhenCurrStartDrawFrame
         : _positionWhenPrevStartDrawFrame;
 
+    Timeline.timeSync(
+      'SmoothShift.offsetFromPointerEvent',
+      arguments: <String, Object?>{
+        'currPosition': _currPosition,
+        'executingRunPipelineBecauseOfAfterFlushLayout':
+            executingRunPipelineBecauseOfAfterFlushLayout,
+        'executingRunPipelineBecauseOfAfterDrawFrame':
+            executingRunPipelineBecauseOfAfterDrawFrame,
+        'positionWhenCurrStartDrawFrame': _positionWhenCurrStartDrawFrame,
+        'positionWhenPrevStartDrawFrame': _positionWhenPrevStartDrawFrame,
+        'pointerDownPosition': _pointerDownPosition,
+        'basePosition': basePosition,
+      },
+      () {},
+    );
+
     // print('hi $runtimeType get _offsetFromPointerEvent '
     //     '_currPosition=$_currPosition '
     //     'executingRunPipelineBecauseOfAfterFlushLayout=$executingRunPipelineBecauseOfAfterFlushLayout '
@@ -101,10 +117,22 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
       SmoothSchedulerBindingMixin.instance.addStartDrawFrameCallback(() {
         if (!mounted) return;
         _hasPendingStartDrawFrameCallback = false;
+
         setState(() {
           _positionWhenPrevStartDrawFrame = _positionWhenCurrStartDrawFrame;
           _positionWhenCurrStartDrawFrame = _currPosition;
         });
+
+        Timeline.timeSync(
+          'SmoothShift.StartDrawFrameCallback.after',
+          arguments: <String, Object?>{
+            'currPosition': _currPosition,
+            'positionWhenCurrStartDrawFrame': _positionWhenCurrStartDrawFrame,
+            'positionWhenPrevStartDrawFrame': _positionWhenPrevStartDrawFrame,
+            'pointerDownPosition': _pointerDownPosition,
+          },
+          () {},
+        );
 
         // print('hi $runtimeType addStartDrawFrameCallback.callback (after) '
         //     '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame _currPosition=$_currPosition');
@@ -123,6 +151,14 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
     //     .log('SmoothShift.handlePointerMove position=${e.localPosition.dy}');
     // print(
     //     'hi $runtimeType _handlePointerMove e.localPosition=${e.localPosition.dy} e=$e');
+
+    Timeline.timeSync(
+      'SmoothShift.handlePointerMove',
+      arguments: <String, Object?>{
+        'eventPosition': e.localPosition.dy,
+      },
+      () {},
+    );
 
     setState(() {
       _currPosition = e.localPosition.dy;
