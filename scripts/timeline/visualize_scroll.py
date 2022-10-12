@@ -29,16 +29,37 @@ else:
 # %%
 
 data = json.loads(Path(path_input).read_text())
-frame_infos = pd.DataFrame(parse_frame_infos(data))
+df_frame = pd.DataFrame(parse_frame_infos(data))
 
 scroll_controller_offsets = pd.DataFrame([
     dict(ts=e['ts'], offset=e['args']['offset']) for e in data['traceEvents']
     if e['ph'] == 'B' and e['name'] == 'ScrollController.listener'
-])
+]).sort_values('ts')
 smooth_shift_offsets = pd.DataFrame([
     dict(ts=e['ts'], offset=e['args']['offset']) for e in data['traceEvents']
     if e['ph'] == 'B' and e['name'] == 'SmoothShift'
-])
+]).sort_values('ts')
+
+
+def _compute_smooth_shift(row):
+    i = smooth_shift_offsets.ts.searchsorted(row.ts_window_render) - 1
+    return smooth_shift_offsets.offset[i]
+
+
+def _compute_scroll_controller_offset_nearest(row):
+    i = scroll_controller_offsets.ts.searchsorted(row.ts_window_render) - 1
+    return scroll_controller_offsets.offset[i]
+
+
+def _compute_scroll_controller_offset_alternative(row):
+    # NOTE "-2" not "-1"
+    i = scroll_controller_offsets.ts.searchsorted(row.ts_window_render) - 2
+    return scroll_controller_offsets.offset[i]
+
+
+df_frame['smooth_shift_offset'] = df_frame.apply(_compute_smooth_shift, axis=1)
+df_frame['scroll_controller_offset_nearest'] = df_frame.apply(_compute_scroll_controller_offset_nearest, axis=1)
+df_frame['scroll_controller_offset_alternative'] = df_frame.apply(_compute_scroll_controller_offset_alternative, axis=1)
 
 plt.clf()
 plt.tight_layout()
