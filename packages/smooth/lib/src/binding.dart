@@ -18,8 +18,8 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     super.initInstances();
     SmoothHostApiWrapped.instance.init();
 
-    assert(window is SmoothSingletonFlutterWindow,
-        'must use SmoothSingletonFlutterWindow for smooth to run correctly');
+    assert(window is SmoothSingletonFlutterWindowMixin,
+        'must use SmoothSingletonFlutterWindowMixin for smooth to run correctly (window=$window)');
   }
 
   // NOTE It is *completely wrong* to use clock.now at handleBeginFrame
