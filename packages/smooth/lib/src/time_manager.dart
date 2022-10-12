@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:smooth/smooth.dart';
 import 'package:smooth/src/simple_date_time.dart';
 import 'package:smooth/src/time_converter.dart';
 
@@ -34,7 +35,8 @@ class TimeManager {
   ///
   /// When confused about the correct value of this field, just think about
   /// how we mimic the [SchedulerBinding.currentFrameTimeStamp].
-  Duration get currentSmoothFrameTimeStamp => TODO;
+  Duration get currentSmoothFrameTimeStamp => _currentSmoothFrameTimeStamp!;
+  Duration? _currentSmoothFrameTimeStamp;
 
   /// When now > this timestamp, should act; otherwise, should not act.
   ///
@@ -45,13 +47,12 @@ class TimeManager {
       return null;
     }
 
-    return TODO;
+    return currentSmoothFrameTimeStamp - kActThresh;
   }
 
   Duration? get thresholdActOnPostDrawFramePhaseTimeStamp {
     if (phase != SmoothFramePhase.afterPlainOldRender) return null;
-
-    return TODO;
+    return currentSmoothFrameTimeStamp;
   }
 
   void onBeginFrame({
@@ -62,7 +63,7 @@ class TimeManager {
         phase == SmoothFramePhase.afterPlainOldRender);
     phase = SmoothFramePhase.initial;
 
-    TODO;
+    _currentSmoothFrameTimeStamp = currentFrameTimeStamp;
   }
 
   void afterBuildOrLayoutPhasePreemptRender({required Duration now}) {
@@ -71,15 +72,13 @@ class TimeManager {
     assert(thresholdActOnBuildOrLayoutPhaseTimeStamp! <= now);
     phase = SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender;
 
-    TODO;
+    _currentSmoothFrameTimeStamp = _currentSmoothFrameTimeStamp! + kOneFrame;
   }
 
   void afterPlainOldRender({required Duration now}) {
     assert(phase == SmoothFramePhase.initial ||
         phase == SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender);
     phase = SmoothFramePhase.afterPlainOldRender;
-
-    TODO;
   }
 
   void beforePostDrawFramePhasePreemptRender({required Duration now}) {
@@ -87,7 +86,7 @@ class TimeManager {
     assert(thresholdActOnPostDrawFramePhaseTimeStamp! <= now);
     phase = SmoothFramePhase.onOrAfterPostDrawFramePhasePreemptRender;
 
-    TODO;
+    _currentSmoothFrameTimeStamp = _currentSmoothFrameTimeStamp! + kOneFrame;
   }
 
   static Duration normalNowTimeStamp() => TimeConverter.instance
