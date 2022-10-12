@@ -1,13 +1,15 @@
 import 'package:clock/clock.dart';
-import 'package:smooth/src/binding.dart';
+import 'package:flutter/foundation.dart';
 import 'package:smooth/src/phase.dart';
 import 'package:smooth/src/simple_date_time.dart';
 import 'package:smooth/src/time_converter.dart';
 
 class TimeManager {
-  final TimeManagerDependency dependency;
+  static const kActThresh = Duration(milliseconds: 2);
 
-  TimeManager([this.dependency = const TimeManagerDependency()]);
+  final ValueGetter<Duration> nowTimeStamp;
+
+  TimeManager({this.nowTimeStamp = _defaultNowTimeStamp});
 
   SmoothFramePhase get phase => TODO;
 
@@ -15,18 +17,16 @@ class TimeManager {
   /// by considering both plain-old frames and *also extra frames*
   Duration get currentSmoothFrameTimeStamp => TODO;
 
+  @visibleForTesting
+  Duration get shouldActOnBuildOrLayoutPhaseTimeStamp => TODO;
+
+  void onBeginFrame(Duration currentFrameTimeStamp) => TODO;
+
   /// If return non-null, means should preempt render
   Duration? onBuildOrLayoutPhaseMaybePreemptRender() => TODO;
 
   Duration? onAfterDrawFramePhaseMaybePreemptRender() => TODO;
 }
 
-class TimeManagerDependency {
-  const TimeManagerDependency();
-
-  Duration get nowTimeStamp => TimeConverter.instance
-      .dateTimeToAdjustedFrameTimeStamp(clock.nowSimple());
-
-  Duration get currentFrameTimeStamp =>
-      SmoothSchedulerBindingMixin.instance.currentFrameTimeStamp;
-}
+Duration _defaultNowTimeStamp() =>
+    TimeConverter.instance.dateTimeToAdjustedFrameTimeStamp(clock.nowSimple());

@@ -38,4 +38,20 @@ class MockActor extends _i1.Mock implements _i2.Actor {
         ),
         returnValueForMissingStub: null,
       );
+  @override
+  void preemptRenderRaw({
+    required Duration? smoothFrameTimeStamp,
+    required String? debugReason,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #preemptRenderRaw,
+          [],
+          {
+            #smoothFrameTimeStamp: smoothFrameTimeStamp,
+            #debugReason: debugReason,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
 }
