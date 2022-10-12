@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:clock/clock.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:smooth/src/simple_date_time.dart';
 
 // TODO maybe improve
 class TimeConverter {
@@ -16,6 +17,10 @@ class TimeConverter {
 
   int get diffDateTimeToAdjustedFrameTimeStamp =>
       _diffDateTimeToSystemFrameTimeStamp + diffSystemToAdjustedFrameTimeStamp;
+
+  Duration dateTimeToAdjustedFrameTimeStamp(SimpleDateTime t) => Duration(
+      microseconds:
+          t.microsecondsSinceEpoch - diffDateTimeToAdjustedFrameTimeStamp);
 
   int get diffSystemToAdjustedFrameTimeStamp =>
       SchedulerBinding.instance.currentSystemFrameTimeStamp.inMicroseconds -
