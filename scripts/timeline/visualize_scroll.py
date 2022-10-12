@@ -43,17 +43,20 @@ smooth_shift_offsets = pd.DataFrame([
 
 def _compute_smooth_shift(row):
     i = smooth_shift_offsets.ts.searchsorted(row.ts_window_render) - 1
+    if i < 0: return 0
     return smooth_shift_offsets.offset[i]
 
 
 def _compute_scroll_controller_offset_nearest(row):
     i = scroll_controller_offsets.ts.searchsorted(row.ts_window_render) - 1
+    if i < 0: return 0
     return scroll_controller_offsets.offset[i]
 
 
 def _compute_scroll_controller_offset_alternative(row):
     # NOTE "-2" not "-1"
     i = scroll_controller_offsets.ts.searchsorted(row.ts_window_render) - 2
+    if i < 0: return 0
     return scroll_controller_offsets.offset[i]
 
 
