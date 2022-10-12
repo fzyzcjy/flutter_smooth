@@ -65,18 +65,20 @@ def parse_frame_infos(data):
             index_window_render_start=index_window_render_start,
         )
 
-        if abs(display_screen_time - (min_ts + 9.85 * 1000000)) < 4000:
-            print(
-                'hi', ans,
-                f'index_flow_end={index_flow_end}',
-                f'flow_id={flow_id}',
-                f'index_flow_step={index_flow_step}',
-                f'e[index_flow_step].ts={data["traceEvents"][index_flow_step]["ts"] - min_ts}',
-                f'index_window_render_start={index_window_render_start}',
-                f'ts_window_render(relative)={ts_window_render - min_ts}',
-                f'display_screen_time(relative)={display_screen_time - min_ts}',
-                f'ts_rasterizer_end(relative)={ts_rasterizer_end - min_ts}',
-            )
+        # for debug
+        # if abs(ts_rasterizer_end - (min_ts + 9.850 * 1000000)) < 4000 or \
+        #         abs(ts_rasterizer_end - (min_ts + 9.835 * 1000000)) < 4000:
+        #     print(
+        #         'hi', ans,
+        #         f'index_flow_end={index_flow_end}',
+        #         f'flow_id={flow_id}',
+        #         f'index_flow_step={index_flow_step}',
+        #         f'e[index_flow_step].ts={data["traceEvents"][index_flow_step]["ts"] - min_ts}',
+        #         f'index_window_render_start={index_window_render_start}',
+        #         f'ts_window_render(relative)={ts_window_render - min_ts}',
+        #         f'display_screen_time(relative)={display_screen_time - min_ts}',
+        #         f'ts_rasterizer_end(relative)={ts_rasterizer_end - min_ts}',
+        #     )
 
         yield ans
 
