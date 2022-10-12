@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
@@ -68,6 +69,25 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     assert(raw is SmoothSchedulerBindingMixin,
         'Please use a WidgetsBinding with SmoothSchedulerBindingMixin');
     return raw as SmoothSchedulerBindingMixin;
+  }
+}
+
+mixin SmoothGestureBindingMixin on GestureBinding {
+  @override
+  void dispatchEvent(PointerEvent event, HitTestResult? hitTestResult,
+      {required HitTestEntryFilter? filter}) {
+    // #6159
+    Timeline.timeSync('dispatchEvent', arguments: <String, Object?>{
+      'eventTimeStamp': event.timeStamp.inMicroseconds.toString(),
+      'eventDateTime': (event.timeStamp.inMicroseconds +
+              (SmoothHostApiWrapped
+                      .instance.pointerEventDateTimeDiffTimeStamp ??
+                  0))
+          .toString(),
+      'eventPositionDy': event.position.dy,
+    }, () {
+      super.dispatchEvent(event, hitTestResult, filter: filter);
+    });
   }
 }
 
@@ -206,6 +226,7 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
 class SmoothWidgetsFlutterBinding extends WidgetsFlutterBinding
     with
         SmoothSchedulerBindingMixin,
+        SmoothGestureBindingMixin,
         SmoothRendererBindingMixin,
         SmoothWidgetsBindingMixin {
   @override

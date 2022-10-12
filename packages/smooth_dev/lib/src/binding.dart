@@ -11,6 +11,7 @@ class SmoothAutomatedTestWidgetsFlutterBinding
     extends AutomatedTestWidgetsFlutterBinding
     with
         SmoothSchedulerBindingMixin,
+        SmoothGestureBindingMixin,
         SmoothRendererBindingMixin,
         SmoothWidgetsBindingMixin,
         SmoothSchedulerBindingTestMixin {
