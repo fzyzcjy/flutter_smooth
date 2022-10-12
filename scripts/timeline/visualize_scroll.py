@@ -73,17 +73,22 @@ df_frame['felt_offset'] = df_frame.scroll_controller_offset - df_frame.smooth_sh
 
 plt.clf()
 plt.tight_layout()
+ax1 = plt.gca()
 
-plt.scatter(_transform_ts(scroll_controller_offsets.ts), scroll_controller_offsets.offset,
+ax1.scatter(_transform_ts(scroll_controller_offsets.ts), scroll_controller_offsets.offset,
             s=2, label='ScrollController', c='C3')
-plt.scatter(_transform_ts(smooth_shift_offsets.ts), smooth_shift_offsets.offset,
+ax1.scatter(_transform_ts(smooth_shift_offsets.ts), smooth_shift_offsets.offset,
             s=2, label='Smooth', c='C4')
-# plt.vlines(vsync_positions, -300, 300, linewidths=.1, label='Vsync')
+# ax1.vlines(vsync_positions, -300, 300, linewidths=.1, label='Vsync')
 
-plt.plot(_transform_ts(df_frame.display_screen_time), df_frame.felt_offset, '-o', markersize=2, label='offset')
-plt.plot(_transform_ts(df_frame.display_screen_time)[:-1],
+ax1.plot(_transform_ts(df_frame.display_screen_time), df_frame.felt_offset, '-o', markersize=2, label='offset')
+
+ax2 = ax1.twinx()
+ax2.plot(_transform_ts(df_frame.display_screen_time)[:-1],
          np.array(df_frame.felt_offset[1:]) - np.array(df_frame.felt_offset[:-1]),
-         '-o', markersize=2, label='delta(offset)')
+         '-o', markersize=2, label='delta(offset)', c='C1')
 
-plt.legend(loc="upper left")
+ax1.legend(loc="upper left")
+ax2.legend(loc="upper right")
+
 plt.show()
