@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -110,7 +109,11 @@ class ExampleListViewPage extends StatelessWidget {
     if (index % 6 == 0) rowColor = Colors.green;
 
     return SizedBox(
-      height: 96.0 + Random().nextInt(64),
+      // NOTE should *not* use random height that changes *every time* it is
+      // built, otherwise the offset in the Matplotlib visualization can be
+      // very confusing even if it is correct
+      // https://github.com/fzyzcjy/yplusplus/issues/6154#issuecomment-1275497820
+      height: 96.0 + (index % 4) * 16,
       child: Stack(
         children: [
           // #6076
