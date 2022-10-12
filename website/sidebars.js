@@ -21,6 +21,21 @@ const sidebars = {
         {type: 'doc', id: 'index', label: 'Introduction'},
         'quickstart',
         'usage',
+        {
+            type: 'category',
+            label: 'Benchmark',
+            collapsed: false,
+            link: {
+                type: 'doc',
+                id: 'benchmark/index',
+            },
+            items: [
+                'benchmark/fps',
+                'benchmark/linearity',
+                'benchmark/latency',
+                'benchmark/waste',
+            ],
+        },
         'design',
         'debug',
         'design-doc',
