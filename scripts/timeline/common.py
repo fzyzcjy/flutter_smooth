@@ -26,6 +26,7 @@ def find_before(data, index_start, predicate):
 def parse_frame_infos(data):
     """#6150"""
 
+    min_ts = min(e['ts'] for e in data['traceEvents'])
     vsync_positions = parse_vsync_positions(data)
 
     for index_rasterizer_end, e_rasterizer_end in enumerate(data['traceEvents']):
@@ -36,14 +37,17 @@ def parse_frame_infos(data):
             data, index_rasterizer_end - 1,
             lambda i, e: e['name'] == 'PipelineItem' and e['ph'] == 'f')
         flow_id = data['traceEvents'][index_flow_end]['id']
-        index_flow_start = find_before(
+        index_flow_step = find_before(
             data, index_flow_end - 1,
-            lambda i, e: e['name'] == 'PipelineItem' and e['ph'] == 's' and e['id'] == flow_id)
+            # NOTE must be "t" not "s"
+            # https://github.com/fzyzcjy/yplusplus/issues/6154#issuecomment-1275522246
+            lambda i, e: e['name'] == 'PipelineItem' and e['ph'] == 't' and e['id'] == flow_id)
         index_window_render_start = find_before(
-            data, index_flow_start - 1,
-            lambda i, e: e['name'] == 'window.render')
+            data, index_flow_step - 1,
+            lambda i, e: e['name'] == 'window.render' and e['ph'] == 'B')
         e_window_render_start = data['traceEvents'][index_window_render_start]
 
+        ts_window_render = e_window_render_start['ts']
         ts_rasterizer_end = e_rasterizer_end['ts']
 
         # https://github.com/fzyzcjy/yplusplus/issues/6154#issuecomment-1275505377
@@ -54,12 +58,27 @@ def parse_frame_infos(data):
         else:
             display_screen_time = vsync_positions[-1]  # fallback
 
-        yield dict(
-            ts_window_render=e_window_render_start['ts'],
+        ans = dict(
+            ts_window_render=ts_window_render,
             display_screen_time=display_screen_time,
             ts_rasterizer_end=ts_rasterizer_end,
             index_window_render_start=index_window_render_start,
         )
+
+        if abs(display_screen_time - (min_ts + 9.85 * 1000000)) < 4000:
+            print(
+                'hi', ans,
+                f'index_flow_end={index_flow_end}',
+                f'flow_id={flow_id}',
+                f'index_flow_step={index_flow_step}',
+                f'e[index_flow_step].ts={data["traceEvents"][index_flow_step]["ts"] - min_ts}',
+                f'index_window_render_start={index_window_render_start}',
+                f'ts_window_render(relative)={ts_window_render - min_ts}',
+                f'display_screen_time(relative)={display_screen_time - min_ts}',
+                f'ts_rasterizer_end(relative)={ts_rasterizer_end - min_ts}',
+            )
+
+        yield ans
 
 
 def is_enclosed_by(data, self_index, enclose_predicate):
