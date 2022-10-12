@@ -1,0 +1,18 @@
+version: 2
+enable-beta-ecosystems: true
+updates:
+- package-ecosystem: "pub"
+  directory: "/packages/smooth"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 10
+- package-ecosystem: "pub"
+  directory: "/packages/smooth/example"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 10
+- package-ecosystem: "pub"
+  directory: "/packages/smooth_dev"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 10
