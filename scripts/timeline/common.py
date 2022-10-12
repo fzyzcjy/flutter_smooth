@@ -45,7 +45,7 @@ def parse_frame_infos(data):
             ts_window_render=e_window_render_start['ts'],
             vsync_target_time=int(e_window_render_start['args']['effectiveFallbackVsyncTargetTime']),
             ts_rasterizer_end=e_rasterizer_end['ts'],
-            index_rasterizer_end=index_rasterizer_end,
+            index_window_render_start=index_window_render_start,
         )
 
 

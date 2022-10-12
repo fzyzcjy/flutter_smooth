@@ -55,15 +55,15 @@ def _compute_smooth_shift(row):
 
 def _compute_scroll_controller_offset(row):
     index_previous_non_preempt_render_paint = \
-        find_before(data, int(row.index_rasterizer_end),
+        find_before(data, int(row.index_window_render_start),
                     lambda i, e: e['name'] == 'PAINT' and e['ph'] == 'B'
                                  and not is_enclosed_by(data, i, lambda e: e['name'] == 'AuxTree.RunPipeline'))
 
     # the one *before* non-PreemptRender PAINT phase
     idx = scroll_controller_offsets.ts.searchsorted(
         data['traceEvents'][index_previous_non_preempt_render_paint]['ts']) - 1
-    if idx < 0 or idx >= len(smooth_shift_offsets.offset): return 0
-    return smooth_shift_offsets.offset[idx]
+    if idx < 0: return 0
+    return scroll_controller_offsets.offset[idx]
 
 
 df_frame['smooth_shift_offset'] = df_frame.apply(_compute_smooth_shift, axis=1)
