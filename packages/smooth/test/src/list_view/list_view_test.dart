@@ -96,11 +96,13 @@ void main() {
 
       await capturer
           .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
+        // note there is "lag" - because we do not use the PointerEvent
+        // immediately, but only use the ones that are old enough to be "real"
+        await t.createExpectImage(50 - 30),
         await t.createExpectImage(50 - 20),
-        await t.createExpectImage(50 - 15),
         // extra smooth frame after finalize phase
         // i.e. PostDrawFramePhasePreemptRender
-        await t.createExpectImage(50 - 10),
+        await t.createExpectImage(50 - 15),
       ]);
 
       debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
