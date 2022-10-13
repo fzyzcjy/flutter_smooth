@@ -9,21 +9,21 @@ class SmoothHostApiWrapped {
   final _api = SmoothHostApi();
 
   Future<void> init() async {
-    _pointerEventDateTimeDiffTimeStamp =
+    _diffDateTimeToPointerEventTimeStamp =
         await _api.pointerEventDateTimeDiffTimeStamp();
   }
 
-  int? get pointerEventDateTimeDiffTimeStamp =>
-      _pointerEventDateTimeDiffTimeStamp;
-  int? _pointerEventDateTimeDiffTimeStamp;
+  int? get diffDateTimeToPointerEventTimeStamp =>
+      _diffDateTimeToPointerEventTimeStamp;
+  int? _diffDateTimeToPointerEventTimeStamp;
 }
 
 extension ExtPointerEvent on PointerEvent {
   DateTime? get dateTime {
-    final pointerEventDateTimeDiffTimeStamp =
-        SmoothHostApiWrapped.instance.pointerEventDateTimeDiffTimeStamp;
-    if (pointerEventDateTimeDiffTimeStamp == null) return null;
+    final diffDateTimeToPointerEventTimeStamp =
+        SmoothHostApiWrapped.instance.diffDateTimeToPointerEventTimeStamp;
+    if (diffDateTimeToPointerEventTimeStamp == null) return null;
     return DateTime.fromMicrosecondsSinceEpoch(
-        timeStamp.inMicroseconds + pointerEventDateTimeDiffTimeStamp);
+        timeStamp.inMicroseconds + diffDateTimeToPointerEventTimeStamp);
   }
 }

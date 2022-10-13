@@ -6,7 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/messages_wrapped.dart';
+import 'package:smooth/src/host_api/messages_wrapped.dart';
 import 'package:smooth/src/service_locator.dart';
 
 class ExtraEventDispatcher {
@@ -20,9 +20,9 @@ class ExtraEventDispatcher {
   void dispatch({required Duration smoothFrameTimeStamp}) {
     final gestureBinding = GestureBinding.instance;
 
-    final pointerEventDateTimeDiffTimeStamp =
-        SmoothHostApiWrapped.instance.pointerEventDateTimeDiffTimeStamp;
-    if (pointerEventDateTimeDiffTimeStamp == null) {
+    final diffDateTimeToPointerEventTimeStamp =
+        SmoothHostApiWrapped.instance.diffDateTimeToPointerEventTimeStamp;
+    if (diffDateTimeToPointerEventTimeStamp == null) {
       // not finish initialization
       return;
     }
@@ -30,10 +30,10 @@ class ExtraEventDispatcher {
     // final now = clock.now();
     // final nowTimeStampInPointerEventClock = Duration(
     //     microseconds:
-    //         now.microsecondsSinceEpoch - pointerEventDateTimeDiffTimeStamp);
+    //         now.microsecondsSinceEpoch - diffDateTimeToPointerEventTimeStamp);
 
     // print(
-    //     'pointerEventDateTimeDiffTimeStamp=$pointerEventDateTimeDiffTimeStamp');
+    //     'diffDateTimeToPointerEventTimeStamp=$diffDateTimeToPointerEventTimeStamp');
 
     // print('hackDispatchExtraPointerEvents '
     //     'pointer=$pointer '
@@ -157,16 +157,16 @@ class _PendingPointerEventManager {
 
   static Duration? timeStampClockSchedulerToClockPointerEvent(
       Duration timeClockScheduler) {
-    final pointerEventDateTimeDiffTimeStamp =
-        SmoothHostApiWrapped.instance.pointerEventDateTimeDiffTimeStamp;
-    if (pointerEventDateTimeDiffTimeStamp == null) return null;
+    final diffDateTimeToPointerEventTimeStamp =
+        SmoothHostApiWrapped.instance.diffDateTimeToPointerEventTimeStamp;
+    if (diffDateTimeToPointerEventTimeStamp == null) return null;
 
     final dateTime = ServiceLocator.instance.timeConverter
         .adjustedFrameTimeStampToDateTime(timeClockScheduler);
 
     return Duration(
         microseconds: dateTime.microsecondsSinceEpoch -
-            pointerEventDateTimeDiffTimeStamp);
+            diffDateTimeToPointerEventTimeStamp);
   }
 
   // #6165

@@ -6,7 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/messages_wrapped.dart';
+import 'package:smooth/src/host_api/messages_wrapped.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
 import 'package:smooth/src/time_manager.dart';
@@ -94,7 +94,7 @@ mixin SmoothGestureBindingMixin on GestureBinding {
       'eventTimeStamp': event.timeStamp.inMicroseconds.toString(),
       'eventDateTime': (event.timeStamp.inMicroseconds +
               (SmoothHostApiWrapped
-                      .instance.pointerEventDateTimeDiffTimeStamp ??
+                      .instance.diffDateTimeToPointerEventTimeStamp ??
                   0))
           .toString(),
       'eventPositionDy': event.position.dy,
