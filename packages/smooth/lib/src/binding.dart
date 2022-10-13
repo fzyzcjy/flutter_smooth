@@ -42,7 +42,8 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     final eagerCurrentFrameTimeStamp = AdjustedFrameTimeStamp.uncheckedFrom(
         adjustForEpoch(rawTimeStamp ?? currentSystemFrameTimeStamp));
 
-    ServiceLocator.instance.timeManager
+    // maybeInstance - https://github.com/fzyzcjy/yplusplus/issues/6166#issuecomment-1276915553
+    ServiceLocator.maybeInstance?.timeManager
         .onBeginFrame(currentFrameTimeStamp: eagerCurrentFrameTimeStamp);
 
     super.handleBeginFrame(rawTimeStamp);
@@ -109,20 +110,23 @@ mixin SmoothSingletonFlutterWindowMixin on ui.SingletonFlutterWindow {
 
   @override
   void render(ui.Scene scene, {Duration? fallbackVsyncTargetTime}) {
-    final serviceLocator = ServiceLocator.instance;
+    final serviceLocator = ServiceLocator.maybeInstance;
 
-    final effectiveFallbackVsyncTargetTime = fallbackVsyncTargetTime ??
-        // NOTE *need* this when [fallbackVsyncTargetTime] is null, because
-        // the plain-old pipeline will call `window.render` and we cannot
-        // control that
-        serviceLocator.timeConverter
-            .adjustedToSystemFrameTimeStamp(
-                serviceLocator.timeManager.currentSmoothFrameTimeStamp)
-            .innerSystemFrameTimeStamp;
+    var effectiveFallbackVsyncTargetTime = fallbackVsyncTargetTime;
+    if (serviceLocator != null) {
+      effectiveFallbackVsyncTargetTime ??=
+          // NOTE *need* this when [fallbackVsyncTargetTime] is null, because
+          // the plain-old pipeline will call `window.render` and we cannot
+          // control that
+          serviceLocator.timeConverter
+              .adjustedToSystemFrameTimeStamp(
+                  serviceLocator.timeManager.currentSmoothFrameTimeStamp)
+              .innerSystemFrameTimeStamp;
+    }
 
-    Timeline.timeSync('window.render', arguments: <String, String>{
+    Timeline.timeSync('window.render', arguments: <String, String?>{
       'effectiveFallbackVsyncTargetTime':
-          effectiveFallbackVsyncTargetTime.inMicroseconds.toString()
+          effectiveFallbackVsyncTargetTime?.inMicroseconds.toString()
     }, () {
       super.render(
         scene,
