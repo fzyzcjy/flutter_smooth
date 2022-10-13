@@ -162,17 +162,31 @@ void main() {
           gesture.addEventUp();
           await gesture.plainDispatchAll();
 
+          debugPrint('action: pumps after pointer up');
           for (var i = 0; i < 6; ++i) {
             await tester
-                .pump(timeInfo.calcPumpDuration(smoothFrameIndex: i + 3));
-            debugPrint('offset=${getCurrentOffset()}');
-
-            await capturer.expectAndReset(tester,
-                expectTestFrameNumber: i + 4,
-                expectImages: [
-                  // TODO
-                ]);
+                .pump(timeInfo.calcPumpDuration(smoothFrameIndex: 12 + i));
+            debugPrint('i=$i offset=${getCurrentOffset()}');
           }
+
+          // this list is populated by looking at debug outputs showing
+          // the [ScrollableState.position.pixels] in each frame
+          const expectOffsets = [
+            45.0,
+            49.621833741675445,
+            53.5288786404724,
+            56.78345020704865,
+            59.44786395206202,
+            61.58443538617031,
+          ];
+
+          await capturer.pack.expect(
+              tester,
+              WindowRenderPack.of({
+                for (var i = 0; i < expectOffsets.length; ++i)
+                  14 + i: [t.createExpectImage(expectOffsets[i])],
+              }));
+          capturer.pack.reset();
 
           debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
         }
@@ -359,10 +373,10 @@ class _SmoothListViewTester {
   final onAfterPreemptPoint = OnceCallable();
   final onPaint = OnceCallable();
 
-  ui.Image createExpectImage(int offset) {
+  ui.Image createExpectImage(double offset) {
     return buildImageFromPainter(SchedulerBinding.instance.window.size,
         (canvas) {
-      canvas.translate(0, -offset.toDouble());
+      canvas.translate(0, -offset);
 
       canvas.drawRect(const Rect.fromLTWH(0, 0, 200, 600),
           Paint()..color = Colors.primaries[0]);
@@ -371,7 +385,7 @@ class _SmoothListViewTester {
       canvas.drawRect(const Rect.fromLTWH(0, 1200, 200, 600),
           Paint()..color = Colors.primaries[2]);
 
-      canvas.translate(0, offset.toDouble());
+      canvas.translate(0, offset);
     });
   }
 

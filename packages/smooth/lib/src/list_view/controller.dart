@@ -43,7 +43,6 @@ class SmoothScrollPositionWithSingleContext
   @override
   void goBallistic(double velocity) {
     print('hi goBallistic velocity=$velocity');
-    debugPrintStack();
 
     assert(hasPixels);
 
