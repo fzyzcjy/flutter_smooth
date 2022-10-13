@@ -20,8 +20,20 @@ class SmoothShift extends StatefulWidget {
 }
 
 // try to use mixin to maximize performance
-class _SmoothShiftState = _SmoothShiftBase
-    with _SmoothShiftFromPointerEvent, _SmoothShiftFromBallistic;
+class _SmoothShiftState extends _SmoothShiftBase
+    with _SmoothShiftFromPointerEvent, _SmoothShiftFromBallistic {
+  @override
+  Widget build(BuildContext context) {
+    print('hi $runtimeType build '
+        'offset=$offset '
+        '_offsetFromPointerEvent=$_offsetFromPointerEvent '
+        '_offsetFromBallistic=$_offsetFromBallistic');
+    // SimpleLog.instance.log(
+    //     'SmoothShift.build offset=$offset currentSmoothFrameTimeStamp=${ServiceLocator.maybeInstance?.preemptStrategy.currentSmoothFrameTimeStamp}');
+
+    return super.build(context);
+  }
+}
 
 abstract class _SmoothShiftBase extends State<SmoothShift>
     with TickerProviderStateMixin {
@@ -30,10 +42,6 @@ abstract class _SmoothShiftBase extends State<SmoothShift>
   @override
   @mustCallSuper
   Widget build(BuildContext context) {
-    // print('hi $runtimeType build offset=$offset');
-    // SimpleLog.instance.log(
-    //     'SmoothShift.build offset=$offset currentSmoothFrameTimeStamp=${ServiceLocator.maybeInstance?.preemptStrategy.currentSmoothFrameTimeStamp}');
-
     return Timeline.timeSync('SmoothShift',
         arguments: <String, Object?>{'offset': offset}, () {
       return Transform.translate(
@@ -67,26 +75,21 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
     final basePosition =
         _positionSnapshot.snapshotOf(mainLayerTreeModeInAuxTreeView);
 
-    Timeline.timeSync(
-      'SmoothShift.offsetFromPointerEvent',
-      arguments: <String, Object?>{
-        'currPosition': _currPosition,
-        'mainLayerTreeModeInAuxTreeView': mainLayerTreeModeInAuxTreeView.name,
-        'positionSnapshot': _positionSnapshot.toString(),
-        'pointerDownPosition': _pointerDownPosition,
-        'basePosition': basePosition,
-      },
-      () {},
-    );
+    final ans = _currPosition! - (basePosition ?? _pointerDownPosition!);
 
-    // print('hi $runtimeType get _offsetFromPointerEvent '
-    //     '_currPosition=$_currPosition '
-    //     'executingRunPipelineBecauseOfAfterFlushLayout=$executingRunPipelineBecauseOfAfterFlushLayout '
-    //     'executingRunPipelineBecauseOfAfterDrawFrame=$executingRunPipelineBecauseOfAfterDrawFrame '
-    //     '_positionWhenCurrStartDrawFrame=$_positionWhenCurrStartDrawFrame '
-    //     '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame '
-    //     '_pointerDownPosition=$_pointerDownPosition');
-    return _currPosition! - (basePosition ?? _pointerDownPosition!);
+    final args = {
+      'currPosition': _currPosition,
+      'mainLayerTreeModeInAuxTreeView': mainLayerTreeModeInAuxTreeView.name,
+      'positionSnapshot': _positionSnapshot.toString(),
+      'pointerDownPosition': _pointerDownPosition,
+      'basePosition': basePosition,
+      'ans': ans,
+    };
+    Timeline.timeSync(
+        'SmoothShift.offsetFromPointerEvent', arguments: args, () {});
+    print('hi $runtimeType get _offsetFromPointerEvent $args');
+
+    return ans;
   }
 
   @override
