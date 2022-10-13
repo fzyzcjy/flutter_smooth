@@ -1,8 +1,10 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/service_locator.dart';
 import 'package:smooth/src/time/simple_date_time.dart';
+import 'package:smooth/src/time/typed_time.dart';
 
 enum SmoothFramePhase {
   /// A new frame starts, and no preemptRender happens yet
@@ -25,7 +27,8 @@ enum SmoothFramePhase {
 }
 
 class TimeManager {
-  static const kActThresh = Duration(milliseconds: 2);
+  static const kActThresh =
+      AdjustedFrameTimeStamp.unchecked(microseconds: 2 * 1000);
 
   TimeManager();
 
@@ -36,13 +39,14 @@ class TimeManager {
   ///
   /// When confused about the correct value of this field, just think about
   /// how we mimic the [SchedulerBinding.currentFrameTimeStamp].
-  Duration get currentSmoothFrameTimeStamp => _currentSmoothFrameTimeStamp!;
-  Duration? _currentSmoothFrameTimeStamp;
+  AdjustedFrameTimeStamp get currentSmoothFrameTimeStamp =>
+      _currentSmoothFrameTimeStamp!;
+  AdjustedFrameTimeStamp? _currentSmoothFrameTimeStamp;
 
   /// When now > this timestamp, should act; otherwise, should not act.
   ///
   /// null means invalid (e.g. we are in a phase that has no meaningful value)
-  Duration? get thresholdActOnBuildOrLayoutPhaseTimeStamp {
+  AdjustedFrameTimeStamp? get thresholdActOnBuildOrLayoutPhaseTimeStamp {
     if (!(phase == SmoothFramePhase.initial ||
         phase == SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender)) {
       return null;
@@ -51,12 +55,12 @@ class TimeManager {
     return currentSmoothFrameTimeStamp - kActThresh;
   }
 
-  Duration? get thresholdActOnPostDrawFramePhaseTimeStamp {
+  AdjustedFrameTimeStamp? get thresholdActOnPostDrawFramePhaseTimeStamp {
     if (phase != SmoothFramePhase.afterRunAuxPipelineForPlainOld) return null;
     return currentSmoothFrameTimeStamp;
   }
 
-  void onBeginFrame({required Duration currentFrameTimeStamp}) {
+  void onBeginFrame({required AdjustedFrameTimeStamp currentFrameTimeStamp}) {
     assert(phase == SmoothFramePhase.onOrAfterPostDrawFramePhasePreemptRender ||
         phase == SmoothFramePhase.afterRunAuxPipelineForPlainOld);
     phase = SmoothFramePhase.initial;
@@ -64,7 +68,8 @@ class TimeManager {
     _currentSmoothFrameTimeStamp = currentFrameTimeStamp;
   }
 
-  void afterBuildOrLayoutPhasePreemptRender({required Duration now}) {
+  void afterBuildOrLayoutPhasePreemptRender(
+      {required AdjustedFrameTimeStamp now}) {
     assert(phase == SmoothFramePhase.initial ||
         phase == SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender);
     assert(thresholdActOnBuildOrLayoutPhaseTimeStamp! <= now);
@@ -73,41 +78,46 @@ class TimeManager {
     // https://github.com/fzyzcjy/yplusplus/issues/6162#issuecomment-1276068643
     final nextVsync =
         vsyncLaterThan(time: now, baseVsync: _currentSmoothFrameTimeStamp!);
-    final nextVsyncInFarFuture =
-        nextVsync - now > const Duration(milliseconds: 12);
-    final newSmoothFrameTimeStamp =
-        nextVsync + (nextVsyncInFarFuture ? Duration.zero : kOneFrame);
+    final nextVsyncInFarFuture = nextVsync - now >
+        const AdjustedFrameTimeStamp.unchecked(microseconds: 12 * 1000);
+    final newSmoothFrameTimeStamp = nextVsync +
+        (nextVsyncInFarFuture
+            ? const AdjustedFrameTimeStamp.uncheckedZero()
+            : kOneFrameAFTS);
 
     assert(newSmoothFrameTimeStamp > _currentSmoothFrameTimeStamp!,
         'newSmoothFrameTimeStamp=$newSmoothFrameTimeStamp should be greater than _currentSmoothFrameTimeStamp=$_currentSmoothFrameTimeStamp');
     _currentSmoothFrameTimeStamp = newSmoothFrameTimeStamp;
   }
 
-  void afterRunAuxPipelineForPlainOld({required Duration now}) {
+  void afterRunAuxPipelineForPlainOld({required AdjustedFrameTimeStamp now}) {
     assert(phase == SmoothFramePhase.initial ||
         phase == SmoothFramePhase.afterBuildOrLayoutPhasePreemptRender);
     phase = SmoothFramePhase.afterRunAuxPipelineForPlainOld;
   }
 
-  void beforePostDrawFramePhasePreemptRender({required Duration now}) {
+  void beforePostDrawFramePhasePreemptRender(
+      {required AdjustedFrameTimeStamp now}) {
     assert(phase == SmoothFramePhase.afterRunAuxPipelineForPlainOld);
     assert(thresholdActOnPostDrawFramePhaseTimeStamp! <= now);
     phase = SmoothFramePhase.onOrAfterPostDrawFramePhasePreemptRender;
 
-    _currentSmoothFrameTimeStamp = _currentSmoothFrameTimeStamp! + kOneFrame;
+    _currentSmoothFrameTimeStamp =
+        _currentSmoothFrameTimeStamp! + kOneFrameAFTS;
   }
 
-  static Duration get normalNow => ServiceLocator.instance.timeConverter
-      .dateTimeToAdjustedFrameTimeStamp(clock.nowSimple());
+  static AdjustedFrameTimeStamp get normalNow =>
+      ServiceLocator.instance.timeConverter
+          .dateTimeToAdjustedFrameTimeStamp(clock.nowSimple());
 
   @visibleForTesting
-  static Duration vsyncLaterThan({
-    required Duration time,
-    required Duration baseVsync,
+  static AdjustedFrameTimeStamp vsyncLaterThan({
+    required AdjustedFrameTimeStamp time,
+    required AdjustedFrameTimeStamp baseVsync,
   }) {
     final diffMicroseconds = time.inMicroseconds - baseVsync.inMicroseconds;
     return baseVsync +
-        Duration(
+        AdjustedFrameTimeStamp.unchecked(
           microseconds: (diffMicroseconds / kOneFrameUs).ceil() * kOneFrameUs,
         );
   }

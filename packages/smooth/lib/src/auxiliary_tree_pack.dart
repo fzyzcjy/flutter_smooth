@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:smooth/src/auxiliary_tree_root_view.dart';
 import 'package:smooth/src/remove_sub_tree_widget.dart';
 import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/time/typed_time.dart';
 
 class AuxiliaryTreeRegistry {
   Iterable<AuxiliaryTreePack> get trees => _trees;
@@ -31,7 +32,7 @@ class AuxiliaryTreePack {
   final mainSubTreeLayerHandle = LayerHandle(OffsetLayer());
   final _tickerRegistry = TickerRegistry();
   final _removeSubTreeController = RemoveSubTreeController();
-  Duration? _previousRunPipelineTimeStamp;
+  AdjustedFrameTimeStamp? _previousRunPipelineTimeStamp;
 
   AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
     pipelineOwner = PipelineOwner();
@@ -64,7 +65,7 @@ class AuxiliaryTreePack {
   }
 
   void runPipeline(
-    Duration timeStamp, {
+    AdjustedFrameTimeStamp timeStamp, {
     required bool skipIfTimeStampUnchanged,
     required String debugReason,
   }) {
@@ -141,7 +142,7 @@ class AuxiliaryTreePack {
   }
 
   /// #5814
-  void _callExtraTickerTick(Duration timeStamp) {
+  void _callExtraTickerTick(AdjustedFrameTimeStamp timeStamp) {
     // #5821
     // final now = DateTime.now();
     // final timeStamp = SchedulerBinding.instance.currentFrameTimeStamp +
@@ -152,7 +153,7 @@ class AuxiliaryTreePack {
     // print('$runtimeType callExtraTickerTick tickers=${tickerRegistry.tickers}');
 
     for (final ticker in _tickerRegistry.tickers) {
-      ticker.maybeExtraTick(timeStamp);
+      ticker.maybeExtraTick(timeStamp.innerAdjustedFrameTimeStamp);
     }
   }
 

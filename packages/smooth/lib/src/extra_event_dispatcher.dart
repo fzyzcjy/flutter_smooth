@@ -4,10 +4,10 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/host_api/messages_wrapped.dart';
 import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/time/typed_time.dart';
 
 class ExtraEventDispatcher {
   final _pendingEventManager = _PendingPointerEventManager();
@@ -17,7 +17,7 @@ class ExtraEventDispatcher {
 
   // TODO just prototype, not final code
   // #5867
-  void dispatch({required Duration smoothFrameTimeStamp}) {
+  void dispatch({required AdjustedFrameTimeStamp smoothFrameTimeStamp}) {
     final gestureBinding = GestureBinding.instance;
 
     final diffDateTimeToPointerEventTimeStamp =
@@ -43,9 +43,9 @@ class ExtraEventDispatcher {
 
     // in order to mimic classical case
     // details see #6066
-    final pendingEventMaxTimeStamp = smoothFrameTimeStamp - kOneFrame;
-    final pendingEvents = _pendingEventManager.read(
-        maxTimeStampClockScheduler: pendingEventMaxTimeStamp);
+    final pendingEventMaxTimeStamp = smoothFrameTimeStamp - kOneFrameAFTS;
+    final pendingEvents =
+        _pendingEventManager.read(maxTimeStamp: pendingEventMaxTimeStamp);
 
     // print(
     //     'pendingPacket.len=${pendingPacket.data.length} pendingPacket.data=${pendingPacket.data}');
@@ -91,21 +91,21 @@ class _PendingPointerEventManager {
         (e) => _isRoughlySamePointerEvent(e, mainTreePointerEvent));
   }
 
-  /// [maxTimeStampClockScheduler] has the same clock as [SchedulerBinding.currentFrameTimeStamp]
-  List<PointerEvent> read({required Duration maxTimeStampClockScheduler}) {
-    final maxTimeStampClockPointerEvent =
-        timeStampClockSchedulerToClockPointerEvent(maxTimeStampClockScheduler);
-    if (maxTimeStampClockPointerEvent == null) {
+  List<PointerEvent> read({required AdjustedFrameTimeStamp maxTimeStamp}) {
+    final timeConverter = ServiceLocator.instance.timeConverter;
+    final maxPointerEventTimeStamp =
+        timeConverter.dateTimeToPointerEventTimeStamp(
+            timeConverter.adjustedFrameTimeStampToDateTime(maxTimeStamp));
+    if (maxPointerEventTimeStamp == null) {
       // not initialized
       return const [];
     }
 
-    _fetchFromEngine(
-        sanityCheckLastEventTimeStamp: maxTimeStampClockPointerEvent);
+    _fetchFromEngine(sanityCheckLastEventTimeStamp: maxPointerEventTimeStamp);
 
     final ans = <PointerEvent>[];
     while (_pendingEvents.isNotEmpty &&
-        _pendingEvents.first.timeStamp < maxTimeStampClockPointerEvent) {
+        _pendingEvents.first.timeStampTyped < maxPointerEventTimeStamp) {
       ans.add(_pendingEvents.removeFirst());
     }
 
@@ -120,7 +120,8 @@ class _PendingPointerEventManager {
     return ans;
   }
 
-  void _fetchFromEngine({required Duration sanityCheckLastEventTimeStamp}) {
+  void _fetchFromEngine(
+      {required PointerEventTimeStamp sanityCheckLastEventTimeStamp}) {
     final gestureBinding = GestureBinding.instance;
 
     final enginePendingEvents =
@@ -138,9 +139,10 @@ class _PendingPointerEventManager {
 
     assert(() {
       // be very loose
-      const kThreshold = Duration(milliseconds: 100);
+      const kThreshold =
+          PointerEventTimeStamp.unchecked(microseconds: 100 * 1000);
 
-      final eventTimeStamp = enginePendingEvents.lastOrNull?.timeStamp;
+      final eventTimeStamp = enginePendingEvents.lastOrNull?.timeStampTyped;
       if (eventTimeStamp != null &&
           (eventTimeStamp - sanityCheckLastEventTimeStamp).abs() > kThreshold) {
         throw AssertionError(
@@ -152,21 +154,7 @@ class _PendingPointerEventManager {
     _pendingEvents.addAll(enginePendingEvents);
 
     assert(_isNonDecreasing(
-        _pendingEvents.map((e) => e.timeStamp.inMicroseconds).toList()));
-  }
-
-  static Duration? timeStampClockSchedulerToClockPointerEvent(
-      Duration timeClockScheduler) {
-    final diffDateTimeToPointerEventTimeStamp =
-        SmoothHostApiWrapped.instance.diffDateTimeToPointerEventTimeStamp;
-    if (diffDateTimeToPointerEventTimeStamp == null) return null;
-
-    final dateTime = ServiceLocator.instance.timeConverter
-        .adjustedFrameTimeStampToDateTime(timeClockScheduler);
-
-    return Duration(
-        microseconds: dateTime.microsecondsSinceEpoch -
-            diffDateTimeToPointerEventTimeStamp);
+        _pendingEvents.map((e) => e.timeStampTyped.inMicroseconds).toList()));
   }
 
   // #6165
@@ -190,7 +178,7 @@ extension on List<PointerEvent> {
 extension on PointerEvent {
   String toBriefString() => 'PointerEvent('
       'timeStamp: $timeStamp, '
-      'dateTime: $dateTime, '
+      'dateTime: ${ServiceLocator.maybeInstance?.timeConverter.pointerEventTimeStampToDateTime(timeStampTyped)}, '
       'position: $position'
       ')';
 }

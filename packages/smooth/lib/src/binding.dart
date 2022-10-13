@@ -9,6 +9,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/host_api/messages_wrapped.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/time/typed_time.dart';
 import 'package:smooth/src/time_manager.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
@@ -40,15 +41,16 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
     // mimic how [handleBeginFrame] computes the real [currentFrameTimeStamp]
-    final eagerCurrentFrameTimeStamp =
-        adjustForEpoch(rawTimeStamp ?? currentSystemFrameTimeStamp);
+    final eagerCurrentFrameTimeStamp = AdjustedFrameTimeStamp.uncheckedFrom(
+        adjustForEpoch(rawTimeStamp ?? currentSystemFrameTimeStamp));
 
     ServiceLocator.instance.timeManager
         .onBeginFrame(currentFrameTimeStamp: eagerCurrentFrameTimeStamp);
 
     super.handleBeginFrame(rawTimeStamp);
 
-    assert(eagerCurrentFrameTimeStamp == currentFrameTimeStamp);
+    assert(eagerCurrentFrameTimeStamp.inMicroseconds ==
+        currentFrameTimeStamp.inMicroseconds);
   }
 
   @override
@@ -105,6 +107,9 @@ mixin SmoothGestureBindingMixin on GestureBinding {
 }
 
 mixin SmoothSingletonFlutterWindowMixin on ui.SingletonFlutterWindow {
+  // static SmoothSingletonFlutterWindowMixin get instance =>
+  //     SchedulerBinding.instance.window as SmoothSingletonFlutterWindowMixin;
+
   @override
   void render(ui.Scene scene, {Duration? fallbackVsyncTargetTime}) {
     final serviceLocator = ServiceLocator.instance;
@@ -113,10 +118,10 @@ mixin SmoothSingletonFlutterWindowMixin on ui.SingletonFlutterWindow {
         // NOTE *need* this when [fallbackVsyncTargetTime] is null, because
         // the plain-old pipeline will call `window.render` and we cannot
         // control that
-        serviceLocator.timeManager.currentSmoothFrameTimeStamp +
-            Duration(
-                microseconds: serviceLocator
-                    .timeConverter.diffSystemToAdjustedFrameTimeStamp);
+        serviceLocator.timeConverter
+            .adjustedToSystemFrameTimeStamp(
+                serviceLocator.timeManager.currentSmoothFrameTimeStamp)
+            .innerSystemFrameTimeStamp;
 
     Timeline.timeSync('window.render', arguments: <String, String>{
       'effectiveFallbackVsyncTargetTime':

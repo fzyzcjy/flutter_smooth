@@ -5,6 +5,7 @@ import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth/src/service_locator.dart';
 import 'package:smooth/src/time/simple_date_time.dart';
+import 'package:smooth/src/time/typed_time.dart';
 
 class Actor {
   // var _maybePreemptRenderCallCount = 0;
@@ -93,10 +94,9 @@ class Actor {
       //     'call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
       WidgetsBinding.instance.window.render(
         scene,
-        fallbackVsyncTargetTime: smoothFrameTimeStamp +
-            Duration(
-                microseconds: serviceLocator
-                    .timeConverter.diffSystemToAdjustedFrameTimeStamp),
+        fallbackVsyncTargetTime: serviceLocator.timeConverter
+            .adjustedToSystemFrameTimeStamp(smoothFrameTimeStamp)
+            .innerSystemFrameTimeStamp,
       );
 
       scene.dispose();
@@ -110,7 +110,7 @@ class Actor {
     // print('$runtimeType _preemptRender end');
   }
 
-  void _preemptModifyLayerTree(Duration timeStamp,
+  void _preemptModifyLayerTree(AdjustedFrameTimeStamp timeStamp,
       {required String debugReason}) {
     for (final pack in ServiceLocator.instance.auxiliaryTreeRegistry.trees) {
       pack.runPipeline(
