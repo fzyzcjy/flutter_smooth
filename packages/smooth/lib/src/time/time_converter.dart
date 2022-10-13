@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:clock/clock.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/host_api/messages.dart';
 import 'package:smooth/src/time/simple_date_time.dart';
@@ -12,7 +13,16 @@ class TimeConverter {
   final _systemFrameTimeStampConverter = _SystemFrameTimeStampConverter();
   final _systemToAdjustedFrameTimeStampConverter =
       const _SystemToAdjustedFrameTimeStampConverter();
-  final _pointerEventTimeStampConverter = _PointerEventTimeStampConverter();
+  final _PointerEventTimeStampConverter _pointerEventTimeStampConverter;
+
+  TimeConverter()
+      : _pointerEventTimeStampConverter =
+            _PointerEventTimeStampConverter.normal();
+
+  TimeConverter.test({
+    required ValueGetter<int> diffDateTimeToPointerEventTimeStamp,
+  }) : _pointerEventTimeStampConverter = _PointerEventTimeStampConverter.fake(
+            diffDateTimeToPointerEventTimeStamp);
 
   void dispose() {
     _systemFrameTimeStampConverter.dispose();
@@ -97,8 +107,19 @@ class _SystemToAdjustedFrameTimeStampConverter {
       SchedulerBinding.instance.currentFrameTimeStamp.inMicroseconds;
 }
 
-class _PointerEventTimeStampConverter {
-  _PointerEventTimeStampConverter() {
+abstract class _PointerEventTimeStampConverter {
+  factory _PointerEventTimeStampConverter.normal() =
+      _PointerEventTimeStampConverterNormal;
+
+  factory _PointerEventTimeStampConverter.fake(ValueGetter<int> getter) =
+      _PointerEventTimeStampConverterFake;
+
+  int? get diffDateTimeToPointerEventTimeStamp;
+}
+
+class _PointerEventTimeStampConverterNormal
+    implements _PointerEventTimeStampConverter {
+  _PointerEventTimeStampConverterNormal() {
     _init();
   }
 
@@ -107,7 +128,18 @@ class _PointerEventTimeStampConverter {
         await SmoothHostApi().pointerEventDateTimeDiffTimeStamp();
   }
 
+  @override
   int? get diffDateTimeToPointerEventTimeStamp =>
       _diffDateTimeToPointerEventTimeStamp;
   int? _diffDateTimeToPointerEventTimeStamp;
+}
+
+class _PointerEventTimeStampConverterFake
+    implements _PointerEventTimeStampConverter {
+  final ValueGetter<int> getter;
+
+  _PointerEventTimeStampConverterFake(this.getter);
+
+  @override
+  int get diffDateTimeToPointerEventTimeStamp => getter();
 }
