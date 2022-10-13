@@ -63,7 +63,7 @@ void main() {
         ]);
 
         debugPrint('action: addEvent down');
-        gesture.addEvent(gesture.pointer.down(const Offset(25, 50)));
+        gesture.addEventDown(const Offset(25, 50), timeInfo.testBeginTime);
 
         debugPrint('action: plainDispatchAll');
         await gesture.plainDispatchAll();
@@ -73,12 +73,12 @@ void main() {
           ..onBeforePreemptPoint.once = () {
             debugPrint('action: elapse + addEvent before PreemptPoint');
             binding.elapseBlocking(const Duration(microseconds: 16500));
-            gesture.addEvent(gesture.pointer.move(const Offset(25, 20)));
+            gesture.addEventMove(const Offset(25, 20));
           }
           ..onAfterPreemptPoint.once = () {
             debugPrint('action: elapse + addEvent after PreemptPoint');
             binding.elapseBlocking(const Duration(microseconds: 16500));
-            gesture.addEvent(gesture.pointer.move(const Offset(25, 15)));
+            gesture.addEventMove(const Offset(25, 15));
           };
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
 
@@ -92,7 +92,7 @@ void main() {
         ]);
 
         debugPrint('action: addEvent move(y=10)');
-        gesture.addEvent(gesture.pointer.move(const Offset(25, 10)));
+        gesture.addEventMove(const Offset(25, 10));
 
         debugPrint('action: plainDispatchAll');
         await gesture.plainDispatchAll();
@@ -102,12 +102,12 @@ void main() {
           ..onBeforePreemptPoint.once = () {
             debugPrint('action: elapse + addEvent before PreemptPoint');
             binding.elapseBlocking(const Duration(microseconds: 16500));
-            gesture.addEvent(gesture.pointer.move(const Offset(25, 5)));
+            gesture.addEventMove(const Offset(25, 5));
           }
           ..onAfterPreemptPoint.once = () {
             debugPrint('action: elapse + addEvent after PreemptPoint');
             binding.elapseBlocking(const Duration(microseconds: 16500));
-            gesture.addEvent(gesture.pointer.move(const Offset(25, 0)));
+            gesture.addEventMove(const Offset(25, 0));
           };
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
 
@@ -118,7 +118,7 @@ void main() {
         ]);
 
         debugPrint('action: addEvent up');
-        gesture.addEvent(gesture.pointer.up());
+        gesture.addEventUp();
 
         debugPrint('action: plainDispatchAll');
         await gesture.plainDispatchAll();
@@ -146,10 +146,10 @@ void main() {
             .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
           await t.createExpectImage(0),
         ]);
-        gesture.addEvent(gesture.pointer.down(const Offset(25, 50)));
+        gesture.addEventDown(const Offset(25, 50));
         await gesture.plainDispatchAll();
 
-        gesture.addEvent(gesture.pointer.move(const Offset(25, 40)));
+        gesture.addEventMove(const Offset(25, 40));
         await gesture.plainDispatchAll();
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
         await capturer
@@ -157,7 +157,7 @@ void main() {
           await t.createExpectImage(50 - 40),
         ]);
 
-        gesture.addEvent(gesture.pointer.move(const Offset(25, 30)));
+        gesture.addEventMove(const Offset(25, 30));
         await gesture.plainDispatchAll();
 
         debugPrint('action: pump');
@@ -165,17 +165,17 @@ void main() {
           ..onBeforePreemptPoint.once = () {
             debugPrint('action: elapse + addEvent before PreemptPoint');
             binding.elapseBlocking(const Duration(microseconds: 16500));
-            gesture.addEvent(gesture.pointer.move(const Offset(25, 20)));
+            gesture.addEventMove(const Offset(25, 20));
           }
           ..onAfterPreemptPoint.once = () {
             debugPrint('action: elapse + addEvent after PreemptPoint');
             binding.elapseBlocking(const Duration(microseconds: 16500));
-            gesture.addEvent(gesture.pointer.move(const Offset(25, 15)));
+            gesture.addEventMove(const Offset(25, 15));
           }
           ..onPaint.once = () {
             debugPrint('action: elapse on paint');
             binding.elapseBlocking(const Duration(microseconds: 16500));
-            gesture.addEvent(gesture.pointer.move(const Offset(25, 10)));
+            gesture.addEventMove(const Offset(25, 10));
           };
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2));
 

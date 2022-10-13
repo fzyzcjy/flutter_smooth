@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:smooth/smooth.dart';
+import 'package:smooth/src/service_locator.dart';
 
 // ref [TestGesture]
 class TestSmoothGesture {
@@ -7,19 +9,33 @@ class TestSmoothGesture {
   static int _getNextPointer() => _nextPointer++;
   static int _nextPointer = 100;
 
-  TestSmoothGesture() : pointer = TestPointer(_getNextPointer());
+  TestSmoothGesture() : _pointer = TestPointer(_getNextPointer());
 
-  final TestPointer pointer;
+  final TestPointer _pointer;
   final _eventsToPlainDispatch = <PointerEvent>[];
 
   void addEvent(PointerEvent event) {
     assert(event.timeStamp != Duration.zero,
         'Should provide a reasonable `timeStamp`');
-   
+
     _eventsToPlainDispatch.add(event);
     TestWidgetsFlutterBinding.instance.debugOverrideEnginePendingEvents
         .add(event);
   }
+
+  void addEventDown(Offset newLocation, DateTime time) =>
+      addEvent(_pointer.down(newLocation, timeStamp: _convertTimeStamp(time)));
+
+  void addEventMove(Offset newLocation, DateTime time) =>
+      addEvent(_pointer.move(newLocation, timeStamp: _convertTimeStamp(time)));
+
+  void addEventUp(DateTime time) =>
+      addEvent(_pointer.up(timeStamp: _convertTimeStamp(time)));
+
+  Duration _convertTimeStamp(DateTime time) =>
+      ServiceLocator.instance.timeConverter
+          .dateTimeToPointerEventTimeStamp(time.toSimple())!
+          .innerPointerEventTimeStamp;
 
   Future<void> plainDispatchAll() async {
     // this [TestAsyncUtils.guard] ref [TestGesture]
