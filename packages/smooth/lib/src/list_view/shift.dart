@@ -63,30 +63,20 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   double get _offsetFromPointerEvent {
     if (_currPosition == null) return 0;
 
-    final executingRunPipelineBecauseOfAfterFlushLayout =
-        SmoothRendererBindingMixin
-            .instance.executingRunPipelineBecauseOfAfterFlushLayout.value;
-    final executingRunPipelineBecauseOfAfterDrawFrame =
-        SmoothWidgetsBindingMixin
-            .instance.executingRunPipelineBecauseOfAfterDrawFrame.value;
-
-    final basePositionUseCurrOrPrev =
-        executingRunPipelineBecauseOfAfterFlushLayout ||
-            executingRunPipelineBecauseOfAfterDrawFrame;
+    final mainLayerTreeModeInAuxTreeView = SmoothSchedulerBindingMixin
+        .instance.mainLayerTreeModeInAuxTreeView.value;
 
     // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
-    final basePosition = basePositionUseCurrOrPrev
-        ? _positionWhenCurrStartDrawFrame
-        : _positionWhenPrevStartDrawFrame;
+    final basePosition = mainLayerTreeModeInAuxTreeView.choose(
+      currentPlainFrame: _positionWhenCurrStartDrawFrame,
+      previousPlainFrame: _positionWhenPrevStartDrawFrame,
+    );
 
     Timeline.timeSync(
       'SmoothShift.offsetFromPointerEvent',
       arguments: <String, Object?>{
         'currPosition': _currPosition,
-        'executingRunPipelineBecauseOfAfterFlushLayout':
-            executingRunPipelineBecauseOfAfterFlushLayout,
-        'executingRunPipelineBecauseOfAfterDrawFrame':
-            executingRunPipelineBecauseOfAfterDrawFrame,
+        'mainLayerTreeModeInAuxTreeView': mainLayerTreeModeInAuxTreeView.name,
         'positionWhenCurrStartDrawFrame': _positionWhenCurrStartDrawFrame,
         'positionWhenPrevStartDrawFrame': _positionWhenPrevStartDrawFrame,
         'pointerDownPosition': _pointerDownPosition,
@@ -175,15 +165,7 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
     });
   }
 
-  void _handleExecutingRunPipelineBecauseOfAfterFlushLayoutChanged() {
-    // basePositionUseCurrOrPrev changes
-    setState(() {});
-  }
-
-  void _handleExecutingRunPipelineBecauseOfAfterDrawFrameChanged() {
-    // basePositionUseCurrOrPrev changes
-    setState(() {});
-  }
+  void _handleRefresh() => setState(() {});
 
   // remove in #6071
   // // #6052
@@ -213,25 +195,14 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   @override
   void initState() {
     super.initState();
-    SmoothRendererBindingMixin
-        .instance.executingRunPipelineBecauseOfAfterFlushLayout
-        .addListener(
-            _handleExecutingRunPipelineBecauseOfAfterFlushLayoutChanged);
-    SmoothWidgetsBindingMixin
-        .instance.executingRunPipelineBecauseOfAfterDrawFrame
-        .addListener(_handleExecutingRunPipelineBecauseOfAfterDrawFrameChanged);
+    SmoothSchedulerBindingMixin.instance.mainLayerTreeModeInAuxTreeView
+        .addListener(_handleRefresh);
   }
 
   @override
   void dispose() {
-    SmoothRendererBindingMixin
-        .instance.executingRunPipelineBecauseOfAfterFlushLayout
-        .removeListener(
-            _handleExecutingRunPipelineBecauseOfAfterFlushLayoutChanged);
-    SmoothWidgetsBindingMixin
-        .instance.executingRunPipelineBecauseOfAfterDrawFrame
-        .removeListener(
-            _handleExecutingRunPipelineBecauseOfAfterDrawFrameChanged);
+    SmoothSchedulerBindingMixin.instance.mainLayerTreeModeInAuxTreeView
+        .removeListener(_handleRefresh);
     super.dispose();
   }
 

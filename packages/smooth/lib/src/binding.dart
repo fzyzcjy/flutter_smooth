@@ -39,15 +39,15 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   //   super.handleBeginFrame(rawTimeStamp);
   // }
 
-  MainLayerTreeModeInAuxTreeView get mainLayerTreeModeInAuxTreeView =>
-      _mainLayerTreeModeInAuxTreeView;
-  MainLayerTreeModeInAuxTreeView _mainLayerTreeModeInAuxTreeView =
-      MainLayerTreeModeInAuxTreeView.previousPlainFrame;
+  ValueListenable<MainLayerTreeModeInAuxTreeView>
+      get mainLayerTreeModeInAuxTreeView => _mainLayerTreeModeInAuxTreeView;
+  final _mainLayerTreeModeInAuxTreeView =
+      ValueNotifier(MainLayerTreeModeInAuxTreeView.previousPlainFrame);
 
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
     // we are in a new frame, so last frame's "now" means this frame's "previous"
-    _mainLayerTreeModeInAuxTreeView =
+    _mainLayerTreeModeInAuxTreeView.value =
         MainLayerTreeModeInAuxTreeView.previousPlainFrame;
 
     // mimic how [handleBeginFrame] computes the real [currentFrameTimeStamp]
@@ -102,7 +102,19 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
 /// ([previousPlainFrame]) plain frame?
 enum MainLayerTreeModeInAuxTreeView {
   currentPlainFrame,
-  previousPlainFrame,
+  previousPlainFrame;
+
+  T choose<T>({
+    required T currentPlainFrame,
+    required T previousPlainFrame,
+  }) {
+    switch (this) {
+      case MainLayerTreeModeInAuxTreeView.currentPlainFrame:
+        return currentPlainFrame;
+      case MainLayerTreeModeInAuxTreeView.previousPlainFrame:
+        return previousPlainFrame;
+    }
+  }
 }
 
 mixin SmoothGestureBindingMixin on GestureBinding {
@@ -230,7 +242,7 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     // when runPipeline in aux tree. This is because, the output of this
     // runPipeline in aux tree will be combined with *current* frame's main
     // layer tree soon.
-    SmoothSchedulerBindingMixin.instance._mainLayerTreeModeInAuxTreeView =
+    SmoothSchedulerBindingMixin.instance._mainLayerTreeModeInAuxTreeView.value =
         MainLayerTreeModeInAuxTreeView.currentPlainFrame;
 
     final currentSmoothFrameTimeStamp =
