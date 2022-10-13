@@ -300,14 +300,23 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   void _tick(Duration selfTickerElapsed) {
     if (!mounted) return;
 
-    final tickTimeStamp = AdjustedFrameTimeStamp.uncheckedFrom(
-        _ticker!.startTime! + selfTickerElapsed);
-
     final lastSimulationInfo = _position!.lastSimulationInfo.value;
     if (lastSimulationInfo == null) return;
 
+    // [selfTickerElapsed] is the time delta relative to [_ticker.startTime]
+    // thus [tickTimeStamp] is absolute [AdjustedFrameTimeStamp]
+    final tickTimeStamp = _ticker!.startTime! + selfTickerElapsed;
+    // [simulationRelativeTime] is the time delta relative to
+    // [ballisticScrollActivityTicker]. In other words, it is the time that the
+    // real [ListView]'s [BallisticScrollActivity] has.
+    final simulationRelativeTime = tickTimeStamp -
+        lastSimulationInfo.ballisticScrollActivityTicker.startTime!;
+
+    final smoothOffset = lastSimulationInfo.clonedSimulation
+        .x(simulationRelativeTime.inMicroseconds / 1000000);
+
     setState(() {
-      _offsetFromBallistic = TODO;
+      _offsetFromBallistic = -(smoothOffset - plainOffset);
     });
 
     // old
