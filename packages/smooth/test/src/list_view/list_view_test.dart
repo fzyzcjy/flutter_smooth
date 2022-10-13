@@ -116,7 +116,28 @@ void main() {
     group('when animation after drag, should be smooth', () {
       group('integrated', () {
         // copied from the ListView control group output
-        const expectOffsets = [
+        const expectPlainListViewOffsets = [
+          45.0,
+          49.6218337416752,
+          53.5288786404719,
+          56.78345020704792,
+          59.447863952061084,
+          61.584435386169176,
+          63.25548002003002,
+          64.52331336430143,
+          65.45025092964121,
+          66.09860822670717,
+          66.53070076615711,
+          66.80884405864884,
+          66.99535361484021,
+          67.15254494538898,
+          67.28437910032227,
+          67.28437910032227,
+          67.28437910032227,
+          67.28437910032227,
+        ];
+
+        const expectSmoothListViewOffsets = [
           45.0,
           49.621833741675445,
           53.5288786404724,
@@ -136,8 +157,18 @@ void main() {
           67.28437910032429,
           67.28437910032429,
         ];
-        assert(expectOffsets.last == expectOffsets[expectOffsets.length - 2],
-            'expectOffsets should come to a stop');
+
+        void _verifyExpectOffsetInvariants() {
+          expect(expectPlainListViewOffsets.lastTwoItemsEqual, true,
+              reason: 'should come to a stop');
+          expect(expectSmoothListViewOffsets.lastTwoItemsEqual, true,
+              reason: 'should come to a stop');
+
+          for (var i = 0; i < expectPlainListViewOffsets.length; ++i) {
+            expect(expectPlainListViewOffsets[i],
+                moreOrLessEquals(expectSmoothListViewOffsets[i]));
+          }
+        }
 
         // https://github.com/fzyzcjy/yplusplus/issues/6170#issuecomment-1276994971
         double getScrollableOffset(WidgetTester tester) {
@@ -152,6 +183,8 @@ void main() {
           required int numWindowRenderPerPlainFrame,
           bool enableSmoothListView = true,
         }) async {
+          _verifyExpectOffsetInvariants();
+
           debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
           final timeInfo = TimeInfo();
           final capturer = WindowRenderCapturer.autoDispose();
@@ -195,6 +228,9 @@ void main() {
           debugPrint('action: pumps after pointer up');
           await pumpFramesAfterPointUp(t, timeInfo);
 
+          final expectOffsets = enableSmoothListView
+              ? expectSmoothListViewOffsets
+              : expectPlainListViewOffsets;
           await capturer.pack.expect(
               tester,
               WindowRenderPack.of({
@@ -234,6 +270,9 @@ void main() {
                   debugPrint('i=$i offset=${getScrollableOffset(tester)}');
                 }
 
+                final expectOffsets = enableSmoothListView
+                    ? expectSmoothListViewOffsets
+                    : expectPlainListViewOffsets;
                 expect(actualOffsets, expectOffsets);
               },
             );
@@ -411,4 +450,8 @@ class _SmoothListViewTester {
 
 extension on ui.SingletonFlutterWindow {
   Size get size => physicalSize / devicePixelRatio;
+}
+
+extension on List<double> {
+  bool get lastTwoItemsEqual => last == this[length - 2];
 }
