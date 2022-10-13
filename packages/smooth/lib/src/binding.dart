@@ -6,7 +6,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/host_api/messages_wrapped.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
 import 'package:smooth/src/time/typed_time.dart';
@@ -16,7 +15,6 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   @override
   void initInstances() {
     super.initInstances();
-    SmoothHostApiWrapped.instance.init();
 
     assert(window is SmoothSingletonFlutterWindowMixin,
         'must use SmoothSingletonFlutterWindowMixin for smooth to run correctly (window=$window)');
@@ -94,10 +92,9 @@ mixin SmoothGestureBindingMixin on GestureBinding {
     // #6159
     Timeline.timeSync('dispatchEvent', arguments: <String, Object?>{
       'eventTimeStamp': event.timeStamp.inMicroseconds.toString(),
-      'eventDateTime': (event.timeStamp.inMicroseconds +
-              (SmoothHostApiWrapped
-                      .instance.diffDateTimeToPointerEventTimeStamp ??
-                  0))
+      'eventDateTime': ServiceLocator.instance.timeConverter
+          .pointerEventTimeStampToDateTime(event.timeStampTyped)
+          ?.microsecondsSinceEpoch
           .toString(),
       'eventPositionDy': event.position.dy,
     }, () {

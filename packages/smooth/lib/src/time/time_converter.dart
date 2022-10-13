@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:clock/clock.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/host_api/messages_wrapped.dart';
+import 'package:smooth/src/host_api/messages.dart';
 import 'package:smooth/src/time/simple_date_time.dart';
 import 'package:smooth/src/time/typed_time.dart';
 
@@ -12,6 +12,7 @@ class TimeConverter {
   final _systemFrameTimeStampConverter = _SystemFrameTimeStampConverter();
   final _systemToAdjustedFrameTimeStampConverter =
       const _SystemToAdjustedFrameTimeStampConverter();
+  final _pointerEventTimeStampConverter = _PointerEventTimeStampConverter();
 
   void dispose() {
     _systemFrameTimeStampConverter.dispose();
@@ -41,7 +42,7 @@ class TimeConverter {
 
   PointerEventTimeStamp? dateTimeToPointerEventTimeStamp(SimpleDateTime d) {
     final diffDateTimeToPointerEventTimeStamp =
-        SmoothHostApiWrapped.instance.diffDateTimeToPointerEventTimeStamp;
+        _pointerEventTimeStampConverter.diffDateTimeToPointerEventTimeStamp;
     if (diffDateTimeToPointerEventTimeStamp == null) return null;
 
     return PointerEventTimeStamp.unchecked(
@@ -52,7 +53,7 @@ class TimeConverter {
 
   SimpleDateTime? pointerEventTimeStampToDateTime(PointerEventTimeStamp d) {
     final diffDateTimeToPointerEventTimeStamp =
-        SmoothHostApiWrapped.instance.diffDateTimeToPointerEventTimeStamp;
+        _pointerEventTimeStampConverter.diffDateTimeToPointerEventTimeStamp;
     if (diffDateTimeToPointerEventTimeStamp == null) return null;
 
     return SimpleDateTime.fromMicrosecondsSinceEpoch(
@@ -94,4 +95,19 @@ class _SystemToAdjustedFrameTimeStampConverter {
   int get diffSystemToAdjustedFrameTimeStamp =>
       SchedulerBinding.instance.currentSystemFrameTimeStamp.inMicroseconds -
       SchedulerBinding.instance.currentFrameTimeStamp.inMicroseconds;
+}
+
+class _PointerEventTimeStampConverter {
+  _PointerEventTimeStampConverter() {
+    _init();
+  }
+
+  Future<void> _init() async {
+    _diffDateTimeToPointerEventTimeStamp =
+        await SmoothHostApi().pointerEventDateTimeDiffTimeStamp();
+  }
+
+  int? get diffDateTimeToPointerEventTimeStamp =>
+      _diffDateTimeToPointerEventTimeStamp;
+  int? _diffDateTimeToPointerEventTimeStamp;
 }
