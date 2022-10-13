@@ -115,6 +115,7 @@ class MemorizedSimulation extends ProxySimulation {
   double? get lastX => _lastX;
   double? _lastX;
 
+  double? get lastTime => _lastTime;
   double? _lastTime;
 
   @override

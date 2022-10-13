@@ -343,16 +343,22 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
 
     final ans = -(smoothOffset - plainOffset);
 
-    // print('hi $runtimeType._computeOffsetFromBallisticOnTick '
-    //     'ans=$ans '
-    //     'smoothOffset=$smoothOffset '
-    //     'plainOffset=$plainOffset '
-    //     '_lastBeforeBeginFrameSimulationOffset=$_lastBeforeBeginFrameSimulationOffset '
-    //     'mainLayerTreeModeInAuxTreeView=$mainLayerTreeModeInAuxTreeView '
-    //     'selfTickerElapsed=$selfTickerElapsed '
-    //     'tickTimeStamp=$tickTimeStamp '
-    //     'ballisticTickerStartTime=$ballisticTickerStartTime '
-    //     'simulationRelativeTime=$simulationRelativeTime ');
+    final info = 'ans=$ans '
+        'smoothOffset=$smoothOffset '
+        'plainOffset=$plainOffset '
+        'realSimulation.lastX=${lastSimulationInfo.realSimulation.lastX} '
+        'realSimulation.lastTime=${lastSimulationInfo.realSimulation.lastTime} '
+        'lastBeforeBeginFrameSimulationOffset=$_lastBeforeBeginFrameSimulationOffset '
+        'mainLayerTreeModeInAuxTreeView=$mainLayerTreeModeInAuxTreeView '
+        'selfTickerElapsed=$selfTickerElapsed '
+        'tickTimeStamp=$tickTimeStamp '
+        'ballisticTickerStartTime=$ballisticTickerStartTime '
+        'simulationRelativeTime=$simulationRelativeTime ';
+    // print('hi $runtimeType._computeOffsetFromBallisticOnTick $info';
+    Timeline.timeSync(
+        'SmoothShift.computeOffsetFromBallisticOnTick',
+        arguments: <String, Object?>{'info': info},
+        () {});
 
     return ans;
   }
