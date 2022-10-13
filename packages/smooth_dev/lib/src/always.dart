@@ -119,3 +119,36 @@ class _RenderAlwaysPaintBuilder extends RenderProxyBox {
     SchedulerBinding.instance.addPostFrameCallback((_) => markNeedsPaint());
   }
 }
+
+class AnimationControllerProvider extends StatefulWidget {
+  final Widget Function(BuildContext, AnimationController) builder;
+
+  const AnimationControllerProvider({super.key, required this.builder});
+
+  @override
+  State<AnimationControllerProvider> createState() =>
+      _AnimationControllerProviderState();
+}
+
+class _AnimationControllerProviderState
+    extends State<AnimationControllerProvider>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController.unbounded(
+        vsync: this, duration: const Duration(days: 1)) //
+      ..forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.builder(context, controller);
+}

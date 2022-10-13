@@ -55,11 +55,13 @@ class AuxiliaryTreePack {
       ),
     );
 
-    _element = RenderObjectToWidgetAdapter<RenderBox>(
-      container: rootView,
-      debugShortDescription: '[AuxiliaryTreePack#${shortHash(this)}.root]',
-      child: wrappedWidget,
-    ).attachToRenderTree(_buildOwner);
+    _withDebugRunPipelineReason(RunPipelineReason.attachToRenderTree, () {
+      _element = RenderObjectToWidgetAdapter<RenderBox>(
+        container: rootView,
+        debugShortDescription: '[AuxiliaryTreePack#${shortHash(this)}.root]',
+        child: wrappedWidget,
+      ).attachToRenderTree(_buildOwner);
+    });
 
     ServiceLocator.instance.auxiliaryTreeRegistry._attach(this);
   }
@@ -85,12 +87,7 @@ class AuxiliaryTreePack {
     // print(
     //     'hi $runtimeType.runPipeline debugReason=$debugReason layer=${rootView.layer}');
 
-    assert(() {
-      assert(_debugRunPipelineReason == null);
-      _debugRunPipelineReason = debugReason;
-      return true;
-    }());
-    try {
+    _withDebugRunPipelineReason(debugReason, () {
       Timeline.timeSync('AuxTree.RunPipeline', () {
         // SimpleLog.instance.log(
         //     'AuxiliaryTreePack.runPipeline timeStamp=$timeStamp debugReason=$debugReason');
@@ -127,6 +124,18 @@ class AuxiliaryTreePack {
 
         // print('$runtimeType runPipeline end');
       });
+    });
+  }
+
+  static void _withDebugRunPipelineReason(
+      RunPipelineReason debugReason, VoidCallback body) {
+    assert(() {
+      assert(_debugRunPipelineReason == null);
+      _debugRunPipelineReason = debugReason;
+      return true;
+    }());
+    try {
+      body();
     } finally {
       assert(() {
         assert(_debugRunPipelineReason == debugReason);
@@ -192,6 +201,7 @@ class AuxiliaryTreePack {
 }
 
 enum RunPipelineReason {
+  attachToRenderTree,
   preemptRenderBuildOrLayoutPhase,
   renderAdapterInMainTreePerformLayout,
   plainAfterFlushLayout,
