@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/scheduler/ticker.dart';
 
 class SmoothScrollController extends ScrollController {
   // ref [super.createScrollPosition], except for return custom sub-class
@@ -53,34 +54,51 @@ class SmoothScrollPositionWithSingleContext
     // NOTE MODIFIED end
 
     if (simulation != null) {
+      late final Ticker ballisticScrollActivityTicker;
+
+      beginActivity(BallisticScrollActivity(
+        this,
+        simulation,
+        // NOTE MODIFIED start
+        LambdaTickerProvider((onTick) {
+          ballisticScrollActivityTicker = context.vsync.createTicker(onTick);
+          return ballisticScrollActivityTicker;
+        }),
+        // context.vsync,
+        // NOTE MODIFIED end
+        activity?.shouldIgnorePointer ?? true,
+      ));
+
       // NOTE MODIFIED start
       // NOTE need to create a *new* simulation, not the old one.
       //      Because [Simulation]'s doc says, some subclasses will change
       //      state when called, and must only call with monotonic timestamps.
       _lastSimulationInfo.value = SimulationInfo(
-        realSimulation: simulation,
+        ballisticScrollActivityTicker: ballisticScrollActivityTicker,
         clonedSimulation: physics.createBallisticSimulation(this, velocity)!,
       );
       // NOTE MODIFIED end
-
-      beginActivity(BallisticScrollActivity(
-        this,
-        simulation,
-        context.vsync,
-        activity?.shouldIgnorePointer ?? true,
-      ));
     } else {
       goIdle();
     }
   }
 }
 
+class LambdaTickerProvider implements TickerProvider {
+  final Ticker Function(TickerCallback onTick) _createTicker;
+
+  const LambdaTickerProvider(this._createTicker);
+
+  @override
+  Ticker createTicker(TickerCallback onTick) => _createTicker(onTick);
+}
+
 class SimulationInfo {
-  final MemorizedSimulation realSimulation;
+  final Ticker ballisticScrollActivityTicker;
   final Simulation clonedSimulation;
 
   const SimulationInfo({
-    required this.realSimulation,
+    required this.ballisticScrollActivityTicker,
     required this.clonedSimulation,
   });
 }

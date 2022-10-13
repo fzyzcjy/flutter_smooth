@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:smooth/smooth.dart';
 import 'package:smooth/src/binding.dart';
 import 'package:smooth/src/list_view/controller.dart';
 
@@ -296,24 +297,32 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
     _ticker = createTicker(_tick)..start();
   }
 
-  void _tick(Duration elapsed) {
+  void _tick(Duration selfTickerElapsed) {
     if (!mounted) return;
+
+    final tickTimeStamp = AdjustedFrameTimeStamp.uncheckedFrom(
+        _ticker!.startTime! + selfTickerElapsed);
 
     final lastSimulationInfo = _position!.lastSimulationInfo.value;
     if (lastSimulationInfo == null) return;
 
-    final plainValue = lastSimulationInfo.realSimulation.lastX;
-    if (plainValue == null) return;
-
-    // ref: [AnimationController._tick]
-    final elapsedInSeconds =
-        elapsed.inMicroseconds.toDouble() / Duration.microsecondsPerSecond;
-    final smoothValue = lastSimulationInfo.clonedSimulation.x(elapsedInSeconds);
-
     setState(() {
-      _offsetFromBallistic = -(smoothValue - plainValue);
+      _offsetFromBallistic = TODO;
     });
 
+    // old
+    // final plainValue = lastSimulationInfo.realSimulation.lastX;
+    // if (plainValue == null) return;
+    //
+    // // ref: [AnimationController._tick]
+    // final elapsedInSeconds =
+    //     elapsed.inMicroseconds.toDouble() / Duration.microsecondsPerSecond;
+    // final smoothValue = lastSimulationInfo.clonedSimulation.x(elapsedInSeconds);
+    //
+    // setState(() {
+    //   _offsetFromBallistic = -(smoothValue - plainValue);
+    // });
+    //
     // print('hi ${describeIdentity(this)}._tick '
     //     'set _offsetFromBallistic=$_offsetFromBallistic '
     //     'since smoothValue=$smoothValue plainValue=$plainValue elapsed=$elapsed');
