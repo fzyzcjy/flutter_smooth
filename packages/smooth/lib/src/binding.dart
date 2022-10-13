@@ -147,20 +147,20 @@ mixin SmoothWidgetsBindingMixin on WidgetsBinding {
     _handleAfterDrawFrame();
   }
 
-  ValueListenable<bool> get executingRunPipelineBecauseOfAfterDrawFrame =>
-      _executingRunPipelineBecauseOfAfterDrawFrame;
-  final _executingRunPipelineBecauseOfAfterDrawFrame = ValueNotifier(false);
+  // ValueListenable<bool> get executingRunPipelineBecauseOfAfterDrawFrame =>
+  //     _executingRunPipelineBecauseOfAfterDrawFrame;
+  // final _executingRunPipelineBecauseOfAfterDrawFrame = ValueNotifier(false);
 
   // indeed, roughly after the `finalizeTree`
   void _handleAfterDrawFrame() {
     // print('_handleAfterFinalizeTree');
 
-    _executingRunPipelineBecauseOfAfterDrawFrame.value = true;
-    try {
-      ServiceLocator.instance.actor.maybePreemptRenderPostDrawFramePhase();
-    } finally {
-      _executingRunPipelineBecauseOfAfterDrawFrame.value = false;
-    }
+    // _executingRunPipelineBecauseOfAfterDrawFrame.value = true;
+    // try {
+    ServiceLocator.instance.actor.maybePreemptRenderPostDrawFramePhase();
+    // } finally {
+    //   _executingRunPipelineBecauseOfAfterDrawFrame.value = false;
+    // }
   }
 
   static SmoothWidgetsBindingMixin get instance {
@@ -176,8 +176,8 @@ mixin SmoothRendererBindingMixin on RendererBinding {
   PipelineOwner get pipelineOwner => _smoothPipelineOwner;
   late final _smoothPipelineOwner = _SmoothPipelineOwner(super.pipelineOwner);
 
-  ValueListenable<bool> get executingRunPipelineBecauseOfAfterFlushLayout =>
-      _smoothPipelineOwner.executingRunPipelineBecauseOfAfterFlushLayout;
+  // ValueListenable<bool> get executingRunPipelineBecauseOfAfterFlushLayout =>
+  //     _smoothPipelineOwner.executingRunPipelineBecauseOfAfterFlushLayout;
 
   static SmoothRendererBindingMixin get instance {
     final raw = WidgetsBinding.instance;
@@ -196,9 +196,9 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     _handleAfterFlushLayout();
   }
 
-  ValueListenable<bool> get executingRunPipelineBecauseOfAfterFlushLayout =>
-      _executingRunPipelineBecauseOfAfterFlushLayout;
-  final _executingRunPipelineBecauseOfAfterFlushLayout = ValueNotifier(false);
+  // ValueListenable<bool> get executingRunPipelineBecauseOfAfterFlushLayout =>
+  //     _executingRunPipelineBecauseOfAfterFlushLayout;
+  // final _executingRunPipelineBecauseOfAfterFlushLayout = ValueNotifier(false);
 
   void _handleAfterFlushLayout() {
     // print('handleAfterFlushLayout');
@@ -212,23 +212,23 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     serviceLocator.extraEventDispatcher
         .dispatch(smoothFrameTimeStamp: currentSmoothFrameTimeStamp);
 
-    _executingRunPipelineBecauseOfAfterFlushLayout.value = true;
-    try {
-      for (final pack in serviceLocator.auxiliaryTreeRegistry.trees) {
-        pack.runPipeline(
-          currentSmoothFrameTimeStamp,
-          // NOTE originally, this is skip-able
-          // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261691891
-          // but, because of logic like:
-          // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
-          // we cannot skip it anymore.
-          skipIfTimeStampUnchanged: false,
-          debugReason: 'SmoothPipelineOwner.handleAfterFlushLayout',
-        );
-      }
-    } finally {
-      _executingRunPipelineBecauseOfAfterFlushLayout.value = false;
+    // _executingRunPipelineBecauseOfAfterFlushLayout.value = true;
+    // try {
+    for (final pack in serviceLocator.auxiliaryTreeRegistry.trees) {
+      pack.runPipeline(
+        currentSmoothFrameTimeStamp,
+        // NOTE originally, this is skip-able
+        // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261691891
+        // but, because of logic like:
+        // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
+        // we cannot skip it anymore.
+        skipIfTimeStampUnchanged: false,
+        debugReason: 'SmoothPipelineOwner.handleAfterFlushLayout',
+      );
     }
+    // } finally {
+    //   _executingRunPipelineBecauseOfAfterFlushLayout.value = false;
+    // }
 
     serviceLocator.timeManager
         .afterRunAuxPipelineForPlainOld(now: TimeManager.normalNow);
