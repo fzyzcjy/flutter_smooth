@@ -162,12 +162,14 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
     super.initState();
     SmoothSchedulerBindingMixin.instance.mainLayerTreeModeInAuxTreeView
         .addListener(_handleRefresh);
+    _positionSnapshot.addListener(_handleRefresh);
   }
 
   @override
   void dispose() {
     SmoothSchedulerBindingMixin.instance.mainLayerTreeModeInAuxTreeView
         .removeListener(_handleRefresh);
+    _positionSnapshot.removeListener(_handleRefresh);
     super.dispose();
   }
 
@@ -201,6 +203,8 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   void initState() {
     super.initState();
 
+    _plainOffsetSnapshot.addListener(_handleRefresh);
+
     // https://github.com/fzyzcjy/yplusplus/issues/5918#issuecomment-1266553640
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -224,11 +228,14 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
 
   @override
   void dispose() {
+    _plainOffsetSnapshot.removeListener(_handleRefresh);
     _scrollPosition?.lastSimulationInfo
         .removeListener(_handleLastSimulationChanged);
     _ticker?.dispose();
     super.dispose();
   }
+
+  void _handleRefresh() => setState(() {});
 
   void _handleLastSimulationChanged() {
     _ticker?.dispose();
