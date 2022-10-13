@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Dict, Any
 
 repo_base_dir = Path(__file__).parents[2]
-path_discussion_md = repo_base_dir / 'website/docs/discussion.md'
+path_discussion_md = repo_base_dir / 'website/docs/discussion/conversation.md'
 dir_data_comments = repo_base_dir / 'website/data/comments'
 dir_data_comments_raw = dir_data_comments / 'raw'
 

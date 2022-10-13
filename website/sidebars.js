@@ -30,18 +30,54 @@ const sidebars = {
                 id: 'benchmark/index',
             },
             items: [
-                'benchmark/fps',
-                'benchmark/linearity',
-                'benchmark/jank',
-                'benchmark/latency',
-                'benchmark/waste',
+                'benchmark/gather-data',
+                {
+                    type: 'category',
+                    label: 'Analyze',
+                    collapsed: false,
+                    link: {
+                        type: 'doc',
+                        id: 'benchmark/analyze/index',
+                    },
+                    items: [
+                        {
+                            type: 'category',
+                            label: 'FPS',
+                            collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'benchmark/analyze/fps/index',
+                            },
+                            items: [
+                                'benchmark/analyze/fps/video',
+                                'benchmark/analyze/fps/tracing',
+                                'benchmark/analyze/fps/pitfalls',
+                            ],
+                        },
+                        'benchmark/analyze/linearity',
+                        'benchmark/analyze/jank',
+                        'benchmark/analyze/latency',
+                        'benchmark/analyze/waste',
+                    ],
+                },
                 'benchmark/devtool',
             ],
         },
         'design',
         'debug',
-        'design-doc',
-        'discussion',
+        {
+            type: 'category',
+            label: 'Discussion',
+            collapsed: false,
+            link: {
+                type: 'doc',
+                id: 'discussion/index',
+            },
+            items: [
+                'discussion/design-doc',
+                'discussion/conversation',
+            ],
+        },
     ],
 };
 
