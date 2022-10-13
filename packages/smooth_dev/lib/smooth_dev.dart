@@ -1,3 +1,4 @@
+export 'src/always.dart';
 export 'src/binding.dart' show SmoothAutomatedTestWidgetsFlutterBinding;
 export 'src/image.dart' show ExtWigetTesterScreenImage, ExtImage;
 export 'src/once_callable.dart';

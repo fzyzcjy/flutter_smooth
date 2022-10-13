@@ -8,7 +8,6 @@ import 'package:smooth/smooth.dart';
 import 'package:smooth_dev/smooth_dev.dart';
 
 import 'test_tools/animation.dart';
-import 'test_tools/widgets.dart';
 
 void main() {
   final binding = SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
