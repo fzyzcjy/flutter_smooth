@@ -35,7 +35,7 @@ class WindowRenderCapturer {
 
   void _onWindowRender(ui.Scene scene) {
     // debugPrintStack(label: 'WindowRenderCapturer.onWindowRender');
-   
+
     final binding = SmoothAutomatedTestWidgetsFlutterBinding.instance;
     final image = scene.toImageSync(
         binding.window.logicalWidth, binding.window.logicalHeight);
@@ -96,7 +96,8 @@ class WindowRenderPack {
       final actualEntries = flatEntries.toList();
       final expectEntries = matcher.flatEntries.toList();
 
-      flutter_test.expect(actualEntries.length, expectEntries.length);
+      flutter_test.expect(actualEntries.length, expectEntries.length,
+          reason: 'entries.length');
       for (var i = 0; i < actualEntries.length; ++i) {
         await actualEntries[i]
             .expect(tester, expectEntries[i], reason: 'context: i=$i');
