@@ -63,30 +63,15 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
         currentFrameTimeStamp.inMicroseconds);
   }
 
+  void addStartDrawFrameCallback(VoidCallback callback) =>
+      _startDrawFrameCallbacks.addCallback(callback);
+  final _startDrawFrameCallbacks = _Callbacks();
+
   @override
   void handleDrawFrame() {
-    _invokeStartDrawFrameCallbacks();
+    _startDrawFrameCallbacks.invokeCallbacks();
     super.handleDrawFrame();
     // SimpleLog.instance.log('$runtimeType.handleDrawFrame.end');
-  }
-
-  // ref: [SchedulerBinding._postFrameCallbacks]
-  final _startDrawFrameCallbacks = <VoidCallback>[];
-
-  void addStartDrawFrameCallback(VoidCallback callback) =>
-      _startDrawFrameCallbacks.add(callback);
-
-  // ref: [SchedulerBinding._invokeFrameCallbackS]
-  void _invokeStartDrawFrameCallbacks() {
-    final localCallbacks = List.of(_startDrawFrameCallbacks);
-    _startDrawFrameCallbacks.clear();
-    for (final callback in localCallbacks) {
-      try {
-        callback();
-      } catch (e, s) {
-        FlutterError.reportError(FlutterErrorDetails(exception: e, stack: s));
-      }
-    }
   }
 
   static SmoothSchedulerBindingMixin get instance {
@@ -94,6 +79,26 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     assert(raw is SmoothSchedulerBindingMixin,
         'Please use a WidgetsBinding with SmoothSchedulerBindingMixin');
     return raw as SmoothSchedulerBindingMixin;
+  }
+}
+
+class _Callbacks {
+  // ref: [SchedulerBinding._postFrameCallbacks]
+  final _callbacks = <VoidCallback>[];
+
+  void addCallback(VoidCallback callback) => _callbacks.add(callback);
+
+  // ref: [SchedulerBinding._invokeFrameCallbackS]
+  void invokeCallbacks() {
+    final localCallbacks = List.of(_callbacks);
+    _callbacks.clear();
+    for (final callback in localCallbacks) {
+      try {
+        callback();
+      } catch (e, s) {
+        FlutterError.reportError(FlutterErrorDetails(exception: e, stack: s));
+      }
+    }
   }
 }
 
