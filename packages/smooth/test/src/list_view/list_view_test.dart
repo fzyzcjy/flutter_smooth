@@ -14,7 +14,7 @@ void main() {
 
   group('SmoothListView', () {
     binding.window.setUpTearDown(
-      physicalSizeTestValue: const Size(50, 100),
+      physicalSizeTestValue: const Size(200, 1000),
       devicePixelRatioTestValue: 1,
     );
 
@@ -30,7 +30,7 @@ void main() {
                 smooth: smooth,
                 itemCount: 100,
                 itemBuilder: (_, index) => Container(
-                  height: 60,
+                  height: 600,
                   color: Colors.primaries[index],
                 ),
               ),
@@ -40,8 +40,9 @@ void main() {
           await capturer
               .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
             await tester.createScreenImage((im) => im
-              ..fillRect(const Rectangle(0, 0, 50, 60), Colors.primaries[0])
-              ..fillRect(const Rectangle(0, 60, 50, 40), Colors.primaries[1])),
+              ..fillRect(const Rectangle(0, 0, 200, 600), Colors.primaries[0])
+              ..fillRect(
+                  const Rectangle(0, 600, 200, 400), Colors.primaries[1])),
           ]);
         });
       }
@@ -62,18 +63,18 @@ void main() {
           t.createExpectImage(0),
         ]);
 
-        gesture.addEventDown(const Offset(25, 50));
+        gesture.addEventDown(const Offset(100, 500));
         await gesture.plainDispatchAll();
-        gesture.addEventMove(const Offset(25, 40));
+        gesture.addEventMove(const Offset(100, 400));
         await gesture.plainDispatchAll();
 
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
-          t.createExpectImage(50 - 40),
+          t.createExpectImage(500 - 400),
         ]);
 
-        gesture.addEventMove(const Offset(25, 30));
+        gesture.addEventMove(const Offset(100, 300));
         await gesture.plainDispatchAll();
 
         debugPrint('action: pump');
@@ -81,17 +82,17 @@ void main() {
           ..onBeforePreemptPoint.once = () {
             debugPrint('action: elapse + addEvent before PreemptPoint');
             binding.elapseBlocking(const Duration(microseconds: 16500));
-            gesture.addEventMove(const Offset(25, 20));
+            gesture.addEventMove(const Offset(100, 200));
           }
           ..onAfterPreemptPoint.once = () {
             debugPrint('action: elapse + addEvent after PreemptPoint');
             binding.elapseBlocking(const Duration(microseconds: 16500));
-            gesture.addEventMove(const Offset(25, 15));
+            gesture.addEventMove(const Offset(100, 150));
           }
           ..onPaint.once = () {
             debugPrint('action: elapse on paint');
             binding.elapseBlocking(const Duration(microseconds: 16500));
-            gesture.addEventMove(const Offset(25, 10));
+            gesture.addEventMove(const Offset(100, 100));
           };
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2));
 
@@ -100,12 +101,12 @@ void main() {
           // note there is "lag" - because we do not use the PointerEvent
           // immediately, but only use the ones that are old enough to be "real"
           // the BuildOrLayoutPhasePreemptRender
-          t.createExpectImage(50 - 30),
+          t.createExpectImage(500 - 300),
           // the plain old render
-          t.createExpectImage(50 - 20),
+          t.createExpectImage(500 - 200),
           // extra smooth frame after finalize phase
           // i.e. PostDrawFramePhasePreemptRender
-          t.createExpectImage(50 - 15),
+          t.createExpectImage(500 - 150),
         ]);
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
@@ -136,7 +137,7 @@ void main() {
             t.createExpectImage(0),
           ]);
 
-          gesture.addEventDown(const Offset(25, 50));
+          gesture.addEventDown(const Offset(100, 500));
           await gesture.plainDispatchAll();
 
           await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
@@ -146,7 +147,7 @@ void main() {
           ]);
           debugPrint('offset=${getCurrentOffset()}');
 
-          gesture.addEventMove(const Offset(25, 30));
+          gesture.addEventMove(const Offset(100, 300));
           await gesture.plainDispatchAll();
 
           await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2));
@@ -187,7 +188,7 @@ void main() {
             t.createExpectImage(0),
           ]);
 
-          gesture.addEventDown(const Offset(25, 50));
+          gesture.addEventDown(const Offset(100, 500));
           await gesture.plainDispatchAll();
 
           await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
@@ -196,7 +197,7 @@ void main() {
             t.createExpectImage(50 - 50),
           ]);
 
-          gesture.addEventMove(const Offset(25, 30));
+          gesture.addEventMove(const Offset(100, 300));
           await gesture.plainDispatchAll();
 
           await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2));
@@ -270,7 +271,7 @@ void main() {
     //   ]);
     //
     //   debugPrint('action: addEvent down');
-    //   gesture.addEventDown(const Offset(25, 50), timeInfo.testBeginTime);
+    //   gesture.addEventDown(const Offset(100, 50), timeInfo.testBeginTime);
     //
     //   debugPrint('action: plainDispatchAll');
     //   await gesture.plainDispatchAll();
@@ -280,12 +281,12 @@ void main() {
     //     ..onBeforePreemptPoint.once = () {
     //       debugPrint('action: elapse + addEvent before PreemptPoint');
     //       binding.elapseBlocking(const Duration(microseconds: 16500));
-    //       gesture.addEventMove(const Offset(25, 20));
+    //       gesture.addEventMove(const Offset(100, 20));
     //     }
     //     ..onAfterPreemptPoint.once = () {
     //       debugPrint('action: elapse + addEvent after PreemptPoint');
     //       binding.elapseBlocking(const Duration(microseconds: 16500));
-    //       gesture.addEventMove(const Offset(25, 15));
+    //       gesture.addEventMove(const Offset(100, 15));
     //     };
     //   await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
     //
@@ -299,7 +300,7 @@ void main() {
     //   ]);
     //
     //   debugPrint('action: addEvent move(y=10)');
-    //   gesture.addEventMove(const Offset(25, 10));
+    //   gesture.addEventMove(const Offset(100, 10));
     //
     //   debugPrint('action: plainDispatchAll');
     //   await gesture.plainDispatchAll();
@@ -309,12 +310,12 @@ void main() {
     //     ..onBeforePreemptPoint.once = () {
     //       debugPrint('action: elapse + addEvent before PreemptPoint');
     //       binding.elapseBlocking(const Duration(microseconds: 16500));
-    //       gesture.addEventMove(const Offset(25, 5));
+    //       gesture.addEventMove(const Offset(100, 5));
     //     }
     //     ..onAfterPreemptPoint.once = () {
     //       debugPrint('action: elapse + addEvent after PreemptPoint');
     //       binding.elapseBlocking(const Duration(microseconds: 16500));
-    //       gesture.addEventMove(const Offset(25, 0));
+    //       gesture.addEventMove(const Offset(100, 0));
     //     };
     //   await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
     //
@@ -355,11 +356,11 @@ class _SmoothListViewTester {
         (canvas) {
       canvas.translate(0, -offset.toDouble());
 
-      canvas.drawRect(const Rect.fromLTWH(0, 0, 50, 60),
+      canvas.drawRect(const Rect.fromLTWH(0, 0, 200, 600),
           Paint()..color = Colors.primaries[0]);
-      canvas.drawRect(const Rect.fromLTWH(0, 60, 50, 60),
+      canvas.drawRect(const Rect.fromLTWH(0, 600, 200, 600),
           Paint()..color = Colors.primaries[1]);
-      canvas.drawRect(const Rect.fromLTWH(0, 120, 50, 60),
+      canvas.drawRect(const Rect.fromLTWH(0, 1200, 200, 600),
           Paint()..color = Colors.primaries[2]);
 
       canvas.translate(0, offset.toDouble());
@@ -375,7 +376,7 @@ class _SmoothListViewTester {
             SmoothListView.builder(
               itemCount: 100,
               itemBuilder: (_, index) => Container(
-                height: 60,
+                height: 600,
                 color: Colors.primaries[index],
               ),
             ),
