@@ -17,10 +17,25 @@ abstract class _PointerEventTimeStampCoord {}
 /// Such as the [PointerEvent.timeStamp]
 typedef PointerEventTimeStamp = DurationT<_PointerEventTimeStampCoord>;
 
-extension ExtSchedulerBindingTimeConverter on SchedulerBinding {
+extension ExtSchedulerBindingTime on SchedulerBinding {
   AdjustedFrameTimeStamp get currentFrameTimeStampTyped =>
       AdjustedFrameTimeStamp.uncheckedFrom(currentFrameTimeStamp);
 
   SystemFrameTimeStamp get currentSystemFrameTimeStampTyped =>
       SystemFrameTimeStamp.uncheckedFrom(currentSystemFrameTimeStamp);
 }
+
+extension ExtPointerEventTime on PointerEvent {
+  PointerEventTimeStamp get timeStampTyped =>
+      PointerEventTimeStamp.uncheckedFrom(timeStamp);
+}
+
+// extension ExtPointerEvent on PointerEvent {
+//   DateTime? get dateTime {
+//     final diffDateTimeToPointerEventTimeStamp =
+//         SmoothHostApiWrapped.instance.diffDateTimeToPointerEventTimeStamp;
+//     if (diffDateTimeToPointerEventTimeStamp == null) return null;
+//     return DateTime.fromMicrosecondsSinceEpoch(
+//         timeStamp.inMicroseconds + diffDateTimeToPointerEventTimeStamp);
+//   }
+// }
