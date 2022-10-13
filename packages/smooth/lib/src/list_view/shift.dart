@@ -257,6 +257,10 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
 
   Ticker? _ticker;
   SmoothScrollPositionWithSingleContext? _scrollPosition;
+  double? _lastBeforeBeginFrameSimulationOffset;
+
+  late final _beginFrameEarlyCallbackRegistrar =
+      _BeginFrameEarlyCallbackRegistrar(_handleBeginFrameEarlyCallback);
 
   _SmoothShiftSourceBallistic(super.state) {
     // https://github.com/fzyzcjy/yplusplus/issues/5918#issuecomment-1266553640
@@ -287,6 +291,12 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
         .removeListener(_handleLastSimulationChanged);
     _ticker?.dispose();
     super.dispose();
+  }
+
+  void _handleBeginFrameEarlyCallback() {
+    _lastBeforeBeginFrameSimulationOffset =
+        _scrollPosition?.lastSimulationInfo.value?.realSimulation.lastX;
+    notifyListeners();
   }
 
   void _handleLastSimulationChanged() {
@@ -323,7 +333,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
         .instance.mainLayerTreeModeInAuxTreeView.value;
     final plainOffset = mainLayerTreeModeInAuxTreeView.choose(
       currentPlainFrame: lastSimulationInfo.realSimulation.lastX,
-      previousPlainFrame: TODO,
+      previousPlainFrame: _lastBeforeBeginFrameSimulationOffset,
     );
     if (plainOffset == null) return 0;
 
@@ -333,14 +343,20 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
         'ans=$ans '
         'smoothOffset=$smoothOffset '
         'plainOffset=$plainOffset '
-        'plainOffsetSnapshot=$_plainOffsetSnapshot '
-        'mainLayerTreeModeInAuxTreeView=${mainLayerTreeModeInAuxTreeView} '
+        '_lastBeforeBeginFrameSimulationOffset=$_lastBeforeBeginFrameSimulationOffset '
+        'mainLayerTreeModeInAuxTreeView=$mainLayerTreeModeInAuxTreeView '
         'selfTickerElapsed=$selfTickerElapsed '
         'tickTimeStamp=$tickTimeStamp '
         'ballisticTickerStartTime=$ballisticTickerStartTime '
         'simulationRelativeTime=$simulationRelativeTime ');
 
     return ans;
+  }
+
+  @override
+  Widget build(BuildContext context, Widget child) {
+    _beginFrameEarlyCallbackRegistrar.maybeRegister();
+    return child;
   }
 }
 
