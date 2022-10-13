@@ -1,5 +1,6 @@
 export 'src/binding.dart' show SmoothAutomatedTestWidgetsFlutterBinding;
 export 'src/image.dart' show ExtWigetTesterScreenImage, ExtImage;
+export 'src/time_converter.dart' show TimeConverterTest;
 export 'src/time_info.dart' show TimeInfo;
 export 'src/widgets.dart' show SpyBuilder;
 export 'src/window.dart' show ExtTestWindow;

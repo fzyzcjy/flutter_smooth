@@ -13,7 +13,7 @@ void main() {
 
   final binding = SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
   binding.debugServiceLocatorFactory =
-      () => ServiceLocator(testing: true).copyWith(actor: actor);
+      () => ServiceLocator(actor: actor, timeConverter: TimeConverterTest());
 
   group('$BuildPreemptPointWidget', () {
     testWidgets('when build, should call maybePreemptRender', (tester) async {

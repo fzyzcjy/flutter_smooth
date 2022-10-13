@@ -6,6 +6,7 @@ import 'package:smooth/smooth.dart';
 import 'package:smooth/src/binding.dart'; // ignore: implementation_imports
 import 'package:smooth/src/service_locator.dart'; // ignore: implementation_imports
 import 'package:smooth_dev/src/proxy.dart';
+import 'package:smooth_dev/src/time_converter.dart';
 
 class SmoothAutomatedTestWidgetsFlutterBinding
     extends AutomatedTestWidgetsFlutterBinding
@@ -32,7 +33,7 @@ class SmoothAutomatedTestWidgetsFlutterBinding
   ServiceLocator? _serviceLocator;
 
   ValueGetter<ServiceLocator> debugServiceLocatorFactory =
-      () => ServiceLocator(testing: true);
+      createTestServiceLocator;
 
   static SmoothAutomatedTestWidgetsFlutterBinding get instance =>
       BindingBase.checkInstance(_instance);

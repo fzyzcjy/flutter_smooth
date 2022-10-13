@@ -9,12 +9,19 @@ class ServiceLocator {
   static ServiceLocator get instance =>
       SmoothSchedulerBindingMixin.instance.serviceLocator;
 
-  factory ServiceLocator({bool testing = false}) => ServiceLocator.raw(
-        actor: Actor(),
-        timeManager: TimeManager(),
-        auxiliaryTreeRegistry: AuxiliaryTreeRegistry(),
-        extraEventDispatcher: ExtraEventDispatcher(),
-        timeConverter: testing ? TimeConverter.normal() : TimeConverter.test(),
+  factory ServiceLocator({
+    Actor? actor,
+    TimeManager? timeManager,
+    AuxiliaryTreeRegistry? auxiliaryTreeRegistry,
+    ExtraEventDispatcher? extraEventDispatcher,
+    TimeConverter? timeConverter,
+  }) =>
+      ServiceLocator.raw(
+        actor: actor ?? Actor(),
+        timeManager: timeManager ?? TimeManager(),
+        auxiliaryTreeRegistry: auxiliaryTreeRegistry ?? AuxiliaryTreeRegistry(),
+        extraEventDispatcher: extraEventDispatcher ?? ExtraEventDispatcher(),
+        timeConverter: timeConverter ?? TimeConverter(),
       );
 
   ServiceLocator.raw({
@@ -24,22 +31,6 @@ class ServiceLocator {
     required this.extraEventDispatcher,
     required this.timeConverter,
   });
-
-  ServiceLocator copyWith({
-    Actor? actor,
-    TimeManager? timeManager,
-    AuxiliaryTreeRegistry? auxiliaryTreeRegistry,
-    ExtraEventDispatcher? extraEventDispatcher,
-    TimeConverter? timeConverter,
-  }) =>
-      ServiceLocator.raw(
-        actor: actor ?? this.actor,
-        timeManager: timeManager ?? this.timeManager,
-        auxiliaryTreeRegistry:
-            auxiliaryTreeRegistry ?? this.auxiliaryTreeRegistry,
-        extraEventDispatcher: extraEventDispatcher ?? this.extraEventDispatcher,
-        timeConverter: timeConverter ?? this.timeConverter,
-      );
 
   final Actor actor;
   final TimeManager timeManager;
