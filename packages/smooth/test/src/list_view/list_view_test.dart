@@ -163,14 +163,16 @@ void main() {
           await gesture.plainDispatchAll();
 
           debugPrint('action: pumps after pointer up');
-          for (var i = 0; i < 6; ++i) {
+          final actualOffsets = <double>[];
+          for (var i = 0; i < 20; ++i) {
             await tester
                 .pump(timeInfo.calcPumpDuration(smoothFrameIndex: 12 + i));
+            actualOffsets.add(getCurrentOffset());
             debugPrint('i=$i offset=${getCurrentOffset()}');
           }
 
-          // this list is populated by looking at debug outputs showing
-          // the [ScrollableState.position.pixels] in each frame
+          // NOTE this list should be long enough, such that we can see
+          // it finally *stops* fully
           const expectOffsets = [
             45.0,
             49.621833741675445,
@@ -178,7 +180,22 @@ void main() {
             56.78345020704865,
             59.44786395206202,
             61.58443538617031,
+            63.255480020031335,
+            64.52331336430291,
+            65.45025092964282,
+            66.09860822670889,
+            66.53070076615893,
+            66.80884405865073,
+            66.99535361484213,
+            67.15254494539093,
+            67.28437910032429,
+            67.28437910032429,
+            67.28437910032429,
+            67.28437910032429,
+            67.28437910032429,
+            67.28437910032429
           ];
+          expect(actualOffsets, expectOffsets);
 
           await capturer.pack.expect(
               tester,
