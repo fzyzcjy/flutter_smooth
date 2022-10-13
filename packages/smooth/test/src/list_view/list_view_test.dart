@@ -115,19 +115,45 @@ void main() {
 
     group('when animation after drag, should be smooth', () {
       group('integrated', () {
-        Future<void> _body(WidgetTester tester) async {
+        // copied from the ListView control group output
+        const expectOffsets = [
+          45.0,
+          49.621833741675445,
+          53.5288786404724,
+          56.78345020704865,
+          59.44786395206202,
+          61.58443538617031,
+          63.255480020031335,
+          64.52331336430291,
+          65.45025092964282,
+          66.09860822670889,
+          66.53070076615893,
+          66.80884405865073,
+          66.99535361484213,
+          67.15254494539093,
+          67.28437910032429,
+          67.28437910032429,
+          67.28437910032429,
+          67.28437910032429,
+        ];
+        assert(expectOffsets.last == expectOffsets[expectOffsets.length - 2],
+            'expectOffsets should come to a stop');
+
+        // https://github.com/fzyzcjy/yplusplus/issues/6170#issuecomment-1276994971
+        double getScrollableOffset(WidgetTester tester) {
+          final state = tester.state<ScrollableState>(find.byType(Scrollable));
+          return state.position.pixels;
+        }
+
+        Future<void> _body(
+          WidgetTester tester, {
+          required Future<void> Function(TimeInfo) pumpFramesAfterPointUp,
+        }) async {
           debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
           final timeInfo = TimeInfo();
           final capturer = WindowRenderCapturer.autoDispose();
           final t = _SmoothListViewTester(tester);
           final gesture = TestSmoothGesture();
-
-          // https://github.com/fzyzcjy/yplusplus/issues/6170#issuecomment-1276994971
-          double getCurrentOffset() {
-            final state =
-                tester.state<ScrollableState>(find.byType(Scrollable));
-            return state.position.pixels;
-          }
 
           await tester.pumpWidget(t.build());
           await capturer
@@ -143,7 +169,7 @@ void main() {
               .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
             t.createExpectImage(0),
           ]);
-          debugPrint('offset=${getCurrentOffset()}');
+          debugPrint('offset=${getScrollableOffset(tester)}');
 
           for (var i = 0; i < 10; ++i) {
             gesture.addEventMove(Offset(100, 500 - i * 5));
@@ -156,46 +182,14 @@ void main() {
                 expectImages: [
                   t.createExpectImage(i * 5),
                 ]);
-            debugPrint('offset=${getCurrentOffset()}');
+            debugPrint('offset=${getScrollableOffset(tester)}');
           }
 
           gesture.addEventUp();
           await gesture.plainDispatchAll();
 
           debugPrint('action: pumps after pointer up');
-          final actualOffsets = <double>[];
-          for (var i = 0; i < 20; ++i) {
-            await tester
-                .pump(timeInfo.calcPumpDuration(smoothFrameIndex: 12 + i));
-            actualOffsets.add(getCurrentOffset());
-            debugPrint('i=$i offset=${getCurrentOffset()}');
-          }
-
-          // NOTE this list should be long enough, such that we can see
-          // it finally *stops* fully
-          const expectOffsets = [
-            45.0,
-            49.621833741675445,
-            53.5288786404724,
-            56.78345020704865,
-            59.44786395206202,
-            61.58443538617031,
-            63.255480020031335,
-            64.52331336430291,
-            65.45025092964282,
-            66.09860822670889,
-            66.53070076615893,
-            66.80884405865073,
-            66.99535361484213,
-            67.15254494539093,
-            67.28437910032429,
-            67.28437910032429,
-            67.28437910032429,
-            67.28437910032429,
-            67.28437910032429,
-            67.28437910032429
-          ];
-          expect(actualOffsets, expectOffsets);
+          await pumpFramesAfterPointUp(timeInfo);
 
           await capturer.pack.expect(
               tester,
@@ -211,7 +205,21 @@ void main() {
         // work as control group, so we can more easily understand how a
         // normal ListView will behave
         testWidgets('using plain old ListView', (tester) async {
-          await _body(tester);
+          await _body(
+            tester,
+            pumpFramesAfterPointUp: (timeInfo) async {
+              final actualOffsets = <double>[];
+
+              for (var i = 0; i < 18; ++i) {
+                await tester
+                    .pump(timeInfo.calcPumpDuration(smoothFrameIndex: 12 + i));
+                actualOffsets.add(getScrollableOffset(tester));
+                debugPrint('i=$i offset=${getScrollableOffset(tester)}');
+              }
+
+              expect(actualOffsets, expectOffsets);
+            },
+          );
         });
 
         testWidgets('using SmoothListView', (tester) async {
