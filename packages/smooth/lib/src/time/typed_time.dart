@@ -1,6 +1,6 @@
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
-import 'package:smooth/src/duration.dart';
+import 'package:smooth/src/time/duration.dart';
 
 abstract class _AdjustedFrameTimeStampCoord {}
 

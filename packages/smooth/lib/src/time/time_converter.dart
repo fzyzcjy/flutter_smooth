@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:clock/clock.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/simple_date_time.dart';
+import 'package:smooth/src/time/simple_date_time.dart';
 
 // TODO maybe improve
 class TimeConverter {

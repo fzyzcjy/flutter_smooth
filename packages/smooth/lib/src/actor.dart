@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth/src/service_locator.dart';
-import 'package:smooth/src/simple_date_time.dart';
+import 'package:smooth/src/time/simple_date_time.dart';
 
 class Actor {
   // var _maybePreemptRenderCallCount = 0;

@@ -3,7 +3,7 @@ import 'package:smooth/src/actor.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/extra_event_dispatcher.dart';
 import 'package:smooth/src/global_widget.dart';
-import 'package:smooth/src/time_converter.dart';
+import 'package:smooth/src/time/time_converter.dart';
 import 'package:smooth/src/time_manager.dart';
 
 class ServiceLocator {
