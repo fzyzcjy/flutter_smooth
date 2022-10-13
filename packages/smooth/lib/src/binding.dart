@@ -9,7 +9,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/host_api/messages_wrapped.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
-import 'package:smooth/src/time_converter.dart';
 import 'package:smooth/src/time_manager.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
@@ -77,12 +76,6 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
       }
     }
   }
-
-  AdjustedFrameTimeStamp get currentFrameTimeStampTyped =>
-      AdjustedFrameTimeStamp.uncheckedFrom(super.currentFrameTimeStamp);
-
-  SystemFrameTimeStamp get currentSystemFrameTimeStampTyped =>
-      SystemFrameTimeStamp.uncheckedFrom(super.currentSystemFrameTimeStamp);
 
   static SmoothSchedulerBindingMixin get instance {
     final raw = WidgetsBinding.instance;
