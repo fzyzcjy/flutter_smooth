@@ -1,18 +1,13 @@
 import 'package:smooth/src/actor.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
+import 'package:smooth/src/binding.dart';
 import 'package:smooth/src/extra_event_dispatcher.dart';
 import 'package:smooth/src/time/time_converter.dart';
 import 'package:smooth/src/time_manager.dart';
 
 class ServiceLocator {
-  static ServiceLocator? get maybeInstance => _instance;
-
-  static ServiceLocator get instance {
-    assert(_instance != null, 'Do you forget to put `SmoothScope` in tree?');
-    return _instance!;
-  }
-
-  static ServiceLocator? _instance;
+  static ServiceLocator get instance =>
+      SmoothSchedulerBindingMixin.instance.serviceLocator;
 
   factory ServiceLocator.normal() => ServiceLocator.raw(
         actor: Actor(),

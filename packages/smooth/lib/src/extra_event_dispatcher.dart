@@ -177,7 +177,7 @@ extension on List<PointerEvent> {
 extension on PointerEvent {
   String toBriefString() => 'PointerEvent('
       'timeStamp: $timeStamp, '
-      'dateTime: ${ServiceLocator.maybeInstance?.timeConverter.pointerEventTimeStampToDateTime(timeStampTyped)}, '
+      'dateTime: ${ServiceLocator.instance.timeConverter.pointerEventTimeStampToDateTime(timeStampTyped)}, '
       'position: $position'
       ')';
 }

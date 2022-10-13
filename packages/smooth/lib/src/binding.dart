@@ -20,6 +20,8 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
         'must use SmoothSingletonFlutterWindowMixin for smooth to run correctly (window=$window)');
   }
 
+  ServiceLocator get serviceLocator;
+
   // NOTE It is *completely wrong* to use clock.now at handleBeginFrame
   // because there can be large vsync overhead! #6120
   //
@@ -42,8 +44,7 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     final eagerCurrentFrameTimeStamp = AdjustedFrameTimeStamp.uncheckedFrom(
         adjustForEpoch(rawTimeStamp ?? currentSystemFrameTimeStamp));
 
-    // maybeInstance - https://github.com/fzyzcjy/yplusplus/issues/6166#issuecomment-1276915553
-    ServiceLocator.maybeInstance?.timeManager
+    ServiceLocator.instance.timeManager
         .onBeginFrame(currentFrameTimeStamp: eagerCurrentFrameTimeStamp);
 
     super.handleBeginFrame(rawTimeStamp);
@@ -110,23 +111,20 @@ mixin SmoothSingletonFlutterWindowMixin on ui.SingletonFlutterWindow {
 
   @override
   void render(ui.Scene scene, {Duration? fallbackVsyncTargetTime}) {
-    final serviceLocator = ServiceLocator.maybeInstance;
+    final serviceLocator = ServiceLocator.instance;
 
-    var effectiveFallbackVsyncTargetTime = fallbackVsyncTargetTime;
-    if (serviceLocator != null) {
-      effectiveFallbackVsyncTargetTime ??=
-          // NOTE *need* this when [fallbackVsyncTargetTime] is null, because
-          // the plain-old pipeline will call `window.render` and we cannot
-          // control that
-          serviceLocator.timeConverter
-              .adjustedToSystemFrameTimeStamp(
-                  serviceLocator.timeManager.currentSmoothFrameTimeStamp)
-              .innerSystemFrameTimeStamp;
-    }
+    final effectiveFallbackVsyncTargetTime = fallbackVsyncTargetTime ??
+        // NOTE *need* this when [fallbackVsyncTargetTime] is null, because
+        // the plain-old pipeline will call `window.render` and we cannot
+        // control that
+        serviceLocator.timeConverter
+            .adjustedToSystemFrameTimeStamp(
+                serviceLocator.timeManager.currentSmoothFrameTimeStamp)
+            .innerSystemFrameTimeStamp;
 
     Timeline.timeSync('window.render', arguments: <String, String?>{
       'effectiveFallbackVsyncTargetTime':
-          effectiveFallbackVsyncTargetTime?.inMicroseconds.toString()
+          effectiveFallbackVsyncTargetTime.inMicroseconds.toString()
     }, () {
       super.render(
         scene,
@@ -157,12 +155,9 @@ mixin SmoothWidgetsBindingMixin on WidgetsBinding {
   void _handleAfterDrawFrame() {
     // print('_handleAfterFinalizeTree');
 
-    final serviceLocator = ServiceLocator.maybeInstance;
-    if (serviceLocator == null) return;
-
     _executingRunPipelineBecauseOfAfterDrawFrame.value = true;
     try {
-      serviceLocator.actor.maybePreemptRenderPostDrawFramePhase();
+      ServiceLocator.instance.actor.maybePreemptRenderPostDrawFramePhase();
     } finally {
       _executingRunPipelineBecauseOfAfterDrawFrame.value = false;
     }
@@ -208,8 +203,7 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
   void _handleAfterFlushLayout() {
     // print('handleAfterFlushLayout');
 
-    final serviceLocator = ServiceLocator.maybeInstance;
-    if (serviceLocator == null) return;
+    final serviceLocator = ServiceLocator.instance;
 
     final currentSmoothFrameTimeStamp =
         serviceLocator.timeManager.currentSmoothFrameTimeStamp;
@@ -253,6 +247,10 @@ class SmoothWidgetsFlutterBinding extends WidgetsFlutterBinding
     super.initInstances();
     _instance = this;
   }
+
+  // in non-test scenario, this is just a normal final variable
+  @override
+  final serviceLocator = ServiceLocator.normal();
 
   @override
   SmoothSingletonFlutterWindow get window =>

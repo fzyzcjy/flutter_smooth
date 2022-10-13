@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/service_locator.dart'; // ignore: implementation_imports
 
 class ExampleListViewPage extends StatelessWidget {
   final bool enableSmooth;

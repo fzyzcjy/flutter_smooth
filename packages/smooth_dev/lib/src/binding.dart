@@ -22,7 +22,17 @@ class SmoothAutomatedTestWidgetsFlutterBinding
 
     // NOTE see https://github.com/fzyzcjy/flutter_smooth/issues/48
     accuratePump = true;
+
+    setUp(() => _serviceLocator = debugServiceLocatorFactory());
+    tearDown(() => _serviceLocator = null);
   }
+
+  @override
+  ServiceLocator get serviceLocator => _serviceLocator!;
+  ServiceLocator? _serviceLocator;
+
+  ValueGetter<ServiceLocator> debugServiceLocatorFactory =
+      ServiceLocator.normal;
 
   static SmoothAutomatedTestWidgetsFlutterBinding get instance =>
       BindingBase.checkInstance(_instance);
@@ -69,8 +79,7 @@ mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
   }
 
   void _sanityCheckFrameTimeStamp() {
-    final smoothActive = ServiceLocator.maybeInstance != null;
-    if (smoothActive && _prevFrameTimeStamp != null) {
+    if (_prevFrameTimeStamp != null) {
       expect(
         (currentFrameTimeStamp - _prevFrameTimeStamp!).inMicroseconds %
             kOneFrame.inMicroseconds,

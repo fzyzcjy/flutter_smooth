@@ -19,11 +19,8 @@ class Actor {
   }
 
   void maybePreemptRenderBuildOrLayoutPhase() {
-    final serviceLocator = ServiceLocator.maybeInstance;
-    if (serviceLocator == null ||
-        serviceLocator.auxiliaryTreeRegistry.trees.isEmpty) {
-      return;
-    }
+    final serviceLocator = ServiceLocator.instance;
+    if (serviceLocator.auxiliaryTreeRegistry.trees.isEmpty) return;
 
     final timeManager = serviceLocator.timeManager;
     final now = clock.nowSimple();
@@ -37,11 +34,8 @@ class Actor {
   }
 
   void maybePreemptRenderPostDrawFramePhase() {
-    final serviceLocator = ServiceLocator.maybeInstance;
-    if (serviceLocator == null ||
-        serviceLocator.auxiliaryTreeRegistry.trees.isEmpty) {
-      return;
-    }
+    final serviceLocator = ServiceLocator.instance;
+    if (serviceLocator.auxiliaryTreeRegistry.trees.isEmpty) return;
 
     final timeManager = serviceLocator.timeManager;
     final now = clock.nowSimple();
