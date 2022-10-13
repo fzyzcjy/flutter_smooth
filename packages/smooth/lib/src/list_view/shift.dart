@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/binding.dart';
@@ -19,38 +20,85 @@ class SmoothShift extends StatefulWidget {
   State<SmoothShift> createState() => _SmoothShiftState();
 }
 
-// try to use mixin to maximize performance
-class _SmoothShiftState extends _SmoothShiftBase
-    with _SmoothShiftFromPointerEvent, _SmoothShiftFromBallistic {
+class _SmoothShiftState extends State<SmoothShift>
+    with TickerProviderStateMixin {
+  late final List<_SmoothShiftSource> sources;
+
+  @override
+  void initState() {
+    super.initState();
+
+    sources = [
+      _SmoothShiftSourcePointerEvent(this),
+      _SmoothShiftSourceBallistic(this),
+    ];
+
+    for (final source in sources) {
+      source.addListener(_handleRefresh);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant SmoothShift oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    for (final source in sources) {
+      source.didUpdateWidget(oldWidget);
+    }
+  }
+
+  @override
+  void dispose() {
+    for (final source in sources) {
+      source.removeListener(_handleRefresh);
+      source.dispose();
+    }
+    super.dispose();
+  }
+
+  void _handleRefresh() => setState(() {});
+
+  double get offset => sources.fold(0, (a, b) => a + b.offset);
+
   @override
   Widget build(BuildContext context) {
-    print('hi $runtimeType build '
-        'offset=$offset '
-        '_offsetFromPointerEvent=$_offsetFromPointerEvent '
-        '_offsetFromBallistic=$_offsetFromBallistic');
+    print('hi $runtimeType build offset=$offset sources=$sources');
     // SimpleLog.instance.log(
     //     'SmoothShift.build offset=$offset currentSmoothFrameTimeStamp=${ServiceLocator.maybeInstance?.preemptStrategy.currentSmoothFrameTimeStamp}');
 
-    return super.build(context);
-  }
-}
-
-abstract class _SmoothShiftBase extends State<SmoothShift>
-    with TickerProviderStateMixin {
-  double get offset => 0;
-
-  @override
-  @mustCallSuper
-  Widget build(BuildContext context) {
     return Timeline.timeSync('SmoothShift',
         arguments: <String, Object?>{'offset': offset}, () {
-      return Transform.translate(
+      Widget result = Transform.translate(
         offset: Offset(0, offset),
         transformHitTests: false,
         child: widget.child,
       );
+
+      for (final source in sources) {
+        result = source.build(context, result);
+      }
+
+      return result;
     });
   }
+}
+
+abstract class _SmoothShiftSource extends ChangeNotifier {
+  final _SmoothShiftState state;
+
+  _SmoothShiftSource(this.state);
+
+  double get offset;
+
+  void didUpdateWidget(SmoothShift oldWidget) {}
+
+  @override
+  void dispose();
+
+  Widget build(BuildContext context, Widget child) => child;
+
+  @override
+  String toString() =>
+      '${objectRuntimeType(this, 'SmoothShiftSource')}(offset: $offset)';
 }
 
 // NOTE about this weird timing, see
@@ -58,7 +106,7 @@ abstract class _SmoothShiftBase extends State<SmoothShift>
 // * https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
 // for detailed reasons
 // (to do: copy it here)
-mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
+class _SmoothShiftSourcePointerEvent extends _SmoothShiftSource {
   double? _pointerDownPosition;
   double? _positionWhenCurrStartDrawFrame;
   double? _positionWhenPrevStartDrawFrame;
@@ -70,7 +118,8 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   // double? _positionWhenPrevPrevBuild;
   // double? _positionWhenPrevBuild;
 
-  double get _offsetFromPointerEvent {
+  @override
+  double get offset {
     if (_currPosition == null) return 0;
 
     final mainLayerTreeModeInAuxTreeView = SmoothSchedulerBindingMixin
@@ -94,21 +143,15 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
     };
     Timeline.timeSync(
         'SmoothShift.offsetFromPointerEvent', arguments: args, () {});
-    print('hi $runtimeType get _offsetFromPointerEvent $args');
+    print('hi $runtimeType get offset $args');
 
     return ans;
   }
 
-  @override
-  double get offset => super.offset + _offsetFromPointerEvent;
-
   void _handleBeginFrameEarlyCallback() {
-    if (!mounted) return;
-
-    setState(() {
-      _positionWhenPrevStartDrawFrame = _positionWhenCurrStartDrawFrame;
-      _positionWhenCurrStartDrawFrame = _currPosition;
-    });
+    _positionWhenPrevStartDrawFrame = _positionWhenCurrStartDrawFrame;
+    _positionWhenCurrStartDrawFrame = _currPosition;
+    notifyListeners();
 
     Timeline.timeSync(
       'SmoothShift.StartDrawFrameCallback.after',
@@ -123,9 +166,8 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   }
 
   void _handlePointerDown(PointerDownEvent e) {
-    setState(() {
-      _pointerDownPosition = e.localPosition.dy;
-    });
+    _pointerDownPosition = e.localPosition.dy;
+    notifyListeners();
   }
 
   void _handlePointerMove(PointerMoveEvent e) {
@@ -142,23 +184,19 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
       () {},
     );
 
-    setState(() {
-      _currPosition = e.localPosition.dy;
-    });
+    _currPosition = e.localPosition.dy;
+    notifyListeners();
   }
 
   void _handlePointerUpOrCancel(PointerEvent e) {
-    setState(() {
-      _pointerDownPosition = null;
-      _positionWhenCurrStartDrawFrame = null;
-      _positionWhenPrevStartDrawFrame = null;
-      // _positionWhenPrevPrevBuild = null;
-      // _positionWhenPrevBuild = null;
-      _currPosition = null;
-    });
+    _pointerDownPosition = null;
+    _positionWhenCurrStartDrawFrame = null;
+    _positionWhenPrevStartDrawFrame = null;
+    // _positionWhenPrevPrevBuild = null;
+    // _positionWhenPrevBuild = null;
+    _currPosition = null;
+    notifyListeners();
   }
-
-  void _handleRefresh() => setState(() {});
 
   // remove in #6071
   // // #6052
@@ -185,22 +223,20 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   //   _positionWhenPrevBuild = _currPosition;
   // }
 
-  @override
-  void initState() {
-    super.initState();
+  _SmoothShiftSourcePointerEvent(super.state) {
     SmoothSchedulerBindingMixin.instance.mainLayerTreeModeInAuxTreeView
-        .addListener(_handleRefresh);
+        .addListener(notifyListeners);
   }
 
   @override
   void dispose() {
     SmoothSchedulerBindingMixin.instance.mainLayerTreeModeInAuxTreeView
-        .removeListener(_handleRefresh);
+        .removeListener(notifyListeners);
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, Widget child) {
     _beginFrameEarlyCallbackRegistrar.maybeRegister();
     // _maybePseudoMoveOnBuild();
 
@@ -210,40 +246,37 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
       onPointerUp: _handlePointerUpOrCancel,
       onPointerCancel: _handlePointerUpOrCancel,
       behavior: HitTestBehavior.translucent,
-      child: super.build(context),
+      child: child,
     );
   }
 }
 
-mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
-  double _offsetFromBallistic = 0;
+class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
+  @override
+  double offset = 0;
+
   Ticker? _ticker;
   SmoothScrollPositionWithSingleContext? _scrollPosition;
 
-  @override
-  double get offset => super.offset + _offsetFromBallistic;
-
-  @override
-  void initState() {
-    super.initState();
-
+  _SmoothShiftSourceBallistic(super.state) {
     // https://github.com/fzyzcjy/yplusplus/issues/5918#issuecomment-1266553640
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _scrollPosition =
-          SmoothScrollPositionWithSingleContext.of(widget.scrollController);
+      if (!state.mounted) return;
+      _scrollPosition = SmoothScrollPositionWithSingleContext.of(
+          state.widget.scrollController);
       _scrollPosition!.lastSimulationInfo
           .addListener(_handleLastSimulationChanged);
     });
   }
 
   @override
-  void didUpdateWidget(covariant SmoothShift oldWidget) {
+  void didUpdateWidget(SmoothShift oldWidget) {
     super.didUpdateWidget(oldWidget);
-    assert(oldWidget.scrollController == widget.scrollController,
+    assert(oldWidget.scrollController == state.widget.scrollController,
         'for simplicity, not yet implemented change of `scrollController`');
     assert(
-        SmoothScrollPositionWithSingleContext.of(widget.scrollController) ==
+        SmoothScrollPositionWithSingleContext.of(
+                state.widget.scrollController) ==
             _scrollPosition,
         'for simplicity, SmoothScrollPositionWithSingleContext cannot yet be changed');
   }
@@ -260,16 +293,12 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
     _ticker?.dispose();
 
     // re-create ticker, because the [Simulation] wants zero timestamp
-    _ticker = createTicker(_tick)..start();
+    _ticker = state.createTicker(_tick)..start();
   }
 
   void _tick(Duration selfTickerElapsed) {
-    if (!mounted) return;
-
-    setState(() {
-      _offsetFromBallistic =
-          _computeOffsetFromBallisticOnTick(selfTickerElapsed);
-    });
+    offset = _computeOffsetFromBallisticOnTick(selfTickerElapsed);
+    notifyListeners();
   }
 
   double _computeOffsetFromBallisticOnTick(Duration selfTickerElapsed) {
