@@ -9,7 +9,7 @@ void main() {
   final binding = SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('MainLayerTreeModeInAuxTreeView', (tester) async {
-    expect(binding.mainLayerTreeModeInAuxTreeView,
+    expect(binding.mainLayerTreeModeInAuxTreeView.value,
         MainLayerTreeModeInAuxTreeView.currentPlainFrame);
 
     final smoothBuilderRunReasons = <RunPipelineReason>[];
@@ -71,7 +71,7 @@ void main() {
       ],
     );
 
-    expect(binding.mainLayerTreeModeInAuxTreeView,
+    expect(binding.mainLayerTreeModeInAuxTreeView.value,
         MainLayerTreeModeInAuxTreeView.currentPlainFrame,
         reason: 'post frame');
   });
