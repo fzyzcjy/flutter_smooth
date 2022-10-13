@@ -6,7 +6,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/service_locator.dart';
-import 'package:smooth/src/time/typed_time.dart';
 
 class ExtraEventDispatcher {
   final _pendingEventManager = _PendingPointerEventManager();
@@ -145,7 +144,10 @@ class _PendingPointerEventManager {
       if (eventTimeStamp != null &&
           (eventTimeStamp - sanityCheckLastEventTimeStamp).abs() > kThreshold) {
         throw AssertionError(
-            'sanityCheckPointerEventTime failed: eventTimeStamp=$eventTimeStamp sanityCheckLastEventTimeStamp=$sanityCheckLastEventTimeStamp');
+          'sanityCheckPointerEventTime failed: '
+          'eventTimeStamp=$eventTimeStamp sanityCheckLastEventTimeStamp=$sanityCheckLastEventTimeStamp. '
+          'If you see this in testing environment, maybe you forget to set `PointerEvent.timeStamp`?',
+        );
       }
       return true;
     }());

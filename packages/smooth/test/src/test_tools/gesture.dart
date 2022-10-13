@@ -13,6 +13,9 @@ class TestSmoothGesture {
   final _eventsToPlainDispatch = <PointerEvent>[];
 
   void addEvent(PointerEvent event) {
+    assert(event.timeStamp != Duration.zero,
+        'Should provide a reasonable `timeStamp`');
+   
     _eventsToPlainDispatch.add(event);
     TestWidgetsFlutterBinding.instance.debugOverrideEnginePendingEvents
         .add(event);
