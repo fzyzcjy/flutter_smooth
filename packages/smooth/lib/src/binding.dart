@@ -250,7 +250,7 @@ class SmoothWidgetsFlutterBinding extends WidgetsFlutterBinding
 
   // in non-test scenario, this is just a normal final variable
   @override
-  final serviceLocator = ServiceLocator.normal();
+  final serviceLocator = ServiceLocator();
 
   @override
   SmoothSingletonFlutterWindow get window =>

@@ -33,8 +33,7 @@ dependencies:
   clock: ^1.0.0
   flutter:
     sdk: flutter
-  smooth:
-    path: ..
+  smooth: ^0.0.1
 
 dev_dependencies:
   flutter_test:
@@ -47,6 +46,8 @@ dev_dependencies:
 dependency_overrides:
   sky_engine:
     path: /Volumes/MyExternal/ExternalRefCode/engine/src/out/host_debug_unopt/gen/dart-pkg/sky_engine
+  smooth:
+    path: ..
 
 flutter:
   uses-material-design: true

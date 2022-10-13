@@ -9,12 +9,12 @@ class ServiceLocator {
   static ServiceLocator get instance =>
       SmoothSchedulerBindingMixin.instance.serviceLocator;
 
-  factory ServiceLocator.normal() => ServiceLocator.raw(
+  factory ServiceLocator({bool testing = false}) => ServiceLocator.raw(
         actor: Actor(),
         timeManager: TimeManager(),
         auxiliaryTreeRegistry: AuxiliaryTreeRegistry(),
         extraEventDispatcher: ExtraEventDispatcher(),
-        timeConverter: TimeConverter(),
+        timeConverter: TimeConverter(testing: testing),
       );
 
   ServiceLocator.raw({

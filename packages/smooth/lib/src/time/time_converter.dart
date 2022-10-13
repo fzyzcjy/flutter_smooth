@@ -15,14 +15,10 @@ class TimeConverter {
       const _SystemToAdjustedFrameTimeStampConverter();
   final _PointerEventTimeStampConverter _pointerEventTimeStampConverter;
 
-  TimeConverter()
-      : _pointerEventTimeStampConverter =
-            _PointerEventTimeStampConverter.normal();
-
-  TimeConverter.test({
-    required ValueGetter<int> diffDateTimeToPointerEventTimeStamp,
-  }) : _pointerEventTimeStampConverter = _PointerEventTimeStampConverter.fake(
-            diffDateTimeToPointerEventTimeStamp);
+  TimeConverter({bool testing = false})
+      : _pointerEventTimeStampConverter = testing
+            ? _PointerEventTimeStampConverter.fake(() => 123456789)
+            : _PointerEventTimeStampConverter.normal();
 
   void dispose() {
     _systemFrameTimeStampConverter.dispose();

@@ -15,7 +15,7 @@ dependencies:
   flutter_test:
     sdk: flutter
   image: ^3.2.0
-  smooth: ^1.0.0
+  smooth: ^0.0.1
   test_api: ^0.4.2
 
 dev_dependencies:

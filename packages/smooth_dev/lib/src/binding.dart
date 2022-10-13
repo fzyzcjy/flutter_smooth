@@ -32,7 +32,7 @@ class SmoothAutomatedTestWidgetsFlutterBinding
   ServiceLocator? _serviceLocator;
 
   ValueGetter<ServiceLocator> debugServiceLocatorFactory =
-      ServiceLocator.normal;
+      () => ServiceLocator(testing: true);
 
   static SmoothAutomatedTestWidgetsFlutterBinding get instance =>
       BindingBase.checkInstance(_instance);
