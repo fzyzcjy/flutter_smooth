@@ -115,21 +115,19 @@ void main() {
 
     group('when animation after drag, should be smooth', () {
       group('integrated', () {
-        // work as control group, so we can more easily understand how a
-        // normal ListView will behave
-        testWidgets('using plain old ListView', (tester) async {
+        Future<void> _body(WidgetTester tester) async {
+          debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
+          final timeInfo = TimeInfo();
+          final capturer = WindowRenderCapturer.autoDispose();
+          final t = _SmoothListViewTester(tester);
+          final gesture = TestSmoothGesture();
+
           // https://github.com/fzyzcjy/yplusplus/issues/6170#issuecomment-1276994971
           double getCurrentOffset() {
             final state =
                 tester.state<ScrollableState>(find.byType(Scrollable));
             return state.position.pixels;
           }
-
-          debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
-          final timeInfo = TimeInfo();
-          final capturer = WindowRenderCapturer.autoDispose();
-          final t = _SmoothListViewTester(tester);
-          final gesture = TestSmoothGesture();
 
           await tester.pumpWidget(t.build());
           await capturer
@@ -143,19 +141,23 @@ void main() {
           await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
           await capturer
               .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
-            t.createExpectImage(50 - 50),
+            t.createExpectImage(0),
           ]);
           debugPrint('offset=${getCurrentOffset()}');
 
-          gesture.addEventMove(const Offset(100, 300));
-          await gesture.plainDispatchAll();
+          for (var i = 0; i < 10; ++i) {
+            gesture.addEventMove(Offset(100, 500 - i * 5));
+            await gesture.plainDispatchAll();
 
-          await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2));
-          await capturer
-              .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
-            t.createExpectImage(50 - 30),
-          ]);
-          debugPrint('offset=${getCurrentOffset()}');
+            await tester
+                .pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2 + i));
+            await capturer.expectAndReset(tester,
+                expectTestFrameNumber: 4 + i,
+                expectImages: [
+                  t.createExpectImage(i * 5),
+                ]);
+            debugPrint('offset=${getCurrentOffset()}');
+          }
 
           gesture.addEventUp();
           await gesture.plainDispatchAll();
@@ -173,6 +175,12 @@ void main() {
           }
 
           debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
+        }
+
+        // work as control group, so we can more easily understand how a
+        // normal ListView will behave
+        testWidgets('using plain old ListView', (tester) async {
+          await _body(tester);
         });
 
         testWidgets('using SmoothListView', (tester) async {
