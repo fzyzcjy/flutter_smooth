@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/scheduler/ticker.dart';
+import 'package:flutter/src/scheduler/ticker.dart'; // ignore: implementation_imports
 
 class SmoothScrollController extends ScrollController {
   // ref [super.createScrollPosition], except for return custom sub-class

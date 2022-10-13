@@ -3,8 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/service_locator.dart';
-import 'package:smooth/src/time/simple_date_time.dart';
-import 'package:smooth/src/time/typed_time.dart';
 
 enum SmoothFramePhase {
   /// A new frame starts, and no preemptRender happens yet

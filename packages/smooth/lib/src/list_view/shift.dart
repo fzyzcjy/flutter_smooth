@@ -61,7 +61,7 @@ class _SmoothShiftState extends State<SmoothShift>
 
   @override
   Widget build(BuildContext context) {
-    print('hi $runtimeType build offset=$offset sources=$sources');
+    // print('hi $runtimeType build offset=$offset sources=$sources');
     // SimpleLog.instance.log(
     //     'SmoothShift.build offset=$offset currentSmoothFrameTimeStamp=${ServiceLocator.maybeInstance?.preemptStrategy.currentSmoothFrameTimeStamp}');
 
@@ -143,7 +143,7 @@ class _SmoothShiftSourcePointerEvent extends _SmoothShiftSource {
     };
     Timeline.timeSync(
         'SmoothShift.offsetFromPointerEvent', arguments: args, () {});
-    print('hi $runtimeType get offset $args');
+    // print('hi $runtimeType get offset $args');
 
     return ans;
   }
@@ -343,16 +343,16 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
 
     final ans = -(smoothOffset - plainOffset);
 
-    print('hi $runtimeType._computeOffsetFromBallisticOnTick '
-        'ans=$ans '
-        'smoothOffset=$smoothOffset '
-        'plainOffset=$plainOffset '
-        '_lastBeforeBeginFrameSimulationOffset=$_lastBeforeBeginFrameSimulationOffset '
-        'mainLayerTreeModeInAuxTreeView=$mainLayerTreeModeInAuxTreeView '
-        'selfTickerElapsed=$selfTickerElapsed '
-        'tickTimeStamp=$tickTimeStamp '
-        'ballisticTickerStartTime=$ballisticTickerStartTime '
-        'simulationRelativeTime=$simulationRelativeTime ');
+    // print('hi $runtimeType._computeOffsetFromBallisticOnTick '
+    //     'ans=$ans '
+    //     'smoothOffset=$smoothOffset '
+    //     'plainOffset=$plainOffset '
+    //     '_lastBeforeBeginFrameSimulationOffset=$_lastBeforeBeginFrameSimulationOffset '
+    //     'mainLayerTreeModeInAuxTreeView=$mainLayerTreeModeInAuxTreeView '
+    //     'selfTickerElapsed=$selfTickerElapsed '
+    //     'tickTimeStamp=$tickTimeStamp '
+    //     'ballisticTickerStartTime=$ballisticTickerStartTime '
+    //     'simulationRelativeTime=$simulationRelativeTime ');
 
     return ans;
   }
