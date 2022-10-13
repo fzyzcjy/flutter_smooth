@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/host_api/messages_wrapped.dart';
 import 'package:smooth/src/service_locator.dart';
 import 'package:smooth/src/time/typed_time.dart';
 
@@ -20,12 +19,12 @@ class ExtraEventDispatcher {
   void dispatch({required AdjustedFrameTimeStamp smoothFrameTimeStamp}) {
     final gestureBinding = GestureBinding.instance;
 
-    final diffDateTimeToPointerEventTimeStamp =
-        SmoothHostApiWrapped.instance.diffDateTimeToPointerEventTimeStamp;
-    if (diffDateTimeToPointerEventTimeStamp == null) {
-      // not finish initialization
-      return;
-    }
+    // final diffDateTimeToPointerEventTimeStamp =
+    //     SmoothHostApiWrapped.instance.diffDateTimeToPointerEventTimeStamp;
+    // if (diffDateTimeToPointerEventTimeStamp == null) {
+    //   // not finish initialization
+    //   return;
+    // }
 
     // final now = clock.now();
     // final nowTimeStampInPointerEventClock = Duration(
