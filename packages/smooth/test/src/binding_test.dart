@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
+import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/binding.dart';
 import 'package:smooth_dev/smooth_dev.dart';
 
@@ -11,15 +12,20 @@ void main() {
     expect(binding.mainLayerTreeModeInAuxTreeView,
         MainLayerTreeModeInAuxTreeView.previousPlainFrame);
 
+    final smoothBuilderRunReasons = <RunPipelineReason>[];
     final smoothBuilderResults = <MainLayerTreeModeInAuxTreeView>[];
 
     await tester.pumpWidget(SmoothParent(
       child: MaterialApp(
         home: SmoothBuilder(
-          builder: (_, child) {
-            smoothBuilderResults.add(binding.mainLayerTreeModeInAuxTreeView);
-            return child;
-          },
+          builder: (_, child) => AlwaysBuildBuilder(
+            onBuild: () {
+              smoothBuilderRunReasons
+                  .add(AuxiliaryTreePack.debugRunPipelineReason!);
+              smoothBuilderResults.add(binding.mainLayerTreeModeInAuxTreeView);
+            },
+            child: child,
+          ),
           child: Column(
             children: [
               AlwaysLayoutBuilder(onPerformLayout: () {
@@ -39,14 +45,18 @@ void main() {
     ));
 
     expect(
-      smoothBuilderResults,
+      [smoothBuilderRunReasons, smoothBuilderResults],
       [
-        // extra preemptRender in build/layout phase
-        MainLayerTreeModeInAuxTreeView.previousPlainFrame,
-        // plain
-        MainLayerTreeModeInAuxTreeView.currentPlainFrame,
-        // extra preemptRender in PostDrawFrame phase
-        MainLayerTreeModeInAuxTreeView.currentPlainFrame,
+        [
+          RunPipelineReason.preemptRenderBuildOrLayoutPhase,
+          RunPipelineReason.plainAfterFlushLayout,
+          RunPipelineReason.preemptRenderPostDrawFramePhase,
+        ],
+        [
+          MainLayerTreeModeInAuxTreeView.previousPlainFrame,
+          MainLayerTreeModeInAuxTreeView.currentPlainFrame,
+          MainLayerTreeModeInAuxTreeView.currentPlainFrame,
+        ],
       ],
     );
 
