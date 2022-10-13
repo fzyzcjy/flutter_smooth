@@ -64,6 +64,9 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   double? _positionWhenPrevStartDrawFrame;
   double? _currPosition;
 
+  late final _beginFrameEarlyCallbackRegistrar =
+      _BeginFrameEarlyCallbackRegistrar(_handleBeginFrameEarlyCallback);
+
   // double? _positionWhenPrevPrevBuild;
   // double? _positionWhenPrevBuild;
 
@@ -99,35 +102,24 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   @override
   double get offset => super.offset + _offsetFromPointerEvent;
 
-  var _hasPendingStartDrawFrameCallback = false;
+  void _handleBeginFrameEarlyCallback() {
+    if (!mounted) return;
 
-  void _maybeAddCallbacks() {
-    if (!_hasPendingStartDrawFrameCallback) {
-      _hasPendingStartDrawFrameCallback = true;
-      SmoothSchedulerBindingMixin.instance.addBeginFrameEarlyCallback(() {
-        if (!mounted) return;
-        _hasPendingStartDrawFrameCallback = false;
+    setState(() {
+      _positionWhenPrevStartDrawFrame = _positionWhenCurrStartDrawFrame;
+      _positionWhenCurrStartDrawFrame = _currPosition;
+    });
 
-        setState(() {
-          _positionWhenPrevStartDrawFrame = _positionWhenCurrStartDrawFrame;
-          _positionWhenCurrStartDrawFrame = _currPosition;
-        });
-
-        Timeline.timeSync(
-          'SmoothShift.StartDrawFrameCallback.after',
-          arguments: <String, Object?>{
-            'currPosition': _currPosition,
-            'positionWhenCurrStartDrawFrame': _positionWhenCurrStartDrawFrame,
-            'positionWhenPrevStartDrawFrame': _positionWhenPrevStartDrawFrame,
-            'pointerDownPosition': _pointerDownPosition,
-          },
-          () {},
-        );
-
-        // print('hi $runtimeType addStartDrawFrameCallback.callback (after) '
-        //     '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame _currPosition=$_currPosition');
-      });
-    }
+    Timeline.timeSync(
+      'SmoothShift.StartDrawFrameCallback.after',
+      arguments: <String, Object?>{
+        'currPosition': _currPosition,
+        'positionWhenCurrStartDrawFrame': _positionWhenCurrStartDrawFrame,
+        'positionWhenPrevStartDrawFrame': _positionWhenPrevStartDrawFrame,
+        'pointerDownPosition': _pointerDownPosition,
+      },
+      () {},
+    );
   }
 
   void _handlePointerDown(PointerDownEvent e) {
@@ -209,7 +201,7 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
 
   @override
   Widget build(BuildContext context) {
-    _maybeAddCallbacks();
+    _beginFrameEarlyCallbackRegistrar.maybeRegister();
     // _maybePseudoMoveOnBuild();
 
     return Listener(
@@ -227,8 +219,6 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   double _offsetFromBallistic = 0;
   Ticker? _ticker;
   SmoothScrollPositionWithSingleContext? _scrollPosition;
-  late final _plainOffsetSnapshot = FrameAwareSnapshot<double?>(
-      () => _scrollPosition?.lastSimulationInfo.value?.realSimulation.lastX);
 
   @override
   double get offset => super.offset + _offsetFromBallistic;
@@ -236,8 +226,6 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   @override
   void initState() {
     super.initState();
-
-    _plainOffsetSnapshot.addListener(_handleRefresh);
 
     // https://github.com/fzyzcjy/yplusplus/issues/5918#issuecomment-1266553640
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -262,14 +250,11 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
 
   @override
   void dispose() {
-    _plainOffsetSnapshot.removeListener(_handleRefresh);
     _scrollPosition?.lastSimulationInfo
         .removeListener(_handleLastSimulationChanged);
     _ticker?.dispose();
     super.dispose();
   }
-
-  void _handleRefresh() => setState(() {});
 
   void _handleLastSimulationChanged() {
     _ticker?.dispose();
@@ -305,9 +290,12 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
     final smoothOffset = lastSimulationInfo.clonedSimulation
         .x(simulationRelativeTime.inMicroseconds / 1000000);
 
-    final plainOffset = _plainOffsetSnapshot.snapshotOf(
-        SmoothSchedulerBindingMixin
-            .instance.mainLayerTreeModeInAuxTreeView.value);
+    final mainLayerTreeModeInAuxTreeView = SmoothSchedulerBindingMixin
+        .instance.mainLayerTreeModeInAuxTreeView.value;
+    final plainOffset = mainLayerTreeModeInAuxTreeView.choose(
+      currentPlainFrame: lastSimulationInfo.realSimulation.lastX,
+      previousPlainFrame: TODO,
+    );
     if (plainOffset == null) return 0;
 
     final ans = -(smoothOffset - plainOffset);
@@ -317,12 +305,29 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
         'smoothOffset=$smoothOffset '
         'plainOffset=$plainOffset '
         'plainOffsetSnapshot=$_plainOffsetSnapshot '
-        'mainLayerTreeModeInAuxTreeView=${SmoothSchedulerBindingMixin.instance.mainLayerTreeModeInAuxTreeView.value} '
+        'mainLayerTreeModeInAuxTreeView=${mainLayerTreeModeInAuxTreeView} '
         'selfTickerElapsed=$selfTickerElapsed '
         'tickTimeStamp=$tickTimeStamp '
         'ballisticTickerStartTime=$ballisticTickerStartTime '
         'simulationRelativeTime=$simulationRelativeTime ');
 
     return ans;
+  }
+}
+
+class _BeginFrameEarlyCallbackRegistrar {
+  final VoidCallback f;
+
+  var _hasPendingCallback = false;
+
+  _BeginFrameEarlyCallbackRegistrar(this.f);
+
+  void maybeRegister() {
+    if (_hasPendingCallback) return;
+    _hasPendingCallback = true;
+    SmoothSchedulerBindingMixin.instance.addBeginFrameEarlyCallback(() {
+      _hasPendingCallback = false;
+      f();
+    });
   }
 }
