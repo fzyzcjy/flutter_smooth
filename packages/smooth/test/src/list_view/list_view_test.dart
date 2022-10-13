@@ -59,7 +59,7 @@ void main() {
         await tester.pumpWidget(t.build());
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
-          await t.createExpectImage(0),
+          t.createExpectImage(0),
         ]);
 
         gesture.addEventDown(const Offset(25, 50));
@@ -70,7 +70,7 @@ void main() {
         await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
         await capturer
             .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
-          await t.createExpectImage(50 - 40),
+          t.createExpectImage(50 - 40),
         ]);
 
         gesture.addEventMove(const Offset(25, 30));
@@ -100,12 +100,12 @@ void main() {
           // note there is "lag" - because we do not use the PointerEvent
           // immediately, but only use the ones that are old enough to be "real"
           // the BuildOrLayoutPhasePreemptRender
-          await t.createExpectImage(50 - 30),
+          t.createExpectImage(50 - 30),
           // the plain old render
-          await t.createExpectImage(50 - 20),
+          t.createExpectImage(50 - 20),
           // extra smooth frame after finalize phase
           // i.e. PostDrawFramePhasePreemptRender
-          await t.createExpectImage(50 - 15),
+          t.createExpectImage(50 - 15),
         ]);
 
         debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
@@ -133,7 +133,7 @@ void main() {
           await tester.pumpWidget(t.build());
           await capturer
               .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
-            await t.createExpectImage(0),
+            t.createExpectImage(0),
           ]);
 
           gesture.addEventDown(const Offset(25, 50));
@@ -142,7 +142,7 @@ void main() {
           await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
           await capturer
               .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
-            await t.createExpectImage(50 - 50),
+            t.createExpectImage(50 - 50),
           ]);
           debugPrint('offset=${getCurrentOffset()}');
 
@@ -152,7 +152,7 @@ void main() {
           await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2));
           await capturer
               .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
-            await t.createExpectImage(50 - 30),
+            t.createExpectImage(50 - 30),
           ]);
           debugPrint('offset=${getCurrentOffset()}');
 
@@ -184,7 +184,7 @@ void main() {
           await tester.pumpWidget(t.build());
           await capturer
               .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
-            await t.createExpectImage(0),
+            t.createExpectImage(0),
           ]);
 
           gesture.addEventDown(const Offset(25, 50));
@@ -193,7 +193,7 @@ void main() {
           await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
           await capturer
               .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
-            await t.createExpectImage(50 - 50),
+            t.createExpectImage(50 - 50),
           ]);
 
           gesture.addEventMove(const Offset(25, 30));
@@ -202,7 +202,7 @@ void main() {
           await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2));
           await capturer
               .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
-            await t.createExpectImage(50 - 30),
+            t.createExpectImage(50 - 30),
           ]);
 
           gesture.addEventUp();
@@ -266,7 +266,7 @@ void main() {
     //   await tester.pumpWidget(t.build());
     //   await capturer
     //       .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
-    //     await t.createExpectImage(0),
+    //     t.createExpectImage(0),
     //   ]);
     //
     //   debugPrint('action: addEvent down');
@@ -291,11 +291,11 @@ void main() {
     //
     //   await capturer
     //       .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
-    //     await t.createExpectImage(50 - 20),
+    //     t.createExpectImage(50 - 20),
     //     // NOTE the "drag to y=15" is dispatched *after* preemptRender, but
     //     // we do know it
     //     // https://github.com/fzyzcjy/yplusplus/issues/6050#issuecomment-1271182805
-    //     await t.createExpectImage(50 - 15),
+    //     t.createExpectImage(50 - 15),
     //   ]);
     //
     //   debugPrint('action: addEvent move(y=10)');
@@ -320,8 +320,8 @@ void main() {
     //
     //   await capturer
     //       .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
-    //     await t.createExpectImage(50 - 5),
-    //     await t.createExpectImage(50 - 0),
+    //     t.createExpectImage(50 - 5),
+    //     t.createExpectImage(50 - 0),
     //   ]);
     //
     //   debugPrint('action: addEvent up');
@@ -333,7 +333,7 @@ void main() {
     //   await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 5));
     //   await capturer
     //       .expectAndReset(tester, expectTestFrameNumber: 5, expectImages: [
-    //     await t.createExpectImage(50 - 0),
+    //     t.createExpectImage(50 - 0),
     //   ]);
     //
     //   debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
@@ -350,11 +350,21 @@ class _SmoothListViewTester {
   final onAfterPreemptPoint = OnceCallable();
   final onPaint = OnceCallable();
 
-  Future<ui.Image> createExpectImage(int offset) =>
-      tester.createScreenImage((im) => im
-        ..fillRect(Rectangle(0, 0 - offset, 50, 60), Colors.primaries[0])
-        ..fillRect(Rectangle(0, 60 - offset, 50, 60), Colors.primaries[1])
-        ..fillRect(Rectangle(0, 120 - offset, 50, 60), Colors.primaries[2]));
+  ui.Image createExpectImage(int offset) {
+    return buildImageFromPainter(SchedulerBinding.instance.window.size,
+        (canvas) {
+      canvas.translate(0, -offset.toDouble());
+
+      canvas.drawRect(const Rect.fromLTWH(0, 0, 50, 60),
+          Paint()..color = Colors.primaries[0]);
+      canvas.drawRect(const Rect.fromLTWH(0, 60, 50, 60),
+          Paint()..color = Colors.primaries[1]);
+      canvas.drawRect(const Rect.fromLTWH(0, 120, 50, 60),
+          Paint()..color = Colors.primaries[2]);
+
+      canvas.translate(0, offset.toDouble());
+    });
+  }
 
   Widget build() {
     return SmoothParent(
@@ -378,4 +388,8 @@ class _SmoothListViewTester {
       ),
     );
   }
+}
+
+extension on ui.SingletonFlutterWindow {
+  Size get size => physicalSize / devicePixelRatio;
 }
