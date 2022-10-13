@@ -1,8 +1,8 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:smooth/smooth.dart';
+import 'package:smooth/src/service_locator.dart';
 import 'package:smooth/src/simple_date_time.dart';
-import 'package:smooth/src/time_converter.dart';
 
 enum SmoothFramePhase {
   /// A new frame starts, and no preemptRender happens yet
@@ -97,7 +97,7 @@ class TimeManager {
     _currentSmoothFrameTimeStamp = _currentSmoothFrameTimeStamp! + kOneFrame;
   }
 
-  static Duration get normalNow => TimeConverter.instance
+  static Duration get normalNow => ServiceLocator.instance.timeConverter
       .dateTimeToAdjustedFrameTimeStamp(clock.nowSimple());
 
   @visibleForTesting

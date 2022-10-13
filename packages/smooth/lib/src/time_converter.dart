@@ -7,12 +7,17 @@ import 'package:smooth/src/simple_date_time.dart';
 
 // TODO maybe improve
 class TimeConverter {
-  static final instance = TimeConverter._();
+  late final Timer _timer;
 
-  TimeConverter._() {
-    Timer.periodic(const Duration(seconds: 1), (_) {
-      __diffDateTimeToSystemFrameTimeStamp = _readDiffDateTimeToTimeStamp();
+  TimeConverter()
+      : _diffDateTimeToSystemFrameTimeStamp = _readDiffDateTimeToTimeStamp() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      _diffDateTimeToSystemFrameTimeStamp = _readDiffDateTimeToTimeStamp();
     });
+  }
+
+  void dispose() {
+    _timer.cancel();
   }
 
   int get diffDateTimeToAdjustedFrameTimeStamp =>
@@ -31,8 +36,8 @@ class TimeConverter {
       SchedulerBinding.instance.currentFrameTimeStamp.inMicroseconds;
 
   int get diffDateTimeToSystemFrameTimeStamp =>
-      __diffDateTimeToSystemFrameTimeStamp ??= _readDiffDateTimeToTimeStamp();
-  int? __diffDateTimeToSystemFrameTimeStamp;
+      _diffDateTimeToSystemFrameTimeStamp;
+  int _diffDateTimeToSystemFrameTimeStamp;
 
   static int _readDiffDateTimeToTimeStamp() {
     // why this is correct:

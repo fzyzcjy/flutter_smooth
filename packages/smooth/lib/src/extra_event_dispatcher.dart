@@ -8,7 +8,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/messages_wrapped.dart';
 import 'package:smooth/src/service_locator.dart';
-import 'package:smooth/src/time_converter.dart';
 
 class ExtraEventDispatcher {
   final _pendingEventManager = _PendingPointerEventManager();
@@ -162,7 +161,7 @@ class _PendingPointerEventManager {
         SmoothHostApiWrapped.instance.pointerEventDateTimeDiffTimeStamp;
     if (pointerEventDateTimeDiffTimeStamp == null) return null;
 
-    final dateTime = TimeConverter.instance
+    final dateTime = ServiceLocator.instance.timeConverter
         .adjustedFrameTimeStampToDateTime(timeClockScheduler);
 
     return Duration(

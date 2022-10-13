@@ -9,7 +9,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/messages_wrapped.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
-import 'package:smooth/src/time_converter.dart';
 import 'package:smooth/src/time_manager.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
@@ -108,14 +107,16 @@ mixin SmoothGestureBindingMixin on GestureBinding {
 mixin SmoothSingletonFlutterWindowMixin on ui.SingletonFlutterWindow {
   @override
   void render(ui.Scene scene, {Duration? fallbackVsyncTargetTime}) {
+    final serviceLocator = ServiceLocator.instance;
+
     final effectiveFallbackVsyncTargetTime = fallbackVsyncTargetTime ??
         // NOTE *need* this when [fallbackVsyncTargetTime] is null, because
         // the plain-old pipeline will call `window.render` and we cannot
         // control that
-        ServiceLocator.instance.timeManager.currentSmoothFrameTimeStamp +
+        serviceLocator.timeManager.currentSmoothFrameTimeStamp +
             Duration(
-                microseconds:
-                    TimeConverter.instance.diffSystemToAdjustedFrameTimeStamp);
+                microseconds: serviceLocator
+                    .timeConverter.diffSystemToAdjustedFrameTimeStamp);
 
     Timeline.timeSync('window.render', arguments: <String, String>{
       'effectiveFallbackVsyncTargetTime':

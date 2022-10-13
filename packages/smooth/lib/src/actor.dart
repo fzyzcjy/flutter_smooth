@@ -5,7 +5,6 @@ import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth/src/service_locator.dart';
 import 'package:smooth/src/simple_date_time.dart';
-import 'package:smooth/src/time_converter.dart';
 
 class Actor {
   // var _maybePreemptRenderCallCount = 0;
@@ -19,15 +18,16 @@ class Actor {
   }
 
   void maybePreemptRenderBuildOrLayoutPhase() {
-    if (ServiceLocator.maybeInstance == null ||
-        ServiceLocator.instance.auxiliaryTreeRegistry.trees.isEmpty) {
+    final serviceLocator = ServiceLocator.maybeInstance;
+    if (serviceLocator == null ||
+        serviceLocator.auxiliaryTreeRegistry.trees.isEmpty) {
       return;
     }
 
-    final timeManager = ServiceLocator.instance.timeManager;
+    final timeManager = serviceLocator.timeManager;
     final now = clock.nowSimple();
     final nowTimestamp =
-        TimeConverter.instance.dateTimeToAdjustedFrameTimeStamp(now);
+        serviceLocator.timeConverter.dateTimeToAdjustedFrameTimeStamp(now);
 
     if (timeManager.thresholdActOnBuildOrLayoutPhaseTimeStamp! < nowTimestamp) {
       _preemptRenderRaw(debugReason: 'maybePreemptRenderBuildOrLayoutPhase');
@@ -36,15 +36,16 @@ class Actor {
   }
 
   void maybePreemptRenderPostDrawFramePhase() {
-    if (ServiceLocator.maybeInstance == null ||
-        ServiceLocator.instance.auxiliaryTreeRegistry.trees.isEmpty) {
+    final serviceLocator = ServiceLocator.maybeInstance;
+    if (serviceLocator == null ||
+        serviceLocator.auxiliaryTreeRegistry.trees.isEmpty) {
       return;
     }
 
-    final timeManager = ServiceLocator.instance.timeManager;
+    final timeManager = serviceLocator.timeManager;
     final now = clock.nowSimple();
     final nowTimestamp =
-        TimeConverter.instance.dateTimeToAdjustedFrameTimeStamp(now);
+        serviceLocator.timeConverter.dateTimeToAdjustedFrameTimeStamp(now);
 
     if (timeManager.thresholdActOnPostDrawFramePhaseTimeStamp! < nowTimestamp) {
       // NOTE this is "before" not "after"
@@ -54,8 +55,9 @@ class Actor {
   }
 
   void _preemptRenderRaw({required String debugReason}) {
+    final serviceLocator = ServiceLocator.instance;
     final smoothFrameTimeStamp =
-        ServiceLocator.instance.timeManager.currentSmoothFrameTimeStamp;
+        serviceLocator.timeManager.currentSmoothFrameTimeStamp;
     final binding = WidgetsFlutterBinding.ensureInitialized();
     final arguments = {
       'reason': debugReason,
@@ -74,7 +76,7 @@ class Actor {
       //     'shouldShiftOneFrameForInterestVsyncTarget=$shouldShiftOneFrameForInterestVsyncTarget '
       //     'set-interestVsyncTargetTimeByLastPreemptRender=$interestVsyncTargetTimeByLastPreemptRender');
 
-      ServiceLocator.instance.extraEventDispatcher
+      serviceLocator.extraEventDispatcher
           .dispatch(smoothFrameTimeStamp: smoothFrameTimeStamp);
 
       // ref: https://github.com/fzyzcjy/yplusplus/issues/5780#issuecomment-1254562485
@@ -93,8 +95,8 @@ class Actor {
         scene,
         fallbackVsyncTargetTime: smoothFrameTimeStamp +
             Duration(
-                microseconds:
-                    TimeConverter.instance.diffSystemToAdjustedFrameTimeStamp),
+                microseconds: serviceLocator
+                    .timeConverter.diffSystemToAdjustedFrameTimeStamp),
       );
 
       scene.dispose();

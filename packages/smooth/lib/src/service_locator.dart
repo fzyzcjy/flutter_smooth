@@ -3,6 +3,7 @@ import 'package:smooth/src/actor.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/extra_event_dispatcher.dart';
 import 'package:smooth/src/global_widget.dart';
+import 'package:smooth/src/time_converter.dart';
 import 'package:smooth/src/time_manager.dart';
 
 class ServiceLocator {
@@ -20,6 +21,7 @@ class ServiceLocator {
         timeManager: TimeManager(),
         auxiliaryTreeRegistry: AuxiliaryTreeRegistry(),
         extraEventDispatcher: ExtraEventDispatcher(),
+        timeConverter: TimeConverter(),
       );
 
   ServiceLocator.raw({
@@ -27,6 +29,7 @@ class ServiceLocator {
     required this.timeManager,
     required this.auxiliaryTreeRegistry,
     required this.extraEventDispatcher,
+    required this.timeConverter,
   });
 
   ServiceLocator copyWith({
@@ -34,6 +37,7 @@ class ServiceLocator {
     TimeManager? timeManager,
     AuxiliaryTreeRegistry? auxiliaryTreeRegistry,
     ExtraEventDispatcher? extraEventDispatcher,
+    TimeConverter? timeConverter,
   }) =>
       ServiceLocator.raw(
         actor: actor ?? this.actor,
@@ -41,12 +45,14 @@ class ServiceLocator {
         auxiliaryTreeRegistry:
             auxiliaryTreeRegistry ?? this.auxiliaryTreeRegistry,
         extraEventDispatcher: extraEventDispatcher ?? this.extraEventDispatcher,
+        timeConverter: timeConverter ?? this.timeConverter,
       );
 
   final Actor actor;
   final TimeManager timeManager;
   final AuxiliaryTreeRegistry auxiliaryTreeRegistry;
   final ExtraEventDispatcher extraEventDispatcher;
+  final TimeConverter timeConverter;
 }
 
 class SmoothScope extends StatefulWidget {
