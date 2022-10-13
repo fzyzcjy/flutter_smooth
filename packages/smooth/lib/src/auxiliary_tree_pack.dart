@@ -64,10 +64,14 @@ class AuxiliaryTreePack {
     ServiceLocator.instance.auxiliaryTreeRegistry._attach(this);
   }
 
+  static RunPipelineReason? get debugRunPipelineReason =>
+      _debugRunPipelineReason;
+  static RunPipelineReason? _debugRunPipelineReason;
+
   void runPipeline(
     AdjustedFrameTimeStamp timeStamp, {
     required bool skipIfTimeStampUnchanged,
-    required String debugReason,
+    required RunPipelineReason debugReason,
   }) {
     // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261687755
     if (skipIfTimeStampUnchanged &&
@@ -81,42 +85,55 @@ class AuxiliaryTreePack {
     // print(
     //     'hi $runtimeType.runPipeline debugReason=$debugReason layer=${rootView.layer}');
 
-    Timeline.timeSync('AuxTree.RunPipeline', () {
-      // SimpleLog.instance.log(
-      //     'AuxiliaryTreePack.runPipeline timeStamp=$timeStamp debugReason=$debugReason');
-      // print(
-      //     '$runtimeType runPipeline start timeStamp=$timeStamp debugReason=$debugReason');
+    assert(() {
+      assert(_debugRunPipelineReason == null);
+      _debugRunPipelineReason = debugReason;
+      return true;
+    }());
+    try {
+      Timeline.timeSync('AuxTree.RunPipeline', () {
+        // SimpleLog.instance.log(
+        //     'AuxiliaryTreePack.runPipeline timeStamp=$timeStamp debugReason=$debugReason');
+        // print(
+        //     '$runtimeType runPipeline start timeStamp=$timeStamp debugReason=$debugReason');
 
-      _callExtraTickerTick(timeStamp);
+        _callExtraTickerTick(timeStamp);
 
-      // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
-      // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
-      _buildOwner.buildScope(_element);
-      pipelineOwner.flushLayout();
-      pipelineOwner.flushCompositingBits();
-      _temporarilyRemoveDebugActiveLayout(() {
-        // NOTE #5884
-        // ignore: unnecessary_lambdas
-        _temporarilyEnsureLayerAttached(() {
-          // print(
-          //     'hi call pipelineOwner.flushPaint pipelineOwner=${describeIdentity(pipelineOwner)} nodesNeedingPaint=${pipelineOwner.nodesNeedingPaint}');
-          pipelineOwner.flushPaint();
+        // NOTE reference: WidgetsBinding.drawFrame & RendererBinding.drawFrame
+        // https://github.com/fzyzcjy/yplusplus/issues/5778#issuecomment-1254490708
+        _buildOwner.buildScope(_element);
+        pipelineOwner.flushLayout();
+        pipelineOwner.flushCompositingBits();
+        _temporarilyRemoveDebugActiveLayout(() {
+          // NOTE #5884
+          // ignore: unnecessary_lambdas
+          _temporarilyEnsureLayerAttached(() {
+            // print(
+            //     'hi call pipelineOwner.flushPaint pipelineOwner=${describeIdentity(pipelineOwner)} nodesNeedingPaint=${pipelineOwner.nodesNeedingPaint}');
+            pipelineOwner.flushPaint();
+          });
         });
+        // renderView.compositeFrame(); // this sends the bits to the GPU
+        // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
+        _buildOwner.finalizeTree();
+
+        // printWrapped(
+        //     '$runtimeType.runPipeline after finalizeTree rootView.layer=${rootView.layer!.toStringDeep()}');
+
+        // printWrapped('$runtimeType.runPipeline end');
+        // printWrapped('pack.rootView.layer=${rootView.layer?.toStringDeep()}');
+        // printWrapped(
+        //     'pack.element.renderObject=${element.renderObject.toStringDeep()}');
+
+        // print('$runtimeType runPipeline end');
       });
-      // renderView.compositeFrame(); // this sends the bits to the GPU
-      // pipelineOwner.flushSemantics(); // this also sends the semantics to the OS.
-      _buildOwner.finalizeTree();
-
-      // printWrapped(
-      //     '$runtimeType.runPipeline after finalizeTree rootView.layer=${rootView.layer!.toStringDeep()}');
-
-      // printWrapped('$runtimeType.runPipeline end');
-      // printWrapped('pack.rootView.layer=${rootView.layer?.toStringDeep()}');
-      // printWrapped(
-      //     'pack.element.renderObject=${element.renderObject.toStringDeep()}');
-
-      // print('$runtimeType runPipeline end');
-    });
+    } finally {
+      assert(() {
+        assert(_debugRunPipelineReason == debugReason);
+        _debugRunPipelineReason = null;
+        return true;
+      }());
+    }
   }
 
   // NOTE #5884
@@ -168,10 +185,18 @@ class AuxiliaryTreePack {
       runPipeline(
         previousRunPipelineTimeStamp,
         skipIfTimeStampUnchanged: false,
-        debugReason: 'AuxiliaryTreePack.dispose',
+        debugReason: RunPipelineReason.auxiliaryTreePackDispose,
       );
     }
   }
+}
+
+enum RunPipelineReason {
+  preemptRenderBuildOrLayoutPhase,
+  renderAdapterInMainTreePerformLayout,
+  plainAfterFlushLayout,
+  preemptRenderPostDrawFramePhase,
+  auxiliaryTreePackDispose,
 }
 
 void _temporarilyRemoveDebugActiveLayout(VoidCallback f) {

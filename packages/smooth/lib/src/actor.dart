@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
+import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/service_locator.dart';
 import 'package:smooth/src/time/simple_date_time.dart';
 import 'package:smooth/src/time/typed_time.dart';
@@ -28,7 +29,8 @@ class Actor {
         serviceLocator.timeConverter.dateTimeToAdjustedFrameTimeStamp(now);
 
     if (timeManager.thresholdActOnBuildOrLayoutPhaseTimeStamp! < nowTimestamp) {
-      _preemptRenderRaw(debugReason: 'maybePreemptRenderBuildOrLayoutPhase');
+      _preemptRenderRaw(
+          debugReason: RunPipelineReason.preemptRenderBuildOrLayoutPhase);
       timeManager.afterBuildOrLayoutPhasePreemptRender(now: nowTimestamp);
     }
   }
@@ -45,17 +47,18 @@ class Actor {
     if (timeManager.thresholdActOnPostDrawFramePhaseTimeStamp! < nowTimestamp) {
       // NOTE this is "before" not "after"
       timeManager.beforePostDrawFramePhasePreemptRender(now: nowTimestamp);
-      _preemptRenderRaw(debugReason: 'maybePreemptRenderPostDrawFramePhase');
+      _preemptRenderRaw(
+          debugReason: RunPipelineReason.preemptRenderPostDrawFramePhase);
     }
   }
 
-  void _preemptRenderRaw({required String debugReason}) {
+  void _preemptRenderRaw({required RunPipelineReason debugReason}) {
     final serviceLocator = ServiceLocator.instance;
     final smoothFrameTimeStamp =
         serviceLocator.timeManager.currentSmoothFrameTimeStamp;
     final binding = WidgetsFlutterBinding.ensureInitialized();
     final arguments = {
-      'reason': debugReason,
+      'reason': debugReason.toString(),
       'smoothFrameTimeStamp': smoothFrameTimeStamp.inMicroseconds.toString(),
       // TODO
     };
@@ -105,12 +108,12 @@ class Actor {
   }
 
   void _preemptModifyLayerTree(AdjustedFrameTimeStamp timeStamp,
-      {required String debugReason}) {
+      {required RunPipelineReason debugReason}) {
     for (final pack in ServiceLocator.instance.auxiliaryTreeRegistry.trees) {
       pack.runPipeline(
         timeStamp,
         skipIfTimeStampUnchanged: false,
-        debugReason: 'preemptModifyLayerTree $debugReason',
+        debugReason: debugReason,
       );
     }
   }

@@ -59,7 +59,7 @@ class _RenderAdapterInMainTree extends RenderBox
     pack.runPipeline(
       ServiceLocator.instance.timeManager.currentSmoothFrameTimeStamp,
       skipIfTimeStampUnchanged: false,
-      debugReason: 'RenderAdapterInMainTree.performLayout',
+      debugReason: RunPipelineReason.renderAdapterInMainTreePerformLayout,
     );
 
     // print('$runtimeType.performLayout child.layout start');

@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
 import 'package:smooth/src/time/typed_time.dart';
@@ -250,7 +251,7 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
         // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
         // we cannot skip it anymore.
         skipIfTimeStampUnchanged: false,
-        debugReason: 'SmoothPipelineOwner.handleAfterFlushLayout',
+        debugReason: RunPipelineReason.plainAfterFlushLayout,
       );
     }
     // } finally {
