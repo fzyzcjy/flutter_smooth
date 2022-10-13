@@ -1,5 +1,5 @@
 import 'package:flutter/gestures.dart';
-import 'package:smooth/src/messages.dart';
+import 'package:smooth/src/host_api/messages.dart';
 
 class SmoothHostApiWrapped {
   static final instance = SmoothHostApiWrapped._();

@@ -1,7 +1,7 @@
 import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(PigeonOptions(
-  dartOut: 'lib/src/messages.dart',
+  dartOut: 'lib/src/host_api/messages.dart',
   javaOut: 'android/src/main/java/com/cjy/smooth/Messages.java',
   objcHeaderOut: 'ios/Classes/messages.h',
   objcSourceOut: 'ios/Classes/messages.m',
