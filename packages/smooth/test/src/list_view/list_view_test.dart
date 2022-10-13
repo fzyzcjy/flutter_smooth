@@ -113,83 +113,145 @@ void main() {
     });
 
     group('when animation after drag, should be smooth', () {
-      testWidgets('integrated', (tester) async {
-        debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
-        final timeInfo = TimeInfo();
-        final capturer = WindowRenderCapturer.autoDispose();
-        final t = _SmoothListViewTester(tester);
-        final gesture = TestSmoothGesture();
-
-        await tester.pumpWidget(t.build());
-        await capturer
-            .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
-          await t.createExpectImage(0),
-        ]);
-
-        gesture.addEventDown(const Offset(25, 50));
-        await gesture.plainDispatchAll();
-
-        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
-        await capturer
-            .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
-          await t.createExpectImage(50 - 50),
-        ]);
-
-        gesture.addEventMove(const Offset(25, 40));
-        await gesture.plainDispatchAll();
-
-        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2));
-        await capturer
-            .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
-          await t.createExpectImage(50 - 40),
-        ]);
-
-        gesture.addEventUp();
-        await gesture.plainDispatchAll();
-
-        debugPrint('action: pump');
-        t
-          ..onBeforePreemptPoint.once = () {
-            debugPrint('action: elapse before PreemptPoint');
-            binding.elapseBlocking(const Duration(microseconds: 16500));
+      group('integrated', () {
+        // work as control group, so we can more easily understand how a
+        // normal ListView will behave
+        testWidgets('using plain old ListView', (tester) async {
+          // https://github.com/fzyzcjy/yplusplus/issues/6170#issuecomment-1276994971
+          double getCurrentOffset() {
+            final state =
+                tester.state<ScrollableState>(find.byType(Scrollable));
+            return state.position.pixels;
           }
-          ..onAfterPreemptPoint.once = () {
-            debugPrint('action: elapse after PreemptPoint');
-            binding.elapseBlocking(const Duration(microseconds: 16500));
+
+          debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
+          final timeInfo = TimeInfo();
+          final capturer = WindowRenderCapturer.autoDispose();
+          final t = _SmoothListViewTester(tester);
+          final gesture = TestSmoothGesture();
+
+          await tester.pumpWidget(t.build());
+          await capturer
+              .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
+            await t.createExpectImage(0),
+          ]);
+
+          gesture.addEventDown(const Offset(25, 50));
+          await gesture.plainDispatchAll();
+
+          await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
+          await capturer
+              .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
+            await t.createExpectImage(50 - 50),
+          ]);
+          debugPrint('offset=${getCurrentOffset()}');
+
+          gesture.addEventMove(const Offset(25, 30));
+          await gesture.plainDispatchAll();
+
+          await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2));
+          await capturer
+              .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
+            await t.createExpectImage(50 - 30),
+          ]);
+          debugPrint('offset=${getCurrentOffset()}');
+
+          gesture.addEventUp();
+          await gesture.plainDispatchAll();
+
+          for (var i = 0; i < 6; ++i) {
+            await tester
+                .pump(timeInfo.calcPumpDuration(smoothFrameIndex: i + 3));
+            debugPrint('offset=${getCurrentOffset()}');
+
+            await capturer.expectAndReset(tester,
+                expectTestFrameNumber: i + 4,
+                expectImages: [
+                  // TODO
+                ]);
           }
-          ..onPaint.once = () {
-            debugPrint('action: elapse on paint');
-            binding.elapseBlocking(const Duration(microseconds: 16500));
-          };
-        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
 
-        await capturer
-            .expectAndReset(tester, expectTestFrameNumber: 5, expectImages: [
-          // TODO
-        ]);
+          debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
+        });
 
-        debugPrint('action: pump');
-        t
-          ..onBeforePreemptPoint.once = () {
-            debugPrint('action: elapse before PreemptPoint');
-            binding.elapseBlocking(const Duration(microseconds: 16500));
-          }
-          ..onAfterPreemptPoint.once = () {
-            debugPrint('action: elapse after PreemptPoint');
-            binding.elapseBlocking(const Duration(microseconds: 16500));
-          }
-          ..onPaint.once = () {
-            debugPrint('action: elapse on paint');
-            binding.elapseBlocking(const Duration(microseconds: 16500));
-          };
-        await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 6));
+        testWidgets('using SmoothListView', (tester) async {
+          debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
+          final timeInfo = TimeInfo();
+          final capturer = WindowRenderCapturer.autoDispose();
+          final t = _SmoothListViewTester(tester);
+          final gesture = TestSmoothGesture();
 
-        await capturer
-            .expectAndReset(tester, expectTestFrameNumber: 6, expectImages: [
-          // TODO
-        ]);
+          await tester.pumpWidget(t.build());
+          await capturer
+              .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
+            await t.createExpectImage(0),
+          ]);
 
-        debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
+          gesture.addEventDown(const Offset(25, 50));
+          await gesture.plainDispatchAll();
+
+          await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
+          await capturer
+              .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
+            await t.createExpectImage(50 - 50),
+          ]);
+
+          gesture.addEventMove(const Offset(25, 30));
+          await gesture.plainDispatchAll();
+
+          await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 2));
+          await capturer
+              .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
+            await t.createExpectImage(50 - 30),
+          ]);
+
+          gesture.addEventUp();
+          await gesture.plainDispatchAll();
+
+          debugPrint('action: pump');
+          t
+            ..onBeforePreemptPoint.once = () {
+              debugPrint('action: elapse before PreemptPoint');
+              binding.elapseBlocking(const Duration(microseconds: 16500));
+            }
+            ..onAfterPreemptPoint.once = () {
+              debugPrint('action: elapse after PreemptPoint');
+              binding.elapseBlocking(const Duration(microseconds: 16500));
+            }
+            ..onPaint.once = () {
+              debugPrint('action: elapse on paint');
+              binding.elapseBlocking(const Duration(microseconds: 16500));
+            };
+          await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 3));
+
+          await capturer
+              .expectAndReset(tester, expectTestFrameNumber: 5, expectImages: [
+            // TODO
+          ]);
+
+          debugPrint('action: pump');
+          t
+            ..onBeforePreemptPoint.once = () {
+              debugPrint('action: elapse before PreemptPoint');
+              binding.elapseBlocking(const Duration(microseconds: 16500));
+            }
+            ..onAfterPreemptPoint.once = () {
+              debugPrint('action: elapse after PreemptPoint');
+              binding.elapseBlocking(const Duration(microseconds: 16500));
+            }
+            ..onPaint.once = () {
+              debugPrint('action: elapse on paint');
+              binding.elapseBlocking(const Duration(microseconds: 16500));
+            };
+          await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 6));
+
+          await capturer
+              .expectAndReset(tester, expectTestFrameNumber: 6, expectImages: [
+            // TODO
+          ]);
+
+          debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
+        });
       });
     });
 
