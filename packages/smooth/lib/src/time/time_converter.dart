@@ -9,9 +9,6 @@ import 'package:smooth/src/time/simple_date_time.dart';
 import 'package:smooth/src/time/typed_time.dart';
 
 abstract class TimeConverter {
-  static const _systemToAdjustedFrameTimeStampConverter =
-      _SystemToAdjustedFrameTimeStampConverter();
-
   factory TimeConverter() = _TimeConverterNormal;
 
   const TimeConverter.raw();
@@ -24,11 +21,11 @@ abstract class TimeConverter {
   AdjustedFrameTimeStamp dateTimeToAdjustedFrameTimeStamp(SimpleDateTime t) =>
       AdjustedFrameTimeStamp.unchecked(
           microseconds:
-              t.microsecondsSinceEpoch - diffDateTimeToAdjustedFrameTimeStamp);
+              t.microsecondsSinceEpoch - _diffDateTimeToAdjustedFrameTimeStamp);
 
   SimpleDateTime adjustedFrameTimeStampToDateTime(AdjustedFrameTimeStamp d) =>
       SimpleDateTime.fromMicrosecondsSinceEpoch(
-          d.inMicroseconds + diffDateTimeToAdjustedFrameTimeStamp);
+          d.inMicroseconds + _diffDateTimeToAdjustedFrameTimeStamp);
 
   PointerEventTimeStamp? dateTimeToPointerEventTimeStamp(SimpleDateTime d) {
     final diff = diffDateTimeToPointerEventTimeStamp;
@@ -44,11 +41,14 @@ abstract class TimeConverter {
   }
 
   int get _diffSystemToAdjustedFrameTimeStamp =>
-      _systemToAdjustedFrameTimeStampConverter
+      _SystemToAdjustedFrameTimeStampConverter
           .diffSystemToAdjustedFrameTimeStamp;
 
+  int get _diffDateTimeToAdjustedFrameTimeStamp =>
+      diffDateTimeToSystemFrameTimeStamp + _diffSystemToAdjustedFrameTimeStamp;
+
   @protected
-  int get diffDateTimeToAdjustedFrameTimeStamp;
+  int get diffDateTimeToSystemFrameTimeStamp;
 
   @protected
   int? get diffDateTimeToPointerEventTimeStamp;
@@ -65,9 +65,8 @@ class _TimeConverterNormal extends TimeConverter {
   }
 
   @override
-  int get diffDateTimeToAdjustedFrameTimeStamp =>
-      _systemFrameTimeStampConverter.diffDateTimeToSystemFrameTimeStamp +
-      _diffSystemToAdjustedFrameTimeStamp;
+  int get diffDateTimeToSystemFrameTimeStamp =>
+      _systemFrameTimeStampConverter.diffDateTimeToSystemFrameTimeStamp;
 
   @override
   int? get diffDateTimeToPointerEventTimeStamp =>
@@ -103,9 +102,7 @@ class _SystemFrameTimeStampConverter {
 }
 
 class _SystemToAdjustedFrameTimeStampConverter {
-  const _SystemToAdjustedFrameTimeStampConverter();
-
-  int get diffSystemToAdjustedFrameTimeStamp =>
+  static int get diffSystemToAdjustedFrameTimeStamp =>
       SchedulerBinding.instance.currentSystemFrameTimeStamp.inMicroseconds -
       SchedulerBinding.instance.currentFrameTimeStamp.inMicroseconds;
 }
