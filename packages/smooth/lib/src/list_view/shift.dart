@@ -20,10 +20,8 @@ class SmoothShift extends StatefulWidget {
 }
 
 // try to use mixin to maximize performance
-class _SmoothShiftState = _SmoothShiftBase with _SmoothShiftFromPointerEvent //
-// NOTE temporarily disable
-// , _SmoothShiftFromBallistic
-    ;
+class _SmoothShiftState = _SmoothShiftBase
+    with _SmoothShiftFromPointerEvent, _SmoothShiftFromBallistic;
 
 abstract class _SmoothShiftBase extends State<SmoothShift>
     with TickerProviderStateMixin {
