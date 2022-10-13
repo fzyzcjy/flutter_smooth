@@ -80,7 +80,9 @@ mixin SmoothSchedulerBindingTestMixin on AutomatedTestWidgetsFlutterBinding {
   }
 
   void _sanityCheckFrameTimeStamp() {
-    if (_prevFrameTimeStamp != null) {
+    // need [SmoothParent.active] - see
+    // https://github.com/fzyzcjy/yplusplus/issues/6166#issuecomment-1276992107
+    if (_prevFrameTimeStamp != null && SmoothParent.active) {
       expect(
         (currentFrameTimeStamp - _prevFrameTimeStamp!).inMicroseconds %
             kOneFrame.inMicroseconds,
