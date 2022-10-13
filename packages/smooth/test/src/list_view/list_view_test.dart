@@ -47,8 +47,8 @@ void main() {
       }
     });
 
-    // #6061
-    testWidgets('when has PostDrawFramePhasePreemptRender', (tester) async {
+    // also reproduce #6061
+    testWidgets('integrated', (tester) async {
       debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
       final timeInfo = TimeInfo();
       final capturer = WindowRenderCapturer.autoDispose();
@@ -98,7 +98,9 @@ void main() {
           .expectAndReset(tester, expectTestFrameNumber: 4, expectImages: [
         // note there is "lag" - because we do not use the PointerEvent
         // immediately, but only use the ones that are old enough to be "real"
+        // the BuildOrLayoutPhasePreemptRender
         await t.createExpectImage(50 - 30),
+        // the plain old render
         await t.createExpectImage(50 - 20),
         // extra smooth frame after finalize phase
         // i.e. PostDrawFramePhasePreemptRender
