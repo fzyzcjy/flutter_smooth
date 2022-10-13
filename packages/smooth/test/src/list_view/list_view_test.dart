@@ -150,11 +150,13 @@ void main() {
           required Future<void> Function(_SmoothListViewTester, TimeInfo)
               pumpFramesAfterPointUp,
           required int numWindowRenderPerPlainFrame,
+          bool enableSmoothListView = true,
         }) async {
           debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
           final timeInfo = TimeInfo();
           final capturer = WindowRenderCapturer.autoDispose();
-          final t = _SmoothListViewTester(tester);
+          final t = _SmoothListViewTester(tester,
+              enableSmoothListView: enableSmoothListView);
           final gesture = TestSmoothGesture();
 
           await tester.pumpWidget(t.build());
@@ -211,28 +213,34 @@ void main() {
           debugPrintBeginFrameBanner = debugPrintEndFrameBanner = false;
         }
 
-        // work as control group, so we can more easily understand how a
-        // normal ListView will behave
-        testWidgets('using plain old ListView', (tester) async {
-          await _body(
-            tester,
-            numWindowRenderPerPlainFrame: 1,
-            pumpFramesAfterPointUp: (t, timeInfo) async {
-              final actualOffsets = <double>[];
+        for (final enableSmoothListView in [false, true]) {
+          // work as control group, so we can more easily understand how a
+          // normal ListView will behave
+          testWidgets(
+              enableSmoothListView
+                  ? 'SmoothListView without preempt renders'
+                  : 'using plain old ListView', (tester) async {
+            await _body(
+              tester,
+              numWindowRenderPerPlainFrame: 1,
+              enableSmoothListView: enableSmoothListView,
+              pumpFramesAfterPointUp: (t, timeInfo) async {
+                final actualOffsets = <double>[];
 
-              for (var i = 0; i < 18; ++i) {
-                await tester
-                    .pump(timeInfo.calcPumpDuration(smoothFrameIndex: 12 + i));
-                actualOffsets.add(getScrollableOffset(tester));
-                debugPrint('i=$i offset=${getScrollableOffset(tester)}');
-              }
+                for (var i = 0; i < 18; ++i) {
+                  await tester.pump(
+                      timeInfo.calcPumpDuration(smoothFrameIndex: 12 + i));
+                  actualOffsets.add(getScrollableOffset(tester));
+                  debugPrint('i=$i offset=${getScrollableOffset(tester)}');
+                }
 
-              expect(actualOffsets, expectOffsets);
-            },
-          );
-        });
+                expect(actualOffsets, expectOffsets);
+              },
+            );
+          });
+        }
 
-        testWidgets('using SmoothListView', (tester) async {
+        testWidgets('SmoothListView with preempt renders', (tester) async {
           await _body(
             tester,
             numWindowRenderPerPlainFrame: 3,
@@ -349,8 +357,12 @@ void main() {
 
 class _SmoothListViewTester {
   final WidgetTester tester;
+  final bool enableSmoothListView;
 
-  _SmoothListViewTester(this.tester);
+  _SmoothListViewTester(
+    this.tester, {
+    this.enableSmoothListView = true,
+  });
 
   final onBeforePreemptPoint = OnceCallable();
   final onAfterPreemptPoint = OnceCallable();
@@ -378,7 +390,8 @@ class _SmoothListViewTester {
         textDirection: TextDirection.ltr,
         child: Stack(
           children: [
-            SmoothListView.builder(
+            SmoothListView.maybeBuilder(
+              smooth: enableSmoothListView,
               itemCount: 100,
               itemBuilder: (_, index) => Container(
                 height: 600,
