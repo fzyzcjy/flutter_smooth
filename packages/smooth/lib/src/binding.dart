@@ -38,8 +38,17 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   //   super.handleBeginFrame(rawTimeStamp);
   // }
 
+  MainLayerTreeModeInAuxTreeView get mainLayerTreeModeInAuxTreeView =>
+      _mainLayerTreeModeInAuxTreeView;
+  MainLayerTreeModeInAuxTreeView _mainLayerTreeModeInAuxTreeView =
+      MainLayerTreeModeInAuxTreeView.previousPlainFrame;
+
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
+    // we are in a new frame, so last frame's "now" means this frame's "previous"
+    _mainLayerTreeModeInAuxTreeView =
+        MainLayerTreeModeInAuxTreeView.previousPlainFrame;
+
     // mimic how [handleBeginFrame] computes the real [currentFrameTimeStamp]
     final eagerCurrentFrameTimeStamp = AdjustedFrameTimeStamp.uncheckedFrom(
         adjustForEpoch(rawTimeStamp ?? currentSystemFrameTimeStamp));
@@ -85,6 +94,14 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
         'Please use a WidgetsBinding with SmoothSchedulerBindingMixin');
     return raw as SmoothSchedulerBindingMixin;
   }
+}
+
+/// When aux tree is computing, should it imagine the main layer tree
+/// be the content of current ([currentPlainFrame]) or previous
+/// ([previousPlainFrame]) plain frame?
+enum MainLayerTreeModeInAuxTreeView {
+  currentPlainFrame,
+  previousPlainFrame,
 }
 
 mixin SmoothGestureBindingMixin on GestureBinding {
@@ -204,6 +221,16 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     // print('handleAfterFlushLayout');
 
     final serviceLocator = ServiceLocator.instance;
+
+    // NOTE: Set this *BEFORE* runPipeline and main tree's paint phase.
+    //
+    // even though we have *not* started main tree's paint phase,
+    // we have to consider current frame (not previous frame)'s main layer tree
+    // when runPipeline in aux tree. This is because, the output of this
+    // runPipeline in aux tree will be combined with *current* frame's main
+    // layer tree soon.
+    SmoothSchedulerBindingMixin.instance._mainLayerTreeModeInAuxTreeView =
+        MainLayerTreeModeInAuxTreeView.currentPlainFrame;
 
     final currentSmoothFrameTimeStamp =
         serviceLocator.timeManager.currentSmoothFrameTimeStamp;
