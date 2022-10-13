@@ -149,6 +149,8 @@ class _SmoothShiftSourcePointerEvent extends _SmoothShiftSource {
   }
 
   void _handleBeginFrameEarlyCallback() {
+    if (!state.mounted) return;
+
     _positionWhenPrevStartDrawFrame = _positionWhenCurrStartDrawFrame;
     _positionWhenCurrStartDrawFrame = _currPosition;
     notifyListeners();
@@ -294,6 +296,8 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
   }
 
   void _handleBeginFrameEarlyCallback() {
+    if (!state.mounted) return;
+
     _lastBeforeBeginFrameSimulationOffset =
         _scrollPosition?.lastSimulationInfo.value?.realSimulation.lastX;
     notifyListeners();
