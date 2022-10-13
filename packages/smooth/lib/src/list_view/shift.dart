@@ -276,7 +276,20 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
             .instance.mainLayerTreeModeInAuxTreeView.value);
     if (plainOffset == null) return 0;
 
-    return -(smoothOffset - plainOffset);
+    final ans = -(smoothOffset - plainOffset);
+
+    print('hi $runtimeType._computeOffsetFromBallisticOnTick '
+        'ans=$ans '
+        'smoothOffset=$smoothOffset '
+        'plainOffset=$plainOffset '
+        'plainOffsetSnapshot=$_plainOffsetSnapshot '
+        'mainLayerTreeModeInAuxTreeView=${SmoothSchedulerBindingMixin.instance.mainLayerTreeModeInAuxTreeView.value} '
+        'selfTickerElapsed=$selfTickerElapsed '
+        'tickTimeStamp=$tickTimeStamp '
+        'ballisticTickerStartTime=$ballisticTickerStartTime '
+        'simulationRelativeTime=$simulationRelativeTime ');
+
+    return ans;
   }
 }
 
