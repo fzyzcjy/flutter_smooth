@@ -2,40 +2,25 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:clock/clock.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/host_api/messages.dart';
 import 'package:smooth/src/time/simple_date_time.dart';
 import 'package:smooth/src/time/typed_time.dart';
 
-// TODO maybe improve
-class TimeConverter {
-  final _systemFrameTimeStampConverter = _SystemFrameTimeStampConverter();
-  final _systemToAdjustedFrameTimeStampConverter =
-      const _SystemToAdjustedFrameTimeStampConverter();
-  final _PointerEventTimeStampConverter _pointerEventTimeStampConverter;
+abstract class TimeConverter {
+  static const _systemToAdjustedFrameTimeStampConverter =
+      _SystemToAdjustedFrameTimeStampConverter();
 
-  TimeConverter({bool testing = false})
-      : _pointerEventTimeStampConverter = testing
-            ? _PointerEventTimeStampConverter.fake(() => 123456789)
-            : _PointerEventTimeStampConverter.normal();
+  factory TimeConverter.normal() = _TimeConverterNormal;
 
-  void dispose() {
-    _systemFrameTimeStampConverter.dispose();
-  }
+  factory TimeConverter.test() = _TimeConverterTest;
 
-  int get _diffDateTimeToAdjustedFrameTimeStamp =>
-      _systemFrameTimeStampConverter.diffDateTimeToSystemFrameTimeStamp +
-      _systemToAdjustedFrameTimeStampConverter
-          .diffSystemToAdjustedFrameTimeStamp;
+  const TimeConverter._();
 
   SystemFrameTimeStamp adjustedToSystemFrameTimeStamp(
           AdjustedFrameTimeStamp t) =>
       SystemFrameTimeStamp.unchecked(
-        microseconds: t.inMicroseconds +
-            _systemToAdjustedFrameTimeStampConverter
-                .diffSystemToAdjustedFrameTimeStamp,
-      );
+          microseconds: t.inMicroseconds + _diffSystemToAdjustedFrameTimeStamp);
 
   AdjustedFrameTimeStamp dateTimeToAdjustedFrameTimeStamp(SimpleDateTime t) =>
       AdjustedFrameTimeStamp.unchecked(
@@ -47,24 +32,45 @@ class TimeConverter {
           d.inMicroseconds + _diffDateTimeToAdjustedFrameTimeStamp);
 
   PointerEventTimeStamp? dateTimeToPointerEventTimeStamp(SimpleDateTime d) {
-    final diffDateTimeToPointerEventTimeStamp =
-        _pointerEventTimeStampConverter.diffDateTimeToPointerEventTimeStamp;
-    if (diffDateTimeToPointerEventTimeStamp == null) return null;
-
+    final diff = _diffDateTimeToPointerEventTimeStamp;
+    if (diff == null) return null;
     return PointerEventTimeStamp.unchecked(
-      microseconds:
-          d.microsecondsSinceEpoch - diffDateTimeToPointerEventTimeStamp,
-    );
+        microseconds: d.microsecondsSinceEpoch - diff);
   }
 
   SimpleDateTime? pointerEventTimeStampToDateTime(PointerEventTimeStamp d) {
-    final diffDateTimeToPointerEventTimeStamp =
-        _pointerEventTimeStampConverter.diffDateTimeToPointerEventTimeStamp;
-    if (diffDateTimeToPointerEventTimeStamp == null) return null;
-
-    return SimpleDateTime.fromMicrosecondsSinceEpoch(
-        d.inMicroseconds + diffDateTimeToPointerEventTimeStamp);
+    final diff = _diffDateTimeToPointerEventTimeStamp;
+    if (diff == null) return null;
+    return SimpleDateTime.fromMicrosecondsSinceEpoch(d.inMicroseconds + diff);
   }
+
+  int get _diffSystemToAdjustedFrameTimeStamp =>
+      _systemToAdjustedFrameTimeStampConverter
+          .diffSystemToAdjustedFrameTimeStamp;
+
+  int get _diffDateTimeToAdjustedFrameTimeStamp;
+
+  int? get _diffDateTimeToPointerEventTimeStamp;
+}
+
+class _TimeConverterNormal extends TimeConverter {
+  final _systemFrameTimeStampConverter = _SystemFrameTimeStampConverter();
+  final _pointerEventTimeStampConverter = _PointerEventTimeStampConverter();
+
+  _TimeConverterNormal() : super._();
+
+  void dispose() {
+    _systemFrameTimeStampConverter.dispose();
+  }
+
+  @override
+  int get _diffDateTimeToAdjustedFrameTimeStamp =>
+      _systemFrameTimeStampConverter.diffDateTimeToSystemFrameTimeStamp +
+      _diffSystemToAdjustedFrameTimeStamp;
+
+  @override
+  int? get _diffDateTimeToPointerEventTimeStamp =>
+      _pointerEventTimeStampConverter.diffDateTimeToPointerEventTimeStamp;
 }
 
 class _SystemFrameTimeStampConverter {
@@ -103,19 +109,8 @@ class _SystemToAdjustedFrameTimeStampConverter {
       SchedulerBinding.instance.currentFrameTimeStamp.inMicroseconds;
 }
 
-abstract class _PointerEventTimeStampConverter {
-  factory _PointerEventTimeStampConverter.normal() =
-      _PointerEventTimeStampConverterNormal;
-
-  factory _PointerEventTimeStampConverter.fake(ValueGetter<int> getter) =
-      _PointerEventTimeStampConverterFake;
-
-  int? get diffDateTimeToPointerEventTimeStamp;
-}
-
-class _PointerEventTimeStampConverterNormal
-    implements _PointerEventTimeStampConverter {
-  _PointerEventTimeStampConverterNormal() {
+class _PointerEventTimeStampConverter {
+  _PointerEventTimeStampConverter() {
     _init();
   }
 
@@ -124,18 +119,17 @@ class _PointerEventTimeStampConverterNormal
         await SmoothHostApi().pointerEventDateTimeDiffTimeStamp();
   }
 
-  @override
   int? get diffDateTimeToPointerEventTimeStamp =>
       _diffDateTimeToPointerEventTimeStamp;
   int? _diffDateTimeToPointerEventTimeStamp;
 }
 
-class _PointerEventTimeStampConverterFake
-    implements _PointerEventTimeStampConverter {
-  final ValueGetter<int> getter;
-
-  _PointerEventTimeStampConverterFake(this.getter);
+class _TimeConverterTest extends TimeConverter {
+  _TimeConverterTest() : super._();
 
   @override
-  int get diffDateTimeToPointerEventTimeStamp => getter();
+  int get _diffDateTimeToAdjustedFrameTimeStamp => TODO;
+
+  @override
+  int? get _diffDateTimeToPointerEventTimeStamp => 123456789;
 }

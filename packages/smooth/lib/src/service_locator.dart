@@ -14,7 +14,7 @@ class ServiceLocator {
         timeManager: TimeManager(),
         auxiliaryTreeRegistry: AuxiliaryTreeRegistry(),
         extraEventDispatcher: ExtraEventDispatcher(),
-        timeConverter: TimeConverter(testing: testing),
+        timeConverter: testing ? TimeConverter.normal() : TimeConverter.test(),
       );
 
   ServiceLocator.raw({
