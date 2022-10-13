@@ -247,8 +247,15 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   void _tick(Duration selfTickerElapsed) {
     if (!mounted) return;
 
+    setState(() {
+      _offsetFromBallistic =
+          _computeOffsetFromBallisticOnTick(selfTickerElapsed);
+    });
+  }
+
+  double _computeOffsetFromBallisticOnTick(Duration selfTickerElapsed) {
     final lastSimulationInfo = _scrollPosition!.lastSimulationInfo.value;
-    if (lastSimulationInfo == null) return;
+    if (lastSimulationInfo == null) return 0;
 
     // [selfTickerElapsed] is the time delta relative to [_ticker.startTime]
     // thus [tickTimeStamp] is absolute [AdjustedFrameTimeStamp]
@@ -256,8 +263,10 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
     // [simulationRelativeTime] is the time delta relative to
     // [ballisticScrollActivityTicker]. In other words, it is the time that the
     // real [ListView]'s [BallisticScrollActivity] has.
-    final simulationRelativeTime = tickTimeStamp -
-        lastSimulationInfo.ballisticScrollActivityTicker.startTime!;
+    final ballisticTickerStartTime =
+        lastSimulationInfo.ballisticScrollActivityTicker.startTime;
+    if (ballisticTickerStartTime == null) return 0;
+    final simulationRelativeTime = tickTimeStamp - ballisticTickerStartTime;
 
     final smoothOffset = lastSimulationInfo.clonedSimulation
         .x(simulationRelativeTime.inMicroseconds / 1000000);
@@ -265,28 +274,9 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
     final plainOffset = _plainOffsetSnapshot.snapshotOf(
         SmoothSchedulerBindingMixin
             .instance.mainLayerTreeModeInAuxTreeView.value);
+    if (plainOffset == null) return 0;
 
-    setState(() {
-      _offsetFromBallistic =
-          plainOffset == null ? 0.0 : -(smoothOffset - plainOffset);
-    });
-
-    // old
-    // final plainValue = lastSimulationInfo.realSimulation.lastX;
-    // if (plainValue == null) return;
-    //
-    // // ref: [AnimationController._tick]
-    // final elapsedInSeconds =
-    //     elapsed.inMicroseconds.toDouble() / Duration.microsecondsPerSecond;
-    // final smoothValue = lastSimulationInfo.clonedSimulation.x(elapsedInSeconds);
-    //
-    // setState(() {
-    //   _offsetFromBallistic = -(smoothValue - plainValue);
-    // });
-    //
-    // print('hi ${describeIdentity(this)}._tick '
-    //     'set _offsetFromBallistic=$_offsetFromBallistic '
-    //     'since smoothValue=$smoothValue plainValue=$plainValue elapsed=$elapsed');
+    return -(smoothOffset - plainOffset);
   }
 }
 
