@@ -12,7 +12,7 @@ import 'package:pigeon/pigeon.dart';
     prefix: 'CS',
   ),
   dartOptions: DartOptions(copyrightHeader: [
-    'ignore_for_file: avoid-non-null-assertion, prefer_constructors_over_static_methods, unnecessary_import'
+    'ignore_for_file: avoid-non-null-assertion, prefer_constructors_over_static_methods'
   ]),
 ))
 @HostApi()

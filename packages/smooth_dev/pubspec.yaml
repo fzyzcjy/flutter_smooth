@@ -15,9 +15,12 @@ dependencies:
   flutter_test:
     sdk: flutter
   image: ^3.2.0
-  smooth:
-    path: ../smooth
+  smooth: ^1.0.0
   test_api: ^0.4.2
 
 dev_dependencies:
   lint: ^1.10.0
+
+dependency_overrides:
+  smooth:
+    path: ../smooth
