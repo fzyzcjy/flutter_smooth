@@ -34,11 +34,11 @@ void main() {
             binding.currentFrameTimeStampTyped - kOneFrameAFTS,
           );
         };
-        await tester.pump(const Duration(seconds: 1));
+        final pumpDuration = kOneFrame * 10;
+        await tester.pump(pumpDuration);
 
-        expect(binding.clock.now(),
-            DateTime.utc(2015).add(const Duration(seconds: 1)));
-        expect(clock.now(), clockAtStart.add(const Duration(seconds: 1)));
+        expect(binding.clock.now(), DateTime.utc(2015).add(pumpDuration));
+        expect(clock.now(), clockAtStart.add(pumpDuration));
 
         expect(onBuild.hasPending, false);
       });
