@@ -74,6 +74,7 @@ class SmoothScrollPositionWithSingleContext
       //      Because [Simulation]'s doc says, some subclasses will change
       //      state when called, and must only call with monotonic timestamps.
       _lastSimulationInfo.value = SimulationInfo(
+        realSimulation: simulation,
         ballisticScrollActivityTicker: ballisticScrollActivityTicker,
         clonedSimulation: physics.createBallisticSimulation(this, velocity)!,
       );
@@ -94,10 +95,12 @@ class LambdaTickerProvider implements TickerProvider {
 }
 
 class SimulationInfo {
+  final MemorizedSimulation realSimulation;
   final Ticker ballisticScrollActivityTicker;
   final Simulation clonedSimulation;
 
   const SimulationInfo({
+    required this.realSimulation,
     required this.ballisticScrollActivityTicker,
     required this.clonedSimulation,
   });
@@ -112,10 +115,17 @@ class MemorizedSimulation extends ProxySimulation {
   double? get lastX => _lastX;
   double? _lastX;
 
+  double? _lastTime;
+
   @override
   double x(double time) {
+    assert(_lastTime == null || time >= _lastTime!);
+
     final ans = super.x(time);
+
     _lastX = ans;
+    _lastTime = time;
+
     return ans;
   }
 }

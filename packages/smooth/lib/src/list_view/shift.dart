@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/smooth.dart';
 import 'package:smooth/src/binding.dart';
 import 'package:smooth/src/list_view/controller.dart';
 
@@ -188,7 +187,9 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
 mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   double _offsetFromBallistic = 0;
   Ticker? _ticker;
-  SmoothScrollPositionWithSingleContext? _position;
+  SmoothScrollPositionWithSingleContext? _scrollPosition;
+  late final _plainOffsetSnapshot = FrameAwareSnapshot<double?>(
+      () => _scrollPosition?.lastSimulationInfo.value?.realSimulation.lastX);
 
   @override
   double get offset => super.offset + _offsetFromBallistic;
@@ -200,9 +201,10 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
     // https://github.com/fzyzcjy/yplusplus/issues/5918#issuecomment-1266553640
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _position =
+      _scrollPosition =
           SmoothScrollPositionWithSingleContext.of(widget.scrollController);
-      _position!.lastSimulationInfo.addListener(_handleLastSimulationChanged);
+      _scrollPosition!.lastSimulationInfo
+          .addListener(_handleLastSimulationChanged);
     });
   }
 
@@ -213,13 +215,14 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
         'for simplicity, not yet implemented change of `scrollController`');
     assert(
         SmoothScrollPositionWithSingleContext.of(widget.scrollController) ==
-            _position,
+            _scrollPosition,
         'for simplicity, SmoothScrollPositionWithSingleContext cannot yet be changed');
   }
 
   @override
   void dispose() {
-    _position?.lastSimulationInfo.removeListener(_handleLastSimulationChanged);
+    _scrollPosition?.lastSimulationInfo
+        .removeListener(_handleLastSimulationChanged);
     _ticker?.dispose();
     super.dispose();
   }
@@ -234,7 +237,7 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
   void _tick(Duration selfTickerElapsed) {
     if (!mounted) return;
 
-    final lastSimulationInfo = _position!.lastSimulationInfo.value;
+    final lastSimulationInfo = _scrollPosition!.lastSimulationInfo.value;
     if (lastSimulationInfo == null) return;
 
     // [selfTickerElapsed] is the time delta relative to [_ticker.startTime]
@@ -249,8 +252,13 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
     final smoothOffset = lastSimulationInfo.clonedSimulation
         .x(simulationRelativeTime.inMicroseconds / 1000000);
 
+    final plainOffset = _plainOffsetSnapshot.snapshotOf(
+        SmoothSchedulerBindingMixin
+            .instance.mainLayerTreeModeInAuxTreeView.value);
+
     setState(() {
-      _offsetFromBallistic = -(smoothOffset - plainOffset);
+      _offsetFromBallistic =
+          plainOffset == null ? 0.0 : -(smoothOffset - plainOffset);
     });
 
     // old
