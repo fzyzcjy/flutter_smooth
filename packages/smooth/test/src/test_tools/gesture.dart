@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
@@ -23,19 +24,19 @@ class TestSmoothGesture {
         .add(event);
   }
 
-  void addEventDown(Offset newLocation, DateTime time) =>
+  void addEventDown(Offset newLocation, {DateTime? time}) =>
       addEvent(_pointer.down(newLocation, timeStamp: _convertTimeStamp(time)));
 
-  void addEventMove(Offset newLocation, DateTime time) =>
+  void addEventMove(Offset newLocation, {DateTime? time}) =>
       addEvent(_pointer.move(newLocation, timeStamp: _convertTimeStamp(time)));
 
-  void addEventUp(DateTime time) =>
+  void addEventUp({DateTime? time}) =>
       addEvent(_pointer.up(timeStamp: _convertTimeStamp(time)));
 
-  Duration _convertTimeStamp(DateTime time) =>
-      ServiceLocator.instance.timeConverter
-          .dateTimeToPointerEventTimeStamp(time.toSimple())!
-          .innerPointerEventTimeStamp;
+  Duration _convertTimeStamp(DateTime? time) => ServiceLocator
+      .instance.timeConverter
+      .dateTimeToPointerEventTimeStamp(time?.toSimple() ?? clock.nowSimple())!
+      .innerPointerEventTimeStamp;
 
   Future<void> plainDispatchAll() async {
     // this [TestAsyncUtils.guard] ref [TestGesture]

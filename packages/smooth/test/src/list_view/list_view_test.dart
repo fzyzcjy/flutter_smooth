@@ -61,11 +61,12 @@ void main() {
           .expectAndReset(tester, expectTestFrameNumber: 2, expectImages: [
         await t.createExpectImage(0),
       ]);
+
       gesture.addEventDown(const Offset(25, 50));
       await gesture.plainDispatchAll();
-
       gesture.addEventMove(const Offset(25, 40));
       await gesture.plainDispatchAll();
+
       await tester.pump(timeInfo.calcPumpDuration(smoothFrameIndex: 1));
       await capturer
           .expectAndReset(tester, expectTestFrameNumber: 3, expectImages: [
