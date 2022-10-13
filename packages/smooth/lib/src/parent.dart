@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smooth/src/service_locator.dart';
 
-class SmoothMainTreeGlobalWidget extends StatelessWidget {
+class SmoothParent extends StatelessWidget {
   final Widget child;
 
-  const SmoothMainTreeGlobalWidget({super.key, required this.child});
+  const SmoothParent({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

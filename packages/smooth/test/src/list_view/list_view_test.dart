@@ -24,7 +24,7 @@ void main() {
         testWidgets(smooth ? 'smooth' : 'plain', (tester) async {
           final capturer = WindowRenderCapturer.autoDispose();
 
-          await tester.pumpWidget(SmoothScope(
+          await tester.pumpWidget(SmoothParent(
             child: Directionality(
               textDirection: TextDirection.ltr,
               child: SmoothListView.maybeBuilder(
@@ -210,7 +210,7 @@ class _SmoothListViewTester {
         ..fillRect(Rectangle(0, 120 - offset, 50, 60), Colors.primaries[2]));
 
   Widget build() {
-    return SmoothScope(
+    return SmoothParent(
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: Stack(

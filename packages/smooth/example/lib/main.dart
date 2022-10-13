@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
     // [ExcludeSemantics], because our demo contains a ton of text, much
     // more than normal app
     return ExcludeSemantics(
-      child: SmoothScope(
+      child: SmoothParent(
         child: MaterialApp(
           home: Scaffold(
             appBar: AppBar(

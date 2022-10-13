@@ -64,7 +64,7 @@ void main() {
           // create smooth extra frames. Otherwise, the layer tree is event not
           // built yet (because paint is not called yet).
           debugPrint('pumpWidget');
-          await tester.pumpWidget(SmoothScope(
+          await tester.pumpWidget(SmoothParent(
             child: Directionality(
               textDirection: TextDirection.ltr,
               child: Stack(
@@ -176,7 +176,7 @@ void main() {
         var enableSlowWork = false;
 
         debugPrint('pumpWidget');
-        await tester.pumpWidget(SmoothScope(
+        await tester.pumpWidget(SmoothParent(
           child: Directionality(
             textDirection: TextDirection.ltr,
             child: Stack(
@@ -304,7 +304,7 @@ void main() {
         final childWidget = ValueNotifier<Widget>(Container());
 
         debugPrint('action: pumpWidget');
-        await tester.pumpWidget(SmoothScope(
+        await tester.pumpWidget(SmoothParent(
           child: Directionality(
             textDirection: TextDirection.ltr,
             child: ValueListenableBuilder<Widget>(

@@ -45,7 +45,7 @@ void main() {
         final timeInfo = TimeInfo();
         final capturer = WindowRenderCapturer.autoDispose();
 
-        await tester.pumpWidget(SmoothScope(
+        await tester.pumpWidget(SmoothParent(
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             home: ExampleEnterPageAnimationPage(
