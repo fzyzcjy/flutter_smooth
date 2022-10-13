@@ -12,4 +12,6 @@ class OnceCallable {
     _callable?.call();
     _callable = null;
   }
+
+  bool get hasPending => _callable != null;
 }

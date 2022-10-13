@@ -7,3 +7,5 @@ export 'src/list_view/shift.dart' show SmoothShift;
 export 'src/parent.dart' show SmoothParent;
 export 'src/preempt_point.dart'
     show SmoothPreemptPoint, BuildPreemptPointWidget, LayoutPreemptPointWidget;
+export 'src/time/simple_date_time.dart';
+export 'src/time/typed_time.dart';
