@@ -20,7 +20,19 @@ const sidebars = {
     tutorialSidebar: [
         {type: 'doc', id: 'index', label: 'Introduction'},
         'quickstart',
-        'usage',
+        {
+            type: 'category',
+            label: 'Example',
+            collapsed: false,
+            link: {
+                type: 'doc',
+                id: 'example/index',
+            },
+            items: [
+                'example/enter-page',
+                'example/list-view',
+            ],
+        },
         {
             type: 'category',
             label: 'Benchmark',
@@ -55,9 +67,45 @@ const sidebars = {
                                 'benchmark/analyze/fps/devtool',
                             ],
                         },
-                        'benchmark/analyze/linearity',
-                        'benchmark/analyze/jank',
-                        'benchmark/analyze/latency',
+                        {
+                            type: 'category',
+                            label: 'Linearity',
+                            collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'benchmark/analyze/linearity/index',
+                            },
+                            items: [
+                                'benchmark/analyze/linearity/video',
+                                'benchmark/analyze/linearity/tracing',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Jank',
+                            collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'benchmark/analyze/jank/index',
+                            },
+                            items: [
+                                'benchmark/analyze/jank/frequency',
+                                'benchmark/analyze/jank/maximum',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Latency',
+                            collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'benchmark/analyze/latency/index',
+                            },
+                            items: [
+                                'benchmark/analyze/latency/component',
+                                'benchmark/analyze/latency/end-to-end',
+                            ],
+                        },
                         'benchmark/analyze/waste',
                     ],
                 },

@@ -2,12 +2,16 @@
 title: Latency
 ---
 
+definition
 e.g. originally need 1s to load the new page, now need 1.01s, then overhead is 1%
 
+why
 p.s. if not considering latency, then "do a *tiny* bit of thing per frame" will be quite great.
 
-a. by end-to-end measuring
+TODO also, is it really "overhead", or "necessary things"
 
-b. by looking at overhead of each component in timeline
+```mdx-code-block
+import DocCardList from '@theme/DocCardList';
 
-(#5962)
+<DocCardList />
+```
