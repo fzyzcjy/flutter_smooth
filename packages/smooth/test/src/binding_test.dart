@@ -25,7 +25,7 @@ void main() {
                 smoothBuilderRunReasons
                     .add(AuxiliaryTreePack.debugRunPipelineReason!);
                 smoothBuilderResults
-                    .add(binding.mainLayerTreeModeInAuxTreeView);
+                    .add(binding.mainLayerTreeModeInAuxTreeView.value);
                 return child;
               },
             ),
