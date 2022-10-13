@@ -48,8 +48,7 @@ void main() {
     });
 
     // #6061
-    testWidgets('when submit extra smooth frame after finalize phase',
-        (tester) async {
+    testWidgets('when has PostDrawFramePhasePreemptRender', (tester) async {
       debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
       final timeInfo = TimeInfo();
       final capturer = WindowRenderCapturer.autoDispose();
@@ -100,6 +99,7 @@ void main() {
         await t.createExpectImage(50 - 20),
         await t.createExpectImage(50 - 15),
         // extra smooth frame after finalize phase
+        // i.e. PostDrawFramePhasePreemptRender
         await t.createExpectImage(50 - 10),
       ]);
 
