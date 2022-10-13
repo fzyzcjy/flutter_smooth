@@ -44,6 +44,11 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   final _mainLayerTreeModeInAuxTreeView =
       ValueNotifier(MainLayerTreeModeInAuxTreeView.previousPlainFrame);
 
+  /// "early" := it is called before Flutter things such as animations
+  void addBeginFrameEarlyCallback(VoidCallback callback) =>
+      _beginFrameEarlyCallbacks.addCallback(callback);
+  final _beginFrameEarlyCallbacks = _Callbacks();
+
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
     // we are in a new frame, so last frame's "now" means this frame's "previous"
@@ -57,19 +62,16 @@ mixin SmoothSchedulerBindingMixin on SchedulerBinding {
     ServiceLocator.instance.timeManager
         .onBeginFrame(currentFrameTimeStamp: eagerCurrentFrameTimeStamp);
 
+    _beginFrameEarlyCallbacks.invokeCallbacks();
+
     super.handleBeginFrame(rawTimeStamp);
 
     assert(eagerCurrentFrameTimeStamp.inMicroseconds ==
         currentFrameTimeStamp.inMicroseconds);
   }
 
-  void addStartDrawFrameCallback(VoidCallback callback) =>
-      _startDrawFrameCallbacks.addCallback(callback);
-  final _startDrawFrameCallbacks = _Callbacks();
-
   @override
   void handleDrawFrame() {
-    _startDrawFrameCallbacks.invokeCallbacks();
     super.handleDrawFrame();
     // SimpleLog.instance.log('$runtimeType.handleDrawFrame.end');
   }

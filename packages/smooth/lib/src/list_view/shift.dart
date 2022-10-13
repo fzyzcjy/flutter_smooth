@@ -319,7 +319,7 @@ class FrameAwareSnapshot<T> extends ChangeNotifier {
     if (_hasPendingCallback) return;
 
     _hasPendingCallback = true;
-    SmoothSchedulerBindingMixin.instance.addStartDrawFrameCallback(() {
+    SmoothSchedulerBindingMixin.instance.addBeginFrameEarlyCallback(() {
       _hasPendingCallback = false;
 
       _snapshotWhenPrevStartDrawFrame = _snapshotWhenCurrStartDrawFrame;
