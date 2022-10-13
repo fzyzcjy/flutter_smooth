@@ -11,3 +11,5 @@ TODO: including the trick - gather all data *before* open devtool, o/w biased
 
 TODO: how to record video
 TODO: why use another camera to record
+
+TODO: the trick, debug header (the colorful and every-frame-changing header)

@@ -1,5 +1,5 @@
 ---
-title: Design Doc
+title: Design doc
 ---
 
 The design doc is at: [https://flutter.dev/go/sixty-fps](https://flutter.dev/go/sixty-fps)
