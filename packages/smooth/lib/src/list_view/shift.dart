@@ -59,9 +59,9 @@ abstract class _SmoothShiftBase extends State<SmoothShift>
 // for detailed reasons
 // (to do: copy it here)
 mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
-  late final _positionSnapshot =
-      FrameAwareSnapshot<double?>(() => _currPosition);
   double? _pointerDownPosition;
+  double? _positionWhenCurrStartDrawFrame;
+  double? _positionWhenPrevStartDrawFrame;
   double? _currPosition;
 
   // double? _positionWhenPrevPrevBuild;
@@ -72,15 +72,19 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
 
     final mainLayerTreeModeInAuxTreeView = SmoothSchedulerBindingMixin
         .instance.mainLayerTreeModeInAuxTreeView.value;
-    final basePosition =
-        _positionSnapshot.snapshotOf(mainLayerTreeModeInAuxTreeView);
+    // https://github.com/fzyzcjy/yplusplus/issues/5961#issuecomment-1266978644
+    final basePosition = mainLayerTreeModeInAuxTreeView.choose(
+      currentPlainFrame: _positionWhenCurrStartDrawFrame,
+      previousPlainFrame: _positionWhenPrevStartDrawFrame,
+    );
 
     final ans = _currPosition! - (basePosition ?? _pointerDownPosition!);
 
     final args = {
       'currPosition': _currPosition,
       'mainLayerTreeModeInAuxTreeView': mainLayerTreeModeInAuxTreeView.name,
-      'positionSnapshot': _positionSnapshot.toString(),
+      'positionWhenCurrStartDrawFrame': _positionWhenCurrStartDrawFrame,
+      'positionWhenPrevStartDrawFrame': _positionWhenPrevStartDrawFrame,
       'pointerDownPosition': _pointerDownPosition,
       'basePosition': basePosition,
       'ans': ans,
@@ -94,6 +98,37 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
 
   @override
   double get offset => super.offset + _offsetFromPointerEvent;
+
+  var _hasPendingStartDrawFrameCallback = false;
+
+  void _maybeAddCallbacks() {
+    if (!_hasPendingStartDrawFrameCallback) {
+      _hasPendingStartDrawFrameCallback = true;
+      SmoothSchedulerBindingMixin.instance.addBeginFrameEarlyCallback(() {
+        if (!mounted) return;
+        _hasPendingStartDrawFrameCallback = false;
+
+        setState(() {
+          _positionWhenPrevStartDrawFrame = _positionWhenCurrStartDrawFrame;
+          _positionWhenCurrStartDrawFrame = _currPosition;
+        });
+
+        Timeline.timeSync(
+          'SmoothShift.StartDrawFrameCallback.after',
+          arguments: <String, Object?>{
+            'currPosition': _currPosition,
+            'positionWhenCurrStartDrawFrame': _positionWhenCurrStartDrawFrame,
+            'positionWhenPrevStartDrawFrame': _positionWhenPrevStartDrawFrame,
+            'pointerDownPosition': _pointerDownPosition,
+          },
+          () {},
+        );
+
+        // print('hi $runtimeType addStartDrawFrameCallback.callback (after) '
+        //     '_positionWhenPrevStartDrawFrame=$_positionWhenPrevStartDrawFrame _currPosition=$_currPosition');
+      });
+    }
+  }
 
   void _handlePointerDown(PointerDownEvent e) {
     setState(() {
@@ -123,7 +158,8 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
   void _handlePointerUpOrCancel(PointerEvent e) {
     setState(() {
       _pointerDownPosition = null;
-      _positionSnapshot.reset();
+      _positionWhenCurrStartDrawFrame = null;
+      _positionWhenPrevStartDrawFrame = null;
       // _positionWhenPrevPrevBuild = null;
       // _positionWhenPrevBuild = null;
       _currPosition = null;
@@ -162,20 +198,18 @@ mixin _SmoothShiftFromPointerEvent on _SmoothShiftBase {
     super.initState();
     SmoothSchedulerBindingMixin.instance.mainLayerTreeModeInAuxTreeView
         .addListener(_handleRefresh);
-    _positionSnapshot.addListener(_handleRefresh);
   }
 
   @override
   void dispose() {
     SmoothSchedulerBindingMixin.instance.mainLayerTreeModeInAuxTreeView
         .removeListener(_handleRefresh);
-    _positionSnapshot.removeListener(_handleRefresh);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // _maybeAddCallbacks();
+    _maybeAddCallbacks();
     // _maybePseudoMoveOnBuild();
 
     return Listener(
@@ -291,62 +325,4 @@ mixin _SmoothShiftFromBallistic on _SmoothShiftBase {
 
     return ans;
   }
-}
-
-// TODO move?
-class FrameAwareSnapshot<T> extends ChangeNotifier {
-  final ValueGetter<T> source;
-
-  T? get snapshotWhenCurrStartDrawFrame => _snapshotWhenCurrStartDrawFrame;
-  T? _snapshotWhenCurrStartDrawFrame;
-
-  T? get snapshotWhenPrevStartDrawFrame => _snapshotWhenPrevStartDrawFrame;
-  T? _snapshotWhenPrevStartDrawFrame;
-
-  T? snapshotOf(
-          MainLayerTreeModeInAuxTreeView mainLayerTreeModeInAuxTreeView) =>
-      mainLayerTreeModeInAuxTreeView.choose(
-        currentPlainFrame: snapshotWhenCurrStartDrawFrame,
-        previousPlainFrame: snapshotWhenPrevStartDrawFrame,
-      );
-
-  FrameAwareSnapshot(this.source) {
-    _maybeAddCallback();
-  }
-
-  void reset() {
-    _snapshotWhenCurrStartDrawFrame = null;
-    _snapshotWhenPrevStartDrawFrame = null;
-  }
-
-  @override
-  void dispose() {
-    _disposed = true;
-    super.dispose();
-  }
-
-  var _disposed = false;
-  var _hasPendingCallback = false;
-
-  void _maybeAddCallback() {
-    if (_hasPendingCallback) return;
-
-    _hasPendingCallback = true;
-    SmoothSchedulerBindingMixin.instance.addBeginFrameEarlyCallback(() {
-      _hasPendingCallback = false;
-
-      _snapshotWhenPrevStartDrawFrame = _snapshotWhenCurrStartDrawFrame;
-      _snapshotWhenCurrStartDrawFrame = source();
-      notifyListeners();
-
-      // TODO do not unconditionally schedule this...
-      if (!_disposed) _maybeAddCallback();
-    });
-  }
-
-  @override
-  String toString() => 'FrameAwareSnapshot('
-      'snapshotWhenCurrStartDrawFrame: $_snapshotWhenCurrStartDrawFrame, '
-      'snapshotWhenPrevStartDrawFrame: $_snapshotWhenPrevStartDrawFrame'
-      ')';
 }
