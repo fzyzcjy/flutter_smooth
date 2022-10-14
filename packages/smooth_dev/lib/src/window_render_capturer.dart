@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
+import 'package:convenient_test_dev/convenient_test_dev.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_test/flutter_test.dart' as flutter_test;
@@ -143,7 +144,10 @@ class WindowRenderItem {
         reason: reason);
     flutter_test.expect(renderIndexInFrame, matcher.renderIndexInFrame,
         reason: reason);
-    await flutter_test.expectLater(image, matchesReferenceImage(matcher.image),
+    await flutter_test.expectLater(
+        image,
+        matchesEnhancedReferenceImage(
+            matcher.image, const GoldenConfig.allowUpdate()),
         reason: reason);
   }
 }
