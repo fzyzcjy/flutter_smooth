@@ -73,12 +73,15 @@ class ClampingScrollSimulation:
 plt.clf()
 plt.tight_layout()
 ax1 = plt.gca()
+ax2 = ax1.twinx()
 
-t = np.arange(0, 1, 1 / 60)
+dt = 1 / 60
+t = np.arange(0, 1, dt)
 
 simulation_a = ClampingScrollSimulation(position=0, velocity=1200)
 x_a = _array_map(t, simulation_a.x)
 v_a = _array_map(t, simulation_a.dx)
+diffx_a = (x_a[1:] - x_a[:-1]) / dt
 
 b_start_time = 0.3
 simulation_b = ClampingScrollSimulation(
@@ -87,13 +90,15 @@ simulation_b = ClampingScrollSimulation(
 )
 x_b = _array_map(t, simulation_b.x)
 v_b = _array_map(t, simulation_b.dx)
+diffx_b = (x_b[1:] - x_b[:-1]) / dt
 
 ax1.plot(t, x_a, label='x_a')
-ax1.plot(t + b_start_time, x_b, label='x_b')
-
-ax2 = ax1.twinx()
 ax2.plot(t, v_a, label='v_a')
+ax2.plot(t[:-1], diffx_a, label='diffx_a')
+
+ax1.plot(t + b_start_time, x_b, label='x_b')
 ax2.plot(t + b_start_time, v_b, label='v_b')
+ax2.plot(t[:-1] + b_start_time, diffx_b, label='diffx_b')
 
 ax1.legend(loc="upper left")
 ax2.legend(loc="upper right")
