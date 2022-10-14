@@ -270,8 +270,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
       if (!state.mounted) return;
       _scrollPosition = SmoothScrollPositionWithSingleContext.of(
           state.widget.scrollController);
-      _scrollPosition!.lastSimulationInfo
-          .addListener(_handleLastSimulationChanged);
+      _ticker = Ticker(_tick)..start();
     });
   }
 
@@ -289,8 +288,6 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
 
   @override
   void dispose() {
-    _scrollPosition?.lastSimulationInfo
-        .removeListener(_handleLastSimulationChanged);
     _ticker?.dispose();
     super.dispose();
   }
@@ -299,15 +296,8 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
     if (!state.mounted) return;
 
     _lastBeforeBeginFrameSimulationOffset =
-        _scrollPosition?.lastSimulationInfo.value?.realSimulation.lastX;
+        _scrollPosition?.lastSimulationInfo?.realSimulation.lastX;
     notifyListeners();
-  }
-
-  void _handleLastSimulationChanged() {
-    _ticker?.dispose();
-
-    // re-create ticker, because the [Simulation] wants zero timestamp
-    _ticker = state.createTicker(_tick)..start();
   }
 
   void _tick(Duration selfTickerElapsed) {
@@ -326,7 +316,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
         arguments: <String, Object?>{'info': info},
         () {});
 
-    final lastSimulationInfo = _scrollPosition!.lastSimulationInfo.value;
+    final lastSimulationInfo = _scrollPosition!.lastSimulationInfo;
     if (lastSimulationInfo == null) {
       _debugTimelineInfo('early return since lastSimulationInfo==null');
       return null;

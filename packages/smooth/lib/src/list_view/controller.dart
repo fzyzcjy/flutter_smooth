@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/scheduler/ticker.dart'; // ignore: implementation_imports
 import 'package:smooth/src/list_view/physics.dart';
@@ -40,9 +39,8 @@ class SmoothScrollPositionWithSingleContext
     super.debugLabel,
   });
 
-  ValueListenable<SimulationInfo?> get lastSimulationInfo =>
-      _lastSimulationInfo;
-  final _lastSimulationInfo = ValueNotifier<SimulationInfo?>(null);
+  SimulationInfo? get lastSimulationInfo => _lastSimulationInfo;
+  SimulationInfo? _lastSimulationInfo;
 
   SmoothScrollPhysics get _physicsTyped => physics as SmoothScrollPhysics;
 
@@ -94,7 +92,7 @@ class SmoothScrollPositionWithSingleContext
       // NOTE need to create a *new* simulation, not the old one.
       //      Because [Simulation]'s doc says, some subclasses will change
       //      state when called, and must only call with monotonic timestamps.
-      _lastSimulationInfo.value = SimulationInfo(
+      _lastSimulationInfo = SimulationInfo(
         realSimulation: simulation,
         ballisticScrollActivityTicker: ballisticScrollActivityTicker,
         clonedSimulation: createSimulation()!,
@@ -104,7 +102,7 @@ class SmoothScrollPositionWithSingleContext
       Timeline.timeSync(
           'goBallistic',
           arguments: <String, String>{
-            'info': _lastSimulationInfo.value.toString(),
+            'info': _lastSimulationInfo.toString(),
             'this': toString(),
             'pixels': pixels.toString(),
             'velocity': velocity.toString(),
