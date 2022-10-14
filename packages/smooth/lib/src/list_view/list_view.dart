@@ -69,14 +69,17 @@ class _SmoothListViewState extends State<SmoothListView> {
       final cacheExtent = constraints.maxHeight;
 
       return SmoothBuilder(
-        builder: (context, child) => ClipRect(
-          child: SmoothShift(
-            scrollController: controller,
-            placeholder: widget.placeholder,
-            childCacheExtent: cacheExtent,
-            // just for prototype
-            childHeight: constraints.maxHeight,
-            child: child,
+        builder: (context, child) => Directionality(
+          textDirection: TextDirection.ltr,
+          child: ClipRect(
+            child: SmoothShift(
+              scrollController: controller,
+              placeholder: widget.placeholder,
+              childCacheExtent: cacheExtent,
+              // just for prototype
+              childHeight: constraints.maxHeight,
+              child: child,
+            ),
           ),
         ),
         child: EnhancedPadding(
