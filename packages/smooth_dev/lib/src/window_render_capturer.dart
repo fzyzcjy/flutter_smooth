@@ -150,7 +150,7 @@ class WindowRenderItem {
             matcher.image,
             const GoldenConfig.allowUpdate(
               maxToleration:
-                  GoldenTolerationEntry(diffPerPixel: 1, countPercent: 0.005),
+                  GoldenTolerationEntry(diffPerPixel: 2, countPercent: 0.005),
             )),
         reason: reason);
   }
