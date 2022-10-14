@@ -117,24 +117,51 @@ void main() {
       group('integrated', () {
         // copied from the ListView control group output
         const expectOffsets = [
-          45.0,
-          49.6218337416752,
-          53.5288786404719,
-          56.78345020704792,
-          59.447863952061084,
-          61.584435386169176,
-          63.25548002003002,
-          64.52331336430143,
-          65.45025092964121,
-          66.09860822670717,
-          66.53070076615711,
-          66.80884405864884,
-          66.99535361484021,
-          67.15254494538898,
-          67.28437910032227,
-          67.28437910032227,
-          67.28437910032227,
-          67.28437910032227,
+          180.0,
+          199.44533769717455,
+          217.80292874716304,
+          235.10514008766364,
+          251.38433865637467,
+          266.67289139099427,
+          281.00316522922066,
+          294.40752710875205,
+          306.91834396728666,
+          318.56798274252264,
+          329.38881037215833,
+          339.4131937938918,
+          348.67349994542144,
+          357.2020957644453,
+          365.03134818866164,
+          372.19362415576865,
+          378.7212906034646,
+          384.64671446944766,
+          390.00226269141604,
+          394.82030220706804,
+          399.13319995410166,
+          402.9733228702154,
+          406.37303789310727,
+          409.3647119604755,
+          411.98071201001835,
+          414.253404979434,
+          416.2151578064207,
+          417.89833742867654,
+          419.3353107839,
+          420.5584448097892,
+          421.600106444042,
+          422.492662624357,
+          423.26848028843233,
+          423.959926373966,
+          424.59936781865656,
+          425.2191715602021,
+          425.8517045363008,
+          426.5293336846507,
+          427.2844259429503,
+          427.3647422676471,
+          427.3647422676471,
+          427.3647422676471,
+          427.3647422676471,
+          427.3647422676471,
+          427.3647422676471
         ];
 
         setUpAll(() {
@@ -179,7 +206,7 @@ void main() {
           debugPrint('offset=${getScrollableOffset(tester)}');
 
           for (var i = 0; i < 10; ++i) {
-            gesture.addEventMove(Offset(100, 500 - i * 5));
+            gesture.addEventMove(Offset(100, 500 - i * 20));
             await gesture.plainDispatchAll();
 
             await tester
@@ -187,7 +214,7 @@ void main() {
             await capturer.expectAndReset(tester,
                 expectTestFrameNumber: 4 + i,
                 expectImages: [
-                  t.createExpectImage(i * 5),
+                  t.createExpectImage(i * 20),
                 ]);
             debugPrint('offset=${getScrollableOffset(tester)}');
           }
@@ -230,7 +257,7 @@ void main() {
               pumpFramesAfterPointUp: (t, timeInfo) async {
                 final actualOffsets = <double>[];
 
-                for (var i = 0; i < 18; ++i) {
+                for (var i = 0; i < 45; ++i) {
                   await tester.pump(
                       timeInfo.calcPumpDuration(smoothFrameIndex: 12 + i));
                   actualOffsets.add(getScrollableOffset(tester));
@@ -248,7 +275,7 @@ void main() {
             tester,
             numWindowRenderPerPlainFrame: 3,
             pumpFramesAfterPointUp: (t, timeInfo) async {
-              for (var i = 0; i < 6; ++i) {
+              for (var i = 0; i < 15; ++i) {
                 debugPrint('action: pump (i=$i)');
                 t
                   ..onBeforePreemptPoint.once = () {
@@ -378,7 +405,7 @@ class _SmoothListViewTester {
         (canvas) {
       canvas.translate(0, -offset);
 
-      for (var i = 0; i < 20; ++i) {
+      for (var i = 0; i < 50; ++i) {
         canvas.drawRect(Rect.fromLTWH(0, itemHeight * i, 200, itemHeight),
             Paint()..color = Colors.primaries[i % Colors.primaries.length]);
       }
