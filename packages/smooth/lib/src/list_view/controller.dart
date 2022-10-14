@@ -111,6 +111,11 @@ class SmoothScrollPositionWithSingleContext
           },
           () {});
     } else {
+      Timeline.timeSync(
+          'goBallistic',
+          arguments: <String, String>{'info': 'choose to goIdle'},
+          () {});
+
       goIdle();
     }
   }
