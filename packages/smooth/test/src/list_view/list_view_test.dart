@@ -451,14 +451,22 @@ extension on List<double> {
   bool get lastTwoItemsEqual => last == this[length - 2];
 }
 
-void _expectListMoreOrLessEquals(List<double> a, List<double> b) {
+void _expectListMoreOrLessEquals(List<double> actual, List<double> matcher) {
   try {
-    expect(a.length, b.length);
-    for (var i = 0; i < a.length; ++i) {
-      expect(a[i], moreOrLessEquals(b[i]));
+    expect(actual.length, matcher.length);
+    for (var i = 0; i < actual.length; ++i) {
+      expect(actual[i], moreOrLessEquals(matcher[i]));
     }
   } on TestFailure catch (_) {
-    print('expectListMoreOrLessEquals a=$a b=$b'); // ignore: avoid_print
+    String _fmt(double value) => value.toStringAsFixed(2);
+    final formatted = [
+      'actual\tmatcher\tdiff',
+      for (var i = 0; i < min(actual.length, matcher.length); ++i)
+        '${_fmt(actual[i])}\t${_fmt(matcher[i])}\t${_fmt(actual[i] - matcher[i])}'
+    ].join('\n');
+    // ignore: avoid_print
+    print(
+        'expectListMoreOrLessEquals a=$actual b=$matcher formatted=\n$formatted');
     rethrow;
   }
 }
