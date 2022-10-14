@@ -116,7 +116,7 @@ void main() {
     group('when animation after drag, should be smooth', () {
       group('integrated', () {
         // copied from the ListView control group output
-        const expectPlainListViewOffsets = [
+        const expectOffsets = [
           45.0,
           49.6218337416752,
           53.5288786404719,
@@ -137,37 +137,9 @@ void main() {
           67.28437910032227,
         ];
 
-        const expectSmoothListViewOffsets = [
-          45.0,
-          49.62183374167606,
-          53.52887864047359,
-          56.7834502070504,
-          59.44786395206429,
-          61.584435386173055,
-          63.25548002003451,
-          64.52331336430646,
-          65.4502509296467,
-          66.09860822671305,
-          66.5307007661633,
-          66.80884405865527,
-          66.99535361484675,
-          67.15254494539556,
-          67.28437910032915,
-          67.28437910032915,
-          67.28437910032915,
-          67.28437910032915,
-        ];
-
         setUpAll(() {
-          expect(expectPlainListViewOffsets.lastTwoItemsEqual, true,
+          expect(expectOffsets.lastTwoItemsEqual, true,
               reason: 'should come to a stop');
-          expect(expectSmoothListViewOffsets.lastTwoItemsEqual, true,
-              reason: 'should come to a stop');
-
-          for (var i = 0; i < expectPlainListViewOffsets.length; ++i) {
-            expect(expectPlainListViewOffsets[i],
-                moreOrLessEquals(expectSmoothListViewOffsets[i]));
-          }
         });
 
         // https://github.com/fzyzcjy/yplusplus/issues/6170#issuecomment-1276994971
@@ -226,9 +198,6 @@ void main() {
           debugPrint('action: pumps after pointer up');
           await pumpFramesAfterPointUp(t, timeInfo);
 
-          final expectOffsets = enableSmoothListView
-              ? expectSmoothListViewOffsets
-              : expectPlainListViewOffsets;
           await capturer.pack.expect(
               tester,
               WindowRenderPack.of({
@@ -268,10 +237,7 @@ void main() {
                   debugPrint('i=$i offset=${getScrollableOffset(tester)}');
                 }
 
-                final expectOffsets = enableSmoothListView
-                    ? expectSmoothListViewOffsets
-                    : expectPlainListViewOffsets;
-                expect(actualOffsets, expectOffsets);
+                _expectListMoreOrLessEquals(actualOffsets, expectOffsets);
               },
             );
           });
@@ -452,4 +418,16 @@ extension on ui.SingletonFlutterWindow {
 
 extension on List<double> {
   bool get lastTwoItemsEqual => last == this[length - 2];
+}
+
+void _expectListMoreOrLessEquals(List<double> a, List<double> b) {
+  try {
+    expect(a.length, b.length);
+    for (var i = 0; i < a.length; ++i) {
+      expect(a[i], moreOrLessEquals(b[i]));
+    }
+  } on TestFailure catch (_) {
+    print('expectListMoreOrLessEquals a=$a b=$b'); // ignore: avoid_print
+    rethrow;
+  }
 }
