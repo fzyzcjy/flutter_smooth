@@ -46,3 +46,28 @@ class ProxySimulation extends Simulation {
   @override
   String toString() => 'ProxySimulation($inner)';
 }
+
+class ShiftingSimulation extends Simulation {
+  final Simulation inner;
+  final double timeShift;
+  final double positionShift;
+
+  ShiftingSimulation(
+    this.inner, {
+    required this.timeShift,
+    required this.positionShift,
+  });
+
+  @override
+  double x(double time) => positionShift + inner.x(time + timeShift);
+
+  @override
+  double dx(double time) => inner.dx(time + timeShift);
+
+  @override
+  bool isDone(double time) => inner.isDone(time + timeShift);
+
+  @override
+  String toString() =>
+      'ShiftingSimulation($inner, timeShift: $timeShift, positionShift: $positionShift)';
+}

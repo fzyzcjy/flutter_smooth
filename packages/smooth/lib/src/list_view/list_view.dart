@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth/smooth.dart';
 import 'package:smooth/src/enhanced_padding.dart';
 import 'package:smooth/src/list_view/controller.dart';
+import 'package:smooth/src/list_view/physics.dart';
 
 class SmoothListView extends StatefulWidget {
   final int itemCount;
@@ -82,6 +83,7 @@ class _SmoothListViewState extends State<SmoothListView> {
             controller: controller,
             // NOTE set [cacheExtent] here to zero, because we will use overflow box
             cacheExtent: 0,
+            physics: SmoothClampingScrollPhysics(),
             itemCount: effectiveItemCount,
             itemBuilder: (context, index) {
               if (index == 0 || index == effectiveItemCount - 1) {
