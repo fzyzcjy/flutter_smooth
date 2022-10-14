@@ -10,6 +10,12 @@ abstract class SmoothScrollPhysics implements ScrollPhysics {
 
 class SmoothClampingScrollPhysics extends ClampingScrollPhysics
     implements SmoothScrollPhysics {
+  const SmoothClampingScrollPhysics({super.parent});
+
+  @override
+  SmoothClampingScrollPhysics applyTo(ScrollPhysics? ancestor) =>
+      SmoothClampingScrollPhysics(parent: buildParent(ancestor));
+
   @override
   Simulation? createBallisticSimulationEnhanced(
       ScrollMetrics position, double velocity,
