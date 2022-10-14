@@ -371,16 +371,16 @@ class _SmoothListViewTester {
   final onAfterPreemptPoint = OnceCallable();
   final onPaint = OnceCallable();
 
-  static const itemHeight = 600.0;
+  static const itemHeight = 100.0;
 
   ui.Image createExpectImage(double offset) {
     return buildImageFromPainter(SchedulerBinding.instance.window.size,
         (canvas) {
       canvas.translate(0, -offset);
 
-      for (var i = 0; i < 3; ++i) {
+      for (var i = 0; i < 20; ++i) {
         canvas.drawRect(Rect.fromLTWH(0, itemHeight * i, 200, itemHeight),
-            Paint()..color = Colors.primaries[i]);
+            Paint()..color = Colors.primaries[i % Colors.primaries.length]);
       }
 
       canvas.translate(0, offset);
@@ -398,7 +398,7 @@ class _SmoothListViewTester {
               itemCount: 100,
               itemBuilder: (_, index) => Container(
                 height: itemHeight,
-                color: Colors.primaries[index],
+                color: Colors.primaries[index % Colors.primaries.length],
               ),
             ),
             AlwaysPaintBuilder(onPaint: onPaint),
