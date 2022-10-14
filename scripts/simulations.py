@@ -1,3 +1,10 @@
+import matplotlib
+import numpy as np
+
+matplotlib.use("MacOSX")
+
+import matplotlib.pyplot as plt
+
 import math
 from dataclasses import dataclass
 
@@ -33,13 +40,17 @@ def _sign(x):
     return x
 
 
+def _array_map(x, f):
+    return np.fromiter((f(xi) for xi in x), x.dtype)
+
+
 @dataclass
 class ClampingScrollSimulation:
     position: float
     velocity: float
     friction: float = 0.015
 
-    def __init__(self):
+    def __post_init__(self):
         self._duration = self._flingDuration(self.velocity)
         self._distance = abs(self.velocity * self._duration / _initialVelocityPenetration)
 
@@ -55,3 +66,38 @@ class ClampingScrollSimulation:
     def dx(self, time):
         t = clampDouble(time / self._duration, 0.0, 1.0)
         return self._distance * _flingVelocityPenetration(t) * _sign(self.velocity) / self._duration
+
+
+# %%
+
+plt.clf()
+plt.tight_layout()
+ax1 = plt.gca()
+
+t = np.arange(0, 1, 1 / 60)
+
+simulation_a = ClampingScrollSimulation(position=0, velocity=1200)
+x_a = _array_map(t, simulation_a.x)
+v_a = _array_map(t, simulation_a.dx)
+
+b_start_time = 0.3
+simulation_b = ClampingScrollSimulation(
+    position=simulation_a.x(b_start_time),
+    velocity=simulation_a.dx(b_start_time),
+)
+x_b = _array_map(t, simulation_b.x)
+v_b = _array_map(t, simulation_b.dx)
+
+ax1.plot(t, x_a, label='x_a')
+ax1.plot(t + b_start_time, x_b, label='x_b')
+
+ax2 = ax1.twinx()
+ax2.plot(t, v_a, label='v_a')
+ax2.plot(t + b_start_time, v_b, label='v_b')
+
+ax1.legend(loc="upper left")
+ax2.legend(loc="upper right")
+
+plt.xlim([0, 1])
+
+plt.show()
