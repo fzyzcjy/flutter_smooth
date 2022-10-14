@@ -311,13 +311,18 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
   }
 
   void _tick(Duration selfTickerElapsed) {
-    offset = _computeOffsetFromBallisticOnTick(selfTickerElapsed);
-    notifyListeners();
+    final newOffset = _computeOffsetFromBallisticOnTick(selfTickerElapsed);
+    if (newOffset != null) {
+      offset = newOffset;
+      notifyListeners();
+    }
   }
 
-  double _computeOffsetFromBallisticOnTick(Duration selfTickerElapsed) {
+  // NOTE need to gracefully handle early returns
+  // see https://github.com/fzyzcjy/yplusplus/issues/6190#issuecomment-1278516607
+  double? _computeOffsetFromBallisticOnTick(Duration selfTickerElapsed) {
     final lastSimulationInfo = _scrollPosition!.lastSimulationInfo.value;
-    if (lastSimulationInfo == null) return 0;
+    if (lastSimulationInfo == null) return null;
 
     // [selfTickerElapsed] is the time delta relative to [_ticker.startTime]
     // thus [tickTimeStamp] is absolute [AdjustedFrameTimeStamp]
@@ -327,7 +332,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
     // real [ListView]'s [BallisticScrollActivity] has.
     final ballisticTickerStartTime =
         lastSimulationInfo.ballisticScrollActivityTicker.startTime;
-    if (ballisticTickerStartTime == null) return 0;
+    if (ballisticTickerStartTime == null) return null;
     final simulationRelativeTime = tickTimeStamp - ballisticTickerStartTime;
 
     final smoothOffset = lastSimulationInfo.clonedSimulation
@@ -339,7 +344,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
       currentPlainFrame: lastSimulationInfo.realSimulation.lastX,
       previousPlainFrame: _lastBeforeBeginFrameSimulationOffset,
     );
-    if (plainOffset == null) return 0;
+    if (plainOffset == null) return null;
 
     final ans = -(smoothOffset - plainOffset);
 
