@@ -353,7 +353,8 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
         'selfTickerElapsed=$selfTickerElapsed '
         'tickTimeStamp=$tickTimeStamp '
         'ballisticTickerStartTime=$ballisticTickerStartTime '
-        'simulationRelativeTime=$simulationRelativeTime ';
+        'simulationRelativeTime=$simulationRelativeTime '
+        'realSimulation=${lastSimulationInfo.realSimulation} ';
     // print('hi $runtimeType._computeOffsetFromBallisticOnTick $info';
     Timeline.timeSync(
         'SmoothShift.computeOffsetFromBallisticOnTick',

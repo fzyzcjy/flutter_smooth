@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/scheduler/ticker.dart'; // ignore: implementation_imports
@@ -43,7 +45,7 @@ class SmoothScrollPositionWithSingleContext
   // ref [super.createScrollPosition], except for marked regions
   @override
   void goBallistic(double velocity) {
-    print('hi goBallistic velocity=$velocity');
+    // print('hi goBallistic velocity=$velocity');
 
     assert(hasPixels);
 
@@ -79,6 +81,16 @@ class SmoothScrollPositionWithSingleContext
         clonedSimulation: physics.createBallisticSimulation(this, velocity)!,
       );
       // NOTE MODIFIED end
+
+      Timeline.timeSync(
+          'goBallistic',
+          arguments: <String, String>{
+            'info': _lastSimulationInfo.value.toString(),
+            'this': toString(),
+            'pixels': pixels.toString(),
+            'velocity': velocity.toString(),
+          },
+          () {});
     } else {
       goIdle();
     }
@@ -104,6 +116,13 @@ class SimulationInfo {
     required this.ballisticScrollActivityTicker,
     required this.clonedSimulation,
   });
+
+  @override
+  String toString() => 'SimulationInfo{'
+      'realSimulation: $realSimulation, '
+      'ballisticScrollActivityTicker: $ballisticScrollActivityTicker, '
+      'clonedSimulation: $clonedSimulation'
+      '}';
 }
 
 class MemorizedSimulation extends ProxySimulation {
@@ -129,6 +148,10 @@ class MemorizedSimulation extends ProxySimulation {
 
     return ans;
   }
+
+  @override
+  String toString() =>
+      'MemorizedSimulation(lastX: $_lastX, lastTime: $_lastTime, inner: $inner)';
 }
 
 class ProxySimulation extends Simulation {
