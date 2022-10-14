@@ -121,7 +121,9 @@ class ExampleListViewPage extends StatelessWidget {
           if (enableNewItemWorkload)
             _NormalLayoutBuilder(
               onPerformLayout: () {
-                for (var i = 0; i < 100; ++i) {
+                const workloadMilliseconds = 100;
+
+                for (var i = 0; i < workloadMilliseconds; ++i) {
                   // NOTE `sleep` does not support microseconds! #6109
                   sleep(const Duration(milliseconds: 1));
                   ServiceLocator.instance.actor
