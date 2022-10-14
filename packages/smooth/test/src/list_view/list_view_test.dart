@@ -158,7 +158,7 @@ void main() {
           67.28437910032429,
         ];
 
-        void _verifyExpectOffsetInvariants() {
+        setUpAll(() {
           expect(expectPlainListViewOffsets.lastTwoItemsEqual, true,
               reason: 'should come to a stop');
           expect(expectSmoothListViewOffsets.lastTwoItemsEqual, true,
@@ -168,7 +168,7 @@ void main() {
             expect(expectPlainListViewOffsets[i],
                 moreOrLessEquals(expectSmoothListViewOffsets[i]));
           }
-        }
+        });
 
         // https://github.com/fzyzcjy/yplusplus/issues/6170#issuecomment-1276994971
         double getScrollableOffset(WidgetTester tester) {
@@ -183,8 +183,6 @@ void main() {
           required int numWindowRenderPerPlainFrame,
           bool enableSmoothListView = true,
         }) async {
-          _verifyExpectOffsetInvariants();
-
           debugPrintBeginFrameBanner = debugPrintEndFrameBanner = true;
           final timeInfo = TimeInfo();
           final capturer = WindowRenderCapturer.autoDispose();
