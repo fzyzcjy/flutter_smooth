@@ -330,7 +330,11 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
           'mainLayerTreeModeInAuxTreeView=$mainLayerTreeModeInAuxTreeView '
           'activeBallisticSimulationInfo=${_scrollPosition!.activeBallisticSimulationInfo} '
           '_lastBeforeBeginFrameSnapshot=$_lastBeforeBeginFrameSnapshot');
-      return null;
+
+      // NOTE should return "0" not null, because when info==null, it means
+      // there is no active ballistic activity. So we should have zero offset.
+      // https://github.com/fzyzcjy/yplusplus/issues/6194#issuecomment-1278571360
+      return 0;
     }
 
     // [selfTickerElapsed] is the time delta relative to [_ticker.startTime]
