@@ -259,7 +259,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
 
   Ticker? _ticker;
   SmoothScrollPositionWithSingleContext? _scrollPosition;
-  double? _lastBeforeBeginFrameSimulationOffset;
+  _MainTreeBallisticInfo? _lastBeforeBeginFrameSnapshot;
 
   late final _beginFrameEarlyCallbackRegistrar =
       _BeginFrameEarlyCallbackRegistrar(_handleBeginFrameEarlyCallback);
@@ -295,8 +295,8 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
   void _handleBeginFrameEarlyCallback() {
     if (!state.mounted) return;
 
-    _lastBeforeBeginFrameSimulationOffset =
-        _scrollPosition?.activeBallisticSimulationInfo?.realSimulation.lastX;
+    _lastBeforeBeginFrameSnapshot =
+        _MainTreeBallisticInfo.from(_scrollPosition!);
     notifyListeners();
   }
 
@@ -316,11 +316,17 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
         arguments: <String, Object?>{'info': info},
         () {});
 
-    final activeBallisticSimulationInfo =
-        _scrollPosition!.activeBallisticSimulationInfo;
-    if (activeBallisticSimulationInfo == null) {
-      _debugTimelineInfo(
-          'early return since activeBallisticSimulationInfo==null');
+    final mainLayerTreeModeInAuxTreeView = SmoothSchedulerBindingMixin
+        .instance.mainLayerTreeModeInAuxTreeView.value;
+    final _MainTreeBallisticInfo? info = mainLayerTreeModeInAuxTreeView.choose(
+      currentPlainFrame: _MainTreeBallisticInfo.from(_scrollPosition!),
+      previousPlainFrame: _lastBeforeBeginFrameSnapshot,
+    );
+    if (info == null) {
+      _debugTimelineInfo('early return since info==null '
+          'mainLayerTreeModeInAuxTreeView=$mainLayerTreeModeInAuxTreeView '
+          'activeBallisticSimulationInfo=${_scrollPosition!.activeBallisticSimulationInfo} '
+          '_lastBeforeBeginFrameSnapshot=$_lastBeforeBeginFrameSnapshot');
       return null;
     }
 
@@ -330,29 +336,21 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
     // [simulationRelativeTime] is the time delta relative to
     // [ballisticScrollActivityTicker]. In other words, it is the time that the
     // real [ListView]'s [BallisticScrollActivity] has.
-    final ballisticTickerStartTime =
-        activeBallisticSimulationInfo.ballisticScrollActivityTicker.startTime;
+    final ballisticTickerStartTime = info.ballisticTickerStartTime;
     if (ballisticTickerStartTime == null) {
-      _debugTimelineInfo('early return since ballisticTickerStartTime==null '
-          'activeBallisticSimulationInfo.ballisticScrollActivityTicker=${activeBallisticSimulationInfo.ballisticScrollActivityTicker} ');
+      _debugTimelineInfo('early return since ballisticTickerStartTime==null');
       return null;
     }
     final simulationRelativeTime = tickTimeStamp - ballisticTickerStartTime;
 
-    final smoothOffset = activeBallisticSimulationInfo.clonedSimulation
+    final smoothOffset = info.clonedSimulation
         .x(simulationRelativeTime.inMicroseconds / 1000000);
 
-    final mainLayerTreeModeInAuxTreeView = SmoothSchedulerBindingMixin
-        .instance.mainLayerTreeModeInAuxTreeView.value;
-    final plainOffset = mainLayerTreeModeInAuxTreeView.choose(
-      currentPlainFrame: activeBallisticSimulationInfo.realSimulation.lastX,
-      previousPlainFrame: _lastBeforeBeginFrameSimulationOffset,
-    );
+    final plainOffset = info.realSimulationLastOffset;
     if (plainOffset == null) {
       _debugTimelineInfo('early return since plainOffset==null '
           'mainLayerTreeModeInAuxTreeView=$mainLayerTreeModeInAuxTreeView '
-          'activeBallisticSimulationInfo.realSimulation.lastX=${activeBallisticSimulationInfo.realSimulation.lastX} '
-          '_lastBeforeBeginFrameSimulationOffset=$_lastBeforeBeginFrameSimulationOffset');
+          'info=$info');
       return null;
     }
 
@@ -361,15 +359,12 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
     _debugTimelineInfo('ans=$ans '
         'smoothOffset=$smoothOffset '
         'plainOffset=$plainOffset '
-        'realSimulation.lastX=${activeBallisticSimulationInfo.realSimulation.lastX} '
-        'realSimulation.lastTime=${activeBallisticSimulationInfo.realSimulation.lastTime} '
-        'lastBeforeBeginFrameSimulationOffset=$_lastBeforeBeginFrameSimulationOffset '
+        'info=$info '
         'mainLayerTreeModeInAuxTreeView=$mainLayerTreeModeInAuxTreeView '
         'selfTickerElapsed=$selfTickerElapsed '
         'tickTimeStamp=$tickTimeStamp '
         'ballisticTickerStartTime=$ballisticTickerStartTime '
-        'simulationRelativeTime=$simulationRelativeTime '
-        'realSimulation=${activeBallisticSimulationInfo.realSimulation} ');
+        'simulationRelativeTime=$simulationRelativeTime ');
 
     return ans;
   }
@@ -379,6 +374,40 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
     _beginFrameEarlyCallbackRegistrar.maybeRegister();
     return child;
   }
+}
+
+@immutable
+class _MainTreeBallisticInfo {
+  final Duration? ballisticTickerStartTime;
+  final double? realSimulationLastOffset;
+  final Simulation clonedSimulation;
+
+  const _MainTreeBallisticInfo({
+    required this.ballisticTickerStartTime,
+    required this.realSimulationLastOffset,
+    required this.clonedSimulation,
+  });
+
+  static _MainTreeBallisticInfo? from(
+      SmoothScrollPositionWithSingleContext scrollPosition) {
+    final activeBallisticSimulationInfo =
+        scrollPosition.activeBallisticSimulationInfo;
+    if (activeBallisticSimulationInfo == null) return null;
+
+    return _MainTreeBallisticInfo(
+      ballisticTickerStartTime:
+          activeBallisticSimulationInfo.ballisticScrollActivityTicker.startTime,
+      realSimulationLastOffset:
+          activeBallisticSimulationInfo.realSimulation.lastX,
+      clonedSimulation: activeBallisticSimulationInfo.clonedSimulation,
+    );
+  }
+
+  @override
+  String toString() => '_MainTreeBallisticInfo{'
+      'ballisticTickerStartTime: $ballisticTickerStartTime, '
+      'realSimulationLastOffset: $realSimulationLastOffset'
+      '}';
 }
 
 class _BeginFrameEarlyCallbackRegistrar {
