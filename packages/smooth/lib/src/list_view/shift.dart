@@ -270,7 +270,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
       if (!state.mounted) return;
       _scrollPosition = SmoothScrollPositionWithSingleContext.of(
           state.widget.scrollController);
-      _ticker = Ticker(_tick)..start();
+      _ticker = state.createTicker(_tick)..start();
     });
   }
 
