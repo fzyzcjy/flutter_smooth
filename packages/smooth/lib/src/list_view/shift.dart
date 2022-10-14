@@ -321,8 +321,16 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
   // NOTE need to gracefully handle early returns
   // see https://github.com/fzyzcjy/yplusplus/issues/6190#issuecomment-1278516607
   double? _computeOffsetFromBallisticOnTick(Duration selfTickerElapsed) {
+    void _debugTimelineInfo(String info) => Timeline.timeSync(
+        'SmoothShift.computeOffsetFromBallisticOnTick',
+        arguments: <String, Object?>{'info': info},
+        () {});
+
     final lastSimulationInfo = _scrollPosition!.lastSimulationInfo.value;
-    if (lastSimulationInfo == null) return null;
+    if (lastSimulationInfo == null) {
+      _debugTimelineInfo('early return since lastSimulationInfo==null');
+      return null;
+    }
 
     // [selfTickerElapsed] is the time delta relative to [_ticker.startTime]
     // thus [tickTimeStamp] is absolute [AdjustedFrameTimeStamp]
@@ -332,7 +340,11 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
     // real [ListView]'s [BallisticScrollActivity] has.
     final ballisticTickerStartTime =
         lastSimulationInfo.ballisticScrollActivityTicker.startTime;
-    if (ballisticTickerStartTime == null) return null;
+    if (ballisticTickerStartTime == null) {
+      _debugTimelineInfo('early return since ballisticTickerStartTime==null '
+          'lastSimulationInfo.ballisticScrollActivityTicker=${lastSimulationInfo.ballisticScrollActivityTicker} ');
+      return null;
+    }
     final simulationRelativeTime = tickTimeStamp - ballisticTickerStartTime;
 
     final smoothOffset = lastSimulationInfo.clonedSimulation
@@ -344,11 +356,17 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
       currentPlainFrame: lastSimulationInfo.realSimulation.lastX,
       previousPlainFrame: _lastBeforeBeginFrameSimulationOffset,
     );
-    if (plainOffset == null) return null;
+    if (plainOffset == null) {
+      _debugTimelineInfo('early return since plainOffset==null '
+          'mainLayerTreeModeInAuxTreeView=$mainLayerTreeModeInAuxTreeView '
+          'lastSimulationInfo.realSimulation.lastX=${lastSimulationInfo.realSimulation.lastX} '
+          '_lastBeforeBeginFrameSimulationOffset=$_lastBeforeBeginFrameSimulationOffset');
+      return null;
+    }
 
     final ans = -(smoothOffset - plainOffset);
 
-    final info = 'ans=$ans '
+    _debugTimelineInfo('ans=$ans '
         'smoothOffset=$smoothOffset '
         'plainOffset=$plainOffset '
         'realSimulation.lastX=${lastSimulationInfo.realSimulation.lastX} '
@@ -359,12 +377,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
         'tickTimeStamp=$tickTimeStamp '
         'ballisticTickerStartTime=$ballisticTickerStartTime '
         'simulationRelativeTime=$simulationRelativeTime '
-        'realSimulation=${lastSimulationInfo.realSimulation} ';
-    // print('hi $runtimeType._computeOffsetFromBallisticOnTick $info';
-    Timeline.timeSync(
-        'SmoothShift.computeOffsetFromBallisticOnTick',
-        arguments: <String, Object?>{'info': info},
-        () {});
+        'realSimulation=${lastSimulationInfo.realSimulation} ');
 
     return ans;
   }
