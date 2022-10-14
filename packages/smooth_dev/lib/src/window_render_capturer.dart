@@ -147,7 +147,11 @@ class WindowRenderItem {
     await flutter_test.expectLater(
         image,
         matchesEnhancedReferenceImage(
-            matcher.image, const GoldenConfig.allowUpdate()),
+            matcher.image,
+            const GoldenConfig.allowUpdate(
+              maxToleration:
+                  GoldenTolerationEntry(diffPerPixel: 1, countPercent: 0.005),
+            )),
         reason: reason);
   }
 }
