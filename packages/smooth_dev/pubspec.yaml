@@ -10,6 +10,8 @@ environment:
 dependencies:
   clock: ^1.0.0
   collection: ^1.16.0
+  convenient_test_dev:
+    path: /Users/tom/RefCode/flutter_convenient_test/packages/convenient_test_dev
   flutter:
     sdk: flutter
   flutter_test:

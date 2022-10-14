@@ -15,7 +15,8 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.2.1
-  convenient_test_dev: ^1.2.0
+  convenient_test_dev:
+    path: /Users/tom/RefCode/flutter_convenient_test/packages/convenient_test_dev
   flutter_test:
     sdk: flutter
   image: ^3.2.0
