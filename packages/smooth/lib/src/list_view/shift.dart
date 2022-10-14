@@ -316,9 +316,11 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
         arguments: <String, Object?>{'info': info},
         () {});
 
-    final lastSimulationInfo = _scrollPosition!.activeBallisticSimulationInfo;
-    if (lastSimulationInfo == null) {
-      _debugTimelineInfo('early return since lastSimulationInfo==null');
+    final activeBallisticSimulationInfo =
+        _scrollPosition!.activeBallisticSimulationInfo;
+    if (activeBallisticSimulationInfo == null) {
+      _debugTimelineInfo(
+          'early return since activeBallisticSimulationInfo==null');
       return null;
     }
 
@@ -329,27 +331,27 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
     // [ballisticScrollActivityTicker]. In other words, it is the time that the
     // real [ListView]'s [BallisticScrollActivity] has.
     final ballisticTickerStartTime =
-        lastSimulationInfo.ballisticScrollActivityTicker.startTime;
+        activeBallisticSimulationInfo.ballisticScrollActivityTicker.startTime;
     if (ballisticTickerStartTime == null) {
       _debugTimelineInfo('early return since ballisticTickerStartTime==null '
-          'lastSimulationInfo.ballisticScrollActivityTicker=${lastSimulationInfo.ballisticScrollActivityTicker} ');
+          'activeBallisticSimulationInfo.ballisticScrollActivityTicker=${activeBallisticSimulationInfo.ballisticScrollActivityTicker} ');
       return null;
     }
     final simulationRelativeTime = tickTimeStamp - ballisticTickerStartTime;
 
-    final smoothOffset = lastSimulationInfo.clonedSimulation
+    final smoothOffset = activeBallisticSimulationInfo.clonedSimulation
         .x(simulationRelativeTime.inMicroseconds / 1000000);
 
     final mainLayerTreeModeInAuxTreeView = SmoothSchedulerBindingMixin
         .instance.mainLayerTreeModeInAuxTreeView.value;
     final plainOffset = mainLayerTreeModeInAuxTreeView.choose(
-      currentPlainFrame: lastSimulationInfo.realSimulation.lastX,
+      currentPlainFrame: activeBallisticSimulationInfo.realSimulation.lastX,
       previousPlainFrame: _lastBeforeBeginFrameSimulationOffset,
     );
     if (plainOffset == null) {
       _debugTimelineInfo('early return since plainOffset==null '
           'mainLayerTreeModeInAuxTreeView=$mainLayerTreeModeInAuxTreeView '
-          'lastSimulationInfo.realSimulation.lastX=${lastSimulationInfo.realSimulation.lastX} '
+          'activeBallisticSimulationInfo.realSimulation.lastX=${activeBallisticSimulationInfo.realSimulation.lastX} '
           '_lastBeforeBeginFrameSimulationOffset=$_lastBeforeBeginFrameSimulationOffset');
       return null;
     }
@@ -359,15 +361,15 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
     _debugTimelineInfo('ans=$ans '
         'smoothOffset=$smoothOffset '
         'plainOffset=$plainOffset '
-        'realSimulation.lastX=${lastSimulationInfo.realSimulation.lastX} '
-        'realSimulation.lastTime=${lastSimulationInfo.realSimulation.lastTime} '
+        'realSimulation.lastX=${activeBallisticSimulationInfo.realSimulation.lastX} '
+        'realSimulation.lastTime=${activeBallisticSimulationInfo.realSimulation.lastTime} '
         'lastBeforeBeginFrameSimulationOffset=$_lastBeforeBeginFrameSimulationOffset '
         'mainLayerTreeModeInAuxTreeView=$mainLayerTreeModeInAuxTreeView '
         'selfTickerElapsed=$selfTickerElapsed '
         'tickTimeStamp=$tickTimeStamp '
         'ballisticTickerStartTime=$ballisticTickerStartTime '
         'simulationRelativeTime=$simulationRelativeTime '
-        'realSimulation=${lastSimulationInfo.realSimulation} ');
+        'realSimulation=${activeBallisticSimulationInfo.realSimulation} ');
 
     return ans;
   }
