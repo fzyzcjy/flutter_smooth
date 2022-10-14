@@ -296,7 +296,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
     if (!state.mounted) return;
 
     _lastBeforeBeginFrameSimulationOffset =
-        _scrollPosition?.lastSimulationInfo?.realSimulation.lastX;
+        _scrollPosition?.activeBallisticSimulationInfo?.realSimulation.lastX;
     notifyListeners();
   }
 
@@ -316,7 +316,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
         arguments: <String, Object?>{'info': info},
         () {});
 
-    final lastSimulationInfo = _scrollPosition!.lastSimulationInfo;
+    final lastSimulationInfo = _scrollPosition!.activeBallisticSimulationInfo;
     if (lastSimulationInfo == null) {
       _debugTimelineInfo('early return since lastSimulationInfo==null');
       return null;

@@ -39,8 +39,11 @@ class SmoothScrollPositionWithSingleContext
     super.debugLabel,
   });
 
-  SimulationInfo? get lastSimulationInfo => _lastSimulationInfo;
-  SimulationInfo? _lastSimulationInfo;
+  SimulationInfo? get activeBallisticSimulationInfo {
+    final activity = this.activity;
+    if (activity is! _SmoothBallisticScrollActivity) return null;
+    return activity.info;
+  }
 
   SmoothScrollPhysics get _physicsTyped => physics as SmoothScrollPhysics;
 
@@ -63,7 +66,7 @@ class SmoothScrollPositionWithSingleContext
         _physicsTyped.createBallisticSimulationEnhanced(
           this,
           velocity,
-          previous: previousBallisticActivity?._simulation.inner,
+          previous: previousBallisticActivity?.info.realSimulation.inner,
           potentialTimeShiftFromPrevious: (previousBallisticActivity
                       ?.controller.lastElapsedDuration?.inMicroseconds ??
                   0) /
@@ -73,36 +76,21 @@ class SmoothScrollPositionWithSingleContext
     final simulation = MemorizedSimulation.wrap(createSimulation());
 
     if (simulation != null) {
-      late final Ticker ballisticScrollActivityTicker;
-
       beginActivity(_SmoothBallisticScrollActivity(
         this,
         simulation,
-        // NOTE MODIFIED start
-        LambdaTickerProvider((onTick) {
-          ballisticScrollActivityTicker = context.vsync.createTicker(onTick);
-          return ballisticScrollActivityTicker;
-        }),
-        // context.vsync,
-        // NOTE MODIFIED end
+        context.vsync,
         activity?.shouldIgnorePointer ?? true,
-      ));
-
-      // NOTE MODIFIED start
-      // NOTE need to create a *new* simulation, not the old one.
-      //      Because [Simulation]'s doc says, some subclasses will change
-      //      state when called, and must only call with monotonic timestamps.
-      _lastSimulationInfo = SimulationInfo(
-        realSimulation: simulation,
-        ballisticScrollActivityTicker: ballisticScrollActivityTicker,
+        // NOTE need to create a *new* simulation, not the old one.
+        //      Because [Simulation]'s doc says, some subclasses will change
+        //      state when called, and must only call with monotonic timestamps.
         clonedSimulation: createSimulation()!,
-      );
-      // NOTE MODIFIED end
+      ));
 
       Timeline.timeSync(
           'goBallistic',
           arguments: <String, String>{
-            'info': _lastSimulationInfo.toString(),
+            'info': activity.toString(),
             'this': toString(),
             'pixels': pixels.toString(),
             'velocity': velocity.toString(),
@@ -120,15 +108,48 @@ class SmoothScrollPositionWithSingleContext
 }
 
 class _SmoothBallisticScrollActivity extends BallisticScrollActivity {
-  final MemorizedSimulation _simulation;
+  factory _SmoothBallisticScrollActivity(
+    ScrollActivityDelegate delegate,
+    MemorizedSimulation simulation,
+    TickerProvider vsync,
+    bool shouldIgnorePointer, // ignore: avoid_positional_boolean_parameters
+    {
+    required Simulation clonedSimulation,
+  }) {
+    late final Ticker createdTicker;
 
-  _SmoothBallisticScrollActivity(
+    final ans = _SmoothBallisticScrollActivity.raw(
+      delegate,
+      simulation,
+      LambdaTickerProvider((onTick) {
+        createdTicker = vsync.createTicker(onTick);
+        return createdTicker;
+      }),
+      shouldIgnorePointer,
+    );
+
+    ans.info = SimulationInfo(
+      realSimulation: simulation,
+      ballisticScrollActivityTicker: createdTicker,
+      clonedSimulation: clonedSimulation,
+    );
+
+    return ans;
+  }
+
+  _SmoothBallisticScrollActivity.raw(
     super.delegate,
-    MemorizedSimulation super.simulation,
+    super.simulation,
     super.vsync,
     // ignore: avoid_positional_boolean_parameters
     super.shouldIgnorePointer,
-  ) : _simulation = simulation;
+  );
+
+  // some extra fields
+  late final SimulationInfo info;
+
+  @override
+  String toString() => '${super.toString()}(info: $info)';
 }
 
 class LambdaTickerProvider implements TickerProvider {
