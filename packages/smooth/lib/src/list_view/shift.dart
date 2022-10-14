@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -99,15 +98,23 @@ class _SmoothShiftState extends State<SmoothShift>
     if (placeholder == null) return const SizedBox.shrink();
 
     // prototype only. for real case, should also consider the reverse case.
-    final placeholderOffset = max(0.0, -offset - widget.childCacheExtent);
+    final itemHeight = placeholder.preferredSize.height;
+    final rawPlaceholderOffset =
+        widget.childHeight + widget.childCacheExtent + offset;
+    final placeholderOffset = rawPlaceholderOffset > 0
+        ? rawPlaceholderOffset
+        : (-((-rawPlaceholderOffset) % itemHeight) - itemHeight);
 
     // +1 to be safe
-    final numItems =
-        (widget.childHeight / placeholder.preferredSize.height).ceil() + 1;
+    final numItems = (widget.childHeight / itemHeight).ceil() + 1;
 
     return Transform.translate(
       offset: Offset(0, placeholderOffset),
-      child: Column(children: List.filled(numItems, placeholder)),
+      child: OverflowBox(
+        alignment: Alignment.topCenter,
+        maxHeight: double.infinity,
+        child: Column(children: List.filled(numItems, placeholder)),
+      ),
     );
   }
 }

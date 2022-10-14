@@ -242,7 +242,7 @@ class ExampleListViewPage extends StatelessWidget {
               child: Container(
                 width: 32,
                 height: 12,
-                color: Colors.grey,
+                color: Colors.grey.shade200,
               ),
             )),
       ),
