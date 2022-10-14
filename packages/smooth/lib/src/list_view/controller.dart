@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/scheduler/ticker.dart'; // ignore: implementation_imports
+import 'package:flutter/src/scheduler/ticker.dart';
+import 'package:smooth/src/list_view/simulation.dart'; // ignore: implementation_imports
 
 class SmoothScrollController extends ScrollController {
   // ref [super.createScrollPosition], except for return custom sub-class
@@ -124,51 +125,4 @@ class SimulationInfo {
       'ballisticScrollActivityTicker: $ballisticScrollActivityTicker, '
       'clonedSimulation: $clonedSimulation'
       '}';
-}
-
-class MemorizedSimulation extends ProxySimulation {
-  MemorizedSimulation(super.inner);
-
-  static MemorizedSimulation? wrap(Simulation? inner) =>
-      inner == null ? null : MemorizedSimulation(inner);
-
-  double? get lastX => _lastX;
-  double? _lastX;
-
-  double? get lastTime => _lastTime;
-  double? _lastTime;
-
-  @override
-  double x(double time) {
-    assert(_lastTime == null || time >= _lastTime!);
-
-    final ans = super.x(time);
-
-    _lastX = ans;
-    _lastTime = time;
-
-    return ans;
-  }
-
-  @override
-  String toString() =>
-      'MemorizedSimulation(lastX: $_lastX, lastTime: $_lastTime, inner: $inner)';
-}
-
-class ProxySimulation extends Simulation {
-  final Simulation inner;
-
-  ProxySimulation(this.inner);
-
-  @override
-  double x(double time) => inner.x(time);
-
-  @override
-  double dx(double time) => inner.dx(time);
-
-  @override
-  bool isDone(double time) => inner.isDone(time);
-
-  @override
-  String toString() => 'ProxySimulation($inner)';
 }
