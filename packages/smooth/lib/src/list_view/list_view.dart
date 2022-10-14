@@ -9,11 +9,13 @@ import 'package:smooth/src/list_view/physics.dart';
 class SmoothListView extends StatefulWidget {
   final int itemCount;
   final NullableIndexedWidgetBuilder itemBuilder;
+  final PreferredSizeWidget? placeholder;
 
   const SmoothListView.builder({
     super.key,
     required this.itemCount,
     required this.itemBuilder,
+    this.placeholder,
   });
 
   static Widget maybeBuilder({
@@ -70,6 +72,7 @@ class _SmoothListViewState extends State<SmoothListView> {
         builder: (context, child) => ClipRect(
           child: SmoothShift(
             scrollController: controller,
+            placeholder: widget.placeholder,
             child: child,
           ),
         ),

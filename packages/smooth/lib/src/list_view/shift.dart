@@ -8,11 +8,13 @@ import 'package:smooth/src/list_view/controller.dart';
 
 class SmoothShift extends StatefulWidget {
   final ScrollController scrollController;
+  final PreferredSizeWidget? placeholder;
   final Widget child;
 
   const SmoothShift({
     super.key,
     required this.scrollController,
+    this.placeholder,
     required this.child,
   });
 

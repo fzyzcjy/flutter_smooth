@@ -101,6 +101,9 @@ class ExampleListViewPage extends StatelessWidget {
     return SmoothListView.builder(
       itemCount: 1000,
       itemBuilder: _buildRow,
+      // TODO only prototype currently, should make it full featured later
+      //      e.g. make it a real item
+      placeholder: _buildPlaceholder(),
     );
   }
 
@@ -225,6 +228,25 @@ class ExampleListViewPage extends StatelessWidget {
     //     ],
     //   ),
     // );
+  }
+
+  PreferredSizeWidget _buildPlaceholder() {
+    return PreferredSize(
+      preferredSize: const Size(300, 128),
+      child: SizedBox(
+        height: 128,
+        child: Container(
+            margin: const EdgeInsets.all(8),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                width: 32,
+                height: 12,
+                color: Colors.grey,
+              ),
+            )),
+      ),
+    );
   }
 }
 
