@@ -45,7 +45,7 @@ class SmoothScrollPositionWithSingleContext
   // ref [super.createScrollPosition], except for marked regions
   @override
   void goBallistic(double velocity) {
-    // print('hi goBallistic velocity=$velocity');
+    print('hi goBallistic velocity=$velocity');
 
     assert(hasPixels);
 
