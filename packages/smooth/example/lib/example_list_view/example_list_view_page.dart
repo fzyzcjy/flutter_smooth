@@ -121,7 +121,9 @@ class ExampleListViewPage extends StatelessWidget {
           if (enableNewItemWorkload)
             _NormalLayoutBuilder(
               onPerformLayout: () {
-                const workloadMilliseconds = 100;
+                // NOTE to be real, should not be too huge (though we can make
+                // it 60FPS). #6204
+                final workloadMilliseconds = index.isEven ? 80 : 0;
 
                 for (var i = 0; i < workloadMilliseconds; ++i) {
                   // NOTE `sleep` does not support microseconds! #6109
