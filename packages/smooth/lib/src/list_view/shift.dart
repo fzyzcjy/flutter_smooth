@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,15 @@ import 'package:smooth/src/list_view/controller.dart';
 class SmoothShift extends StatefulWidget {
   final ScrollController scrollController;
   final PreferredSizeWidget? placeholder;
+  final double childCacheExtent;
+  final double childHeight;
   final Widget child;
 
   const SmoothShift({
     super.key,
     required this.scrollController,
+    required this.childCacheExtent,
+    required this.childHeight,
     this.placeholder,
     required this.child,
   });
@@ -69,10 +74,15 @@ class _SmoothShiftState extends State<SmoothShift>
 
     return Timeline.timeSync('SmoothShift',
         arguments: <String, Object?>{'offset': offset}, () {
-      Widget result = Transform.translate(
-        offset: Offset(0, offset),
-        transformHitTests: false,
-        child: widget.child,
+      Widget result = Stack(
+        children: [
+          Transform.translate(
+            offset: Offset(0, offset),
+            transformHitTests: false,
+            child: widget.child,
+          ),
+          _buildPlaceholder(),
+        ],
       );
 
       for (final source in sources) {
@@ -81,6 +91,24 @@ class _SmoothShiftState extends State<SmoothShift>
 
       return result;
     });
+  }
+
+  // TODO should make it full featured later
+  Widget _buildPlaceholder() {
+    final placeholder = widget.placeholder;
+    if (placeholder == null) return const SizedBox.shrink();
+
+    // prototype only. for real case, should also consider the reverse case.
+    final placeholderOffset = max(0.0, -offset - widget.childCacheExtent);
+
+    // +1 to be safe
+    final numItems =
+        (widget.childHeight / placeholder.preferredSize.height).ceil() + 1;
+
+    return Transform.translate(
+      offset: Offset(0, placeholderOffset),
+      child: Column(children: List.filled(numItems, placeholder)),
+    );
   }
 }
 

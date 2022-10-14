@@ -73,6 +73,9 @@ class _SmoothListViewState extends State<SmoothListView> {
           child: SmoothShift(
             scrollController: controller,
             placeholder: widget.placeholder,
+            childCacheExtent: cacheExtent,
+            // just for prototype
+            childHeight: constraints.maxHeight,
             child: child,
           ),
         ),
