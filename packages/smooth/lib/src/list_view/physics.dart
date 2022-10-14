@@ -28,12 +28,21 @@ class SmoothClampingScrollPhysics extends ClampingScrollPhysics
 
     final potentialPositionShiftFromPrevious =
         raw.position - previous.x(potentialTimeShiftFromPrevious);
-    if (!_isSuccessor(
+    final isSuccessor = _isSuccessor(
       raw: raw,
       previous: previous,
       timeShiftFromPrevious: potentialTimeShiftFromPrevious,
       positionShiftFromPrevious: potentialPositionShiftFromPrevious,
-    )) return raw;
+    );
+
+    print('hi $runtimeType.createBallisticSimulationEnhanced '
+        'position=$position velocity=$velocity '
+        'raw=$raw previous=$previous '
+        'potentialTimeShiftFromPrevious=$potentialTimeShiftFromPrevious '
+        'potentialPositionShiftFromPrevious=$potentialPositionShiftFromPrevious '
+        'isSuccessor=$isSuccessor');
+
+    if (!isSuccessor) return raw;
 
     return ShiftingSimulation(
       previous,
