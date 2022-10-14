@@ -83,7 +83,7 @@ class _SmoothListViewState extends State<SmoothListView> {
             controller: controller,
             // NOTE set [cacheExtent] here to zero, because we will use overflow box
             cacheExtent: 0,
-            physics: SmoothClampingScrollPhysics(),
+            physics: const SmoothClampingScrollPhysics(),
             itemCount: effectiveItemCount,
             itemBuilder: (context, index) {
               if (index == 0 || index == effectiveItemCount - 1) {

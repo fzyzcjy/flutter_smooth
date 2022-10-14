@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/scheduler/ticker.dart';
+import 'package:flutter/src/scheduler/ticker.dart'; // ignore: implementation_imports
 import 'package:smooth/src/list_view/physics.dart';
 import 'package:smooth/src/list_view/simulation.dart'; // ignore: implementation_imports
 
@@ -54,7 +54,7 @@ class SmoothScrollPositionWithSingleContext
   // ref [super.createScrollPosition], except for marked regions
   @override
   void goBallistic(double velocity) {
-    print('hi $runtimeType.goBallistic velocity=$velocity');
+    // print('hi $runtimeType.goBallistic velocity=$velocity');
     // debugPrintStack();
 
     assert(hasPixels);
