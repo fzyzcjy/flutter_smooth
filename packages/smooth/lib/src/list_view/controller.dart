@@ -46,10 +46,9 @@ class SmoothScrollPositionWithSingleContext
 
   SmoothScrollPhysics get _physicsTyped => physics as SmoothScrollPhysics;
 
-  Simulation? get _previousBallisticSimulation {
+  _SmoothBallisticScrollActivity? get _previousBallisticActivity {
     final activity = this.activity;
-    if (activity is! _SmoothBallisticScrollActivity) return null;
-    return activity._simulation;
+    return activity is _SmoothBallisticScrollActivity ? activity : null;
   }
 
   // ref [super.createScrollPosition], except for marked regions
@@ -60,12 +59,20 @@ class SmoothScrollPositionWithSingleContext
 
     assert(hasPixels);
 
-    // NOTE MODIFIED start
-    // use [MemorizedSimulation] to wrap
-    final simulation = MemorizedSimulation.wrap(
-        _physicsTyped.createBallisticSimulation(this, velocity,
-            previous: _previousBallisticSimulation));
-    // NOTE MODIFIED end
+    final previousBallisticActivity = _previousBallisticActivity;
+
+    Simulation? createSimulation() =>
+        _physicsTyped.createBallisticSimulationEnhanced(
+          this,
+          velocity,
+          previous: previousBallisticActivity?._simulation.inner,
+          potentialTimeShiftFromPrevious: (previousBallisticActivity
+                      ?.controller.lastElapsedDuration?.inMicroseconds ??
+                  0) /
+              1000000,
+        );
+
+    final simulation = MemorizedSimulation.wrap(createSimulation());
 
     if (simulation != null) {
       late final Ticker ballisticScrollActivityTicker;
@@ -90,7 +97,7 @@ class SmoothScrollPositionWithSingleContext
       _lastSimulationInfo.value = SimulationInfo(
         realSimulation: simulation,
         ballisticScrollActivityTicker: ballisticScrollActivityTicker,
-        clonedSimulation: physics.createBallisticSimulation(this, velocity)!,
+        clonedSimulation: createSimulation()!,
       );
       // NOTE MODIFIED end
 
@@ -110,11 +117,11 @@ class SmoothScrollPositionWithSingleContext
 }
 
 class _SmoothBallisticScrollActivity extends BallisticScrollActivity {
-  final Simulation _simulation;
+  final MemorizedSimulation _simulation;
 
   _SmoothBallisticScrollActivity(
     super.delegate,
-    super.simulation,
+    MemorizedSimulation super.simulation,
     super.vsync,
     // ignore: avoid_positional_boolean_parameters
     super.shouldIgnorePointer,

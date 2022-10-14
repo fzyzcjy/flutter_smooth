@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:smooth/src/list_view/simulation.dart';
 
 abstract class SmoothScrollPhysics implements ScrollPhysics {
-  @override
   Simulation? createBallisticSimulationEnhanced(
       ScrollMetrics position, double velocity,
-      {required Simulation? previous, required double previousTimeShift});
+      {required Simulation? previous,
+      required double potentialTimeShiftFromPrevious});
 }
 
 class SmoothClampingScrollPhysics extends ClampingScrollPhysics
@@ -13,33 +13,39 @@ class SmoothClampingScrollPhysics extends ClampingScrollPhysics
   @override
   Simulation? createBallisticSimulationEnhanced(
       ScrollMetrics position, double velocity,
-      {required Simulation? previous, required double previousTimeShift}) {
+      {required Simulation? previous,
+      required double potentialTimeShiftFromPrevious}) {
     final raw = super.createBallisticSimulation(position, velocity);
 
-    if (raw is ClampingScrollSimulation &&
-        previous is ClampingScrollSimulation &&
-        _simulationsEqualExceptPositionAndTimeShift(
-          raw: raw,
-          previous: previous,
-          previousTimeShift: previousTimeShift,
-        )) {
-      return ShiftingSimulation(
-        previous,
-        timeShift: previousTimeShift,
-        positionShift: positionShift,
-      );
-    }
+    if (!(raw is ClampingScrollSimulation &&
+        previous is ClampingScrollSimulation)) return raw;
 
-    return raw;
+    final potentialPositionShiftFromPrevious =
+        raw.position - previous.x(potentialTimeShiftFromPrevious);
+    if (!_isSuccessor(
+      raw: raw,
+      previous: previous,
+      timeShiftFromPrevious: potentialTimeShiftFromPrevious,
+      positionShiftFromPrevious: potentialPositionShiftFromPrevious,
+    )) return raw;
+
+    return ShiftingSimulation(
+      previous,
+      timeShift: potentialTimeShiftFromPrevious,
+      positionShift: potentialPositionShiftFromPrevious,
+    );
   }
 
-  static bool _simulationsEqualExceptPositionAndTimeShift({
+  static bool _isSuccessor({
     required ClampingScrollSimulation raw,
     required ClampingScrollSimulation previous,
-    required double previousTimeShift,
+    required double timeShiftFromPrevious,
+    required double positionShiftFromPrevious,
   }) {
-    return TODO_position &&
-        TODO_velocity &&
+    // check all constructor arguments of [raw]
+    return _roughlyEquals(raw.position,
+            previous.x(timeShiftFromPrevious) + positionShiftFromPrevious) &&
+        _roughlyEquals(raw.velocity, previous.dx(timeShiftFromPrevious)) &&
         _roughlyEquals(raw.friction, previous.friction);
   }
 }
