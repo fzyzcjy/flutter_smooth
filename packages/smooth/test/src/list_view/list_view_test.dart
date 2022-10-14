@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:convenient_test_dev/convenient_test_dev.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,6 +11,9 @@ import 'package:smooth_dev/smooth_dev.dart';
 import '../test_tools/gesture.dart';
 
 void main() {
+  goldenFileComparator =
+      EnhancedLocalFileComparator.configFromCurrent(captureFailure: false);
+
   final binding = SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
 
   group('SmoothListView', () {
