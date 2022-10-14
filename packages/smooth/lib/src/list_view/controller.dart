@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/scheduler/ticker.dart';
+import 'package:smooth/src/list_view/physics.dart';
 import 'package:smooth/src/list_view/simulation.dart'; // ignore: implementation_imports
 
 class SmoothScrollController extends ScrollController {
@@ -43,6 +44,14 @@ class SmoothScrollPositionWithSingleContext
       _lastSimulationInfo;
   final _lastSimulationInfo = ValueNotifier<SimulationInfo?>(null);
 
+  SmoothScrollPhysics get _physicsTyped => physics as SmoothScrollPhysics;
+
+  Simulation? get _previousBallisticSimulation {
+    final activity = this.activity;
+    if (activity is! _SmoothBallisticScrollActivity) return null;
+    return activity._simulation;
+  }
+
   // ref [super.createScrollPosition], except for marked regions
   @override
   void goBallistic(double velocity) {
@@ -54,13 +63,14 @@ class SmoothScrollPositionWithSingleContext
     // NOTE MODIFIED start
     // use [MemorizedSimulation] to wrap
     final simulation = MemorizedSimulation.wrap(
-        physics.createBallisticSimulation(this, velocity));
+        _physicsTyped.createBallisticSimulation(this, velocity,
+            previous: _previousBallisticSimulation));
     // NOTE MODIFIED end
 
     if (simulation != null) {
       late final Ticker ballisticScrollActivityTicker;
 
-      beginActivity(BallisticScrollActivity(
+      beginActivity(_SmoothBallisticScrollActivity(
         this,
         simulation,
         // NOTE MODIFIED start
@@ -97,6 +107,18 @@ class SmoothScrollPositionWithSingleContext
       goIdle();
     }
   }
+}
+
+class _SmoothBallisticScrollActivity extends BallisticScrollActivity {
+  final Simulation _simulation;
+
+  _SmoothBallisticScrollActivity(
+    super.delegate,
+    super.simulation,
+    super.vsync,
+    // ignore: avoid_positional_boolean_parameters
+    super.shouldIgnorePointer,
+  ) : _simulation = simulation;
 }
 
 class LambdaTickerProvider implements TickerProvider {
