@@ -5,7 +5,7 @@ import 'package:smooth/src/list_view/simulation.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
- 
+
   group('SmoothClampingScrollPhysics', () {
     FixedScrollMetrics _createScrollMetrics({required double pixels}) =>
         FixedScrollMetrics(
@@ -17,7 +17,7 @@ void main() {
         );
 
     test('simple', () {
-      final physics = SmoothClampingScrollPhysics();
+      const physics = SmoothClampingScrollPhysics();
 
       final first = physics.createBallisticSimulationEnhanced(
         _createScrollMetrics(pixels: 100),
@@ -40,6 +40,21 @@ void main() {
         isA<ShiftingSimulation>()
             .having((p) => p.inner, 'inner', first)
             .having((p) => p.timeShift, 'timeShift', deltaTime)
+            .having((p) => p.positionShift, 'positionShift', 0),
+      );
+
+      final third = physics.createBallisticSimulationEnhanced(
+        _createScrollMetrics(pixels: second.x(deltaTime)),
+        second.dx(deltaTime),
+        previous: second,
+        potentialTimeShiftFromPrevious: deltaTime,
+      )!;
+
+      expect(
+        third,
+        isA<ShiftingSimulation>()
+            .having((p) => p.inner, 'inner', first)
+            .having((p) => p.timeShift, 'timeShift', deltaTime * 2)
             .having((p) => p.positionShift, 'positionShift', 0),
       );
     });
