@@ -22,31 +22,42 @@ class SmoothClampingScrollPhysics extends ClampingScrollPhysics
       {required Simulation? previous,
       required double potentialTimeShiftFromPrevious}) {
     final raw = super.createBallisticSimulation(position, velocity);
+    if (raw is! ClampingScrollSimulation) return raw;
 
-    if (!(raw is ClampingScrollSimulation &&
-        previous is ClampingScrollSimulation)) return raw;
+    final ClampingScrollSimulation effectivePrevious;
+    final double effectivePotentialTimeShiftFromPrevious;
+    if (previous is ShiftingSimulation) {
+      effectivePrevious = previous.inner as ClampingScrollSimulation;
+      effectivePotentialTimeShiftFromPrevious =
+          potentialTimeShiftFromPrevious + previous.timeShift;
+    } else if (previous is ClampingScrollSimulation) {
+      effectivePrevious = previous;
+      effectivePotentialTimeShiftFromPrevious = potentialTimeShiftFromPrevious;
+    } else {
+      return raw;
+    }
 
-    final potentialPositionShiftFromPrevious =
-        raw.position - previous.x(potentialTimeShiftFromPrevious);
+    final potentialPositionShiftFromPrevious = raw.position -
+        effectivePrevious.x(effectivePotentialTimeShiftFromPrevious);
     final isSuccessor = _isSuccessor(
       raw: raw,
-      previous: previous,
-      timeShiftFromPrevious: potentialTimeShiftFromPrevious,
+      previous: effectivePrevious,
+      timeShiftFromPrevious: effectivePotentialTimeShiftFromPrevious,
       positionShiftFromPrevious: potentialPositionShiftFromPrevious,
     );
 
-    print('hi $runtimeType.createBallisticSimulationEnhanced '
-        'position=$position velocity=$velocity '
-        'raw=$raw previous=$previous '
-        'potentialTimeShiftFromPrevious=$potentialTimeShiftFromPrevious '
-        'potentialPositionShiftFromPrevious=$potentialPositionShiftFromPrevious '
-        'isSuccessor=$isSuccessor');
+    // print('hi $runtimeType.createBallisticSimulationEnhanced '
+    //     'position=$position velocity=$velocity '
+    //     'raw=$raw previous=$previous '
+    //     'potentialTimeShiftFromPrevious=$potentialTimeShiftFromPrevious '
+    //     'potentialPositionShiftFromPrevious=$potentialPositionShiftFromPrevious '
+    //     'isSuccessor=$isSuccessor');
 
     if (!isSuccessor) return raw;
 
     return ShiftingSimulation(
-      previous,
-      timeShift: potentialTimeShiftFromPrevious,
+      effectivePrevious,
+      timeShift: effectivePotentialTimeShiftFromPrevious,
       positionShift: potentialPositionShiftFromPrevious,
     );
   }
