@@ -14,7 +14,10 @@ import 'brake_point_test.mocks.dart';
 @GenerateMocks([BrakeController])
 void main() {
   late BrakeController controller;
-  setUp(() => controller = MockBrakeController());
+  setUp(() {
+    controller = MockBrakeController();
+    when(controller.brakeModeActive).thenReturn(false);
+  });
 
   final binding = SmoothAutomatedTestWidgetsFlutterBinding.ensureInitialized();
   binding.debugServiceLocatorFactory = () => ServiceLocator(
@@ -22,8 +25,6 @@ void main() {
 
   testWidgets('when brake, next build/layout/initState should fallback',
       (tester) async {
-    when(controller.brakeModeActive).thenReturn(false);
-
     var countFormerInitState = 0;
     var countFormerBuild = 0;
     var countFormerLayout = 0;
