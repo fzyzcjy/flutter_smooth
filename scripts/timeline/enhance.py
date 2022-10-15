@@ -74,6 +74,28 @@ def synthesize_long_event_matching_filter(filter_event: Callable[[str], bool], s
 ABNORMAL_TID = -999999
 
 
+def synthesize_events_abnormal_vsync_duration(vsync_positions: List[int]):
+    normal_value = 16667
+    threshold = 1000
+
+    vsync_positions = sorted(vsync_positions)
+
+    new_events = []
+
+    for vsync_index in range(len(vsync_positions) - 1):
+        delta = vsync_positions[vsync_index + 1] - vsync_positions[vsync_index]
+        if abs(delta - normal_value) > threshold:
+            new_events += synthesize_event(
+                name='AbnormalVsyncDuration',
+                start_us=vsync_positions[vsync_index],
+                duration_us=100 * 1000,
+                tid=ABNORMAL_TID - 1,
+                logging=True,
+            )
+
+    return new_events
+
+
 def synthesize_events_abnormal_raster_in_vsync_interval(vsync_positions: List[int], raster_end_positions: List[int]):
     new_events = []
     raster_index = 0
@@ -152,6 +174,7 @@ def main():
     vsync_positions = parse_vsync_positions(data)
     raster_end_positions = parse_raster_end_positions(data)
 
+    data['traceEvents'] += synthesize_events_abnormal_vsync_duration(vsync_positions)
     data['traceEvents'] += synthesize_events_abnormal_raster_in_vsync_interval(vsync_positions, raster_end_positions)
     data['traceEvents'] += synthesize_events_no_pending_continuation(vsync_positions)
     data['traceEvents'] += synthesize_events_preempt_render_large_latency(vsync_positions)
