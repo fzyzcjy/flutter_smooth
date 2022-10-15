@@ -128,6 +128,9 @@ class Actor {
 
       _preemptModifyLayerTree(smoothFrameTimeStamp, debugReason: debugReason);
 
+      final smoothFrameSystemTimeStamp = serviceLocator.timeConverter
+          .adjustedToSystemFrameTimeStamp(smoothFrameTimeStamp);
+
       final builder = SceneBuilder();
       // why this layer - from RenderView.compositeFrame
       // ignore: invalid_use_of_protected_member
@@ -137,12 +140,17 @@ class Actor {
       //     'call window.render (now=${DateTime.now()}, stopwatch=${stopwatch.elapsed})');
       WidgetsBinding.instance.window.render(
         scene,
-        fallbackVsyncTargetTime: serviceLocator.timeConverter
-            .adjustedToSystemFrameTimeStamp(smoothFrameTimeStamp)
-            .innerSystemFrameTimeStamp,
+        fallbackVsyncTargetTime:
+            smoothFrameSystemTimeStamp.innerSystemFrameTimeStamp,
       );
 
       scene.dispose();
+
+      // #6235
+      const kNotifyIdleExtraTime = Duration(microseconds: 16667 - 3000);
+      binding.platformDispatcher.notifyIdle(
+          smoothFrameSystemTimeStamp.innerSystemFrameTimeStamp +
+              kNotifyIdleExtraTime);
 
       // #5831
       // // #5822
