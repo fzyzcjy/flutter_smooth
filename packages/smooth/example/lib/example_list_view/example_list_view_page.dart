@@ -59,13 +59,15 @@ class ExampleListViewPage extends StatelessWidget {
               // for normal case, still mimic it is a bit slow to be real
               if (enableAlwaysWorkload)
                 for (var i = 0; i < 5; ++i)
-                  LayoutPreemptPointWidget(
-                    child: _AlwaysLayoutBuilder(
-                      onPerformLayout: () {
-                        // NOTE `sleep` does not support microseconds! #6109
-                        sleep(const Duration(milliseconds: 1));
-                      },
-                      child: Container(),
+                  SmoothBrakePoint(
+                    child: LayoutPreemptPointWidget(
+                      child: _AlwaysLayoutBuilder(
+                        onPerformLayout: () {
+                          // NOTE `sleep` does not support microseconds! #6109
+                          sleep(const Duration(milliseconds: 1));
+                        },
+                        child: Container(),
+                      ),
                     ),
                   ),
               Expanded(child: enableSmooth ? _buildSmooth() : _buildPlain()),
@@ -125,13 +127,15 @@ class ExampleListViewPage extends StatelessWidget {
           // #6076
           if (enableNewItemWorkload)
             for (var i = 0; i < workloadMilliseconds; ++i)
-              LayoutPreemptPointWidget(
-                child: _NormalLayoutBuilder(
-                  onPerformLayout: () {
-                    // NOTE `sleep` does not support microseconds! #6109
-                    sleep(const Duration(milliseconds: 1));
-                  },
-                  child: Container(),
+              SmoothBrakePoint(
+                child: LayoutPreemptPointWidget(
+                  child: _NormalLayoutBuilder(
+                    onPerformLayout: () {
+                      // NOTE `sleep` does not support microseconds! #6109
+                      sleep(const Duration(milliseconds: 1));
+                    },
+                    child: Container(),
+                  ),
                 ),
               ),
           if (rowColor != null)
