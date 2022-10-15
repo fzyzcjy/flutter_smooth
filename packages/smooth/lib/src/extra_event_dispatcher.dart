@@ -13,6 +13,12 @@ class ExtraEventDispatcher {
   void handleMainTreePointerEvent(PointerEvent e) =>
       _pendingEventManager.handleMainTreePointerEvent(e);
 
+  void addEnginePendingEventListener(EnginePendingEventListener value) =>
+      _pendingEventManager.addEnginePendingEventListener(value);
+
+  void removeEnginePendingEventListener(EnginePendingEventListener value) =>
+      _pendingEventManager.removeEnginePendingEventListener(value);
+
   // TODO just prototype, not final code
   // #5867
   void dispatch({required AdjustedFrameTimeStamp smoothFrameTimeStamp}) {
@@ -118,6 +124,20 @@ class _PendingPointerEventManager {
     return ans;
   }
 
+  final _enginePendingEventListeners = <EnginePendingEventListener>[];
+
+  void addEnginePendingEventListener(EnginePendingEventListener value) =>
+      _enginePendingEventListeners.add(value);
+
+  void removeEnginePendingEventListener(EnginePendingEventListener value) =>
+      _enginePendingEventListeners.remove(value);
+
+  void _fireEnginePendingEventListeners(PointerEvent e) {
+    for (final listener in _enginePendingEventListeners) {
+      listener(e);
+    }
+  }
+
   void _fetchFromEngine(
       {required PointerEventTimeStamp sanityCheckLastEventTimeStamp}) {
     final gestureBinding = GestureBinding.instance;
@@ -134,6 +154,10 @@ class _PendingPointerEventManager {
     );
     // SimpleLog.instance.log(
     //     'PendingPointerEventManager enqueue (from engine) ${enginePendingEvents.toBriefString()}');
+
+    for (final e in enginePendingEvents) {
+      _fireEnginePendingEventListeners(e);
+    }
 
     assert(() {
       // be very loose
@@ -183,3 +207,5 @@ extension on PointerEvent {
       'position: $position'
       ')';
 }
+
+typedef EnginePendingEventListener = void Function(PointerEvent);
