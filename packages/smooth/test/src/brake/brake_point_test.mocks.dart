@@ -30,4 +30,12 @@ class MockBrakeController extends _i1.Mock implements _i2.BrakeController {
         Invocation.getter(#brakeModeActive),
         returnValue: false,
       ) as bool);
+  @override
+  void activateBrakeMode() => super.noSuchMethod(
+        Invocation.method(
+          #activateBrakeMode,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
 }
