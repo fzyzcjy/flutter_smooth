@@ -54,9 +54,13 @@ def parse_frame_infos(data):
         i = bisect_left(vsync_positions, ts_rasterizer_end)
         if i < len(vsync_positions):
             display_screen_time = vsync_positions[i]
-            # "*1.1" for rounding errors?
-            assert display_screen_time - 16667 * 1.1 <= ts_rasterizer_end <= display_screen_time, \
-                f'display_screen_time={display_screen_time} ts_rasterizer_end={ts_rasterizer_end}'
+            # https://github.com/fzyzcjy/yplusplus/issues/6227#issuecomment-1279728357
+            if not (display_screen_time - 16667 * 1.1 <= ts_rasterizer_end <= display_screen_time):
+                print(
+                    'ts_rasterizer_end vs display_screen_time may look weird, or may be normal'
+                    f'display_screen_time(relative)={display_screen_time - min_ts} '
+                    f'ts_rasterizer_end(relative)={ts_rasterizer_end - min_ts}'
+                )
         else:
             display_screen_time = vsync_positions[-1]  # fallback
 
