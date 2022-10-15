@@ -66,9 +66,11 @@ class _SmoothListViewState extends State<SmoothListView> {
     super.dispose();
   }
 
-  // #6210
   void _handleEnginePendingEvent(PointerEvent e) {
-    TODO;
+    // #6210
+    if (e is PointerUpEvent) {
+      ServiceLocator.instance.brakeController.activateBrakeMode();
+    }
   }
 
   @override
