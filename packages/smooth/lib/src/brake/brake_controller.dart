@@ -1,3 +1,3 @@
-abstract class BrakeController {
+class BrakeController {
   bool get brakeModeActive => throw UnimplementedError(); // TODO
 }
