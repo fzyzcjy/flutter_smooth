@@ -212,7 +212,11 @@ mixin SmoothWidgetsBindingMixin on WidgetsBinding {
       final forceDirectlyCallNextVsyncTargetTime =
           currentSmoothFrameTimeStamp + kOneFrame;
 
-      SchedulerBinding.instance.scheduleFrame(
+      // ref [SchedulerBinding.scheduleFrame], except for the
+      // "if _hasScheduledFrame then skip" logic, since we want to *force*
+      // schedule it
+      ensureFrameCallbacksRegistered();
+      platformDispatcher.scheduleFrame(
           forceDirectlyCallNextVsyncTargetTime:
               forceDirectlyCallNextVsyncTargetTime);
     });
