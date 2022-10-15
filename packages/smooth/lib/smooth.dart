@@ -1,4 +1,5 @@
 export 'src/binding.dart' show SmoothWidgetsFlutterBinding;
+export 'src/brake/brake_point.dart' show SmoothBrakePoint;
 export 'src/builder.dart' show SmoothBuilder;
 export 'src/constant.dart';
 export 'src/debug.dart' show SmoothDebug;
