@@ -224,13 +224,14 @@ class _SmoothShiftSourcePointerEvent extends _SmoothShiftSource {
     notifyListeners();
   }
 
-  void _handlePointerUpOrCancel(PointerEvent e) {
-    _pointerDownPosition = null;
-    _positionWhenCurrStartDrawFrame = null;
-    _positionWhenPrevStartDrawFrame = null;
-    _currPosition = null;
-    notifyListeners();
-  }
+  // do *nothing* when pointer up/cancel #6222
+  // void _handlePointerUpOrCancel(PointerEvent e) {
+  //   _pointerDownPosition = null;
+  //   _positionWhenCurrStartDrawFrame = null;
+  //   _positionWhenPrevStartDrawFrame = null;
+  //   _currPosition = null;
+  //   notifyListeners();
+  // }
 
   _SmoothShiftSourcePointerEvent(super.state) {
     SmoothSchedulerBindingMixin.instance.mainLayerTreeModeInAuxTreeView
@@ -252,8 +253,10 @@ class _SmoothShiftSourcePointerEvent extends _SmoothShiftSource {
     return Listener(
       onPointerDown: _handlePointerDown,
       onPointerMove: _handlePointerMove,
-      onPointerUp: _handlePointerUpOrCancel,
-      onPointerCancel: _handlePointerUpOrCancel,
+      // do *nothing* when pointer up/cancel
+      // details: https://github.com/fzyzcjy/yplusplus/issues/6222#issuecomment-1279692460
+      // onPointerUp: _handlePointerUpOrCancel,
+      // onPointerCancel: _handlePointerUpOrCancel,
       behavior: HitTestBehavior.translucent,
       child: child,
     );
