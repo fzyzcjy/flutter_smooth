@@ -207,10 +207,16 @@ mixin SmoothWidgetsBindingMixin on WidgetsBinding {
   // for details see #6218
   void _forceScheduleFrameForBrakeModeActive() {
     Timeline.timeSync('forceScheduleFrameForBrakeModeActive', () {
-      final currentSmoothFrameTimeStamp = ServiceLocator.instance.timeManager
-          .currentSmoothFrameTimeStamp.innerAdjustedFrameTimeStamp;
+      final serviceLocator = ServiceLocator.instance;
+      final currentSmoothFrameTimeStamp =
+          serviceLocator.timeManager.currentSmoothFrameTimeStamp;
+      final currentSmoothSystemFrameTimeStamp = serviceLocator.timeConverter
+          .adjustedToSystemFrameTimeStamp(currentSmoothFrameTimeStamp);
       final forceDirectlyCallNextVsyncTargetTime =
-          currentSmoothFrameTimeStamp + kOneFrame;
+          currentSmoothSystemFrameTimeStamp.innerSystemFrameTimeStamp +
+              kOneFrame;
+      print(
+          'hi forceScheduleFrameForBrakeModeActive forceDirectlyCallNextVsyncTargetTime=$forceDirectlyCallNextVsyncTargetTime');
 
       // ref [SchedulerBinding.scheduleFrame], except for the
       // "if _hasScheduledFrame then skip" logic, since we want to *force*
