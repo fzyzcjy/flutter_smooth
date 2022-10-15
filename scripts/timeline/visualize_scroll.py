@@ -8,6 +8,7 @@ import matplotlib
 
 matplotlib.use("MacOSX")
 
+from argparse import ArgumentParser
 import json
 from pathlib import Path
 from typing import Dict
@@ -19,7 +20,7 @@ from timeline.common import parse_frame_infos, find_before, is_enclosed_by, pars
 
 TraceEvent = Dict
 
-if 0:
+if 1:
     parser = ArgumentParser()
     parser.add_argument('input')
     args = parser.parse_args()
