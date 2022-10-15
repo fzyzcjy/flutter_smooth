@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// [child]'s `build` will only be called after previous subtrees has finished both build *and layout* phase
+/// [child]'s `build` will only be called after previous subtrees has
+/// finished both build *and layout* phase
 class BuildAfterPreviousBuildOrLayout extends StatelessWidget {
   final WidgetBuilder builder;
 
