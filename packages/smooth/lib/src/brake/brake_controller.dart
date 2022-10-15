@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/scheduler.dart';
 
 class BrakeController {
@@ -7,9 +9,20 @@ class BrakeController {
   void activateBrakeMode() {
     if (_brakeModeActive) return;
 
+    Timeline.timeSync('activateBrakeMode', () {});
+
     _brakeModeActive = true;
+
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _brakeModeActive = false;
+      _deactivateBrakeMode();
     });
+  }
+
+  void _deactivateBrakeMode() {
+    if (!_brakeModeActive) return;
+
+    Timeline.timeSync('deactivateBrakeMode', () {});
+
+    _brakeModeActive = false;
   }
 }
