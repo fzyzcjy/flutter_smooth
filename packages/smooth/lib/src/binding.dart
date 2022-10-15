@@ -215,8 +215,8 @@ mixin SmoothWidgetsBindingMixin on WidgetsBinding {
       final forceDirectlyCallNextVsyncTargetTime =
           currentSmoothSystemFrameTimeStamp.innerSystemFrameTimeStamp +
               kOneFrame;
-      print(
-          'hi forceScheduleFrameForBrakeModeActive forceDirectlyCallNextVsyncTargetTime=$forceDirectlyCallNextVsyncTargetTime');
+      // print(
+      //     'hi forceScheduleFrameForBrakeModeActive forceDirectlyCallNextVsyncTargetTime=$forceDirectlyCallNextVsyncTargetTime');
 
       // ref [SchedulerBinding.scheduleFrame], except for the
       // "if _hasScheduledFrame then skip" logic, since we want to *force*

@@ -14,7 +14,7 @@ class BrakeController {
 
     _task.start('BrakeMode');
     _brakeModeActive = true;
-    print('BrakeController.activateBrakeMode');
+    // print('BrakeController.activateBrakeMode');
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _deactivateBrakeMode();
@@ -26,6 +26,6 @@ class BrakeController {
 
     _task.finish();
     _brakeModeActive = false;
-    print('BrakeController.deactivateBrakeMode');
+    // print('BrakeController.deactivateBrakeMode');
   }
 }
