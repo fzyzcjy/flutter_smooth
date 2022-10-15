@@ -33,3 +33,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.discussion-comment h1,
+.discussion-comment h2,
+.discussion-comment h3,
+.discussion-comment h4,
+.discussion-comment h5,
+.discussion-comment h6,
+.discussion-comment p {
+    line-height: 1.75rem;
+}
+
+.discussion-comment blockquote {
+    padding-left: 0.75rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
