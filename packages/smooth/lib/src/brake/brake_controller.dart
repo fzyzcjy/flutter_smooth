@@ -6,11 +6,13 @@ class BrakeController {
   bool get brakeModeActive => _brakeModeActive;
   bool _brakeModeActive = false;
 
+  // TODO correct?
+  final _task = TimelineTask();
+
   void activateBrakeMode() {
     if (_brakeModeActive) return;
 
-    Timeline.timeSync('activateBrakeMode', () {});
-
+    _task.start('BrakeMode');
     _brakeModeActive = true;
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -21,8 +23,7 @@ class BrakeController {
   void _deactivateBrakeMode() {
     if (!_brakeModeActive) return;
 
-    Timeline.timeSync('deactivateBrakeMode', () {});
-
+    _task.finish();
     _brakeModeActive = false;
   }
 }
