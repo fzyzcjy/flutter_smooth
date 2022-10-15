@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/service_locator.dart'; // ignore: implementation_imports
 
 class ExampleListViewPage extends StatelessWidget {
   final bool enableSmooth;
@@ -59,17 +58,16 @@ class ExampleListViewPage extends StatelessWidget {
               // #6101
               // for normal case, still mimic it is a bit slow to be real
               if (enableAlwaysWorkload)
-                _AlwaysLayoutBuilder(
-                  onPerformLayout: () {
-                    for (var i = 0; i < 5; ++i) {
-                      // NOTE `sleep` does not support microseconds! #6109
-                      sleep(const Duration(milliseconds: 1));
-                      ServiceLocator.instance.actor
-                          .maybePreemptRenderBuildOrLayoutPhase();
-                    }
-                  },
-                  child: Container(),
-                ),
+                for (var i = 0; i < 5; ++i)
+                  LayoutPreemptPointWidget(
+                    child: _AlwaysLayoutBuilder(
+                      onPerformLayout: () {
+                        // NOTE `sleep` does not support microseconds! #6109
+                        sleep(const Duration(milliseconds: 1));
+                      },
+                      child: Container(),
+                    ),
+                  ),
               Expanded(child: enableSmooth ? _buildSmooth() : _buildPlain()),
               // Row(
               //   children: [
@@ -112,6 +110,10 @@ class ExampleListViewPage extends StatelessWidget {
     if (index % 3 == 0) rowColor = Colors.pink;
     if (index % 6 == 0) rowColor = Colors.green;
 
+    // NOTE to be real, should not be too huge (though we can make
+    // it 60FPS). #6204
+    final workloadMilliseconds = index.isEven ? 80 : 0;
+
     return SizedBox(
       // NOTE should *not* use random height that changes *every time* it is
       // built, otherwise the offset in the Matplotlib visualization can be
@@ -122,21 +124,16 @@ class ExampleListViewPage extends StatelessWidget {
         children: [
           // #6076
           if (enableNewItemWorkload)
-            _NormalLayoutBuilder(
-              onPerformLayout: () {
-                // NOTE to be real, should not be too huge (though we can make
-                // it 60FPS). #6204
-                final workloadMilliseconds = index.isEven ? 80 : 0;
-
-                for (var i = 0; i < workloadMilliseconds; ++i) {
-                  // NOTE `sleep` does not support microseconds! #6109
-                  sleep(const Duration(milliseconds: 1));
-                  ServiceLocator.instance.actor
-                      .maybePreemptRenderBuildOrLayoutPhase();
-                }
-              },
-              child: Container(),
-            ),
+            for (var i = 0; i < workloadMilliseconds; ++i)
+              LayoutPreemptPointWidget(
+                child: _NormalLayoutBuilder(
+                  onPerformLayout: () {
+                    // NOTE `sleep` does not support microseconds! #6109
+                    sleep(const Duration(milliseconds: 1));
+                  },
+                  child: Container(),
+                ),
+              ),
           if (rowColor != null)
             ColoredBox(
               color: rowColor,
