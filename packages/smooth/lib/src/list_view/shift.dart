@@ -67,7 +67,7 @@ class _SmoothShiftState extends State<SmoothShift>
 
   @override
   Widget build(BuildContext context) {
-    print('hi $runtimeType build offset=$offset sources=$sources');
+    // print('hi $runtimeType build offset=$offset sources=$sources');
     // SimpleLog.instance.log(
     //     'SmoothShift.build offset=$offset currentSmoothFrameTimeStamp=${ServiceLocator.maybeInstance?.preemptStrategy.currentSmoothFrameTimeStamp}');
 
@@ -326,7 +326,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
           'SmoothShift.computeOffsetFromBallisticOnTick',
           arguments: <String, Object?>{'info': info},
           () {});
-      print('SmoothShift.computeOffsetFromBallisticOnTick $info');
+      // print('SmoothShift.computeOffsetFromBallisticOnTick $info');
     }
 
     final mainLayerTreeModeInAuxTreeView = SmoothSchedulerBindingMixin
