@@ -18,6 +18,8 @@ class ExtraEventDispatcher {
   void removeEnginePendingEventListener(EnginePendingEventListener value) =>
       _pendingEventManager.removeEnginePendingEventListener(value);
 
+  void fetchFromEngine() => _pendingEventManager.fetchFromEngine();
+
   // TODO just prototype, not final code
   // #5867
   void dispatch({required AdjustedFrameTimeStamp smoothFrameTimeStamp}) {
@@ -104,7 +106,7 @@ class _PendingPointerEventManager {
       return const [];
     }
 
-    _fetchFromEngine();
+    fetchFromEngine();
 
     final ans = <PointerEvent>[];
     while (_pendingEvents.isNotEmpty &&
@@ -113,7 +115,7 @@ class _PendingPointerEventManager {
     }
 
     Timeline.timeSync(
-      'PendingPointerEventManager.dequeue',
+      'PendingPointerEventManager.read',
       arguments: <String, Object?>{'ans': ans.toBriefString()},
       () => null,
     );
@@ -137,14 +139,14 @@ class _PendingPointerEventManager {
     }
   }
 
-  void _fetchFromEngine() {
+  void fetchFromEngine() {
     final gestureBinding = GestureBinding.instance;
 
     final enginePendingEvents =
         gestureBinding.readEnginePendingEventsAndClear();
 
     Timeline.timeSync(
-      'PendingPointerEventManager.enqueue',
+      'PendingPointerEventManager.fetchFromEngine',
       arguments: <String, Object?>{
         'enginePendingEvents': enginePendingEvents.toBriefString()
       },
