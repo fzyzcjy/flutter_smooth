@@ -1,6 +1,7 @@
 import 'package:smooth/src/actor.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/binding.dart';
+import 'package:smooth/src/brake/brake_controller.dart';
 import 'package:smooth/src/extra_event_dispatcher.dart';
 import 'package:smooth/src/time/time_converter.dart';
 import 'package:smooth/src/time_manager.dart';
@@ -15,6 +16,7 @@ class ServiceLocator {
     AuxiliaryTreeRegistry? auxiliaryTreeRegistry,
     ExtraEventDispatcher? extraEventDispatcher,
     TimeConverter? timeConverter,
+    BrakeController? brakeController,
   }) =>
       ServiceLocator.raw(
         actor: actor ?? Actor(),
@@ -22,6 +24,7 @@ class ServiceLocator {
         auxiliaryTreeRegistry: auxiliaryTreeRegistry ?? AuxiliaryTreeRegistry(),
         extraEventDispatcher: extraEventDispatcher ?? ExtraEventDispatcher(),
         timeConverter: timeConverter ?? TimeConverter(),
+        brakeController: brakeController ?? BrakeController(),
       );
 
   ServiceLocator.raw({
@@ -30,6 +33,7 @@ class ServiceLocator {
     required this.auxiliaryTreeRegistry,
     required this.extraEventDispatcher,
     required this.timeConverter,
+    required this.brakeController,
   });
 
   final Actor actor;
@@ -37,6 +41,7 @@ class ServiceLocator {
   final AuxiliaryTreeRegistry auxiliaryTreeRegistry;
   final ExtraEventDispatcher extraEventDispatcher;
   final TimeConverter timeConverter;
+  final BrakeController brakeController;
 }
 
 // should not use it - too late to register ServiceLocator

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/brake/build_after_previous_build_or_layout.dart';
+import 'package:smooth/src/service_locator.dart';
 
 class SmoothBrakePoint extends StatefulWidget {
-  final String? debugName;
   final Widget emptyPlaceholder;
   final Widget child;
 
   const SmoothBrakePoint({
     super.key,
-    this.debugName,
-    this.emptyPlaceholder = const SizedBox(height: 48),
+    this.emptyPlaceholder = const SizedBox(height: 128),
     required this.child,
   });
 
@@ -32,7 +31,7 @@ class _SmoothBrakePointState extends State<SmoothBrakePoint> {
 
       // In *normal* cases, we should not put non-pure logic inside `build`.
       // But we are hacking here, and it is safe - see readme for more details.
-      if (TODO) {
+      if (ServiceLocator.instance.brakeController.brakeModeActive) {
         previousChild = widget.child;
         return widget.child;
       } else {
