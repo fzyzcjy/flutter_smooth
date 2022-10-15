@@ -6,8 +6,8 @@ from comments.common import save_raw
 
 def gather(org: str, repo: str, issue: int):
     print('step: run gh to get data')
-    result = subprocess.run(f'gh issue view {issue} --repo {org}/{repo} --json comments', shell=True,
-                            stdout=subprocess.PIPE)
+    result = subprocess.run(f'gh issue view {issue} --repo {org}/{repo} --json author,body,createdAt,title,comments',
+                            shell=True, stdout=subprocess.PIPE)
     assert result.returncode == 0
     data = result.stdout
 
