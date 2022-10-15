@@ -438,6 +438,8 @@ class _MainTreeBallisticInfo {
         scrollPosition.activeBallisticSimulationInfo;
     if (activeBallisticSimulationInfo == null) return null;
 
+    // print(
+    //     'hi _MainTreeBallisticInfo.from ballisticScrollActivityTicker=${describeIdentity(activeBallisticSimulationInfo.ballisticScrollActivityTicker)}');
     return _MainTreeBallisticInfo(
       ballisticTickerStartTime:
           activeBallisticSimulationInfo.ballisticScrollActivityTicker.startTime,
@@ -450,7 +452,8 @@ class _MainTreeBallisticInfo {
   @override
   String toString() => '_MainTreeBallisticInfo{'
       'ballisticTickerStartTime: $ballisticTickerStartTime, '
-      'realSimulationLastOffset: $realSimulationLastOffset'
+      'realSimulationLastOffset: $realSimulationLastOffset, '
+      'clonedSimulation: $clonedSimulation'
       '}';
 }
 
