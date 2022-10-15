@@ -69,6 +69,8 @@ class _SmoothListViewState extends State<SmoothListView> {
   void _handleEnginePendingEvent(PointerEvent e) {
     // #6210
     if (e is PointerUpEvent) {
+      // TODO should trigger conditionally, i.e. only do this if this specific
+      // pointer is associated to *our* ListView
       ServiceLocator.instance.brakeController.activateBrakeMode();
     }
   }
