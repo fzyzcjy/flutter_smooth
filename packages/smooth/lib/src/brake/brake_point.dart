@@ -31,7 +31,7 @@ class _SmoothBrakePointState extends State<SmoothBrakePoint> {
 
       // In *normal* cases, we should not put non-pure logic inside `build`.
       // But we are hacking here, and it is safe - see readme for more details.
-      if (ServiceLocator.instance.brakeController.brakeModeActive) {
+      if (!ServiceLocator.instance.brakeController.brakeModeActive) {
         previousChild = widget.child;
         return widget.child;
       } else {

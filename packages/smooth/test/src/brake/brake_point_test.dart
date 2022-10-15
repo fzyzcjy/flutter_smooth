@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:smooth/smooth.dart';
 import 'package:smooth/src/brake/brake_controller.dart';
+import 'package:smooth/src/brake/build_after_previous_build_or_layout.dart';
 import 'package:smooth/src/service_locator.dart';
 import 'package:smooth_dev/smooth_dev.dart';
 
@@ -32,16 +34,32 @@ void main() {
     debugPrint('action: pumpWidget');
     await tester.pumpWidget(Column(
       children: [
-        SpyStatefulWidget(onInitState: () => countFormerInitState++),
-        SpyStatefulWidget(onBuild: () => countFormerBuild++),
-        SpyRenderObjectWidget(onPerformLayout: () => countFormerLayout++),
-        SpyRenderObjectWidget(onPerformLayout: () {
-          debugPrint('action: brakeModeActive := true');
-          when(controller.brakeModeActive).thenReturn(true);
-        }),
-        SpyStatefulWidget(onInitState: () => countLatterInitState++),
-        SpyStatefulWidget(onBuild: () => countLatterBuild++),
-        SpyRenderObjectWidget(onPerformLayout: () => countLatterLayout++),
+        SmoothBrakePoint(
+          child: SpyStatefulWidget(onInitState: () => countFormerInitState++),
+        ),
+        SmoothBrakePoint(
+          child: SpyStatefulWidget(onBuild: () => countFormerBuild++),
+        ),
+        SmoothBrakePoint(
+          child:
+              SpyRenderObjectWidget(onPerformLayout: () => countFormerLayout++),
+        ),
+        BuildAfterPreviousBuildOrLayout(
+          builder: (_) => SpyRenderObjectWidget(onPerformLayout: () {
+            debugPrint('action: brakeModeActive := true');
+            when(controller.brakeModeActive).thenReturn(true);
+          }),
+        ),
+        SmoothBrakePoint(
+          child: SpyStatefulWidget(onInitState: () => countLatterInitState++),
+        ),
+        SmoothBrakePoint(
+          child: SpyStatefulWidget(onBuild: () => countLatterBuild++),
+        ),
+        SmoothBrakePoint(
+          child:
+              SpyRenderObjectWidget(onPerformLayout: () => countLatterLayout++),
+        ),
       ],
     ));
 
