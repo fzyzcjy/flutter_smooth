@@ -5,6 +5,7 @@ import 'package:smooth/smooth.dart';
 import 'package:smooth/src/enhanced_padding.dart';
 import 'package:smooth/src/list_view/controller.dart';
 import 'package:smooth/src/list_view/physics.dart';
+import 'package:smooth/src/service_locator.dart';
 
 class SmoothListView extends StatefulWidget {
   final int itemCount;
@@ -52,12 +53,22 @@ class _SmoothListViewState extends State<SmoothListView> {
         () {},
       );
     });
+
+    ServiceLocator.instance.extraEventDispatcher
+        .addEnginePendingEventListener(_handleEnginePendingEvent);
   }
 
   @override
   void dispose() {
+    ServiceLocator.instance.extraEventDispatcher
+        .removeEnginePendingEventListener(_handleEnginePendingEvent);
     controller.dispose();
     super.dispose();
+  }
+
+  // #6210
+  void _handleEnginePendingEvent(PointerEvent e) {
+    TODO;
   }
 
   @override
