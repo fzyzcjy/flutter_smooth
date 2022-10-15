@@ -66,7 +66,6 @@ class ExampleListViewPage extends StatelessWidget {
                           // NOTE `sleep` does not support microseconds! #6109
                           sleep(const Duration(milliseconds: 1));
                         },
-                        child: Container(),
                       ),
                     ),
                   ),
@@ -134,7 +133,6 @@ class ExampleListViewPage extends StatelessWidget {
                       // NOTE `sleep` does not support microseconds! #6109
                       sleep(const Duration(milliseconds: 1));
                     },
-                    child: Container(),
                   ),
                 ),
               ),
@@ -369,7 +367,6 @@ class _NormalLayoutBuilder extends SingleChildRenderObjectWidget {
 
   const _NormalLayoutBuilder({
     this.onPerformLayout,
-    super.child,
   });
 
   @override
@@ -406,7 +403,6 @@ class _AlwaysLayoutBuilder extends SingleChildRenderObjectWidget {
 
   const _AlwaysLayoutBuilder({
     this.onPerformLayout,
-    super.child,
   });
 
   @override
