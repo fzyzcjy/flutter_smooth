@@ -6,10 +6,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:smooth/smooth.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
 import 'package:smooth/src/proxy.dart';
 import 'package:smooth/src/service_locator.dart';
-import 'package:smooth/src/time/typed_time.dart';
 import 'package:smooth/src/time_manager.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
@@ -198,6 +198,24 @@ mixin SmoothWidgetsBindingMixin on WidgetsBinding {
     // } finally {
     //   _executingRunPipelineBecauseOfAfterDrawFrame.value = false;
     // }
+
+    if (ServiceLocator.instance.brakeController.brakeModeActive) {
+      _forceScheduleFrameForBrakeModeActive();
+    }
+  }
+
+  // for details see #6218
+  void _forceScheduleFrameForBrakeModeActive() {
+    Timeline.timeSync('forceScheduleFrameForBrakeModeActive', () {
+      final currentSmoothFrameTimeStamp = ServiceLocator.instance.timeManager
+          .currentSmoothFrameTimeStamp.innerAdjustedFrameTimeStamp;
+      final forceDirectlyCallNextVsyncTargetTime =
+          currentSmoothFrameTimeStamp + kOneFrame;
+
+      SchedulerBinding.instance.scheduleFrame(
+          forceDirectlyCallNextVsyncTargetTime:
+              forceDirectlyCallNextVsyncTargetTime);
+    });
   }
 
   static SmoothWidgetsBindingMixin get instance {

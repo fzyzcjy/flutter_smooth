@@ -254,7 +254,10 @@ class ProxySingletonFlutterWindow extends ProxyFlutterView
   String get defaultRouteName => inner.defaultRouteName;
 
   @override
-  void scheduleFrame() => inner.scheduleFrame();
+  void scheduleFrame({Duration? forceDirectlyCallNextVsyncTargetTime}) =>
+      inner.scheduleFrame(
+          forceDirectlyCallNextVsyncTargetTime:
+              forceDirectlyCallNextVsyncTargetTime);
 
   @override
   bool get semanticsEnabled => inner.semanticsEnabled;
