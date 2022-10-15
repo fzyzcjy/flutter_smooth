@@ -28,11 +28,19 @@ class Actor {
     final nowTimestamp =
         serviceLocator.timeConverter.dateTimeToAdjustedFrameTimeStamp(now);
 
-    if (timeManager.thresholdActOnBuildOrLayoutPhaseTimeStamp! < nowTimestamp) {
-      _preemptRenderRaw(
-          debugReason: RunPipelineReason.preemptRenderBuildOrLayoutPhase);
-      timeManager.afterBuildOrLayoutPhasePreemptRender(now: nowTimestamp);
+    if (timeManager.thresholdActOnBuildOrLayoutPhaseTimeStamp! >=
+        nowTimestamp) {
+      return;
     }
+
+    // this should be called *after* time check, since this may be a bit more
+    // expensive
+    if (!_preludeBeforePreemptRender()) return;
+
+    _preemptRenderRaw(
+        debugReason: RunPipelineReason.preemptRenderBuildOrLayoutPhase);
+
+    timeManager.afterBuildOrLayoutPhasePreemptRender(now: nowTimestamp);
   }
 
   void maybePreemptRenderPostDrawFramePhase() {
@@ -44,12 +52,36 @@ class Actor {
     final nowTimestamp =
         serviceLocator.timeConverter.dateTimeToAdjustedFrameTimeStamp(now);
 
-    if (timeManager.thresholdActOnPostDrawFramePhaseTimeStamp! < nowTimestamp) {
-      // NOTE this is "before" not "after"
-      timeManager.beforePostDrawFramePhasePreemptRender(now: nowTimestamp);
-      _preemptRenderRaw(
-          debugReason: RunPipelineReason.preemptRenderPostDrawFramePhase);
+    // TODO refactor - maybe extract such duplicated code
+    // similar reason as the same code in [maybePreemptRenderBuildOrLayoutPhase]
+    // #6210
+    serviceLocator.extraEventDispatcher.fetchFromEngine();
+
+    if (timeManager.thresholdActOnPostDrawFramePhaseTimeStamp! >=
+        nowTimestamp) {
+      return;
     }
+
+    if (!_preludeBeforePreemptRender()) return;
+
+    // NOTE this is "before" not "after"
+    timeManager.beforePostDrawFramePhasePreemptRender(now: nowTimestamp);
+
+    _preemptRenderRaw(
+        debugReason: RunPipelineReason.preemptRenderPostDrawFramePhase);
+  }
+
+  bool _preludeBeforePreemptRender() {
+    final serviceLocator = ServiceLocator.instance;
+
+    // this must be done *BEFORE* preemptRender. By doing so, when a callback
+    // sees some "difficult" point event and decide to activate brakeMode,
+    // we will skip the preemptRender below to save time.
+    // #6210
+    serviceLocator.extraEventDispatcher.fetchFromEngine();
+
+    // when in brake mode, do not do any preemptRender #6210
+    return !serviceLocator.brakeController.brakeModeActive;
   }
 
   void _preemptRenderRaw({required RunPipelineReason debugReason}) {
