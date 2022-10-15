@@ -67,7 +67,7 @@ class _SmoothShiftState extends State<SmoothShift>
 
   @override
   Widget build(BuildContext context) {
-    // print('hi $runtimeType build offset=$offset sources=$sources');
+    print('hi $runtimeType build offset=$offset sources=$sources');
     // SimpleLog.instance.log(
     //     'SmoothShift.build offset=$offset currentSmoothFrameTimeStamp=${ServiceLocator.maybeInstance?.preemptStrategy.currentSmoothFrameTimeStamp}');
 
@@ -152,9 +152,6 @@ class _SmoothShiftSourcePointerEvent extends _SmoothShiftSource {
   late final _beginFrameEarlyCallbackRegistrar =
       _BeginFrameEarlyCallbackRegistrar(_handleBeginFrameEarlyCallback);
 
-  // double? _positionWhenPrevPrevBuild;
-  // double? _positionWhenPrevBuild;
-
   @override
   double get offset {
     if (_currPosition == null) return 0;
@@ -231,36 +228,9 @@ class _SmoothShiftSourcePointerEvent extends _SmoothShiftSource {
     _pointerDownPosition = null;
     _positionWhenCurrStartDrawFrame = null;
     _positionWhenPrevStartDrawFrame = null;
-    // _positionWhenPrevPrevBuild = null;
-    // _positionWhenPrevBuild = null;
     _currPosition = null;
     notifyListeners();
   }
-
-  // remove in #6071
-  // // #6052
-  // void _maybePseudoMoveOnBuild() {
-  //   if (_currPosition == null) return;
-  //
-  //   // no pointer events
-  //   if (_positionWhenPrevBuild == _currPosition) {
-  //     // very naive interpolation...
-  //     final double interpolatedShift;
-  //
-  //     if (_positionWhenPrevBuild != null &&
-  //         _positionWhenPrevPrevBuild != null) {
-  //       interpolatedShift =
-  //           _positionWhenPrevBuild! - _positionWhenPrevPrevBuild!;
-  //     } else {
-  //       interpolatedShift = 0.0;
-  //     }
-  //
-  //     _currPosition = _currPosition! + interpolatedShift;
-  //   }
-  //
-  //   _positionWhenPrevPrevBuild = _positionWhenPrevBuild;
-  //   _positionWhenPrevBuild = _currPosition;
-  // }
 
   _SmoothShiftSourcePointerEvent(super.state) {
     SmoothSchedulerBindingMixin.instance.mainLayerTreeModeInAuxTreeView
@@ -353,7 +323,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
           'SmoothShift.computeOffsetFromBallisticOnTick',
           arguments: <String, Object?>{'info': info},
           () {});
-      // print('SmoothShift.computeOffsetFromBallisticOnTick $info');
+      print('SmoothShift.computeOffsetFromBallisticOnTick $info');
     }
 
     final mainLayerTreeModeInAuxTreeView = SmoothSchedulerBindingMixin
