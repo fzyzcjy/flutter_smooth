@@ -380,7 +380,7 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
     // [simulationRelativeTime] is the time delta relative to
     // [ballisticScrollActivityTicker]. In other words, it is the time that the
     // real [ListView]'s [BallisticScrollActivity] has.
-    final ballisticTickerStartTime = info.ballisticTickerStartTime;
+    final ballisticTickerStartTime = info.ballisticTicker.startTime;
     if (ballisticTickerStartTime == null) {
       _debugTimelineInfo('early return since ballisticTickerStartTime==null');
       return null;
@@ -422,12 +422,12 @@ class _SmoothShiftSourceBallistic extends _SmoothShiftSource {
 
 @immutable
 class _MainTreeBallisticInfo {
-  final Duration? ballisticTickerStartTime;
+  final Ticker ballisticTicker;
   final double? realSimulationLastOffset;
   final Simulation clonedSimulation;
 
   const _MainTreeBallisticInfo({
-    required this.ballisticTickerStartTime,
+    required this.ballisticTicker,
     required this.realSimulationLastOffset,
     required this.clonedSimulation,
   });
@@ -441,8 +441,10 @@ class _MainTreeBallisticInfo {
     // print(
     //     'hi _MainTreeBallisticInfo.from ballisticScrollActivityTicker=${describeIdentity(activeBallisticSimulationInfo.ballisticScrollActivityTicker)}');
     return _MainTreeBallisticInfo(
-      ballisticTickerStartTime:
-          activeBallisticSimulationInfo.ballisticScrollActivityTicker.startTime,
+      // NOTE only save the Ticker, *not* the ticker.startTime
+      // details: https://github.com/fzyzcjy/yplusplus/issues/6221#issuecomment-1279684873
+      ballisticTicker:
+          activeBallisticSimulationInfo.ballisticScrollActivityTicker,
       realSimulationLastOffset:
           activeBallisticSimulationInfo.realSimulation.lastX,
       clonedSimulation: activeBallisticSimulationInfo.clonedSimulation,
@@ -451,7 +453,7 @@ class _MainTreeBallisticInfo {
 
   @override
   String toString() => '_MainTreeBallisticInfo{'
-      'ballisticTickerStartTime: $ballisticTickerStartTime, '
+      'ballisticTicker: $ballisticTicker, '
       'realSimulationLastOffset: $realSimulationLastOffset, '
       'clonedSimulation: $clonedSimulation'
       '}';
