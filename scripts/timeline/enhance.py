@@ -188,6 +188,9 @@ def main():
     with ZipFile(f'{path_input}.zip', 'w', compression=ZIP_DEFLATED) as zipf:
         zipf.write(path_input, arcname=path_input.name)
 
+    from . import visualize_scroll
+    _ = visualize_scroll
+
 
 if __name__ == '__main__':
     main()
