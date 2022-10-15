@@ -1,0 +1,3 @@
+[submodule "blob"]
+	path = blob
+	url = https://github.com/fzyzcjy/flutter_smooth_blob
