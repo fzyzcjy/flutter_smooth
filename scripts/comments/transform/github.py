@@ -1,5 +1,7 @@
 from comments.common import TransformedComment
 
+SOURCE = 'github'
+
 
 def _transform_comment(comment_raw, retrieve_time, link):
     if comment_raw.get('isMinimized', False):
@@ -10,13 +12,14 @@ def _transform_comment(comment_raw, retrieve_time, link):
     title = comment_raw.get('title')
     if title is not None:
         body = f'### {title}\n\n{body}'
-   
+
     return TransformedComment(
         author=comment_raw['author']['login'],
         body=body,
         link=link,  # do not have per-comment link yet
         create_time=comment_raw['createdAt'],
         retrieve_time=retrieve_time,
+        source=SOURCE,
     )
 
 

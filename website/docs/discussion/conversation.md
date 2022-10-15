@@ -14,7 +14,7 @@ This page contains a (sorted) copy of discussions happened on various places. Th
 
 import DiscussionComment from '@site/src/components/DiscussionComment';
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-04-02T05:45:54Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-04-02T05:45:54Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 ### [Proposal]Let Flutter run animations at 60fps even if there are heavy widgets, possibly using React Fiber-like or suspend-like algorithm?
 
@@ -36,7 +36,7 @@ I am interested in making contribution when having time as well.
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-04-02T08:22:05Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-04-02T08:22:05Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > if I understand correctly you compare reconciling DOMs to rebuilding the elements in a widget tree
 and you are proposing to rebuild only certain elements the same way react-fiber prioritize
@@ -49,7 +49,7 @@ Sounds reasonable.
 
 </DiscussionComment>
 
-<DiscussionComment author="maheshmnj" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-04-04T07:48:34Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="maheshmnj" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-04-04T07:48:34Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Hi @fzyzcjy, Thanks for filing the issue. I am quite not sure about the algorithm and its effectiveness. Labeling this issue for further insights from the team.
 
@@ -57,7 +57,7 @@ cc: @dnfield
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-04-04T08:07:41Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-04-04T08:07:41Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @maheshmnj Hi thanks for the reply.
 
@@ -65,19 +65,19 @@ I have made an attempt about doing async rendering *without modifying* Flutter f
 
 </DiscussionComment>
 
-<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-04-04T14:56:51Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-04-04T14:56:51Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 I've been talking about something somewhat like this on the #hackers-framework channel in the past, but it's not a trivial problem to solve. I'd be interested in seeing more details about your designproposal and/or discussing on discord.
 
 </DiscussionComment>
 
-<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-04-04T16:37:22Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-04-04T16:37:22Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 And FWIW, this is likely a pretty significant amount of work to do, but there are some people who have already started looking at parts of it @hixie @goderbauer 
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-04-05T00:31:09Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-04-05T00:31:09Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @dnfield Hi thanks for the reply! 
 
@@ -87,7 +87,7 @@ To avoid reinventing the wheel, I hope to listen to the parts before thinking ab
 
 </DiscussionComment>
 
-<DiscussionComment author="wangying3426" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-08T02:57:10Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="wangying3426" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-08T02:57:10Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @fzyzcjy Any update please? We are also interested in this feature.
 
@@ -95,25 +95,25 @@ To avoid reinventing the wheel, I hope to listen to the parts before thinking ab
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-08T03:06:09Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-08T03:06:09Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @wangying3426 Well, no updates from me since I want to firstly listen to the "who have already started looking at parts of it @Hixie @goderbauer"
 
 </DiscussionComment>
 
-<DiscussionComment author="JsouLiang" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-14T07:04:33Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="JsouLiang" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-14T07:04:33Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @Hixie @goderbauer @dnfield How do you think about this fiber proposal?
 
 </DiscussionComment>
 
-<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-14T16:21:36Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-14T16:21:36Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 No one has come up with a workable proposal at this point in time. I think it's worth doing but it's not my top priority at the moment.
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-14T23:11:50Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-14T23:11:50Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > but it's not my top priority at the moment.
 
@@ -123,7 +123,7 @@ Btw I am not thinking about strictly implementing Fiber, since web model is not 
 
 </DiscussionComment>
 
-<DiscussionComment author="JsouLiang" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T02:56:03Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="JsouLiang" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T02:56:03Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > > but it's not my top priority at the moment.
 > 
@@ -144,7 +144,7 @@ How do you think about it? @fzyzcjy
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T03:01:06Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T03:01:06Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > @JsouLiang Maybe we can create a document and then a detailed description
 
@@ -156,7 +156,7 @@ Btw, fiber can make animations smoother, but if I understand correctly, the smoo
 
 </DiscussionComment>
 
-<DiscussionComment author="JsouLiang" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T03:27:32Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="JsouLiang" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T03:27:32Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > but if I understand correctly, the smoothness is because that specific animation is driven by css, not js.
 
@@ -167,13 +167,13 @@ That mean, the CSS associated with the HTML element can calculate the animation 
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T03:28:45Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T03:28:45Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Yes, that is why fiber is so useful. Indeed it is like, the web ui is driven by two things - the JS and CSS. Fiber pause JS once in a while so CSS things can come in and animate.
 
 </DiscussionComment>
 
-<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T03:28:53Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T03:28:53Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > @fzyzcjy Btw, fiber can make animations smoother, but if I understand correctly, the smoothness is because that specific animation is driven by css, not js. This is contrary to flutter. For example, a CircularProgressIndicator, or even a scrolling of ListView, is driven by Dart code. Thus, we cannot easily say "let's give control to flutter engine / android / ios / whatever once in a while when we are doing build/layout/paint/whatever". If we simply do so, we will not get a smooth animation automatically. Instead, we may need to find out a more sophisticated approach.
 
@@ -183,7 +183,7 @@ for more, Android's window transition animation is driven by WindowService seper
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T03:38:50Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T03:38:50Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @JsouLiang @xanahopper 
 
@@ -195,7 +195,7 @@ Btw, some side remarks that is less like Fiber: Here is a tool that defers Widge
 
 </DiscussionComment>
 
-<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T03:44:07Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T03:44:07Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 The hard part of all of this is to figure out how to do it without breaking existing Framework code.
 
@@ -203,7 +203,7 @@ I think it's probably possible, but it's not easy.
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T03:44:58Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T03:44:58Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > @dnfield without breaking existing Framework code
 
@@ -213,7 +213,7 @@ Then, maybe we can have a feature flag?
 
 </DiscussionComment>
 
-<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T03:45:53Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T03:45:53Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @fzyzcjy Yes, we all farmilar with KeFrame and has already applied some optimize like it.
 > I guess we can make it more fine-grained and with more improvements since we are going to modify the flutter framework itself.
@@ -229,7 +229,7 @@ I think this may the point we are going to discuss.
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T03:46:35Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T03:46:35Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > we cannot just stop because is not easy. if it is a right way to improve it.
 
@@ -237,14 +237,14 @@ Same here :) I like challenging, i.e. exciting, work!
 
 </DiscussionComment>
 
-<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T03:50:41Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T03:50:41Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @fzyzcjy I'm interested in this topic and have been trying to go in a direction where Keframe can make the best use of each 16.7ms, since now each item will take the full 16.7ms (even though it may only take 1ms on some good devices). I'm trying to count the time taken by individual items to determine how many items should be rendered in the next frame.
 
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T03:52:19Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T03:52:19Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Continue from the animation proposal above, with @dnfield's "without breaking existing Framework code":
 
@@ -254,13 +254,13 @@ The API may be as simple as a Widget, say, `HighPrioritySubTree(builder: (contex
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T03:54:47Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T03:54:47Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @Nayuta403 I have had similar thoughts before. The problem is, `build` phase is not the most costly one. There are `layout` and `paint` phase, etc, as well. What's worse, Flutter has C++ engine code which rasterizes and flush to the screen. That one can take a long time in some cases (for example, in my own app, when there is a ton of bezier curves). A widget may, for example, have very short `build` phase time but very long C++ rasterize time.
 
 </DiscussionComment>
 
-<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T04:00:38Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T04:00:38Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > The API may be as simple as a Widget, say, `HighPrioritySubTree(builder: (context, child) => build_your_subtree_here, child: put_static_child_here)`, just like animation builder widgets. That builder should wrap the CircularProgressIndicator in the example above. We may also add a `CancelHighPrioritySubTree` if needed. For example, when scrolling ListView, we may want the scrolling animation be at 60fps, while we have to accept that a big widget in ListView is slow to build. Then, we may wrap ListView with HighPrioritySubTree, and each child of ListView with CancelHighPrioritySubTree. By doing so, our ListView will be forcefully built at each frame, while its contents will be stale for a few frames.
 
@@ -270,7 +270,7 @@ Than change default page transition widget, scrollable container to high priorit
 
 </DiscussionComment>
 
-<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T04:06:56Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T04:06:56Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 And here is another case may need to be consider: the list.
  in general container such as page, content size has no effect with container and other siblings, but things are different in list.
@@ -278,7 +278,7 @@ if we have different size of different item, we cannot just show placeholder wit
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T04:09:32Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T04:09:32Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 >  I'd rather like to add a optional parameter to base class Widget to specify it's build/layout/render priority.
 
@@ -286,7 +286,7 @@ That sounds good to me. With that flag, we can also very easily create the widge
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T04:12:13Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T04:12:13Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > if we have different size of different item, we cannot just show placeholder with same size, scrolling when and after content item is building/layouting may cause a sudden change in list.
 
@@ -296,7 +296,7 @@ Maybe this is inevitable, and we have to live with it? Or, maybe we just place b
 
 </DiscussionComment>
 
-<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T04:25:56Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T04:25:56Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 we have to live with it, but we can give some different solutions, such like allow jumps, background color or some other...
 
@@ -310,7 +310,7 @@ this may conflict with principle of Flutter for single pass measure……but I t
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T05:20:21Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T05:20:21Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @xanahopper I am not sure whether that is another isolated problem, or we can directly solve it within our proposal about this issue. For example, if we are to add a pre-measure phase, we may add computeSomething in addition to existing computeLayout, computeDryLayout etc, and that may be orthogonal to this issue.
 
@@ -318,7 +318,7 @@ Btw, I suspect whether pre-measure can happen before `build` phase, since we eve
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T05:47:02Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T05:47:02Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > @fzyzcjy reply to @Nayuta403  I have had similar thoughts before. The problem is, build phase is not the most costly one. There are layout and paint phase, etc, as well. What's worse, Flutter has C++ engine code which rasterizes and flush to the screen. That one can take a long time in some cases (for example, in my own app, when there is a ton of bezier curves). A widget may, for example, have very short build phase time but very long C++ rasterize time.
 
@@ -334,7 +334,7 @@ Btw I also like your (@Nayuta403) keframe solution :) Just trying to propose som
 
 </DiscussionComment>
 
-<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:09:38Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:09:38Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @fzyzcjy  Thank you, I think we all want to make Flutter better. ❤️
 
@@ -345,7 +345,7 @@ So I think of a few problems we might have to solve:
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:10:03Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:10:03Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 More thoughts here.
 
@@ -371,7 +371,7 @@ This solution also has some spirit similar to React Fiber: In Fiber, our JS-driv
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:13:41Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:13:41Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > How to get the current UI cost, I think we still need to know this information even if we put the animation in the high priority queue, so that we can determine when the low priority task should end.
 
@@ -385,7 +385,7 @@ If that is impossible, I wonder whether we can use some heuristics. We all know 
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:15:32Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:15:32Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > How does the ListVIew item handle sliding when there is no width and height information
 
@@ -396,7 +396,7 @@ If using the approach mentioned above, it will just be blank. But not blank when
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:18:41Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:18:41Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > How Fiber builds interruptible. It might be a little easier for a ListVIew, because its items are siblings. But what about parent-child nodes like Container?
 
@@ -420,7 +420,7 @@ But as I am not an expert in Dart compiler implementation, I am not sure about t
 
 </DiscussionComment>
 
-<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:31:44Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:31:44Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 A few pointers:
 
@@ -431,7 +431,7 @@ A few pointers:
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:40:01Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:40:01Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @dnfield Thanks for the ideas!
 
@@ -441,19 +441,19 @@ Quick answer to budget: As suggested in my comments above, we may not need to bu
 
 </DiscussionComment>
 
-<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:42:05Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:42:05Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Animations might not ever finish.
 
 </DiscussionComment>
 
-<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:42:34Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="dnfield" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:42:34Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 And you might be animating the entire screen, e.g. for a route transition
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:43:27Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:43:27Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > Animations might not ever finish.
 
@@ -461,7 +461,7 @@ Well, I mean, run its build+layout+paint+raster fully instead of partially, not 
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:44:23Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:44:23Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > And you might be animating the entire screen, e.g. for a route transition
 
@@ -469,7 +469,7 @@ That sounds similar to the "a scrolling ListView" example above in https://githu
 
 </DiscussionComment>
 
-<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:52:42Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:52:42Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > Seems we do not need? We just blindly run whatever should be done next, and suspend when we are near 16ms.
 
@@ -481,7 +481,7 @@ Well, I think there should be a timer for how long the UI is currently built, si
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T06:55:41Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T06:55:41Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > Well, I think there should be a timer for how long the UI is currently built
 
@@ -489,7 +489,7 @@ I guess that is easy :) Maybe as simple as `DateTime.now()`, but probably there 
 
 </DiscussionComment>
 
-<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T07:08:13Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T07:08:13Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > @Nayuta403 I have had similar thoughts before. The problem is, build phase is not the most costly one. There are layout and paint phase, etc, as well. What's worse, Flutter has C++ engine code which rasterizes and flush to the screen. That one can take a long time in some cases (for example, in my own app, when there is a ton of bezier curves). A widget may, for example, have very short build phase time but very long C++ rasterize time.
 
@@ -498,7 +498,7 @@ Yes, the timing of the statistical framework is not complicated, so I'm just try
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T07:10:21Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T07:10:21Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > @Nayuta403 Yes, the timing of the statistical framework is not complicated, so I'm just trying to perform more tasks in a frame based on that time, regardless of Raster
 
@@ -506,7 +506,7 @@ Sorry I do not quite get it. Are you using history timing information to estimat
 
 </DiscussionComment>
 
-<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T07:38:31Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T07:38:31Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 It's Keframe. I'm trying to count the time it takes to `build/layout/paint` item widgets so that each frame can be rendered as many times as possible (currently only one item per frame is rendered). 
 (Am I making myself clear? (*￣︶￣))
@@ -514,7 +514,7 @@ It's Keframe. I'm trying to count the time it takes to `build/layout/paint` item
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T07:43:51Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T07:43:51Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @Nayuta403 Clear :)
 
@@ -522,7 +522,7 @@ So seems that it is based on history. Then what if different items have (very) d
 
 </DiscussionComment>
 
-<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T07:57:05Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T07:57:05Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Yes, you are absolutely right, because now every task is setState() and only goes back to rendering the real widget on the next frame. One idea I have now is to make this task a real rendering task, similar to marking it as dirty and then executing drawFrame() to get the real time.
 
@@ -530,7 +530,7 @@ I can create an issue later to describe my thinking in detail and make the issue
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T08:00:57Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T08:00:57Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 
 > I can create an issue later to describe my thinking in detail and make the issue clearer :>
@@ -539,7 +539,7 @@ Looking forward to it :)
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T09:39:44Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T09:39:44Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 #### More about "how to build suspendable/interruptable", given that sync generators are slow
 
@@ -575,7 +575,7 @@ TBD, I guess will be similar to above. Looking forward to hearing some feedbacks
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T09:57:10Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T09:57:10Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 #### How can we paint UI onto screen, if we are in half-way of layout/paint/rasterize, and many nodes are dirty / half-way updated?
 
@@ -615,7 +615,7 @@ So, will this have performance penalty or not?
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-15T14:41:50Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-15T14:41:50Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Looking forward to some early feedbacks about the proposal :)
 
@@ -623,7 +623,7 @@ Maybe /cc @dnfield @JsouLiang @Nayuta403 @xanahopper (based on today's activity)
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T00:57:12Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T00:57:12Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 P.S. I am starting to work on a prototype about smoothing the "layout" phase. Will report any progress I make :)
 
@@ -631,7 +631,7 @@ Code: https://github.com/fzyzcjy/flutter/tree/feat-smooth
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T04:06:27Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T04:06:27Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 ### Progress: 62ms -> 22ms for 99th build time of `list_text_layout`, and its limitations
 
@@ -702,7 +702,7 @@ This is just proof-of-concept and is very naive.
 
 </DiscussionComment>
 
-<DiscussionComment author="JsouLiang" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T06:49:08Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="JsouLiang" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T06:49:08Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Furthermore, I think should we able to break the Build call if the Widget is complex and the Widget Build call is too deep and stalling?
 
@@ -711,7 +711,7 @@ Furthermore, I think should we able to break the Build call if the Widget is com
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T07:15:11Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T07:15:11Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 ### New idea: Dual isolates
 
@@ -794,13 +794,13 @@ I plan not to implement sidecar isolate in the minimal example. Instead, just cr
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T07:15:58Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T07:15:58Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @JsouLiang For the "RenderSuspendable" proposal, I guess we can have nested ones. For the "Isolates" proposal just now, I guess we do not have this problem - the main isolate will be paused at *any* safepoint, i.e. *any* layout function.
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T07:20:48Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T07:20:48Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @dnfield @JsouLiang @Nayuta403 (and other engine masters)
 
@@ -811,7 +811,7 @@ For the new proposal, I hope to see some feedback... Since I am not an expert in
 
 </DiscussionComment>
 
-<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T09:23:36Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T09:23:36Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > @JsouLiang For the "RenderSuspendable" proposal, I guess we can have nested ones. For the "Isolates" proposal just now, I guess we do not have this problem - the main isolate will be paused at _any_ safepoint, i.e. _any_ layout function.
 
@@ -824,7 +824,7 @@ And for more, I may offer you some complex card widget case for benchmark.
 
 </DiscussionComment>
 
-<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T09:59:40Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T09:59:40Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 For this Suspendable render, we may introduce structure like Fiber, I think it is [Threaded tree](https://en.wikipedia.org/wiki/Threaded_binary_tree).
 
@@ -838,7 +838,7 @@ we can tell from figure that suspendable is contagious, content in suspendable c
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T10:27:32Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T10:27:32Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @xanahopper 
 
@@ -874,7 +874,7 @@ Sure, looking forward to that. Btw I also have very complex cases for my own app
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T10:35:09Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T10:35:09Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > @xanahopper's comment in https://github.com/flutter/flutter/issues/101227#issuecomment-1249172293
 
@@ -890,7 +890,7 @@ This is solved very easily with my "Dual isolates" proposal. It just call `safep
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T10:43:25Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T10:43:25Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @wangying3426 https://github.com/flutter/flutter/issues/101227#issuecomment-1240156979
 
@@ -900,7 +900,7 @@ Btw I forget to mention you (too above in the comments). Yes, now I have many up
 
 </DiscussionComment>
 
-<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T11:08:52Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="xanahopper" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T11:08:52Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Multiple isolates and optimize with it is before the specification phase, just for you known that we both have the same idea that I and my colleagues are working on it. for very early part we think that this way may need modify engine or even the Dart VM.
 
@@ -938,7 +938,7 @@ this is a prototype of pseudo code, hope it help.
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T11:42:29Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T11:42:29Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @xanahopper 
 
@@ -969,7 +969,7 @@ Most importantly, how can we get the BoxConstraints (suppose we are dealing with
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-16T11:46:14Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-16T11:46:14Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @xanahopper In addition, I have mentioned many limitations of the suspendable tree traversal in https://github.com/flutter/flutter/issues/101227#issuecomment-1248894781 (see last section there). Looking forward to see some solutions about it!
 
@@ -981,7 +981,7 @@ For example, a big problem: Originally all code (implicitly) assume that, when a
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-17T00:41:55Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-17T00:41:55Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 **Update**: I am thinking whether we can remove the need of new threads in https://github.com/flutter/flutter/issues/101227#issuecomment-1249005541. If we can pause a Dart isolate without needing new threads, we can remove those threads.
 
@@ -1009,7 +1009,7 @@ Well I see some parts of my experiment above has already been discussed there
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-17T08:02:13Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-17T08:02:13Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 ### Rethinking (overcoming) the shortcomings of [the `Suspendable` "62ms->22ms" experiment](https://github.com/flutter/flutter/issues/101227#issuecomment-1248894781)
 
@@ -1057,7 +1057,7 @@ We may need to provide some information to the users, indeed `State`s or `BulidC
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-17T11:46:14Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-17T11:46:14Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 ### Enhance `keframe`: Now seems it can build/layout as many items as possible until time is up, i.e. have strategy similar to the ["layout" proposal](https://github.com/flutter/flutter/issues/101227#issuecomment-1248894781) above
 
@@ -1208,13 +1208,13 @@ frame #3
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-17T14:35:35Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-17T14:35:35Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @Nayuta403 If you are interested, I can try to make it a full library. Given that it is based on keframe's idea (hack widget build), but at the same time it is quite different from the existing implementation (do not use addPostFrameCallback and use the LayoutBuilder hack), I am not sure whether I should make a PR to keframe, or I should create a separate lib by myself (and mention keframe)?
 
 </DiscussionComment>
 
-<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-17T16:22:11Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-17T16:22:11Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @fzyzcjy  Hi man, you are very thoughtful and full of passion, thank you for your thoughts. Recently I have been busy with work.I want to first communicate with you about Keframe idea and then follow up your discussion.
 
@@ -1242,7 +1242,7 @@ Ps: I actually think Fiber and Keframe will end up with similar results, but Kef
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-17T23:12:10Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-17T23:12:10Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @Nayuta403 You are welcome!
 
@@ -1264,7 +1264,7 @@ Thanks for your invitation (I see it). However, I realize keframe is under `Lian
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-17T23:33:32Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-17T23:33:32Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @Nayuta403 A bit more explanation: Why we do not need to worry about "the child subtree build&layout for a FrameSeparateWidget is so long that it makes everything slow"?
 
@@ -1272,7 +1272,7 @@ Because if that is the case, we can wrap several FrameSeparateWidget in the heav
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-18T04:11:00Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-18T04:11:00Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 **Update:** Some experiments here using the new implementation ([proposed here](https://github.com/flutter/flutter/issues/101227#issuecomment-1250056634)).
 
@@ -1282,7 +1282,7 @@ Btw I find that performance boost varies a lot when considering different experi
 
 </DiscussionComment>
 
-<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-18T16:05:22Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-18T16:05:22Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > But anyway, all my work will be open-sourced, and under license like MIT, so everyone can use it!
 
@@ -1314,7 +1314,7 @@ How do you think about it?
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-18T23:03:56Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-18T23:03:56Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > Yes, I was negligent. Lianjia is the company I used to work for. Just because this project is completed by me and has a certain number of users, I am still maintaining it personally. You are absolutely right, I also wish we had some open-sourced work available to everyone. We can work on your project https://github.com/fzyzcjy/flutter_smooth
 
@@ -1348,7 +1348,7 @@ They (paint/compositing/finalizing) each take a little of time, but when accumul
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-18T23:09:40Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-18T23:09:40Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Btw, recent ideas:
 
@@ -1357,7 +1357,7 @@ Btw, recent ideas:
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-20T13:46:34Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-20T13:46:34Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 ### New idea: Preemption
 
@@ -1399,7 +1399,7 @@ Description of the figure:
 
 </DiscussionComment>
 
-<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-20T13:47:17Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-20T13:47:17Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 >  I think that is a pretty smart idea, and has not found other solutions yet. If you approve I will add things similar to that into the codebase. The idea will be the same, while implementation will differ slightly (e.g. use a InheritedWidget + StatefulWidget + controller).
 
@@ -1427,7 +1427,7 @@ I got a bad cold yesterday, so I was late in answering the message
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-20T13:48:45Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-20T13:48:45Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @dnfield @Nayuta403 @JsouLiang (and other experts) I have made a "preemption" proposal, which is like a easy-to-implement version of "dual isolate". Looking forward to any feedbacks! I am going to implement a prototype tomorrow :)
 
@@ -1439,7 +1439,7 @@ There are some discussions going on there as well. For completeness, a reader of
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-20T13:53:17Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-20T13:53:17Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @Nayuta403 
 
@@ -1467,7 +1467,7 @@ Sorry to hear that, and hope you are getting well!
 
 </DiscussionComment>
 
-<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-20T14:27:41Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="Nayuta403" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-20T14:27:41Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 >  Anyway, those are simple things, and I can also do it if you like (just need e.g. 15 minutes).
 
@@ -1492,7 +1492,7 @@ Am I getting it wrong?  I'm looking forward to seeing your prototype : )
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-20T14:34:30Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-20T14:34:30Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 > If I do I think it will probably take more than 15 minutes to communicate. hhhh
 
@@ -1513,13 +1513,13 @@ Thanks :)
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-21T01:05:56Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-21T01:05:56Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Design proposal: https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?usp=sharing
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-21T13:15:53Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-21T13:15:53Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 For readers of GitHub and not yet read Discord: Some discussions happen in Discord as well, see - https://discord.com/channels/608014603317936148/608021234516754444/1021783497112821861
 
@@ -1527,7 +1527,7 @@ As well as the sub-discussion in discord: https://discord.com/channels/608014603
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-22T14:46:52Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-22T14:46:52Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Update: minimalist API (one widget for everything) + a prototype about framework layer.
 
@@ -2262,7 +2262,7 @@ Next time I may only update progress in Discord, since there are already >hundre
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-23T13:28:16Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-23T13:28:16Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 ### Prototype: Enter-new-heavy-page, smoothly even though it takes 0.5s to build/layout
 
@@ -2293,7 +2293,7 @@ https://user-images.githubusercontent.com/5236035/191970843-a9c82a38-1276-4024-8
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-25T01:50:08Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-25T01:50:08Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 ### Brief visual update: It runs at ~60fps, while widget build/layout needs ~500ms
 
@@ -2314,7 +2314,7 @@ https://user-images.githubusercontent.com/5236035/192124851-19bae792-ad31-4ae3-8
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-26T10:27:09Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-26T10:27:09Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Latest video (if you are interested :))
 
@@ -2326,13 +2326,13 @@ https://user-images.githubusercontent.com/5236035/192254354-e65a8bd2-9f49-4c5b-a
 
 </DiscussionComment>
 
-<DiscussionComment author="moffatman" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-26T12:15:54Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="moffatman" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-26T12:15:54Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Is build progress occuring during animation here? Because the effect could be replicated by just delaying the complex content build for ~500 ms (animation duration). 
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-26T12:37:42Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-26T12:37:42Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 @moffatman
 
@@ -2360,13 +2360,13 @@ By the way, your original modification does not work, because by default I do no
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-09-30T23:01:48Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-30T23:01:48Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 Quick update (still WIP, just provide some progress): I am working on the gesture system. Jonah Williams has thought that, it was bad that my old proposal did not let the pointer data packet go through Flutter's gesture system. Now, the new method just calls the classical `gestureBinding.handlePointerEvent` to dispatch `PointerMoveEvent`s.
 
 </DiscussionComment>
 
-<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" createTime="2022-10-12T14:04:46Z" retrieveTime="2022-10-15T21:31:00.632251">
+<DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-10-12T14:04:46Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 ### Quick update: ListView scrolling at 60FPS with heavy build/layout
 

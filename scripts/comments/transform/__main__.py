@@ -4,7 +4,7 @@ from comments.common import dir_data_comments_raw, path_discussion_md, Transform
 from comments.transform import github
 
 _transformers = {
-    'github': github.transform,
+    github.SOURCE: github.transform,
 }
 
 
@@ -28,7 +28,7 @@ import DiscussionComment from '@site/src/components/DiscussionComment';'''
     for item in data_transformed:
         assert isinstance(item, TransformedComment)
         yield f'''
-<DiscussionComment author="{item.author}" link="{item.link}" createTime="{item.create_time}" retrieveTime="{item.retrieve_time}">
+<DiscussionComment author="{item.author}" link="{item.link}" source="{item.source}" createTime="{item.create_time}" retrieveTime="{item.retrieve_time}">
 
 {item.body}
 

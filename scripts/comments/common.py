@@ -31,5 +31,6 @@ class TransformedComment:
     body: str
     author: str
     link: str
+    source: str
     create_time: str
     retrieve_time: str
