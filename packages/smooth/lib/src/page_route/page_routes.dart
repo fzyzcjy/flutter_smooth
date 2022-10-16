@@ -4,23 +4,7 @@ import 'package:smooth/src/animation_controller.dart';
 import 'package:smooth/src/builder.dart';
 import 'package:smooth/src/list_view/controller.dart';
 
-class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T> {
-  SmoothPageRouteBuilder({
-    // just copy from [PageRouteBuilder] constructor
-    super.settings,
-    required super.pageBuilder,
-    required super.transitionsBuilder,
-    super.transitionDuration = const Duration(milliseconds: 300),
-    super.reverseTransitionDuration = const Duration(milliseconds: 300),
-    super.opaque = true,
-    super.barrierDismissible = false,
-    super.barrierColor,
-    super.barrierLabel,
-    super.maintainState = true,
-    super.fullscreenDialog,
-    super.allowSnapshotting = true,
-  });
-
+mixin SmoothPageRouteMixin<T> on PageRoute<T> {
   DualProxyAnimationController? _dualProxyAnimationController;
   Ticker? _secondaryAnimationControllerTicker;
 
@@ -65,7 +49,7 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T> {
         builder: (context, _) {
           print(
               'hi SmoothBuilder.AnimatedBuilder.builder value=${_partialWriteOnlySecondaryAnimationController?.value}');
-          return transitionsBuilder(
+          return super.buildTransitions(
             context,
             // TODO improve this (e.g. handle offstage)
             _partialWriteOnlySecondaryAnimationController!,
@@ -78,4 +62,23 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T> {
       child: child,
     );
   }
+}
+
+class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T>
+    with SmoothPageRouteMixin<T> {
+  // just copy from [PageRouteBuilder] constructor
+  SmoothPageRouteBuilder({
+    super.settings,
+    required super.pageBuilder,
+    required super.transitionsBuilder,
+    super.transitionDuration = const Duration(milliseconds: 300),
+    super.reverseTransitionDuration = const Duration(milliseconds: 300),
+    super.opaque = true,
+    super.barrierDismissible = false,
+    super.barrierColor,
+    super.barrierLabel,
+    super.maintainState = true,
+    super.fullscreenDialog,
+    super.allowSnapshotting = true,
+  });
 }
