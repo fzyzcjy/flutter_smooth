@@ -104,8 +104,7 @@ const sidebars = {
                             },
                             items: [
                                 'benchmark/analyze/overhead/definition',
-                                'benchmark/analyze/overhead/component',
-                                'benchmark/analyze/overhead/end-to-end',
+                                'benchmark/analyze/overhead/result',
                             ],
                         },
                         'benchmark/analyze/waste',
