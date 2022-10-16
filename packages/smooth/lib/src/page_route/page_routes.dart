@@ -52,7 +52,7 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T> {
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
     return SmoothBuilder(
-      wantSmoothTickTickers: [_animationControllerTicker],
+      wantSmoothTickTickers: [_animationControllerTicker!],
       builder: (context, child) {
         return transitionsBuilder(
             context, animation, secondaryAnimation, child);

@@ -25,7 +25,7 @@ class AuxiliaryTreeRegistry {
 }
 
 class AuxiliaryTreePack {
-  final ValueGetter<List<Ticker>> wantSmoothTickTickers;
+  final ValueGetter<List<Ticker>>? wantSmoothTickTickers;
 
   late final PipelineOwner pipelineOwner;
   late final AuxiliaryTreeRootView rootView;
@@ -39,7 +39,7 @@ class AuxiliaryTreePack {
 
   AuxiliaryTreePack(
     Widget Function(AuxiliaryTreePack) widget, {
-    this.wantSmoothTickTickers = const [],
+    this.wantSmoothTickTickers,
   }) {
     pipelineOwner = PipelineOwner();
     rootView = pipelineOwner.rootNode = AuxiliaryTreeRootView(
@@ -186,7 +186,7 @@ class AuxiliaryTreePack {
 
     for (final ticker in [
       ..._tickerRegistry.tickers,
-      ...wantSmoothTickTickers(),
+      ...?wantSmoothTickTickers?.call(),
     ]) {
       ticker.maybeExtraTick(timeStamp.innerAdjustedFrameTimeStamp);
     }
