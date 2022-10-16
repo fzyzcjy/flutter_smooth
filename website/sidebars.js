@@ -19,6 +19,7 @@ const sidebars = {
     // But you can create a sidebar manually
     tutorialSidebar: [
         {type: 'doc', id: 'index', label: 'Introduction'},
+        'installation',
         'quickstart',
         {
             type: 'category',
