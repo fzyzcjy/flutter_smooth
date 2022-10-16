@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/animation_controller.dart';
@@ -53,9 +52,9 @@ mixin SmoothPageRouteMixin<T> on PageRoute<T> {
           // NOTE use this secondary, not primary
           animation: _partialWriteOnlySecondaryAnimationController!,
           builder: (context, _) {
-            print('hi SmoothBuilder.AnimatedBuilder.builder '
-                'value=${_partialWriteOnlySecondaryAnimationController?.value} '
-                '_partialWriteOnlySecondaryAnimationController=${describeIdentity(_partialWriteOnlySecondaryAnimationController)} $_partialWriteOnlySecondaryAnimationController');
+            // print('hi SmoothBuilder.AnimatedBuilder.builder '
+            //     'value=${_partialWriteOnlySecondaryAnimationController?.value} '
+            //     '_partialWriteOnlySecondaryAnimationController=${describeIdentity(_partialWriteOnlySecondaryAnimationController)} $_partialWriteOnlySecondaryAnimationController');
             return super.buildTransitions(
               context,
               // TODO improve this (e.g. handle offstage)
