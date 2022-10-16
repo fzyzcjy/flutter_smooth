@@ -103,14 +103,20 @@ class _SecondPage extends StatefulWidget {
 }
 
 class _SecondPageState extends State<_SecondPage> {
-  var firstFrame = true;
+  var placeholder = true;
 
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      setState(() => firstFrame = false);
+      // This hack is because [ModalRoute.offstage] needs one extra frame
+      // to be updated to false. We should find other workarounds later
+      // so we can remove this extra latency.
+      // https://github.com/fzyzcjy/flutter_smooth/issues/127#issuecomment-1279972708
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        setState(() => placeholder = false);
+      });
     });
   }
 
@@ -118,7 +124,7 @@ class _SecondPageState extends State<_SecondPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Second Page')),
-      body: firstFrame
+      body: placeholder
           // the placeholder to show when the complex widget is loading
           ? Container()
           : ComplexWidget(
