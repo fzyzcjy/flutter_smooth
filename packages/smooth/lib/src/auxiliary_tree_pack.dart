@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/auxiliary_tree_root_view.dart';
 import 'package:smooth/src/remove_sub_tree_widget.dart';
 import 'package:smooth/src/service_locator.dart';
@@ -24,6 +25,8 @@ class AuxiliaryTreeRegistry {
 }
 
 class AuxiliaryTreePack {
+  final ValueGetter<List<Ticker>> wantSmoothTickTickers;
+
   late final PipelineOwner pipelineOwner;
   late final AuxiliaryTreeRootView rootView;
   late final BuildOwner _buildOwner;
@@ -34,7 +37,10 @@ class AuxiliaryTreePack {
   final _removeSubTreeController = RemoveSubTreeController();
   AdjustedFrameTimeStamp? _previousRunPipelineTimeStamp;
 
-  AuxiliaryTreePack(Widget Function(AuxiliaryTreePack) widget) {
+  AuxiliaryTreePack(
+    Widget Function(AuxiliaryTreePack) widget, {
+    this.wantSmoothTickTickers = const [],
+  }) {
     pipelineOwner = PipelineOwner();
     rootView = pipelineOwner.rootNode = AuxiliaryTreeRootView(
       configuration: const AuxiliaryTreeRootViewConfiguration(size: Size.zero),
@@ -178,7 +184,10 @@ class AuxiliaryTreePack {
 
     // print('$runtimeType callExtraTickerTick tickers=${tickerRegistry.tickers}');
 
-    for (final ticker in _tickerRegistry.tickers) {
+    for (final ticker in [
+      ..._tickerRegistry.tickers,
+      ...wantSmoothTickTickers(),
+    ]) {
       ticker.maybeExtraTick(timeStamp.innerAdjustedFrameTimeStamp);
     }
   }

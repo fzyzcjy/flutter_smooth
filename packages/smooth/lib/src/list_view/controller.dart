@@ -152,6 +152,7 @@ class _SmoothBallisticScrollActivity extends BallisticScrollActivity {
   String toString() => '${super.toString()}(info: $info)';
 }
 
+// TODO move
 class LambdaTickerProvider implements TickerProvider {
   final Ticker Function(TickerCallback onTick) _createTicker;
 

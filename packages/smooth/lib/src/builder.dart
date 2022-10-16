@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/adapter_in_auxiliary_tree.dart';
 import 'package:smooth/src/adapter_in_main_tree.dart';
 import 'package:smooth/src/auxiliary_tree_pack.dart';
@@ -7,10 +8,14 @@ class SmoothBuilder extends StatefulWidget {
   final Widget Function(BuildContext context, Widget child) builder;
   final Widget child;
 
+  // TODO improve this api
+  final List<Ticker> wantSmoothTickTickers;
+
   const SmoothBuilder({
     super.key,
     required this.builder,
     required this.child,
+    this.wantSmoothTickTickers = const [],
   });
 
   @override
@@ -37,6 +42,7 @@ class _SmoothBuilderState extends State<SmoothBuilder> {
           ),
         ),
       ),
+      wantSmoothTickTickers: () => widget.wantSmoothTickTickers,
     );
   }
 
