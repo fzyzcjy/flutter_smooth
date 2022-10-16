@@ -6,7 +6,7 @@ Look at each frame of the video. If a frame has identical content as the previou
 
 In addition, even though the content is unchanged, if it is because the user really have zero pointer speed (e.g. when the finger reaches the top/bottom of screen), this is not a jank. To identify such cases from the classical janks, either by common sense, or use the "debug header" trick discussed in "gather-data" section to confirm.
 
-There seems to be one jank that also happens in classical Flutter, even when content is super fast to compute, so we need to exclude (or at least consider) this effect from our computation. This is the jank that occurs when pointer up. Consider a classical Flutter case with very light workload. Suppose vsync happens at 0ms, 16.67ms, 33.33ms, etc, and suppose `PointerUpEvent` is handled at 15ms (i.e. the after-draw-frame period). Then, at 15ms, Flutter calls `goBallistic` with current offset and velocity. Next, during the 16.67-33.33ms frame, Flutter's ballistic scroll activity handles the first tick (i.e. with `elapsed` being zero), so it outputs a offset identical to the last pointer offset. Because of this, the output from 16.67-33.33ms frame will has the same offset as that from 0-16.67ms. I have made a small experiment and observed this behavior (correct me if I am wrong).
+There seems to be one jank that also happens in classical Flutter, even when content is super fast to compute, so we need to exclude (or at least consider) this effect from our computation. This is the jank that occurs when pointer up. See https://github.com/flutter/flutter/issues/113494 for details.
 
 ## Results
 
