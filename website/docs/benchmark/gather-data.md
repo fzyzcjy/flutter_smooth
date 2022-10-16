@@ -42,6 +42,7 @@ I also record the timeline tracing data, which provide rich insights.
 2. Perform all interactions with the app.
 3. Tap `v` in the shell to open DevTool.
 4. Tap [download](https://docs.flutter.dev/development/tools/devtools/performance#import-and-export) in DevTool panel to get somthing like `dart_devtools_2022-10-16_09_54_55.141.json`.
+4. Run `scripts/timeline/enhance.py`, which synthesizes some "fake" events such as "Jank", so that we can easily spot them in the timeline.
 5. The file can be opened in `chrome://tracing`.
 
 We will use automatic scripts later to enhance it.
