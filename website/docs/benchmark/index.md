@@ -1,9 +1,12 @@
 # Benchmark
 
-TODO: explain how I have benchmarked everything, present the result, and analyze them.
+In this chapter, I will show:
 
-Note: It is not enough to only measure and report FPS. Other metrics are also critical to user perception, such as
-latency and linearity.
+1. How are my benchmarks conducted?
+2. What metrics are interesting, and how are they analyzed?
+3. What are the benchmark results on my (super-slow) test device?
+
+Let's get started:
 
 ```mdx-code-block
 import DocCardList from '@theme/DocCardList';
