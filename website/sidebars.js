@@ -18,20 +18,19 @@ const sidebars = {
 
     // But you can create a sidebar manually
     tutorialSidebar: [
-        {type: 'doc', id: 'index', label: 'Introduction'},
+        'index',
         'installation',
-        'quickstart',
         {
             type: 'category',
-            label: 'Example',
+            label: 'Usage',
             collapsed: false,
             link: {
                 type: 'doc',
-                id: 'example/index',
+                id: 'usage/index',
             },
             items: [
-                'example/list-view',
-                'example/enter-page',
+                'usage/drop-in',
+                'usage/builder',
             ],
         },
         {
