@@ -108,8 +108,19 @@ class ExampleListViewPage extends StatelessWidget {
 
   Widget _buildRow(BuildContext context, int index) {
     Color? rowColor;
-    if (index % 3 == 0) rowColor = Colors.pink;
-    if (index % 6 == 0) rowColor = Colors.green;
+    if (index.isEven) {
+      switch ((index ~/ 2) % 3) {
+        case 0:
+          rowColor = Colors.pink;
+          break;
+        case 1:
+          rowColor = Colors.green;
+          break;
+        case 2:
+          rowColor = Colors.indigo;
+          break;
+      }
+    }
 
     // NOTE to be real, should not be too huge (though we can make
     // it 60FPS). #6204
