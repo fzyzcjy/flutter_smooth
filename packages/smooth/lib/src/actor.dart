@@ -30,14 +30,14 @@ class Actor {
 
     if (timeManager.thresholdActOnBuildOrLayoutPhaseTimeStamp! >=
         nowTimestamp) {
-      _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
+      // _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
       return;
     }
 
     // this should be called *after* time check, since this may be a bit more
     // expensive
     if (!_preludeBeforePreemptRender()) {
-      _debugLogMaybePreemptRender(haltReason: 'PreludeDisagree');
+      // _debugLogMaybePreemptRender(haltReason: 'PreludeDisagree');
       return;
     }
 
@@ -63,12 +63,12 @@ class Actor {
 
     if (timeManager.thresholdActOnPostDrawFramePhaseTimeStamp! >=
         nowTimestamp) {
-      _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
+      // _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
       return;
     }
 
     if (!_preludeBeforePreemptRender()) {
-      _debugLogMaybePreemptRender(haltReason: 'PreludeDisagree');
+      // _debugLogMaybePreemptRender(haltReason: 'PreludeDisagree');
       return;
     }
 
@@ -92,11 +92,11 @@ class Actor {
     return !serviceLocator.brakeController.brakeModeActive;
   }
 
-  void _debugLogMaybePreemptRender({required String haltReason}) =>
-      Timeline.timeSync(
-          'MaybePreemptRenderHalt',
-          arguments: <String, Object?>{'haltReason': haltReason},
-          () {});
+  // void _debugLogMaybePreemptRender({required String haltReason}) =>
+  //     Timeline.timeSync(
+  //         'MaybePreemptRenderHalt',
+  //         arguments: <String, Object?>{'haltReason': haltReason},
+  //         () {});
 
   void _preemptRenderRaw({required RunPipelineReason debugReason}) {
     final serviceLocator = ServiceLocator.instance;
