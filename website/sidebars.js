@@ -42,6 +42,7 @@ const sidebars = {
                 id: 'benchmark/index',
             },
             items: [
+                'benchmark/setup',
                 'benchmark/gather-data',
                 {
                     type: 'category',
@@ -80,19 +81,7 @@ const sidebars = {
                                 'benchmark/analyze/linearity/tracing',
                             ],
                         },
-                        {
-                            type: 'category',
-                            label: 'Jank statistics',
-                            collapsed: false,
-                            link: {
-                                type: 'doc',
-                                id: 'benchmark/analyze/jank-statistics/index',
-                            },
-                            items: [
-                                'benchmark/analyze/jank-statistics/frequency',
-                                'benchmark/analyze/jank-statistics/maximum',
-                            ],
-                        },
+                        'benchmark/analyze/jank-statistics',
                         {
                             type: 'category',
                             label: 'Overhead',
