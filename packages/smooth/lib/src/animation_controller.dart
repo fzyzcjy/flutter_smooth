@@ -166,4 +166,154 @@ class ProxyAnimationController implements AnimationController {
       'This should be protected and not called externally');
 }
 
-class DualProxyAnimationController extends ProxyAnimationController {}
+class DualProxyAnimationController extends ProxyAnimationController {
+  final AnimationController partialWriteOnlySecondary;
+
+  DualProxyAnimationController({
+    super.value,
+    super.duration,
+    super.reverseDuration,
+    super.debugLabel,
+    super.lowerBound = 0.0,
+    super.upperBound = 1.0,
+    super.animationBehavior = AnimationBehavior.normal,
+    required super.vsync,
+  }) : partialWriteOnlySecondary = AnimationController(
+          value: value,
+          duration: duration,
+          reverseDuration: reverseDuration,
+          debugLabel: debugLabel,
+          lowerBound: lowerBound,
+          upperBound: upperBound,
+          animationBehavior: animationBehavior,
+          vsync: vsync,
+        );
+
+  @override
+  set duration(Duration? value) {
+    partialWriteOnlySecondary.duration = value;
+    super.duration = value;
+  }
+
+  @override
+  set reverseDuration(Duration? value) {
+    partialWriteOnlySecondary.reverseDuration = value;
+    super.reverseDuration = value;
+  }
+
+  @override
+  void resync(TickerProvider vsync) {
+    partialWriteOnlySecondary.resync(vsync);
+    super.resync(vsync);
+  }
+
+  @override
+  set value(double newValue) {
+    partialWriteOnlySecondary.value = newValue;
+    super.value = newValue;
+  }
+
+  @override
+  void reset() {
+    partialWriteOnlySecondary.reset();
+    super.reset();
+  }
+
+  @override
+  TickerFuture forward({double? from}) {
+    partialWriteOnlySecondary.forward(from: from);
+    return super.forward(from: from);
+  }
+
+  @override
+  TickerFuture reverse({double? from}) {
+    partialWriteOnlySecondary.reverse(from: from);
+    return super.reverse(from: from);
+  }
+
+  @override
+  TickerFuture animateTo(double target,
+      {Duration? duration, Curve curve = Curves.linear}) {
+    partialWriteOnlySecondary.animateTo(target,
+        duration: duration, curve: curve);
+    return super.animateTo(target, duration: duration, curve: curve);
+  }
+
+  @override
+  TickerFuture animateBack(double target,
+      {Duration? duration, Curve curve = Curves.linear}) {
+    partialWriteOnlySecondary.animateBack(target,
+        duration: duration, curve: curve);
+    return super.animateBack(target, duration: duration, curve: curve);
+  }
+
+  @override
+  TickerFuture repeat(
+      {double? min, double? max, bool reverse = false, Duration? period}) {
+    partialWriteOnlySecondary.repeat(
+        min: min, max: max, reverse: reverse, period: period);
+    return super.repeat(min: min, max: max, reverse: reverse, period: period);
+  }
+
+  @override
+  TickerFuture fling(
+      {double velocity = 1.0,
+      SpringDescription? springDescription,
+      AnimationBehavior? animationBehavior}) {
+    partialWriteOnlySecondary.fling(
+        velocity: velocity,
+        springDescription: springDescription,
+        animationBehavior: animationBehavior);
+    return super.fling(
+        velocity: velocity,
+        springDescription: springDescription,
+        animationBehavior: animationBehavior);
+  }
+
+  @override
+  TickerFuture animateWith(Simulation simulation) {
+    partialWriteOnlySecondary.animateWith(simulation);
+    return super.animateWith(simulation);
+  }
+
+  @override
+  void stop({bool canceled = true}) {
+    partialWriteOnlySecondary.stop(canceled: canceled);
+    super.stop(canceled: canceled);
+  }
+
+  @override
+  void dispose() {
+    partialWriteOnlySecondary.dispose();
+    super.dispose();
+  }
+
+  // do NOT do these on secondary
+  // @override
+  // void addListener(VoidCallback listener) {
+  //   partialWriteOnlySecondary.addListener(listener);
+  //   super.addListener(listener);
+  // }
+  //
+  // @override
+  // void removeListener(VoidCallback listener) {
+  //   partialWriteOnlySecondary.removeListener(listener);
+  //   super.removeListener(listener);
+  // }
+  //
+  // @override
+  // void addStatusListener(AnimationStatusListener listener) {
+  //   partialWriteOnlySecondary.addStatusListener(listener);
+  //   super.addStatusListener(listener);
+  // }
+  //
+  // @override
+  // void removeStatusListener(AnimationStatusListener listener) {
+  //   partialWriteOnlySecondary.removeStatusListener(listener);
+  //   super.removeStatusListener(listener);
+  // }
+
+  @override
+  String toString() =>
+      'DualProxyAnimationController($inner, $partialWriteOnlySecondary)';
+}
