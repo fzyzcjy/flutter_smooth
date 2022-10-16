@@ -99,6 +99,9 @@ class SmoothMaterialPageRoute<T> extends MaterialPageRoute<T>
     super.settings,
     super.maintainState = true,
     super.fullscreenDialog,
-    super.allowSnapshotting = true,
-  });
+    // super.allowSnapshotting = true,
+  }) : super(
+          // https://github.com/fzyzcjy/flutter_smooth/issues/127#issuecomment-1279978263
+          allowSnapshotting: false,
+        );
 }
