@@ -128,7 +128,9 @@ class _SecondPageState extends State<_SecondPage> {
       appBar: AppBar(title: const Text('Second Page')),
       body: placeholder
           // the placeholder to show when the complex widget is loading
-          ? Container()
+          ? Container(
+              color: Colors.white,
+            )
           : ComplexWidget(
               listTileCount: widget.listTileCount,
               wrapListTile: widget.wrapListTile,
