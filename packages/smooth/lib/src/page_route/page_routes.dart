@@ -91,7 +91,7 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T>
 
 // ref [MaterialPageRoute], only add a mixin
 class SmoothMaterialPageRoute<T> extends MaterialPageRoute<T>
-    with MaterialRouteTransitionMixin<T>, SmoothPageRouteMixin<T> {
+    with SmoothPageRouteMixin<T> {
   SmoothMaterialPageRoute({
     required super.builder,
     super.settings,
