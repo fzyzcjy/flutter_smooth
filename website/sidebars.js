@@ -63,7 +63,6 @@ const sidebars = {
                             items: [
                                 'benchmark/analyze/fps/video',
                                 'benchmark/analyze/fps/tracing',
-                                'benchmark/analyze/fps/pitfalls',
                                 'benchmark/analyze/fps/devtool',
                             ],
                         },
@@ -107,6 +106,19 @@ const sidebars = {
                             ],
                         },
                         'benchmark/analyze/waste',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Pitfalls',
+                    collapsed: false,
+                    link: {
+                        type: 'doc',
+                        id: 'benchmark/pitfall/index',
+                    },
+                    items: [
+                        'benchmark/pitfall/half-fps',
+                        'benchmark/pitfall/latency-change',
                     ],
                 },
             ],
