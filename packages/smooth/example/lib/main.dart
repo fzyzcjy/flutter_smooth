@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:example/example_enter_page_animation/page.dart';
-import 'package:example/example_list_view/example_list_view_page.dart';
+import 'package:example/example_list_view/page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
@@ -22,76 +22,31 @@ class MyApp extends StatelessWidget {
     return ExcludeSemantics(
       child: SmoothParent(
         child: MaterialApp(
-          home: Scaffold(
-            appBar: AppBar(
-              title: const Text('Smooth: 60FPS'),
-            ),
-            body: Builder(
-              builder: (context) => ListView(
-                children: [
-                  ListTile(
-                    title: const Text('Example: Enter page animation'),
-                    onTap: () => Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                            builder: (_) =>
-                                const ExampleEnterPageAnimationPage())),
-                  ),
-                  for (final enableSmooth in [false, true])
-                    ListTile(
-                      title: Text(
-                          'Example: ListView (${enableSmooth ? 'smooth' : 'plain'}, debugHeader)'),
-                      onTap: () => Navigator.push<dynamic>(
-                          context,
-                          MaterialPageRoute<dynamic>(
-                              builder: (_) => ExampleListViewPage(
-                                  enableSmooth: enableSmooth,
-                                  enableDebugHeader: true))),
-                    ),
-                  ListTile(
-                    title: const Text(
-                        'Example: ListView smooth + leaveWhenPointerUp'),
-                    onTap: () => Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                            builder: (_) => const ExampleListViewPage(
-                                enableSmooth: true,
-                                enableDebugHeader: true,
-                                leaveWhenPointerUp: true))),
-                  ),
-                  ListTile(
-                    title:
-                        const Text('Example: ListView plain + zero workload'),
-                    onTap: () => Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                            builder: (_) => const ExampleListViewPage(
-                                  enableSmooth: false,
-                                  enableAlwaysWorkload: false,
-                                  enableNewItemWorkload: false,
-                                ))),
-                  ),
-                  ListTile(
-                    title: const Text('Example: ListView plain'),
-                    onTap: () => Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                            builder: (_) => const ExampleListViewPage(
-                                enableSmooth: false))),
-                  ),
-                  ListTile(
-                    title: const Text('Example: ListView smooth'),
-                    onTap: () => Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                            builder: (_) =>
-                                const ExampleListViewPage(enableSmooth: true))),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          home: _buildHome(),
         ),
+      ),
+    );
+  }
+
+  Widget _buildHome() {
+    return Scaffold(
+      appBar: AppBar(title: const Text('FlutterSmooth Demo')),
+      body: ListView(
+        children: [
+          _buildItem(const ExampleListViewPage(), 'Example: ListView'),
+          _buildItem(const ExampleEnterPageAnimationPage(),
+              'Example: Enter page animation'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildItem(Widget page, String title) {
+    return Builder(
+      builder: (context) => ListTile(
+        title: Text(title),
+        onTap: () => Navigator.push<dynamic>(
+            context, MaterialPageRoute<dynamic>(builder: (_) => page)),
       ),
     );
   }

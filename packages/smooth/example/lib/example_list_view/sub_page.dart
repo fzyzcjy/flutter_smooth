@@ -6,14 +6,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 
-class ExampleListViewPage extends StatelessWidget {
+class ExampleListViewSubPage extends StatelessWidget {
   final bool enableSmooth;
   final bool enableDebugHeader;
   final bool leaveWhenPointerUp;
   final bool enableNewItemWorkload;
   final bool enableAlwaysWorkload;
 
-  const ExampleListViewPage({
+  const ExampleListViewSubPage({
     super.key,
     required this.enableSmooth,
     this.enableDebugHeader = false,
