@@ -21,6 +21,7 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T> {
     super.allowSnapshotting = true,
   });
 
+  DualProxyAnimationController? _dualProxyAnimationController;
   Ticker? _secondaryAnimationControllerTicker;
 
   // NOTE mimic [TransitionRoute.createAnimationController], but change vsync
@@ -44,6 +45,7 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T> {
       }),
     );
 
+    _dualProxyAnimationController = result;
     _secondaryAnimationControllerTicker = secondaryCreatedTicker;
 
     return result;
@@ -54,10 +56,14 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T> {
       Animation<double> secondaryAnimation, Widget child) {
     return SmoothBuilder(
       wantSmoothTickTickers: [_secondaryAnimationControllerTicker!],
-      builder: (context, child) {
-        return transitionsBuilder(
-            context, animation, secondaryAnimation, child);
-      },
+      builder: (context, child) => AnimatedBuilder(
+        // NOTE use this secondary, not primary
+        animation: _dualProxyAnimationController!.partialWriteOnlySecondary,
+        builder: (context, _) {
+          return transitionsBuilder(
+              context, animation, secondaryAnimation, child);
+        },
+      ),
       child: child,
     );
   }
