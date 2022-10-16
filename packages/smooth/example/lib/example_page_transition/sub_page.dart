@@ -103,14 +103,28 @@ class _SecondPage extends StatefulWidget {
 }
 
 class _SecondPageState extends State<_SecondPage> {
+  var firstFrame = true;
+
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() => firstFrame = false);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Second Page')),
-      body: ComplexWidget(
-        listTileCount: widget.listTileCount,
-        wrapListTile: widget.wrapListTile,
-      ),
+      body: firstFrame
+          // the placeholder to show when the complex widget is loading
+          ? Container()
+          : ComplexWidget(
+              listTileCount: widget.listTileCount,
+              wrapListTile: widget.wrapListTile,
+            ),
     );
   }
 }
