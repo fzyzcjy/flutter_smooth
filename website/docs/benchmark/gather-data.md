@@ -6,6 +6,8 @@ All tests are done in a TRT-AL00 Android device, with Snapdragon 435.
 
 How slow is it? [Geekbench](https://nerdschalk.com/huawei-enjoy-7-plus-benchmarks-now-available/) says it is 642 & 2867 points (single & multi core, respectively). Another rough but intuitive viewpoint is by looking at [comments](https://api.flutter.dev/flutter/dart-ui/PlatformDispatcher/onReportTimings.html) on `onReportTimings` - Flutter officially says it takes <0.1ms on iPhone6S per second, while I have measured ~20ms per second. <!-- #6127 -->
 
+As a side remark, this device has roughly 100ms latency in touching, i.e. Android system will only dispatch a touch event ~100ms after the real touch. This is OS level and Flutter has no way to overcome it.
+
 ## Record video
 
 To get most real results, I use the camera of a *second* phone to record a video of the testing device. For example:
@@ -20,7 +22,7 @@ ffmpeg -i path/to/your/video.mp4 -vsync 0 -frame_pts true -vf drawtext=fontfile=
 
 (The `video_to_frame.py` does the same job as the command above.)
 
-For example, the result is:
+For example, (part of) the result is as follows. We will mainly analyze the parts of the video from pointer-down to scroll-end later.
 
 ![gather_data_video_frames](../../../blob/doc_images/gather_data_video_frames.png)
 
