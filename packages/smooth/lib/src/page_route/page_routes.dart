@@ -82,3 +82,15 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T>
     super.allowSnapshotting = true,
   });
 }
+
+// ref [MaterialPageRoute], only add a mixin
+class SmoothMaterialPageRoute<T> extends MaterialPageRoute<T>
+    with MaterialRouteTransitionMixin<T>, SmoothPageRouteMixin<T> {
+  SmoothMaterialPageRoute({
+    required super.builder,
+    super.settings,
+    super.maintainState = true,
+    super.fullscreenDialog,
+    super.allowSnapshotting = true,
+  });
+}
