@@ -1,11 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:example/example_enter_page_animation/page.dart';
-import 'package:example/example_gesture/example_gesture_page.dart';
 import 'package:example/example_list_view/example_list_view_page.dart';
-import 'package:example/example_simple_animation/example_simple_animation_page.dart';
-import 'package:example/utils/debug_plain_animation.dart';
-import 'package:example/utils/simple_pointer_event_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
@@ -40,13 +36,6 @@ class MyApp extends StatelessWidget {
                         MaterialPageRoute<dynamic>(
                             builder: (_) =>
                                 const ExampleEnterPageAnimationPage())),
-                  ),
-                  ListTile(
-                    title: const Text('Example: Gesture'),
-                    onTap: () => Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                            builder: (_) => const ExampleGesturePage())),
                   ),
                   for (final enableSmooth in [false, true])
                     ListTile(
@@ -98,34 +87,6 @@ class MyApp extends StatelessWidget {
                             builder: (_) =>
                                 const ExampleListViewPage(enableSmooth: true))),
                   ),
-                  for (final enableSmooth in [false, true])
-                    ListTile(
-                      title: Text(
-                          'Example: Simple animation (${enableSmooth ? 'smooth' : 'plain'})'),
-                      onTap: () => Navigator.push<dynamic>(
-                          context,
-                          MaterialPageRoute<dynamic>(
-                              builder: (_) => ExampleSimpleAnimationPage(
-                                  smooth: enableSmooth))),
-                    ),
-                  ListTile(
-                    title: const Text('Show debug widget'),
-                    onTap: () => Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                            builder: (_) => const DebugPlainAnimationPage())),
-                  ),
-                  ListTile(
-                    title: const Text('SimplePointerEventPage'),
-                    onTap: () => Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                            builder: (_) => const SimplePointerEventPage())),
-                  ),
-                  // ListTile(
-                  //   title: const Text('Dump logs'),
-                  //   onTap: SimpleLog.instance.dumpAndReset,
-                  // ),
                 ],
               ),
             ),
