@@ -91,6 +91,7 @@ const sidebars = {
                                 id: 'benchmark/analyze/overhead/index',
                             },
                             items: [
+                                'benchmark/analyze/overhead/definition',
                                 'benchmark/analyze/overhead/component',
                                 'benchmark/analyze/overhead/end-to-end',
                             ],
