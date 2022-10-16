@@ -7,7 +7,7 @@ repository:
   name: flutter_smooth
 
   # A short description of the repository that will show up on GitHub
-  description: [WIP] Achieve 60 FPS, no matter how heavy the tree is to build/layout
+  description: Achieve 60 FPS, no matter how heavy the tree is to build/layout
 
   # A URL with more information about the repository
   homepage: https://fzyzcjy.github.io/flutter_smooth/
