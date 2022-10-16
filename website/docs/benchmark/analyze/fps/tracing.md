@@ -1,4 +1,4 @@
-# From tracing
+# Result from tracing
 
 ## Methods
 
