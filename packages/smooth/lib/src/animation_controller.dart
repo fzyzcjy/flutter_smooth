@@ -178,6 +178,7 @@ class DualProxyAnimationController extends ProxyAnimationController {
     super.upperBound = 1.0,
     super.animationBehavior = AnimationBehavior.normal,
     required super.vsync,
+    required TickerProvider vsyncForSecondary,
   }) : partialWriteOnlySecondary = AnimationController(
           value: value,
           duration: duration,
@@ -186,7 +187,8 @@ class DualProxyAnimationController extends ProxyAnimationController {
           lowerBound: lowerBound,
           upperBound: upperBound,
           animationBehavior: animationBehavior,
-          vsync: vsync,
+          // NOTE
+          vsync: vsyncForSecondary,
         );
 
   @override

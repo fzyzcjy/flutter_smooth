@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:smooth/src/animation_controller.dart';
 import 'package:smooth/src/builder.dart';
 import 'package:smooth/src/list_view/controller.dart';
 
@@ -20,7 +21,7 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T> {
     super.allowSnapshotting = true,
   });
 
-  Ticker? _animationControllerTicker;
+  Ticker? _secondaryAnimationControllerTicker;
 
   // NOTE mimic [TransitionRoute.createAnimationController], but change vsync
   @override
@@ -29,21 +30,21 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T> {
     final reverseDuration = reverseTransitionDuration;
     assert(duration >= Duration.zero);
 
-    late final Ticker createdTicker;
+    late final Ticker secondaryCreatedTicker;
 
-    final result = AnimationController(
+    final result = DualProxyAnimationController(
       duration: duration,
       reverseDuration: reverseDuration,
       debugLabel: debugLabel,
-      // NOTE MODIFIED changed this vsync
-      // vsync: navigator!,
-      vsync: LambdaTickerProvider((onTick) {
-        createdTicker = navigator!.createTicker(onTick);
-        return createdTicker;
+      vsync: navigator!,
+      // NOTE
+      vsyncForSecondary: LambdaTickerProvider((onTick) {
+        secondaryCreatedTicker = navigator!.createTicker(onTick);
+        return secondaryCreatedTicker;
       }),
     );
 
-    _animationControllerTicker = createdTicker;
+    _secondaryAnimationControllerTicker = secondaryCreatedTicker;
 
     return result;
   }
@@ -52,7 +53,7 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T> {
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
     return SmoothBuilder(
-      wantSmoothTickTickers: [_animationControllerTicker!],
+      wantSmoothTickTickers: [_secondaryAnimationControllerTicker!],
       builder: (context, child) {
         return transitionsBuilder(
             context, animation, secondaryAnimation, child);
