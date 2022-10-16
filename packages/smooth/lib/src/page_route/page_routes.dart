@@ -39,25 +39,31 @@ mixin SmoothPageRouteMixin<T> on PageRoute<T> {
   }
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(
+      BuildContext mainTreeContext,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
     return SmoothBuilder(
       wantSmoothTickTickers: [_secondaryAnimationControllerTicker!],
-      builder: (context, child) => AnimatedBuilder(
-        // NOTE use this secondary, not primary
-        animation: _partialWriteOnlySecondaryAnimationController!,
-        builder: (context, _) {
-          print(
-              'hi SmoothBuilder.AnimatedBuilder.builder value=${_partialWriteOnlySecondaryAnimationController?.value}');
-          return super.buildTransitions(
-            context,
-            // TODO improve this (e.g. handle offstage)
-            _partialWriteOnlySecondaryAnimationController!,
-            // TODO handle secondaryAnimation, not done yet
-            secondaryAnimation,
-            child,
-          );
-        },
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(mainTreeContext),
+        child: AnimatedBuilder(
+          // NOTE use this secondary, not primary
+          animation: _partialWriteOnlySecondaryAnimationController!,
+          builder: (context, _) {
+            print(
+                'hi SmoothBuilder.AnimatedBuilder.builder value=${_partialWriteOnlySecondaryAnimationController?.value}');
+            return super.buildTransitions(
+              context,
+              // TODO improve this (e.g. handle offstage)
+              _partialWriteOnlySecondaryAnimationController!,
+              // TODO handle secondaryAnimation, not done yet
+              secondaryAnimation,
+              child,
+            );
+          },
+        ),
       ),
       child: child,
     );
