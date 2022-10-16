@@ -8,7 +8,7 @@ It still contains rough edges, since these are the highest-level things and I sp
 
 :::
 
-## `SmoothListView`
+## `SmoothListView` replacing `ListView`
 
 Usage:
 
@@ -22,6 +22,8 @@ Demo:
 
 `packages/smooth/example/lib/example_list_view/example_list_view_page.dart`
 
-## `SmoothMaterialPageRoute` (and other page routes)
+## Page transition animations
+
+For example, `SmoothMaterialPageRoute` replaces `MaterialPageRoute`.
 
 TODO #125
