@@ -270,6 +270,11 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
 
     final serviceLocator = ServiceLocator.instance;
 
+    // NOTE before really doing "AfterFlushLayout" things, call preempt point
+    // once more, pretending we are still at the (near-end) of build/layout
+    // phase. This is needed because of #6232
+    serviceLocator.actor.maybePreemptRenderBuildOrLayoutPhase();
+
     // NOTE: Set this *BEFORE* runPipeline and main tree's paint phase.
     //
     // even though we have *not* started main tree's paint phase,
