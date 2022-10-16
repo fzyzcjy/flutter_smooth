@@ -4,6 +4,12 @@
 
 Achieve 60 FPS, no matter how heavy the tree is to build/layout
 
+
+https://user-images.githubusercontent.com/5236035/196013963-fbfdcad3-675f-4c13-bc53-6e283e18caed.mp4
+
+
+
+
 * Design doc: https://flutter.dev/go/sixty-fps
 * Issue: https://github.com/flutter/flutter/issues/101227
 * Discussions: In Discord "hackers-framework" channel. Mainly messages from 2022.09.21 to 2022.09.27, and also a "
