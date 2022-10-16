@@ -81,7 +81,19 @@ const sidebars = {
                                 'benchmark/analyze/linearity/tracing',
                             ],
                         },
-                        'benchmark/analyze/jank-statistics',
+                        {
+                            type: 'category',
+                            label: 'Jank statistics',
+                            collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'benchmark/analyze/jank-statistics/index',
+                            },
+                            items: [
+                                'benchmark/analyze/jank-statistics/definition',
+                                'benchmark/analyze/jank-statistics/result',
+                            ],
+                        },
                         {
                             type: 'category',
                             label: 'Overhead',
