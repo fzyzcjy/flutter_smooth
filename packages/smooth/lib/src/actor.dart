@@ -23,60 +23,64 @@ class Actor {
     final serviceLocator = ServiceLocator.instance;
     if (serviceLocator.auxiliaryTreeRegistry.trees.isEmpty) return;
 
-    final timeManager = serviceLocator.timeManager;
-    final now = clock.nowSimple();
-    final nowTimestamp =
-        serviceLocator.timeConverter.dateTimeToAdjustedFrameTimeStamp(now);
+    Timeline.timeSync('MaybePreemptRender', () {
+      final timeManager = serviceLocator.timeManager;
+      final now = clock.nowSimple();
+      final nowTimestamp =
+          serviceLocator.timeConverter.dateTimeToAdjustedFrameTimeStamp(now);
 
-    if (timeManager.thresholdActOnBuildOrLayoutPhaseTimeStamp! >=
-        nowTimestamp) {
-      // _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
-      return;
-    }
+      if (timeManager.thresholdActOnBuildOrLayoutPhaseTimeStamp! >=
+          nowTimestamp) {
+        // _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
+        return;
+      }
 
-    // this should be called *after* time check, since this may be a bit more
-    // expensive
-    if (!_preludeBeforePreemptRender()) {
-      // _debugLogMaybePreemptRender(haltReason: 'PreludeDisagree');
-      return;
-    }
+      // this should be called *after* time check, since this may be a bit more
+      // expensive
+      if (!_preludeBeforePreemptRender()) {
+        // _debugLogMaybePreemptRender(haltReason: 'PreludeDisagree');
+        return;
+      }
 
-    _preemptRenderRaw(
-        debugReason: RunPipelineReason.preemptRenderBuildOrLayoutPhase);
+      _preemptRenderRaw(
+          debugReason: RunPipelineReason.preemptRenderBuildOrLayoutPhase);
 
-    timeManager.afterBuildOrLayoutPhasePreemptRender(now: nowTimestamp);
+      timeManager.afterBuildOrLayoutPhasePreemptRender(now: nowTimestamp);
+    });
   }
 
   void maybePreemptRenderPostDrawFramePhase() {
     final serviceLocator = ServiceLocator.instance;
     if (serviceLocator.auxiliaryTreeRegistry.trees.isEmpty) return;
 
-    final timeManager = serviceLocator.timeManager;
-    final now = clock.nowSimple();
-    final nowTimestamp =
-        serviceLocator.timeConverter.dateTimeToAdjustedFrameTimeStamp(now);
+    Timeline.timeSync('MaybePreemptRender', () {
+      final timeManager = serviceLocator.timeManager;
+      final now = clock.nowSimple();
+      final nowTimestamp =
+          serviceLocator.timeConverter.dateTimeToAdjustedFrameTimeStamp(now);
 
-    // TODO refactor - maybe extract such duplicated code
-    // similar reason as the same code in [maybePreemptRenderBuildOrLayoutPhase]
-    // #6210
-    serviceLocator.extraEventDispatcher.fetchFromEngine();
+      // TODO refactor - maybe extract such duplicated code
+      // similar reason as the same code in [maybePreemptRenderBuildOrLayoutPhase]
+      // #6210
+      serviceLocator.extraEventDispatcher.fetchFromEngine();
 
-    if (timeManager.thresholdActOnPostDrawFramePhaseTimeStamp! >=
-        nowTimestamp) {
-      // _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
-      return;
-    }
+      if (timeManager.thresholdActOnPostDrawFramePhaseTimeStamp! >=
+          nowTimestamp) {
+        // _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
+        return;
+      }
 
-    if (!_preludeBeforePreemptRender()) {
-      // _debugLogMaybePreemptRender(haltReason: 'PreludeDisagree');
-      return;
-    }
+      if (!_preludeBeforePreemptRender()) {
+        // _debugLogMaybePreemptRender(haltReason: 'PreludeDisagree');
+        return;
+      }
 
-    // NOTE this is "before" not "after"
-    timeManager.beforePostDrawFramePhasePreemptRender(now: nowTimestamp);
+      // NOTE this is "before" not "after"
+      timeManager.beforePostDrawFramePhasePreemptRender(now: nowTimestamp);
 
-    _preemptRenderRaw(
-        debugReason: RunPipelineReason.preemptRenderPostDrawFramePhase);
+      _preemptRenderRaw(
+          debugReason: RunPipelineReason.preemptRenderPostDrawFramePhase);
+    });
   }
 
   bool _preludeBeforePreemptRender() {
