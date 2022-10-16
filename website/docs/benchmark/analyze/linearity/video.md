@@ -1,5 +1,3 @@
----
-title: From video
----
+# From video
 
 TODO: analyze from video

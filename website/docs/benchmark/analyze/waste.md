@@ -1,6 +1,4 @@
----
-title: Waste
----
+# Waste
 
 TODO: from timeline + my script
 

@@ -1,6 +1,4 @@
----
-title: Frequency
----
+# Frequency
 
 TODO Consider how frequently one single jank happens (e.g. only jank 1 frame vs jank 10 frames continuously is
 different).

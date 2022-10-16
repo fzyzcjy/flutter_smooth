@@ -1,6 +1,4 @@
----
-title: Benchmark
----
+# Benchmark
 
 TODO: explain how I have benchmarked everything, present the result, and analyze them.
 

@@ -1,6 +1,4 @@
----
-title: Example
----
+# Example
 
 TODO: brief intro
 

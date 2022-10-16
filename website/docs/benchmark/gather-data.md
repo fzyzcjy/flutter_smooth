@@ -1,6 +1,4 @@
----
-title: Gather data
----
+# Gather data
 
 TODO: show my experiment setup, especially which phone I use to test.
 Also mention it is 200x slower than iphone 6s in ReportTimings to have a rough feeling about its speed.

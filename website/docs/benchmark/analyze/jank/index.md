@@ -1,6 +1,4 @@
----
-title: Jank
----
+# Jank
 
 TODO
 

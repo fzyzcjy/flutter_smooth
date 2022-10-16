@@ -1,6 +1,4 @@
----
-title: Discussion
----
+# Discussion
 
 TODO: brief intro
 

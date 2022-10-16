@@ -1,6 +1,4 @@
----
-title: Latency
----
+# Latency
 
 definition
 e.g. originally need 1s to load the new page, now need 1.01s, then overhead is 1%

@@ -1,6 +1,4 @@
----
-title: Linearity
----
+# Linearity
 
 TODO: definition
 

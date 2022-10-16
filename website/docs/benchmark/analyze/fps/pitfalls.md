@@ -1,6 +1,4 @@
----
-title: Pitfalls
----
+# Pitfalls
 
 ### Undetected jank when latency changes
 

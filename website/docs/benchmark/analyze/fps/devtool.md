@@ -1,6 +1,4 @@
----
-title: Devtool
----
+# Devtool
 
 Explain that we cannot view the (computed) metrics of devtool, since
 

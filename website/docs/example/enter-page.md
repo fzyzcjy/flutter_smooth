@@ -1,6 +1,4 @@
----
-title: Enter page animation
----
+# Enter page animation
 
 TODO core code
 
