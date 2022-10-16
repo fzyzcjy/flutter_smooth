@@ -21,13 +21,21 @@ class Bbox:
         x2, y2 = p2
         return Bbox(x1, y1, x2 - x1, y2 - y1)
 
+    def inflate_horizontal(self, left, right):
+        return Bbox(
+            self.x - left,
+            self.y,
+            self.w + left + right,
+            self.h,
+        )
+
     @property
     def xywh(self):
         return [self.x, self.y, self.w, self.h]
 
 
-plain_bbox = Bbox.from_p1_p2((200, 0), (1100, 1050))
-smooth_bbox = Bbox.from_p1_p2((100, 0), (1000, 1050))
+plain_bbox = Bbox.from_p1_p2((340, 0), (960, 1050))
+smooth_bbox = Bbox.from_p1_p2((220, 0), (840, 1050))
 
 p_output = dir_video / 'output.mp4'
 p_output.unlink(missing_ok=True)
@@ -35,8 +43,16 @@ p_output.unlink(missing_ok=True)
 in_plain = ffmpeg.input(str(dir_video / 'list_view/raw_plain.mp4'))
 in_smooth = ffmpeg.input(str(dir_video / 'list_view/raw_smooth.mp4'))
 
-cropped_plain = ffmpeg.crop(in_plain, *plain_bbox.xywh)
-cropped_smooth = ffmpeg.crop(in_smooth, *smooth_bbox.xywh)
+
+def crop_and_pad(s, bbox: Bbox, *, left, right):
+    s = ffmpeg.crop(s, *bbox.inflate_horizontal(left=left, right=right).xywh)
+    s = ffmpeg.drawbox(s, *Bbox(x=0, y=0, w=left, h=bbox.h).xywh, 'white', thickness=left)
+    s = ffmpeg.drawbox(s, *Bbox(x=left + bbox.w, y=0, w=right, h=bbox.h).xywh, 'white', thickness=right)
+    return s
+
+
+cropped_plain = crop_and_pad(in_plain, plain_bbox, left=100, right=50)
+cropped_smooth = crop_and_pad(in_smooth, smooth_bbox, left=50, right=100)
 
 stream = ffmpeg.filter(
     [cropped_plain, cropped_smooth],
