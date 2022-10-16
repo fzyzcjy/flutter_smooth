@@ -16,7 +16,7 @@ However, it is definitely not always the case. For example, we have seen in the 
 
 ### Example: How does a jank look like
 
-Luckily, there is [a bug](LargeLatency_PreemptRender) that I have not fixed, and it affects the time range 2800ms-3400ms, which is indeed the time before the main scrolling happens, causing a jank (and a lot of `LargeLatency_PreemptRender` warning). So we can have a look how a jank looks like here.
+Luckily, there is [a bug](https://github.com/fzyzcjy/flutter_smooth/issues/109) that I have not fixed, and it affects the time range 2800ms-3400ms, which is indeed the time before the main scrolling happens, causing a jank (and a lot of `LargeLatency_PreemptRender` warning). So we can have a look how a jank looks like here.
 
 Look at the figure below, we see a `Jank(ZeroRasterEndInVsyncInterval)` in the 2938-2955ms frame. Clearly, during these 16.67ms, there is no ending of `GPURasterizer::Draw`. In other words, no content is provided to the screen, so we will have a jank.
 
