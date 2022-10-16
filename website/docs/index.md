@@ -21,10 +21,11 @@ Achieve 60 FPS, no matter how heavy the tree is to build/layout
             height="320px"
             url='https://github.com/fzyzcjy/flutter_smooth_blob/blob/master/video/output.mp4?raw=true'
         />
-        <small>(left = plain, right = smooth)</small>
+        <small>(left = plain, right = smooth; captured by external camera to maximally demonstrate end-user perception)</small>
     </div>
     <div className="flex-1"></div>
 </div>
+
 
 ## How to use it?
 
@@ -35,3 +36,4 @@ Achieve 60 FPS, no matter how heavy the tree is to build/layout
 ## What will you get?
 
 * No matter how heavy the tree is to build/layout, it will run at (roughly) [full FPS](benchmark/analyze/fps), [feel smooth](benchmark/analyze/linearity), [has zero uncomfortable janks](benchmark/analyze/jank-statistics), with [neglitable overhead](benchmark/analyze/overhead).
+
