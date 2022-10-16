@@ -25,9 +25,6 @@ class ExampleListViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Example (${widget.enableSmooth ? 'smooth' : 'plain'})'),
-      // ),
       body: SafeArea(
         child: Listener(
           // #6028
@@ -70,18 +67,6 @@ class ExampleListViewPage extends StatelessWidget {
                     ),
                   ),
               Expanded(child: enableSmooth ? _buildSmooth() : _buildPlain()),
-              // Row(
-              //   children: [
-              //     for (final value in [0, 1, 10, 50, 100, 200, 500])
-              //       SizedBox(
-              //         width: 48,
-              //         child: TextButton(
-              //           onPressed: () => setState(() => workload = value),
-              //           child: Text('$value'),
-              //         ),
-              //       ),
-              //   ],
-              // ),
             ],
           ),
         ),
@@ -159,85 +144,6 @@ class ExampleListViewPage extends StatelessWidget {
         ],
       ),
     );
-
-    // return ListTile(
-    //   dense: true,
-    //   visualDensity: VisualDensity.compact,
-    //   // leading: SizedBox(
-    //   //   width: 32,
-    //   //   height: 32,
-    //   //   child: CircleAvatar(
-    //   //     backgroundColor: Colors.primaries[index % Colors.primaries.length],
-    //   //     child: Text(
-    //   //       'G$index',
-    //   //       style: const TextStyle(fontSize: 12),
-    //   //     ),
-    //   //   ),
-    //   // ),
-    //   title: Container(
-    //     // just for easy video checking
-    //     color: index % 10 == 0
-    //         ? Colors.green
-    //         : index % 5 == 0
-    //             ? Colors.pink
-    //             : null,
-    //     child: Text('$index'),
-    //   ),
-    //   subtitle: Stack(
-    //     children: [
-    //       // v1
-    //       // https://github.com/fzyzcjy/yplusplus/issues/6022#issuecomment-1269158088
-    //       // SizedBox(
-    //       //   height: 36,
-    //       //   // simulate slow build/layout; do not paint it, since much more
-    //       //   // than realistic number of text
-    //       //   child: Opacity(
-    //       //     opacity: 0,
-    //       //     child: OverflowBox(
-    //       //       child: Stack(
-    //       //         children: [
-    //       //           for (var i = 0; i < workload * 10; ++i)
-    //       //             LayoutPreemptPointWidget(
-    //       //               child: Text(
-    //       //                 // https://github.com/fzyzcjy/yplusplus/issues/6020#issuecomment-1268464366
-    //       //                 '+91 88888 8800$index ' * 10,
-    //       //                 style: const TextStyle(fontSize: 3),
-    //       //               ),
-    //       //             ),
-    //       //         ],
-    //       //       ),
-    //       //     ),
-    //       //   ),
-    //       // ),
-    //
-    //       // v2 - #6076 find it wrong
-    //       // // https://github.com/fzyzcjy/yplusplus/issues/6022#issuecomment-1269158088
-    //       // _AlwaysLayoutBuilder(
-    //       //   onPerformLayout: () {
-    //       //     for (var i = 0; i < workload * 10; ++i) {
-    //       //       sleep(const Duration(microseconds: 400));
-    //       //       ServiceLocator.instance.actor.maybePreemptRender();
-    //       //     }
-    //       //   },
-    //       //   child: Container(),
-    //       // ),
-    //
-    //       // v3
-    //       // #6076
-    //       _NormalLayoutBuilder(
-    //         onPerformLayout: () {
-    //           for (var i = 0; i < workload * 10; ++i) {
-    //             sleep(const Duration(microseconds: 400));
-    //             ServiceLocator.instance.actor.maybePreemptRender();
-    //           }
-    //         },
-    //         child: Container(),
-    //       ),
-    //       SizedBox(height: 16.0 * (3 + Random().nextInt(3))),
-    //       // Text('a\n' * (3 + Random().nextInt(3))),
-    //     ],
-    //   ),
-    // );
   }
 
   PreferredSizeWidget _buildPlaceholder() {
