@@ -52,7 +52,7 @@ class _ExamplePageTransitionSubPageState
       // TODO use our page route
       Navigator.push<dynamic>(
         context,
-        MaterialPageRoute<dynamic>(
+        _buildPageRoute(
           builder: (_) => _SecondPage(
             listTileCount: widget.listTileCount,
             wrapListTile: widget.wrapListTile,
@@ -60,6 +60,10 @@ class _ExamplePageTransitionSubPageState
         ),
       );
     });
+  }
+
+  PageRoute<dynamic> _buildPageRoute({required WidgetBuilder builder}) {
+    return MaterialPageRoute<dynamic>(builder: builder);
   }
 }
 
