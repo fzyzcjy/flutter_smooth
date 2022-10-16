@@ -1,6 +1,6 @@
 # Installation
 
-Add dependencies:
+## 1. Add dependencies
 
 ```yaml
 dependencies:
@@ -15,16 +15,26 @@ This package is not yet released to `pub.dev` because it needs a custom `flutter
 
 :::
 
-Initialize the binding:
+## 2. Initialization
 
 ```Dart
 void main() {
-  SmoothWidgetsFlutterBinding.ensureInitialized(); // add this line in your `main` function
+  SmoothWidgetsFlutterBinding.ensureInitialized(); // add this line
   // ... your original code ...
 }
 ```
 
-Then done.
+## 3. Add a widget
+
+Wrap your tree with `SmoothParent`:
+
+```dart
+SmoothParent(
+  child: /*... your original child such as MaterialApp ...*/
+)
+```
+
+Done!
 
 ## Use it in tests
 
