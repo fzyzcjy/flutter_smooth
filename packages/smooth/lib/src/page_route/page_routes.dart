@@ -24,6 +24,9 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T> {
   DualProxyAnimationController? _dualProxyAnimationController;
   Ticker? _secondaryAnimationControllerTicker;
 
+  AnimationController? get _partialWriteOnlySecondaryAnimationController =>
+      _dualProxyAnimationController!.partialWriteOnlySecondary;
+
   // NOTE mimic [TransitionRoute.createAnimationController], but change vsync
   @override
   AnimationController createAnimationController() {
@@ -58,10 +61,18 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T> {
       wantSmoothTickTickers: [_secondaryAnimationControllerTicker!],
       builder: (context, child) => AnimatedBuilder(
         // NOTE use this secondary, not primary
-        animation: _dualProxyAnimationController!.partialWriteOnlySecondary,
+        animation: _partialWriteOnlySecondaryAnimationController!,
         builder: (context, _) {
+          print(
+              'hi SmoothBuilder.AnimatedBuilder.builder value=${_partialWriteOnlySecondaryAnimationController?.value}');
           return transitionsBuilder(
-              context, animation, secondaryAnimation, child);
+            context,
+            // TODO improve this (e.g. handle offstage)
+            _partialWriteOnlySecondaryAnimationController!,
+            // TODO handle secondaryAnimation, not done yet
+            secondaryAnimation,
+            child,
+          );
         },
       ),
       child: child,
