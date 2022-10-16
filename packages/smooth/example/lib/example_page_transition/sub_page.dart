@@ -1,6 +1,7 @@
 import 'package:example/utils/complex_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:smooth/smooth.dart';
 
 class ExamplePageTransitionSubPage extends StatefulWidget {
   final bool enableSmooth;
@@ -63,7 +64,28 @@ class _ExamplePageTransitionSubPageState
   }
 
   PageRoute<dynamic> _buildPageRoute({required WidgetBuilder builder}) {
-    return MaterialPageRoute<dynamic>(builder: builder);
+    if (widget.enableSmooth) {
+      // TODO change it to "material" page route
+      // currently mimic https://docs.flutter.dev/cookbook/animation/page-route-animation
+      return SmoothPageRouteBuilder<dynamic>(
+        pageBuilder: (context, _, __) => builder(context),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 1.0);
+          const end = Offset.zero;
+          const curve = Curves.ease;
+
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      );
+    } else {
+      return MaterialPageRoute<dynamic>(builder: builder);
+    }
   }
 }
 
