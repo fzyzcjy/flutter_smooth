@@ -60,10 +60,10 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
             navbar: {
-                title: 'My Site',
+                title: 'Flutter Smooth',
                 logo: {
-                    alt: 'My Site Logo',
-                    src: 'img/logo.svg',
+                    alt: 'Logo',
+                    src: 'https://raw.githubusercontent.com/fzyzcjy/flutter_smooth_blob/master/meta/logo.svg',
                 },
                 items: [
                     // TODO
