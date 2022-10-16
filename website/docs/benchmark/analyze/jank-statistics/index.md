@@ -1,6 +1,4 @@
-# Jank
-
-TODO
+# Jank statistics
 
 ```mdx-code-block
 import DocCardList from '@theme/DocCardList';

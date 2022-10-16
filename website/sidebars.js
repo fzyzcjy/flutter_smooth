@@ -75,34 +75,35 @@ const sidebars = {
                                 id: 'benchmark/analyze/linearity/index',
                             },
                             items: [
+                                'benchmark/analyze/linearity/definition',
                                 'benchmark/analyze/linearity/video',
                                 'benchmark/analyze/linearity/tracing',
                             ],
                         },
                         {
                             type: 'category',
-                            label: 'Jank',
+                            label: 'Jank statistics',
                             collapsed: false,
                             link: {
                                 type: 'doc',
-                                id: 'benchmark/analyze/jank/index',
+                                id: 'benchmark/analyze/jank-statistics/index',
                             },
                             items: [
-                                'benchmark/analyze/jank/frequency',
-                                'benchmark/analyze/jank/maximum',
+                                'benchmark/analyze/jank-statistics/frequency',
+                                'benchmark/analyze/jank-statistics/maximum',
                             ],
                         },
                         {
                             type: 'category',
-                            label: 'Latency',
+                            label: 'Overhead',
                             collapsed: false,
                             link: {
                                 type: 'doc',
-                                id: 'benchmark/analyze/latency/index',
+                                id: 'benchmark/analyze/overhead/index',
                             },
                             items: [
-                                'benchmark/analyze/latency/component',
-                                'benchmark/analyze/latency/end-to-end',
+                                'benchmark/analyze/overhead/component',
+                                'benchmark/analyze/overhead/end-to-end',
                             ],
                         },
                         'benchmark/analyze/waste',
