@@ -30,8 +30,8 @@ const sidebars = {
                 id: 'example/index',
             },
             items: [
-                'example/enter-page',
                 'example/list-view',
+                'example/enter-page',
             ],
         },
         {
