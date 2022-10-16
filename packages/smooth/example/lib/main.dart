@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
-import 'package:example/example_enter_page_animation/page.dart';
 import 'package:example/example_list_view/page.dart';
+import 'package:example/example_page_transition/page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
@@ -34,8 +34,8 @@ class MyApp extends StatelessWidget {
       body: ListView(
         children: [
           _buildItem(const ExampleListViewPage(), 'Example: ListView'),
-          _buildItem(const ExampleEnterPageAnimationPage(),
-              'Example: Enter page animation'),
+          _buildItem(
+              const ExamplePageTransitionPage(), 'Example: Page transition'),
         ],
       ),
     );
