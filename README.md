@@ -12,7 +12,7 @@
 
 <!-- start: video -->
 
-https://user-images.githubusercontent.com/5236035/196115059-5b32622b-bfc3-4f81-9f49-f7c6bd8c9c0f.mp4
+https://user-images.githubusercontent.com/5236035/196152010-09a2d829-c94c-48b4-80ed-0633430329ec.mp4
 
 <small><small>(left = without smooth, right = smooth; captured by external camera to maximally demonstrate end-user perception. High-resolution video [here](https://fzyzcjy.github.io/flutter_smooth).)</small></small>
 
