@@ -53,7 +53,7 @@ def main():
         data_raw = json.loads(p_raw.read_text())
         data_transformed += _transformers[data_raw['source']](data_raw)
 
-    data_transformed.sort(key=lambda item: item.create_time)
+    data_transformed.sort(key=lambda item: (item.create_time, item.retrieve_time))
 
     for item in data_transformed:
         item.author = _author_mappers.get(item.author, item.author)
