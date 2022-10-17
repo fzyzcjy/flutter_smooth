@@ -37,10 +37,13 @@ import DiscussionComment from '@site/src/components/DiscussionComment';'''
 
 
 def _analyze_data(data):
-    import pandas as pd
+    try:
+        import pandas as pd
 
-    df = pd.DataFrame([item.__dict__ for item in data])
-    print(f'authors:\n{df.author.value_counts()}')
+        df = pd.DataFrame([item.__dict__ for item in data])
+        print(f'authors:\n{df.author.value_counts()}')
+    except:
+        print('_analyze_data failed, skip it')  # e.g. in CI, pandas is not installed
 
 
 def main():
