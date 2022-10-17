@@ -42,3 +42,10 @@ Two possibilities:
 
 * The infra part is already implemented (hard, took me a month). The drop-in part and demo, which is mainly engineering work utilizing the exposed infra API, still has many improveable things - feel free to issue and PR!
 * Need to wait for all PRs to Flutter to be merged and next Flutter release. (PR status [here](insight/status))
+
+## Thanks
+
+* [@Hixie](https://github.com/Hixie) (Flutter team): Consider details of my several proposals to the Flutter framework/engine such as requiring zero-overhead principle. Construct concrete cases when the initial proposal becomes fragile.
+* [@dnfield](https://github.com/dnfield) (Flutter team): Provide a canonical janky case inside Flutter framework to help prototyping. Point out slowness of sync generators which avoids detouring.
+* [@jonahwilliams](https://github.com/jonahwilliams) (Flutter team): Elaborate shortcomings of the old gesture system proposal (later I made a much more natural one).
+* [@gaaclarke](https://github.com/gaaclarke) (Flutter team): Share his pet theory, slowness caused by memory locality, indicating another potential application of the package.
