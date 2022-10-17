@@ -48,13 +48,8 @@ class _RenderAdapterInAuxiliaryTree extends RenderBox {
     assert(offset == Offset.zero,
         '$runtimeType prototype has not deal with offset yet');
 
-    // printWrapped('$runtimeType.paint before addLayer');
-    // printWrapped(
-    //     'pack.mainSubTreeLayerHandle.layer=${pack.mainSubTreeLayerHandle.layer?.toStringDeep()}');
-
     // print('$runtimeType paint');
 
     context.addLayer(pack.mainSubTreeLayerHandle.layer!);
-    // context.addLayer(_simpleLayer.layer!);
   }
 }

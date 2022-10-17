@@ -44,13 +44,3 @@ extension ExtPointerEventTime on PointerEvent {
   PointerEventTimeStamp get timeStampTyped =>
       PointerEventTimeStamp.uncheckedFrom(timeStamp);
 }
-
-// extension ExtPointerEvent on PointerEvent {
-//   DateTime? get dateTime {
-//     final diffDateTimeToPointerEventTimeStamp =
-//         SmoothHostApiWrapped.instance.diffDateTimeToPointerEventTimeStamp;
-//     if (diffDateTimeToPointerEventTimeStamp == null) return null;
-//     return DateTime.fromMicrosecondsSinceEpoch(
-//         timeStamp.inMicroseconds + diffDateTimeToPointerEventTimeStamp);
-//   }
-// }

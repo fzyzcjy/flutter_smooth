@@ -175,13 +175,6 @@ class AuxiliaryTreePack {
 
   /// #5814
   void _callExtraTickerTick(AdjustedFrameTimeStamp timeStamp) {
-    // #5821
-    // final now = DateTime.now();
-    // final timeStamp = SchedulerBinding.instance.currentFrameTimeStamp +
-    //     Duration(
-    //         microseconds: now.microsecondsSinceEpoch -
-    //             SchedulerBinding.instance.currentFrameStartTimeUs!);
-
     // print('$runtimeType callExtraTickerTick tickers=${tickerRegistry.tickers}');
 
     for (final ticker in [

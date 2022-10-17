@@ -148,7 +148,6 @@ class Actor {
       // // #5822
       // binding.platformDispatcher.preemptRequestVsync();
     });
-    // _times.add(clock.now().difference(start));
 
     // print('$runtimeType _preemptRender end');
   }
@@ -163,6 +162,4 @@ class Actor {
       );
     }
   }
-
-// static var _nextDummyPosition = 0.0;
 }

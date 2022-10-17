@@ -184,20 +184,11 @@ mixin SmoothWidgetsBindingMixin on WidgetsBinding {
     _handleAfterDrawFrame();
   }
 
-  // ValueListenable<bool> get executingRunPipelineBecauseOfAfterDrawFrame =>
-  //     _executingRunPipelineBecauseOfAfterDrawFrame;
-  // final _executingRunPipelineBecauseOfAfterDrawFrame = ValueNotifier(false);
-
   // indeed, roughly after the `finalizeTree`
   void _handleAfterDrawFrame() {
     // print('_handleAfterFinalizeTree');
 
-    // _executingRunPipelineBecauseOfAfterDrawFrame.value = true;
-    // try {
     ServiceLocator.instance.actor.maybePreemptRenderPostDrawFramePhase();
-    // } finally {
-    //   _executingRunPipelineBecauseOfAfterDrawFrame.value = false;
-    // }
 
     if (ServiceLocator.instance.brakeController.brakeModeActive) {
       _forceScheduleFrameForBrakeModeActive();
@@ -261,10 +252,6 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     _handleAfterFlushLayout();
   }
 
-  // ValueListenable<bool> get executingRunPipelineBecauseOfAfterFlushLayout =>
-  //     _executingRunPipelineBecauseOfAfterFlushLayout;
-  // final _executingRunPipelineBecauseOfAfterFlushLayout = ValueNotifier(false);
-
   void _handleAfterFlushLayout() {
     // print('handleAfterFlushLayout');
 
@@ -292,8 +279,6 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
     serviceLocator.extraEventDispatcher
         .dispatch(smoothFrameTimeStamp: currentSmoothFrameTimeStamp);
 
-    // _executingRunPipelineBecauseOfAfterFlushLayout.value = true;
-    // try {
     for (final pack in serviceLocator.auxiliaryTreeRegistry.trees) {
       pack.runPipeline(
         currentSmoothFrameTimeStamp,
@@ -306,9 +291,6 @@ class _SmoothPipelineOwner extends ProxyPipelineOwner {
         debugReason: RunPipelineReason.plainAfterFlushLayout,
       );
     }
-    // } finally {
-    //   _executingRunPipelineBecauseOfAfterFlushLayout.value = false;
-    // }
 
     serviceLocator.timeManager
         .afterRunAuxPipelineForPlainOld(now: TimeManager.normalNow);

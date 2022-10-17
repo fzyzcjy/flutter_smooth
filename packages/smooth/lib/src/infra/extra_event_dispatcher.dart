@@ -25,43 +25,11 @@ class ExtraEventDispatcher {
   void dispatch({required AdjustedFrameTimeStamp smoothFrameTimeStamp}) {
     final gestureBinding = GestureBinding.instance;
 
-    // final diffDateTimeToPointerEventTimeStamp =
-    //     SmoothHostApiWrapped.instance.diffDateTimeToPointerEventTimeStamp;
-    // if (diffDateTimeToPointerEventTimeStamp == null) {
-    //   // not finish initialization
-    //   return;
-    // }
-
-    // final now = clock.now();
-    // final nowTimeStampInPointerEventClock = Duration(
-    //     microseconds:
-    //         now.microsecondsSinceEpoch - diffDateTimeToPointerEventTimeStamp);
-
-    // print(
-    //     'diffDateTimeToPointerEventTimeStamp=$diffDateTimeToPointerEventTimeStamp');
-
-    // print('hackDispatchExtraPointerEvents '
-    //     'pointer=$pointer '
-    //     'hitTest=${gestureBinding.hitTests[pointer]!}');
-
-    // final pendingEvents = gestureBinding.readEnginePendingEventsAndClear();
-
     // in order to mimic classical case
     // details see #6066
     final pendingEventMaxTimeStamp = smoothFrameTimeStamp - kOneFrameAFTS;
     final pendingEvents =
         _pendingEventManager.read(maxTimeStamp: pendingEventMaxTimeStamp);
-
-    // print(
-    //     'pendingPacket.len=${pendingPacket.data.length} pendingPacket.data=${pendingPacket.data}');
-
-    // // WARN: this fake event is VERY dummy! many fields are not filled in
-    // // so a real consumer of pointer event may get VERY confused!
-    // final event = PointerMoveEvent(
-    //   pointer: pointer,
-    //   position: Offset(_nextDummyPosition, _nextDummyPosition),
-    // );
-    // _nextDummyPosition = (_nextDummyPosition + 10) % 300;
 
     final interestPipelineOwners = ServiceLocator
         .instance.auxiliaryTreeRegistry.trees
