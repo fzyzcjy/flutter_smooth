@@ -13,6 +13,7 @@
     --ifm-color-primary-light: #3ba2f4;
     --ifm-color-primary-lighter: #48a9f5;
     --ifm-color-primary-lightest: #70bbf7;
+    --docusaurus-highlighted-code-line-bg: rgb(230, 230, 230);
 }
 
 [data-theme='dark'] {
@@ -23,6 +24,7 @@
     --ifm-color-primary-light: #3ba2f4;
     --ifm-color-primary-lighter: #48a9f5;
     --ifm-color-primary-lightest: #70bbf7;
+    --docusaurus-highlighted-code-line-bg: rgb(100, 100, 100);
 }
 
 /* https://dev.to/sajclarke_62/using-tailwindcss-v3-in-docusaurus-in-5-steps-5c26 */
