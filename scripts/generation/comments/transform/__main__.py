@@ -11,19 +11,18 @@ _transformers = {
 
 _author_mappers = {
     'Ch Tom': 'fzyzcjy',
+    'Ian Hickson': 'Hixie',
+    'Dan Field': 'dnfield',
+    'Jonah Williams': 'jonahwilliams',
+    'Aaron Clarke': 'gaaclarke',
+    'Nayuta': 'Nayuta403',
+    'Jsouliang': 'JsouLiang',
+    'XanaHopper': 'xanahopper',
 }
 
 
 def _visualize(data_transformed):
     yield '''<!-- THIS IS AUTO GENERATED, DO NOT MODIFY BY HAND -->
-
-:::info
-
-This page contains a (sorted) copy of discussions happened on various places. The original sources are:
-
-* TODO
-
-:::
 
 import DiscussionComment from '@site/src/components/DiscussionComment';'''
 
@@ -35,6 +34,13 @@ import DiscussionComment from '@site/src/components/DiscussionComment';'''
 {item.body}
 
 </DiscussionComment>'''
+
+
+def _analyze_data(data):
+    import pandas as pd
+
+    df = pd.DataFrame([item.__dict__ for item in data])
+    print(f'authors:\n{df.author.value_counts()}')
 
 
 def main():
@@ -49,6 +55,8 @@ def main():
     for item in data_transformed:
         item.author = _author_mappers.get(item.author, item.author)
         item.body = item.body.replace('<reasons>', 'reasons')  # well, very hacky escape...
+
+    _analyze_data(data_transformed)
 
     data_visualized = '\n'.join(_visualize(data_transformed))
 

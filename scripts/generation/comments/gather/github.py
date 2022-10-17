@@ -1,7 +1,7 @@
 import json
 import subprocess
 
-from generation.comments.common import save_raw
+from generation.comments.common import save_raw, repo_base_dir
 
 
 def gather(org: str, repo: str, issue: int):
@@ -26,6 +26,9 @@ def gather(org: str, repo: str, issue: int):
 
 def main():
     gather(org='flutter', repo='flutter', issue=101227)
+
+    for item in json.loads((repo_base_dir / 'blob/data/github_pr.json').read_text()):
+        gather(org=item['org'], repo=item['repo'], issue=item['number'])
 
 
 if __name__ == '__main__':
