@@ -41,6 +41,7 @@ smooth_bbox = Bbox.from_p1_p2((230, 0), (840, 1050))
 # `ffplay -vf eq=gamma=1.5:saturation=1.3 blob/video/output.mp4`
 # https://video.stackexchange.com/questions/20962/ffmpeg-color-correction-gamma-brightness-and-saturation
 eq_filter = dict(gamma=1.8, contrast=1.2)
+hue_delta = -8
 
 
 def crop_and_pad(s, bbox: Bbox, *, left, right):
@@ -62,6 +63,7 @@ def run_one(output_stem: str, scale: bool):
 
     stream = ffmpeg.filter([cropped_plain, cropped_smooth], "hstack", inputs=2)
     stream = ffmpeg.filter([stream], 'eq', **eq_filter)
+    stream = ffmpeg.filter([stream], 'hue', h=hue_delta)
 
     if scale:
         stream = ffmpeg.filter([stream], 'scale', '-1', '320')
