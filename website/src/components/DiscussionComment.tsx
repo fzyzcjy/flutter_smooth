@@ -1,12 +1,14 @@
 import React from 'react';
-import {FaGithub, FaGoogle} from 'react-icons/fa';
+import {FaDiscord, FaGithub, FaGoogle} from 'react-icons/fa';
 
 const sourceTitleMap = {
     'github': 'GitHub',
+    'discord': 'Discord',
     'google_doc_comments': 'Google Doc',
 }
 const sourceIconMap = {
     'github': <FaGithub className="inline-block pt-1"/>,
+    'discord': <FaDiscord className="inline-block pt-1"/>,
     'google_doc_comments': <FaGoogle className="inline-block pt-1"/>,
 }
 

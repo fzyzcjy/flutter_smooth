@@ -1,11 +1,12 @@
 import json
 
 from generation.comments.common import dir_data_comments_raw, TransformedComment, repo_base_dir
-from generation.comments.transform import github, google_doc_comments
+from generation.comments.transform import github, google_doc_comments, discord
 
 _transformers = {
     github.SOURCE: github.transform,
     google_doc_comments.SOURCE: google_doc_comments.transform,
+    discord.SOURCE: discord.transform,
 }
 
 _author_mappers = {
@@ -47,6 +48,7 @@ def main():
 
     for item in data_transformed:
         item.author = _author_mappers.get(item.author, item.author)
+        item.body = item.body.replace('<reasons>', 'reasons')  # well, very hacky escape...
 
     data_visualized = '\n'.join(_visualize(data_transformed))
 
