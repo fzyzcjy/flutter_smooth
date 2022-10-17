@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Callable, List, Dict
 from zipfile import ZipFile, ZIP_DEFLATED
 
-from timeline.common import parse_vsync_positions, parse_raster_end_positions
+from analysis.timeline.common import parse_vsync_positions, parse_raster_end_positions
 
 TraceEvent = Dict
 

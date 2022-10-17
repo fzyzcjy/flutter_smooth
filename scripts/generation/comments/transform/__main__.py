@@ -1,7 +1,7 @@
 import json
 
-from comments.common import dir_data_comments_raw, TransformedComment, repo_base_dir
-from comments.transform import github
+from generation.comments.common import dir_data_comments_raw, TransformedComment, repo_base_dir
+from generation.comments.transform import github
 
 _transformers = {
     github.SOURCE: github.transform,

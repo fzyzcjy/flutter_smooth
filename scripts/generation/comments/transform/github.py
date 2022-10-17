@@ -1,4 +1,4 @@
-from comments.common import TransformedComment
+from generation.comments.common import TransformedComment
 
 SOURCE = 'github'
 

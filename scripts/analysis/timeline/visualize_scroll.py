@@ -16,7 +16,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from timeline.common import parse_frame_infos, find_before, is_enclosed_by, parse_vsync_positions
+from analysis.timeline.common import parse_frame_infos, find_before, is_enclosed_by, parse_vsync_positions
 
 TraceEvent = Dict
 

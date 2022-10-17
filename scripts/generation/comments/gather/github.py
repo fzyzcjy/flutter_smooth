@@ -1,7 +1,7 @@
 import json
 import subprocess
 
-from comments.common import save_raw
+from generation.comments.common import save_raw
 
 
 def gather(org: str, repo: str, issue: int):
