@@ -16,6 +16,15 @@
         "doc",
         "ideas"
       ]
+    },
+    {
+      "login": "Hixie",
+      "name": "Ian Hickson",
+      "avatar_url": "https://avatars.githubusercontent.com/u/551196?v=4",
+      "profile": "http://ln.hixie.ch/",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
