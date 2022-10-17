@@ -33,6 +33,7 @@ const sidebars = {
                 'usage/builder',
             ],
         },
+        'demo',
         {
             type: 'category',
             label: 'Benchmark',

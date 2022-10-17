@@ -36,7 +36,7 @@ const config = {
                     sidebarPath: require.resolve('./sidebars.js'),
                     // Please change this to your repo.
                     // Remove this to remove the "edit this page" links.
-                    editUrl: 'https://github.com/fzyzcjy/flutter_smooth/tree/master/',
+                    editUrl: 'https://github.com/fzyzcjy/flutter_smooth/tree/master/website/',
                     // https://docusaurus.io/docs/docs-introduction#docs-only-mode
                     routeBasePath: '/',
                 },
