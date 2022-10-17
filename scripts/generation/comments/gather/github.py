@@ -24,5 +24,9 @@ def gather(org: str, repo: str, issue: int):
     )
 
 
-if __name__ == '__main__':
+def main():
     gather(org='flutter', repo='flutter', issue=101227)
+
+
+if __name__ == '__main__':
+    main()
