@@ -40,12 +40,12 @@ def gather_range(start_url: str, end_url_inclusive: str):
     after = matcher_start.group(3)
     before = matcher_end.group(3)
 
-    _run_export_command('export', channel_id, f'--after {after} --before {before}')
+    _run_export_command(channel_id, f'--after {after} --before {before}')
 
 
 def gather_all_in_channel(url: str):
     channel_id = re.match(r'https://discord.com/channels/(\d+)/(\d+)', url).group(1)
-    _run_export_command('export', channel_id)
+    _run_export_command(channel_id)
 
 
 def main():
