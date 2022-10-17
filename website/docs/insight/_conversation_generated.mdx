@@ -1515,11 +1515,353 @@ Design proposal: https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDA
 
 </DiscussionComment>
 
+<DiscussionComment author="Jonah Williams" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1SuE" source="google_doc_comments" createTime="2022-09-21T01:14:35.939Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+If we can stop rendering at any point, how do we resolve the sizes of render objects that depend on their children?
+
+What about something like a layout builder? If we pre-empted layout then we may not actually be able to finish building?
+
+</DiscussionComment>
+
+<DiscussionComment author="Jonah Williams" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1SuI" source="google_doc_comments" createTime="2022-09-21T01:16:01.875Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+If we stop rendering based on time elapsed at an arbitrary RO, there is a risk we end up with a UI that makes no sense. i.e. we could get buttons with no labels or half filled in text. I'd be concerned that without a developer making an intentional choice of where to stop rendering, we'd be worse off than if we janked and took longer to render
+
+</DiscussionComment>
+
+<DiscussionComment author="Jonah Williams" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1SuQ" source="google_doc_comments" createTime="2022-09-21T01:17:55.051Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+It might be worth contrasting this approach with keframe, or elaborating on what problems this solves that keframe cannot
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1SuY" source="google_doc_comments" createTime="2022-09-21T01:19:00.455Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+We do not resolve sizes. Indeed, we are using the _previous fully_ rendered UI (plus modifications in preemptModifyLayer).
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Suc" source="google_doc_comments" createTime="2022-09-21T01:19:56.363Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Well we are using the _previous fully_ rendered UI + modifications in preemptModifyLayer. We will never see half filled UI!
+
+</DiscussionComment>
+
+<DiscussionComment author="Jonah Williams" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Sug" source="google_doc_comments" createTime="2022-09-21T01:20:49.234Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+The flutter test framework generally allows developers to elapsed arbitrary amounts of time with fake async usage. This is intentional to ensure that unit tests can be reasonably deterministic.
+
+It would be massively breaking for unit tests to take a different number of frames to reach the same conclusion, depending on the speed of the host hardware.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Suk" source="google_doc_comments" createTime="2022-09-21T01:21:19.125Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Indeed, imagine the whole proposal like this: We are still running the janky slow UI that is less than 60FPS. But, once in a while, we "secretly" flush old layer tree + some preemptModifyLayer modifications to the screen.
+
+</DiscussionComment>
+
+<DiscussionComment author="Jonah Williams" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Suo" source="google_doc_comments" createTime="2022-09-21T01:22:26.962Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+It seems like that would only work if the previous UI was quite similar to the current UI, but that may not be the case.
+
+How do you connect the current render object with the previous UI? The ROs are stateful objects, the only stable representation may be the old layer tree.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Sus" source="google_doc_comments" createTime="2022-09-21T01:23:19.756Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+We should fake the meaning of "time" in this proposal as well. For example, we may provide a variable called `preemptStrategy`:
+
+```
+abstract class PreemptStrategy {
+bool shouldWePreemptNow();
+} 
+```
+
+and call it in place of "checking whether 15 ms has passed".
+
+Then, when testing, we are in full control. For example, we can disable the whole preempt. We can decide to preempt at a specific RenderObject we like to test. etc
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Suw" source="google_doc_comments" createTime="2022-09-21T01:23:58.886Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Sure. I will do that in a minute.
+
+</DiscussionComment>
+
+<DiscussionComment author="Jonah Williams" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Su4" source="google_doc_comments" createTime="2022-09-21T01:24:34.176Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Seems reasonable. FWIW, the amount of time available will vary per platform, and in the case of devices with dynamic refresh rates it may even vary frame to frame. I believe we should know the approximate target time for each frame when it starts though
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Su8" source="google_doc_comments" createTime="2022-09-21T01:26:55.990Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+I am mainly thinking about janks in animations. The examples - progress indicator, scrolling listview, enter page transition, all are examples.
+
+If your previous UI does not look similar to current, it is also OK. My proposal is just like, "originally the UI is janky, now we add some extra frames into its normal frames".
+
+Anyway they can always disable it by a simple flag in widgets.
+
+When flushing ui during animation, we just provide (old + minor modified) layer tree. We do not touch RO indeed.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1SvA" source="google_doc_comments" createTime="2022-09-21T01:27:57.841Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Agree, and that should be fetchable from some kind of platform APIs. I am saying 15ms or 16.6ms just because it is simple to explain :)
+
+</DiscussionComment>
+
+<DiscussionComment author="Jonah Williams" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1SvQ" source="google_doc_comments" createTime="2022-09-21T01:31:57.627Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Yes, understood! :)
+
+</DiscussionComment>
+
+<DiscussionComment author="Jonah Williams" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1SvU" source="google_doc_comments" createTime="2022-09-21T01:33:54.168Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+What I mean is - how do you detect that the previous UI is not like the current UI? Its OK if this isn't a performance improvement for that case, but I don't see how you would actually determine that it was "Safe" to use an old layer tree
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Svc" source="google_doc_comments" createTime="2022-09-21T01:36:30.982Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+It is always safe. Because we are just "inserting" extra frames into the plain old frames!
+
+For example, suppose it originally runs at 10 fps. Now, between frame 1 and frame 2, we insert frame 1a,1b,1c, ..., which is very alike frame 1 except for minor modifications (such as one OffsetLayer.offset).
+
+If the users find this UI weird in their special case, they can also choose to disable surely.
+
+</DiscussionComment>
+
+<DiscussionComment author="Dan Field" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Swc" source="google_doc_comments" createTime="2022-09-21T04:03:57.720Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Layout for a single widget can easily blow through frame budget. That's part of what we'd like to solve with an interruptible approach, assuming such an approach is possible.
+
+</DiscussionComment>
+
+<DiscussionComment author="Dan Field" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Swg" source="google_doc_comments" createTime="2022-09-21T04:04:10.196Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+This will cause problems with scrolling/touch events.
+
+</DiscussionComment>
+
+<DiscussionComment author="Dan Field" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Swk" source="google_doc_comments" createTime="2022-09-21T04:05:06.582Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+These are not particularly pressing examples right now - showing a single progress indicator or simple animation tends not to be the issue, it's more like doing a full screen route transition where you're building a a large new tree or subtree with a few hundred widgets to inflate and layout.
+
+</DiscussionComment>
+
+<DiscussionComment author="Dan Field" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Sws" source="google_doc_comments" createTime="2022-09-21T04:05:58.504Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+This needs a lot more details about how you would sensibly interrupt and restart layout at a meaningful point.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Sww" source="google_doc_comments" createTime="2022-09-21T04:13:53.415Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Hmm do you mean one single _leaf_ widget? 
+
+Indeed that is also very simple: I am proposing adding `if (timeout) preemptRender()` at the beginning of each RenderObject.layout.
+
+Now, we can add more. Say, for YourHeavyRenderObject.performLayout() function, add 10 of such `if timeout preemptRender`
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Sw0" source="google_doc_comments" createTime="2022-09-21T04:14:24.576Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+That's "that" approach which I am comparing to. My proposal does not have this :)
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Sw4" source="google_doc_comments" createTime="2022-09-21T04:16:01.715Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+> showing a single progress indicator or simple animation tends not to be the issue
+
+Well the example is indeed, "have progress indicator 60fps, *while* we are doing something really heavy". i.e. just the interesting case you said :)
+
+Content edited
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgdW1Sw8" source="google_doc_comments" createTime="2022-09-21T04:18:05.939Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+The proposal do not interrupt, neither restart. It just calls a function (the preemptRender).
+
+Not sure but maybe you have the same understanding as @JonahWilliams? This comment may be helpful: https://discord.com/channels/608014603317936148/608021234516754444/1021963804747255929
+
+</DiscussionComment>
+
+<DiscussionComment author="Nayuta" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgfacSXE" source="google_doc_comments" createTime="2022-09-21T12:15:28.332Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+How is this Layertree generated (since the current RO is not painted), it still looks like the LayerTree from the previous frame?
+
+</DiscussionComment>
+
+<DiscussionComment author="Nayuta" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgfacSXI" source="google_doc_comments" createTime="2022-09-21T12:20:48.095Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+If I understand correctly, you want to use the full LayerTree result from the last time. Like this object in the Raster thread?
+
+https://github.com/flutter/engine/blob/4839a3b5d225f7d522bf9edf5cfe395c187b0e93/shell/common/rasterizer.cc#L381
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgfusIVM" source="google_doc_comments" createTime="2022-09-21T13:06:00.227Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Yes, from previous frame, but modified a bit from preemptModifyLayerTree.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgfusIVQ" source="google_doc_comments" createTime="2022-09-21T13:06:28.964Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Almost the same full layer tree, except for preemptModifylayerTree
+
+</DiscussionComment>
+
 <DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-21T13:15:53Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 For readers of GitHub and not yet read Discord: Some discussions happen in Discord as well, see - https://discord.com/channels/608014603317936148/608021234516754444/1021783497112821861
 
 As well as the sub-discussion in discord: https://discord.com/channels/608014603317936148/1021987751710699632
+
+</DiscussionComment>
+
+<DiscussionComment author="Aaron Clarke" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK6o" source="google_doc_comments" createTime="2022-09-21T23:28:16.183Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+I don't see a clear description of what your proposal is.  The first information under "detailed design" are questions.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK7E" source="google_doc_comments" createTime="2022-09-21T23:29:52.258Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+I should move it, wait a minute
+
+</DiscussionComment>
+
+<DiscussionComment author="Aaron Clarke" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK7c" source="google_doc_comments" createTime="2022-09-21T23:41:52.568Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+I think that stuff we just said on the discord would be a good description: preempt build/layout, update the last layer, render the last frame, resume build/layout
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK7o" source="google_doc_comments" createTime="2022-09-21T23:44:41.631Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Thanks! I will add that
+
+</DiscussionComment>
+
+<DiscussionComment author="Ian Hickson" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK8I" source="google_doc_comments" createTime="2022-09-21T23:47:38.511Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+the way flutter does build and layout is interleaved, but not fine-grained. lots of building happens, then lots of layout, then lots of building, etc. You can run out of time at any time in this process, with a hundred widgets built but not laid out, for example. now the system is in a very inconsistent state.
+
+</DiscussionComment>
+
+<DiscussionComment author="Ian Hickson" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK8M" source="google_doc_comments" createTime="2022-09-21T23:48:55.117Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+since we haven't done paint yet, what we're painting here is just the last frame. there's no need to send it to the engine, it's already got it.
+
+</DiscussionComment>
+
+<DiscussionComment author="Ian Hickson" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK8Q" source="google_doc_comments" createTime="2022-09-21T23:51:38.614Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+how does it know what to do?
+
+</DiscussionComment>
+
+<DiscussionComment author="Ian Hickson" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK8U" source="google_doc_comments" createTime="2022-09-21T23:52:01.162Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+what if the preempt happened before the progress indicator got to rebuild?
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK9A" source="google_doc_comments" createTime="2022-09-22T00:09:05.191Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Sure. Then I should insert `if timeout then preemptRender` into the `build()` as well, and seems we have no problem.
+
+Btw, no inconsistent state :) I am sending the _layer tree_ in preemptRender, so I just accept the dart state to be completely in middle
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK9E" source="google_doc_comments" createTime="2022-09-22T00:10:03.149Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Last frame,  but plus "preemptModifyLayerTree". For the scrolling listview example, we will modify the OffsetLayer.offset a bit (the amount by inertia). Then, users will see the list content shifted a little bit. So users will see list scrolling smoothly at 60fps, even if one build/layout/paint/... cycle takes, say, 10fps.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK9I" source="google_doc_comments" createTime="2022-09-22T00:10:42.809Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+See examples below, flutter framework dev (e.g. me) write down some code to cover a range of cases. Users can also write some if want very special behavior
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK9M" source="google_doc_comments" createTime="2022-09-22T00:11:20.716Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+No problem :) Progress indicator updates the UI also inside preemptModifyLayerTree, and that is why it is smooth 60fps.
+
+</DiscussionComment>
+
+<DiscussionComment author="Ian Hickson" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK90" source="google_doc_comments" createTime="2022-09-22T00:47:21.780Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+This is the part I don't really understand.
+
+</DiscussionComment>
+
+<DiscussionComment author="Ian Hickson" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK94" source="google_doc_comments" createTime="2022-09-22T00:47:48.550Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+How does the framework know this is the one that needs painting?
+
+What if it this is the slow part?
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK98" source="google_doc_comments" createTime="2022-09-22T00:49:30.019Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Users manually write down "PreemptDisplayList(child:CircularProgressIndicator(preempt: false, … other argos …),)"
+
+Then, when framework wants to preempt render an extra frame, it calls PreemptDisplayList.preemptModifyLayerTree.
+
+> What if it this is the slow part?
+
+Then it jank. But IMHO this happens rarely, at least should be ok for progress indicator and scrolling list view - could you please provide some real world case where it will be slow?
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK-A" source="google_doc_comments" createTime="2022-09-22T00:50:08.815Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+I have replied to another comment in google doc. Does that help? If not I can elaborate
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgghZK-E" source="google_doc_comments" createTime="2022-09-22T00:50:59.190Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+If the animation is really the slow part under that special case, then any single-threaded solution will not work IMHO. (Seems flutter does not want multithread and I agree with that, so we only consider single thread solutions)
+
+</DiscussionComment>
+
+<DiscussionComment author="Nayuta" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAggxsF2g" source="google_doc_comments" createTime="2022-09-22T02:50:13.980Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+
+
+</DiscussionComment>
+
+<DiscussionComment author="Nayuta" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAggxsF2k" source="google_doc_comments" createTime="2022-09-22T02:50:15.062Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+
+
+</DiscussionComment>
+
+<DiscussionComment author="Nayuta" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAghP1jDo" source="google_doc_comments" createTime="2022-09-22T13:01:35.648Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+I would like to add:  this solution has less overhead than keframe. When Keframe replaces placeholder with real widget, it is driven by vsync signal to execute drawFrame process and submit to engine, so it will execute the complete build/layout/paint etc process. But build/layout/paint other than the actual widget is not necessary. In the Preempt Layout scheme, the UI thread just voluntarily submits a frame to the Engine after 16ms of detection, and then returns to the normal rendering flow without much additional overhead.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAghP1jEQ" source="google_doc_comments" createTime="2022-09-22T13:18:08.710Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Thanks, I added it
 
 </DiscussionComment>
 
@@ -2258,6 +2600,49 @@ Next time I may only update progress in Discord, since there are already >hundre
 
 </DiscussionComment>
 
+<DiscussionComment author="Ian Hickson" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgAJWz4g" source="google_doc_comments" createTime="2022-09-22T18:10:23.481Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+I think if we can find a way to do multithreading nobody is against it a priori.
+
+If I may, it sounds like your proposal boils down to "provide developers with a way to mark areas of the tree that should be updated first (doing build, layout, paint, and semantics), then, if the time runs out during a frame, send the updated layer tree that only contains those parts and not the others, then continue doing the frame". Is that right?
+
+If so, I think the main problem with this approach is that we'd have to rerun the rarely-mentioned (because it's so cheap) "animation" step that happens before build, so that the parts of the tree that need animating early can be updated with the new time stamp, but in the current model, that requires winding down the stack frame because between the "animation" and "build" phases we run microtasks.
+
+I also worry that it would lead to some strange effects like how to determine which parts of the tree to update and which to not. For example, suppose you have three parts to your page. Part A is marked as needing fast updates, and parts B and C other two are expensive animations.
+
+We start frame 1, we update all the AnimationControllers, we build/layout/paint/layer/semantics the first (A), then we start on B, and we do no build and layout of B. Then we interrupt the work to send the tree to the engine with A's update. We do a new animation phase to update all the AnimationControllers again, we build/layout/paint/layer/semantics the first (A), then we resume the work on the original frame. Now we build/layout C. Finally build and layout are done so we paint B and C and do the layer tree and render it. Unfortunately, because B and C were painted after different animation phases, they'll be out of sync. It'll look like the two animations are running at a low frame rate _and out of sync with each other_, which IMHO is worse than today (where they're just at a low frame rate).
+
+That's assuming we can figure out how to do the animation phase at all.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgi3nytg" source="google_doc_comments" createTime="2022-09-22T23:07:21.894Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+> boils down to ... Is that right?
+
+Quite similar to my existing proposal, if it is implementable, sure.
+
+> we'd have to rerun the rarely-mentioned (because it's so cheap) "animation" step ... because between the "animation" and "build" phases we run microtasks.
+
+Indeed I am also quite curious why it was design like that, instead of putting animation into build/layout phase.
+Anyway, if using the PreemptBuilder dev-facing API, dev just use a builder callback (like what we have done a million times) to drive animation, which is flexible.
+
+> Unfortunately, because B and C were painted after different animation phases, they'll be out of sync.
+
+Sorry I cannot get it. In my proposal, they always see the same vsync signal. Indeed, using the mental model (a section in this design doc), every code should just see the plain old janky environment, except for a small portion of the code (the one inside PreemptBuilder) which knows extra info.
+
+> That's assuming we can figure out how to do the animation phase at all.
+
+Currently I plan *not* to do the animation phase indeed, and just use the builder callback.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgi3nytk" source="google_doc_comments" createTime="2022-09-22T23:26:20.434Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+IIRC, Flutter officially supports us to using builder pattern for animations. For example, AnimatedBuilder is indeed implemented as `setState` per Listenable update, very similar to how we treat PreemptBuilder - build (setState?) per 60fps frame.
+
+</DiscussionComment>
+
 <DiscussionComment author="fzyzcjy" link="https://github.com/flutter/flutter/issues/101227" source="github" createTime="2022-09-23T13:28:16Z" retrieveTime="2022-10-15T21:31:00.632251">
 
 ### Prototype: Enter-new-heavy-page, smoothly even though it takes 0.5s to build/layout
@@ -2353,6 +2738,125 @@ build() {
 Indeed, preempt points are auto injected via PreemptPoint, and (possibly done in the real PR) in every RenderObject.layout. So usually no need to manually write that.
 
 By the way, your original modification does not work, because by default I do not expect a single widget.build to exceed 16ms. Anyway if that is the case just insert a few `maybePreemptRender`.
+
+</DiscussionComment>
+
+<DiscussionComment author="Aaron Clarke" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgw_vfTs" source="google_doc_comments" createTime="2022-09-26T20:17:01.105Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+It's unclear the mechanism that is used to resume layout.  Are we really resuming or retrying?  In order to resume the whole stack would have to be captured (ie a continuation).
+
+</DiscussionComment>
+
+<DiscussionComment author="Aaron Clarke" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgw_vfT8" source="google_doc_comments" createTime="2022-09-26T20:35:41.851Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+I'm unfamiliar with how keframe works.  Would this make that library obsolete?  Does it handle all the cases it does?
+
+</DiscussionComment>
+
+<DiscussionComment author="Aaron Clarke" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgw_vfUw" source="google_doc_comments" createTime="2022-09-26T21:21:30.304Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+What happens if we can't update the existing tree in the 1.667ms we have then?  How do we select this number 15ms?
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgw_vfXA" source="google_doc_comments" createTime="2022-09-26T22:51:53.514Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+My proposed method is not sensitive to the threshold indeed. In other words, suppose you happen to pause at 15ms, then you do not necessarily need to finish UI thread work and submit to raster thread in 16.67-15=1.67ms. On the contrary, you can, e.g. finish in 2ms or 3ms or 4ms or whatever, as long as raster thread have enough time to finish his hob.
+
+Some details can be found in the "when to call preemptRender" section
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgkxeeuk" source="google_doc_comments" createTime="2022-09-27T13:38:33.735Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Ah sorry I did not see all your questions! I only see the last, and when viewing the second-last I see my avatar so wrongly think all things below have been answered...
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgkxeeuo" source="google_doc_comments" createTime="2022-09-27T13:39:08.205Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+We do not resume or retry. We just _call_ preemptRender function as any normal function call, and just _return_ from it. So zero cost.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAgkxeeus" source="google_doc_comments" createTime="2022-09-27T13:41:58.686Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+I have not done thorough experiments (e.g. ListView scrolling) so cannot give a conclusion now. But it seems this package will cover all cases with less drawbacks and better performance, by solving the problem in a different approach.
+
+</DiscussionComment>
+
+<DiscussionComment author="Dan Field" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAhGPCXpU" source="google_doc_comments" createTime="2022-09-28T23:21:09.174Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Other things need time on this thread, for example GC.
+
+</DiscussionComment>
+
+<DiscussionComment author="Dan Field" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAhGPCXpY" source="google_doc_comments" createTime="2022-09-28T23:21:57.199Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+I'm saying that a _single_ layout function might take too long and your preempt call will come too late.
+
+</DiscussionComment>
+
+<DiscussionComment author="Dan Field" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAhGPCXpg" source="google_doc_comments" createTime="2022-09-28T23:27:19.384Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+https://github.com/fzyzcjy/flutter_smooth/blob/master/packages/smooth/example/lib/main.dart#L165 is a good chunk of the hard part. I'm not really clear from this document how that would automatically get inserted in meaningful places without breaking a lot of things.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAhGPCXpo" source="google_doc_comments" createTime="2022-09-28T23:30:46.105Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+I agree theoretically. But during my experiments, I see about 39% of the UI thread time is idle, and I guess GC does not need that much time. This screenshot: https://user-images.githubusercontent.com/5236035/190553863-5a373dcb-75ba-468d-8118-66e7a393070b.png
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAhGPCXps" source="google_doc_comments" createTime="2022-09-28T23:31:54.998Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Just add maybePreemptRender to that _single_ layout function. For example:
+
+class VeryHeavySingleLayout extends RenderObject {
+void performLayout() {
+compute_heavy_things_part_1;
+maybePreemptRender();
+compute_heavy_things_part_2;
+maybePreemptRender();
+...
+compute_heavy_things_part_5;
+maybePreemptRender();
+}
+}
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAhGPCXp4" source="google_doc_comments" createTime="2022-09-28T23:34:25.287Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+1. Insert a maybePreemptRender to RenderObject.layout function seems enough, without breaking anything if I think correctly.
+2. I also think about another possibility, just do it the way now it is. In other words, let the user manually specify preempt points via SmoothPreemptPoint. Then one less PR to framework, and user has more flexibility.
+
+</DiscussionComment>
+
+<DiscussionComment author="Dan Field" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAhGPEyA8" source="google_doc_comments" createTime="2022-09-28T23:45:08.783Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+In real applications under real workloads there is more need for GC time - for example, if your application is creating a lot of objects to understand data it fetched from the network or SQLite.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAhGPEyBY" source="google_doc_comments" createTime="2022-09-29T00:06:53.439Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+I agree. But seems that we need to compare two cases:
+1. Without this new proposal: Suppose one frame is 100ms, then we have busy UI thread for 100ms without idle. And then frame ends so we have idle.
+2. With this proposal: We still be busy for 100ms (+3% overhead so indeed 103ms), and then get idle. In addition, we have 6 extra smooth frames which may generate some object.
+
+Thus, the difference with this proposal is that, the objects we create inside extra smooth frame do give GC extra pressure. But I hope that is small - they are just animations.
+
+</DiscussionComment>
+
+<DiscussionComment author="fzyzcjy" link="https://docs.google.com/document/d/1FuNcBvAPghUyjeqQCOYxSt6lGDAQ1YxsNlOvrUx0Gko/edit?disco=AAAAhGPEyBc" source="google_doc_comments" createTime="2022-09-29T00:09:30.460Z" retrieveTime="2022-10-17T11:05:47.152504">
+
+Moreover, IMHO, my approach allows GC to happen, as long as it is less than 16ms stop-the-world and is not very unlucky.
+
+For example, suppose GC happens during 17ms to 20ms. Then I can still build the layer tree and submit window.render at around 33.33ms. That stop-the-world GC does not cause any problem like visible jank. As long as we have about 0.5ms per 16.667ms, because 0.5ms is what we need (in experiments below) to produce an extra smooth frame.
+
+On the contrary, existing methods may have jank in such cases. Because if GC runs for 3ms, they have 3ms less to compute the next scene.
 
 </DiscussionComment>
 

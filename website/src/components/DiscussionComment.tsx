@@ -1,12 +1,13 @@
 import React from 'react';
-import {FaGithub} from 'react-icons/fa';
+import {FaGithub, FaGoogle} from 'react-icons/fa';
 
 const sourceTitleMap = {
     'github': 'GitHub',
+    'google_doc_comments': 'Google Doc',
 }
 const sourceIconMap = {
-    // TODO
     'github': <FaGithub className="inline-block pt-1"/>,
+    'google_doc_comments': <FaGoogle className="inline-block pt-1"/>,
 }
 
 // noinspection JSUnusedGlobalSymbols
