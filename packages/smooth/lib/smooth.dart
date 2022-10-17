@@ -5,7 +5,6 @@ export 'src/infra/binding.dart' show SmoothWidgetsFlutterBinding;
 export 'src/infra/brake/brake_point.dart' show SmoothBrakePoint;
 export 'src/infra/builder.dart' show SmoothBuilder;
 export 'src/infra/constant.dart';
-export 'src/infra/debug.dart' show SmoothDebug;
 export 'src/infra/parent.dart' show SmoothParent;
 export 'src/infra/preempt_point.dart'
     show SmoothPreemptPoint, BuildPreemptPointWidget, LayoutPreemptPointWidget;

@@ -9,16 +9,6 @@ import 'package:smooth/src/infra/time/simple_date_time.dart';
 import 'package:smooth/src/infra/time/typed_time.dart';
 
 class Actor {
-  // var _maybePreemptRenderCallCount = 0;
-
-  final _times = <Duration>[];
-
-  void debugPrintStat() {
-    // ignore: avoid_print
-    print(
-        'PreemptRender times=[${_times.map((d) => d.inMicroseconds / 1000).toList().join(', ')}]');
-  }
-
   void maybePreemptRenderBuildOrLayoutPhase() {
     final serviceLocator = ServiceLocator.instance;
     if (serviceLocator.auxiliaryTreeRegistry.trees.isEmpty) return;
@@ -158,7 +148,7 @@ class Actor {
       // // #5822
       // binding.platformDispatcher.preemptRequestVsync();
     });
-    _times.add(clock.now().difference(start));
+    // _times.add(clock.now().difference(start));
 
     // print('$runtimeType _preemptRender end');
   }
