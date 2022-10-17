@@ -1,8 +1,9 @@
-from . import github
+from . import github, discord
 
 
 def main():
     github.main()
+    discord.main()
 
 
 if __name__ == '__main__':
