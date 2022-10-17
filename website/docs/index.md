@@ -10,7 +10,7 @@ import ReactPlayer from 'react-player'
 
 <center><small>Achieve 60 FPS, no matter how heavy the tree is to build/layout.</small></center>
 
-## 3-second video
+## 🎼 3-second video
 
 
 <div className="flex flex-row">
@@ -29,7 +29,7 @@ import ReactPlayer from 'react-player'
 </div>
     
 
-## 1-minute explanation
+## 📚 1-minute explanation
 
 ### Purpose
 
@@ -39,11 +39,11 @@ No matter how heavy the tree is to build/layout, it will run at (roughly) full F
 
 Two possibilities:
 
-* **Drop-in replacements**: For common scenarios, add 6 characters ("Smooth") - `ListView` becomes [`SmoothListView`](https://fzyzcjy.github.io/flutter_smooth/usage/drop-in), ``MaterialPageRoute`` becomes [`SmoothMaterialPageRoute`](https://fzyzcjy.github.io/flutter_smooth/usage/drop-in).
+* **Drop-in replacements**: For common scenarios, add 6 characters ("Smooth") - `ListView` becomes `SmoothListView`, ``MaterialPageRoute`` becomes `SmoothMaterialPageRoute`.
 
-* **Arbitrarily flexible builder**: For complex cases, use [`SmoothBuilder(builder: ...)`](https://fzyzcjy.github.io/flutter_smooth/usage/builder) and put whatever you want to be smooth inside the `builder`.
+* **Arbitrarily flexible builder**: For complex cases, use `SmoothBuilder(builder: ...)` and put whatever you want to be smooth inside the `builder`.
 
-## What's next
+## 🚀 What's next
 
 The documentaiton - https://fzyzcjy.github.io/flutter_smooth/, with usage, demo, benchmark, insights, and more.
 
