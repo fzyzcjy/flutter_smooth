@@ -6,6 +6,7 @@ export 'src/infra/brake/brake_point.dart' show SmoothBrakePoint;
 export 'src/infra/builder.dart' show SmoothBuilder;
 export 'src/infra/constant.dart';
 export 'src/infra/parent.dart' show SmoothParent;
+export 'src/infra/point.dart' show SmoothPoint;
 export 'src/infra/preempt_point.dart'
     show SmoothBuildPreemptPointWidget, SmoothLayoutPreemptPointWidget;
 export 'src/infra/time/simple_date_time.dart';

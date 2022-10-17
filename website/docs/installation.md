@@ -24,7 +24,7 @@ void main() {
 }
 ```
 
-## 3. Add a widget
+## 3. Add parent widget
 
 Wrap your tree with `SmoothParent`:
 
@@ -34,7 +34,9 @@ SmoothParent(
 )
 ```
 
-Done!
+## 4. Add TODO
+
+TODO
 
 ## Use it in tests
 
