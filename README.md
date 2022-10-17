@@ -12,7 +12,9 @@
 
 <!-- start: video -->
 
-https://github.com/fzyzcjy/flutter_smooth_blob/blob/master/video/output.mp4?raw=true
+TODO
+
+<small>(left = without smooth, right = smooth; captured by external camera to maximally demonstrate end-user perception)</small>
 
 <!-- end: video -->
 

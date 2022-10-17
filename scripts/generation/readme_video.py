@@ -42,12 +42,6 @@ smooth_bbox = Bbox.from_p1_p2((230, 0), (840, 1050))
 # https://video.stackexchange.com/questions/20962/ffmpeg-color-correction-gamma-brightness-and-saturation
 eq_filter = dict(gamma=1.8, contrast=1.2)
 
-p_output = dir_video / 'output.mp4'
-p_output.unlink(missing_ok=True)
-
-in_plain = ffmpeg.input(str(dir_video / 'list_view/raw_plain.mp4'))
-in_smooth = ffmpeg.input(str(dir_video / 'list_view/raw_smooth.mp4'))
-
 
 def crop_and_pad(s, bbox: Bbox, *, left, right):
     s = ffmpeg.crop(s, *bbox.inflate_horizontal(left=left, right=right).xywh)
@@ -56,11 +50,26 @@ def crop_and_pad(s, bbox: Bbox, *, left, right):
     return s
 
 
-cropped_plain = crop_and_pad(in_plain, plain_bbox, left=100, right=50)
-cropped_smooth = crop_and_pad(in_smooth, smooth_bbox, left=50, right=100)
+def run_one(output_stem: str, scale: bool):
+    p_output = dir_video / f'{output_stem}.mp4'
+    p_output.unlink(missing_ok=True)
 
-stream = ffmpeg.filter([cropped_plain, cropped_smooth], "hstack", inputs=2)
-stream = ffmpeg.filter([stream], 'eq', **eq_filter)
-stream = stream.output(str(p_output))
-print(ffmpeg.compile(stream))
-ffmpeg.run(stream)
+    in_plain = ffmpeg.input(str(dir_video / 'list_view/raw_plain.mp4'))
+    in_smooth = ffmpeg.input(str(dir_video / 'list_view/raw_smooth.mp4'))
+
+    cropped_plain = crop_and_pad(in_plain, plain_bbox, left=100, right=50)
+    cropped_smooth = crop_and_pad(in_smooth, smooth_bbox, left=50, right=100)
+
+    stream = ffmpeg.filter([cropped_plain, cropped_smooth], "hstack", inputs=2)
+    stream = ffmpeg.filter([stream], 'eq', **eq_filter)
+
+    if scale:
+        stream = ffmpeg.filter([stream], 'scale', '-1', '320')
+
+    stream = stream.output(str(p_output))
+    print(ffmpeg.compile(stream))
+    ffmpeg.run(stream)
+
+
+run_one('output', scale=False)
+run_one('output_small', scale=True)
