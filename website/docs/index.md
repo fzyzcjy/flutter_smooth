@@ -8,7 +8,7 @@ import ReactPlayer from 'react-player'
 
 ![logo](https://raw.githubusercontent.com/fzyzcjy/flutter_smooth_blob/master/meta/logo.svg)
 
-<center><small>Achieve 60 FPS, no matter how heavy the tree is to build/layout.</small></center>
+<center><small>Achieve ~60 FPS, no matter how heavy the tree is to build/layout.</small></center>
 
 ## 🎼 3-second video
 
