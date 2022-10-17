@@ -1,13 +1,14 @@
 from argparse import ArgumentParser
 
-from generation import fetch_github_pr, generate_pr_status
+from generation import fetch_github_pr, generate_pr_status, readme
 from .comments.gather import __main__ as gather_main
 from .comments.transform import __main__ as transform_main
 
 
 def main(ci: bool):
     print(f'main start (ci={ci})')
-   
+
+    readme.main()
     fetch_github_pr.main()
     generate_pr_status.main()
     if not ci:

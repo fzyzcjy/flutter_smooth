@@ -1,4 +1,4 @@
-# [flutter_smooth](https://github.com/fzyzcjy/flutter_smooth/tree/master) (WIP)
+# [flutter_smooth](https://github.com/fzyzcjy/flutter_smooth/tree/master)
 
 ![logo](https://raw.githubusercontent.com/fzyzcjy/flutter_smooth_blob/master/meta/logo.svg)
 
