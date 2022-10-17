@@ -7,9 +7,9 @@ import ReactPlayer from 'react-player'
 
 ![logo](https://raw.githubusercontent.com/fzyzcjy/flutter_smooth_blob/master/meta/logo.svg)
 
-Achieve 60 FPS, no matter how heavy the tree is to build/layout
+<center><small>Achieve 60 FPS, no matter how heavy the tree is to build/layout.</small></center>
 
-## Video in 3 seconds
+## 3-second video
 
 <div className="flex flex-row">
     <div className="flex-1"></div>
@@ -21,19 +21,24 @@ Achieve 60 FPS, no matter how heavy the tree is to build/layout
             height="320px"
             url='https://github.com/fzyzcjy/flutter_smooth_blob/blob/master/video/output.mp4?raw=true'
         />
-        <small>(left = plain, right = smooth; captured by external camera to maximally demonstrate end-user perception)</small>
+        <small>(left = without smooth, right = smooth; captured by external camera to maximally demonstrate end-user perception)</small>
     </div>
     <div className="flex-1"></div>
 </div>
 
+## Purpose
 
-## How to use it?
+No matter how heavy the tree is to build/layout, it will run at (roughly) full FPS, feel smooth, has zero uncomfortable janks, with neglitable overhead. (Detailed reports [here](benchmark))
+
+## Usage
+
+Two possibilities:
 
 * **Drop-in replacements**: For common scenarios, add 6 characters ("Smooth") - `ListView` becomes [`SmoothListView`](usage/drop-in), ``MaterialPageRoute`` becomes [`SmoothMaterialPageRoute`](usage/drop-in).
 
-* **Arbitrarily flexible builder**: For complex cases, use [`SmoothBuilder(builder: ...)`](usage/builder) and put the tree that you want to be smooth inside the `builder`.
+* **Arbitrarily flexible builder**: For complex cases, use [`SmoothBuilder(builder: ...)`](usage/builder) and put whatever you want to be smooth inside the `builder`.
 
-## What will you get?
+## Status
 
-* No matter how heavy the tree is to build/layout, it will run at (roughly) [full FPS](benchmark/analyze/fps), [feel smooth](benchmark/analyze/linearity), [has zero uncomfortable janks](benchmark/analyze/jank-statistics), with [neglitable overhead](benchmark/analyze/overhead).
-
+* The infra part is already implemented (hard, took me a month). The drop-in part and demo, which is mainly engineering work utilizing the exposed infra API, still has many improveable things - feel free to issue and PR!
+* Need to wait for all PRs to Flutter to be merged and next Flutter release. (PR status [here](insight/status))
