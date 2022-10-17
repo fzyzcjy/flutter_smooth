@@ -34,8 +34,8 @@ def gather_range(start_url: str, end_url_inclusive: str):
     matcher_start = re.match(r'https://discord.com/channels/(\d+)/(\d+)/(\d+)', start_url)
     matcher_end = re.match(r'https://discord.com/channels/(\d+)/(\d+)/(\d+)', end_url_inclusive)
 
-    channel_id = matcher_start.group(1)
-    assert channel_id == matcher_end.group(1)
+    channel_id = matcher_start.group(2)
+    assert channel_id == matcher_end.group(2)
 
     after = matcher_start.group(3)
     before = matcher_end.group(3)
@@ -44,7 +44,7 @@ def gather_range(start_url: str, end_url_inclusive: str):
 
 
 def gather_all_in_channel(url: str):
-    channel_id = re.match(r'https://discord.com/channels/(\d+)/(\d+)', url).group(1)
+    channel_id = re.match(r'https://discord.com/channels/(\d+)/(\d+)', url).group(2)
     _run_export_command(channel_id)
 
 
