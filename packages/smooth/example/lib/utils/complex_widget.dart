@@ -37,27 +37,29 @@ class ComplexWidget extends StatelessWidget {
             children: List.generate(listTileCount, (int index) {
               // NOTE hack, in real world should auto have preempt point
               // but in prototype we do it by hand
-              return SmoothPreemptPoint(
-                child: SizedBox(
-                  height: 12,
-                  child: (wrapListTile ?? identityWidgetWrapper)(
-                    child: ListTile(
-                      dense: true,
-                      visualDensity: VisualDensity.compact,
-                      leading: SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircleAvatar(
-                          child: Text('G$index'),
+              return BuildPreemptPointWidget(
+                child: LayoutPreemptPointWidget(
+                  child: SizedBox(
+                    height: 12,
+                    child: (wrapListTile ?? identityWidgetWrapper)(
+                      child: ListTile(
+                        dense: true,
+                        visualDensity: VisualDensity.compact,
+                        leading: SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircleAvatar(
+                            child: Text('G$index'),
+                          ),
                         ),
+                        title: Text(
+                          '$prefix Foo contact from $index-th local contact' *
+                              textRepeat,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 5),
+                        ),
+                        subtitle: Text('$prefix +91 88888 8800$index'),
                       ),
-                      title: Text(
-                        '$prefix Foo contact from $index-th local contact' *
-                            textRepeat,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 5),
-                      ),
-                      subtitle: Text('$prefix +91 88888 8800$index'),
                     ),
                   ),
                 ),

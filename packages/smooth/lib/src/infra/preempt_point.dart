@@ -5,24 +5,6 @@ import 'package:smooth/src/infra/service_locator.dart';
 // NOTE since prototype, we inject preempt point *manually*.
 // However, in real api, it should be done in RenderObject.layout, i.e. automatically
 // without human intervention
-class SmoothPreemptPoint extends StatelessWidget {
-  final Widget child;
-
-  const SmoothPreemptPoint({
-    super.key,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BuildPreemptPointWidget(
-      child: LayoutPreemptPointWidget(
-        child: child,
-      ),
-    );
-  }
-}
-
 class BuildPreemptPointWidget extends StatelessWidget {
   final Widget child;
 
