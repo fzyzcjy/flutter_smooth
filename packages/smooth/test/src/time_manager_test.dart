@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_test/flutter_test.dart' as flutter_test;
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/time_manager.dart';
+import 'package:smooth/src/infra/time_manager.dart';
 
 void main() {
   const kTenSeconds = AdjustedFrameTimeStamp.unchecked(seconds: 10);

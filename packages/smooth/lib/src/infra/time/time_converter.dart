@@ -4,9 +4,9 @@ import 'dart:developer';
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/host_api/messages.dart';
-import 'package:smooth/src/time/simple_date_time.dart';
-import 'package:smooth/src/time/typed_time.dart';
+import 'package:smooth/src/infra/host_api/messages.dart';
+import 'package:smooth/src/infra/time/simple_date_time.dart';
+import 'package:smooth/src/infra/time/typed_time.dart';
 
 abstract class TimeConverter {
   factory TimeConverter() = _TimeConverterNormal;

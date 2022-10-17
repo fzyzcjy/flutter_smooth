@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smooth/src/brake/brake_controller.dart';
+import 'package:smooth/src/infra/brake/brake_controller.dart';
 
 void main() {
   group('BrakeController', () {

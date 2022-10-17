@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/brake/build_after_previous_build_or_layout.dart';
-import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/infra/brake/build_after_previous_build_or_layout.dart';
+import 'package:smooth/src/infra/service_locator.dart';
 
 class SmoothBrakePoint extends StatefulWidget {
   final Widget emptyPlaceholder;

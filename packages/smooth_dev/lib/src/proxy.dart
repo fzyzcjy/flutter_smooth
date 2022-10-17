@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter_test/flutter_test.dart';
 
 // ignore: implementation_imports
-import 'package:smooth/src/proxy.dart';
+import 'package:smooth/src/infra/proxy.dart';
 
 class ProxyTestWindow extends ProxySingletonFlutterWindow
     implements TestWindow {

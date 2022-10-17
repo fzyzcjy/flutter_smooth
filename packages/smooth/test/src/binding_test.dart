@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/auxiliary_tree_pack.dart';
-import 'package:smooth/src/binding.dart';
+import 'package:smooth/src/infra/auxiliary_tree_pack.dart';
+import 'package:smooth/src/infra/binding.dart';
 import 'package:smooth_dev/smooth_dev.dart';
 
 void main() {

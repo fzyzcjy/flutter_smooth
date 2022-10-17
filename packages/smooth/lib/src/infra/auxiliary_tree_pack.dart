@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/auxiliary_tree_root_view.dart';
-import 'package:smooth/src/remove_sub_tree_widget.dart';
-import 'package:smooth/src/service_locator.dart';
-import 'package:smooth/src/time/typed_time.dart';
+import 'package:smooth/src/infra/auxiliary_tree_root_view.dart';
+import 'package:smooth/src/infra/remove_sub_tree_widget.dart';
+import 'package:smooth/src/infra/service_locator.dart';
+import 'package:smooth/src/infra/time/typed_time.dart';
 
 class AuxiliaryTreeRegistry {
   Iterable<AuxiliaryTreePack> get trees => _trees;

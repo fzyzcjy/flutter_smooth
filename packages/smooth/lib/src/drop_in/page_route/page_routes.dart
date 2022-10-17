@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/animation_controller.dart';
-import 'package:smooth/src/builder.dart';
-import 'package:smooth/src/list_view/controller.dart';
+import 'package:smooth/src/drop_in/list_view/controller.dart';
+import 'package:smooth/src/infra/animation_controller.dart';
+import 'package:smooth/src/infra/builder.dart';
 
 mixin SmoothPageRouteMixin<T> on PageRoute<T> {
   DualProxyAnimationController? _dualProxyAnimationController;

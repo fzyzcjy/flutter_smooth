@@ -25,7 +25,8 @@ class _RemoveSubTreeWidgetState extends State<RemoveSubTreeWidget> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: widget.controller._removeSubTree,
-      builder: (_, removeSubTree, __) => removeSubTree ? const SizedBox() : widget.child,
+      builder: (_, removeSubTree, __) =>
+          removeSubTree ? const SizedBox() : widget.child,
     );
   }
 }

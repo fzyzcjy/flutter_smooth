@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/infra/service_locator.dart';
 import 'package:smooth_dev/smooth_dev.dart';
 
 import 'test_tools/mock_source.mocks.dart';

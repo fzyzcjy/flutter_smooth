@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/adapter_in_auxiliary_tree.dart';
-import 'package:smooth/src/adapter_in_main_tree.dart';
-import 'package:smooth/src/auxiliary_tree_pack.dart';
+import 'package:smooth/src/infra/adapter_in_auxiliary_tree.dart';
+import 'package:smooth/src/infra/adapter_in_main_tree.dart';
+import 'package:smooth/src/infra/auxiliary_tree_pack.dart';
 
 class SmoothBuilder extends StatefulWidget {
   final Widget Function(BuildContext context, Widget child) builder;

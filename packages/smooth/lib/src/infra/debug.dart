@@ -1,4 +1,4 @@
-import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/infra/service_locator.dart';
 
 abstract class SmoothDebug {
   static void debugPrintStat() =>

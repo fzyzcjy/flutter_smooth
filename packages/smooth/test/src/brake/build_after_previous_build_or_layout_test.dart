@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smooth/src/brake/build_after_previous_build_or_layout.dart';
+import 'package:smooth/src/infra/brake/build_after_previous_build_or_layout.dart';
 
 import '../test_tools/widgets.dart';
 

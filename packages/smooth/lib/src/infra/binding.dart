@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/auxiliary_tree_pack.dart';
-import 'package:smooth/src/proxy.dart';
-import 'package:smooth/src/service_locator.dart';
-import 'package:smooth/src/time_manager.dart';
+import 'package:smooth/src/infra/auxiliary_tree_pack.dart';
+import 'package:smooth/src/infra/proxy.dart';
+import 'package:smooth/src/infra/service_locator.dart';
+import 'package:smooth/src/infra/time_manager.dart';
 
 mixin SmoothSchedulerBindingMixin on SchedulerBinding {
   @override

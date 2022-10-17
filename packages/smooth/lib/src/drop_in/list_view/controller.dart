@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/scheduler/ticker.dart'; // ignore: implementation_imports
-import 'package:smooth/src/list_view/physics.dart';
-import 'package:smooth/src/list_view/simulation.dart'; // ignore: implementation_imports
+import 'package:smooth/src/drop_in/list_view/physics.dart';
+import 'package:smooth/src/drop_in/list_view/simulation.dart'; // ignore: implementation_imports
 
 class SmoothScrollController extends ScrollController {
   // ref [super.createScrollPosition], except for return custom sub-class

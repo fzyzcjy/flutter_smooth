@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:smooth/src/list_view/simulation.dart';
+import 'package:smooth/src/drop_in/list_view/simulation.dart';
 
 abstract class SmoothScrollPhysics implements ScrollPhysics {
   Simulation? createBallisticSimulationEnhanced(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/infra/service_locator.dart';
 
 // NOTE since prototype, we inject preempt point *manually*.
 // However, in real api, it should be done in RenderObject.layout, i.e. automatically

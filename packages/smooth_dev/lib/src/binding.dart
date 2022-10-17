@@ -3,8 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/binding.dart'; // ignore: implementation_imports
-import 'package:smooth/src/service_locator.dart'; // ignore: implementation_imports
+import 'package:smooth/src/infra/binding.dart'; // ignore: implementation_imports
+import 'package:smooth/src/infra/service_locator.dart'; // ignore: implementation_imports
 import 'package:smooth_dev/src/proxy.dart';
 import 'package:smooth_dev/src/time_converter.dart';
 

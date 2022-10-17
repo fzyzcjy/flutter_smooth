@@ -2,7 +2,7 @@ import 'package:clock/clock.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/infra/service_locator.dart';
 
 // ref [TestGesture]
 class TestSmoothGesture {

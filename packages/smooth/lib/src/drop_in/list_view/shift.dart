@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/binding.dart';
-import 'package:smooth/src/list_view/controller.dart';
+import 'package:smooth/src/drop_in/list_view/controller.dart';
+import 'package:smooth/src/infra/binding.dart';
 
 class SmoothShift extends StatefulWidget {
   final ScrollController scrollController;

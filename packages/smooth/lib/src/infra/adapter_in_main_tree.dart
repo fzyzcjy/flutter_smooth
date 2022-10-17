@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:smooth/src/auxiliary_tree_pack.dart';
-import 'package:smooth/src/auxiliary_tree_root_view.dart';
-import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/infra/auxiliary_tree_pack.dart';
+import 'package:smooth/src/infra/auxiliary_tree_root_view.dart';
+import 'package:smooth/src/infra/service_locator.dart';
 
 class AdapterInMainTreeWidget extends SingleChildRenderObjectWidget {
   final AuxiliaryTreePack pack;

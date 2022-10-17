@@ -1,4 +1,4 @@
-import 'package:smooth/src/time/typed_time.dart';
+import 'package:smooth/src/infra/time/typed_time.dart';
 
 // TODO make FPS non-const (i.e. changeable according to different devices)
 

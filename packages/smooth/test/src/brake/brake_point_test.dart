@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/brake/brake_controller.dart';
-import 'package:smooth/src/brake/build_after_previous_build_or_layout.dart';
-import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/infra/brake/brake_controller.dart';
+import 'package:smooth/src/infra/brake/build_after_previous_build_or_layout.dart';
+import 'package:smooth/src/infra/service_locator.dart';
 import 'package:smooth_dev/smooth_dev.dart';
 
 import '../test_tools/widgets.dart';

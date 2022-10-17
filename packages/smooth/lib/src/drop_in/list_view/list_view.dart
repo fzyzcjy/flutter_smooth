@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/enhanced_padding.dart';
-import 'package:smooth/src/list_view/controller.dart';
-import 'package:smooth/src/list_view/physics.dart';
-import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/drop_in/list_view/controller.dart';
+import 'package:smooth/src/drop_in/list_view/physics.dart';
+import 'package:smooth/src/infra/enhanced_padding.dart';
+import 'package:smooth/src/infra/service_locator.dart';
 
 class SmoothListView extends StatefulWidget {
   final int itemCount;

@@ -1,10 +1,10 @@
-import 'package:smooth/src/actor.dart';
-import 'package:smooth/src/auxiliary_tree_pack.dart';
-import 'package:smooth/src/binding.dart';
-import 'package:smooth/src/brake/brake_controller.dart';
-import 'package:smooth/src/extra_event_dispatcher.dart';
-import 'package:smooth/src/time/time_converter.dart';
-import 'package:smooth/src/time_manager.dart';
+import 'package:smooth/src/infra/actor.dart';
+import 'package:smooth/src/infra/auxiliary_tree_pack.dart';
+import 'package:smooth/src/infra/binding.dart';
+import 'package:smooth/src/infra/brake/brake_controller.dart';
+import 'package:smooth/src/infra/extra_event_dispatcher.dart';
+import 'package:smooth/src/infra/time/time_converter.dart';
+import 'package:smooth/src/infra/time_manager.dart';
 
 class ServiceLocator {
   static ServiceLocator get instance =>

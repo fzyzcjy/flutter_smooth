@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smooth/src/list_view/physics.dart';
-import 'package:smooth/src/list_view/simulation.dart';
+import 'package:smooth/src/drop_in/list_view/physics.dart';
+import 'package:smooth/src/drop_in/list_view/simulation.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -1,8 +1,8 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smooth/smooth.dart';
-import 'package:smooth/src/service_locator.dart'; // ignore: implementation_imports
-import 'package:smooth/src/time/time_converter.dart'; // ignore: implementation_imports
+import 'package:smooth/src/infra/service_locator.dart'; // ignore: implementation_imports
+import 'package:smooth/src/infra/time/time_converter.dart'; // ignore: implementation_imports
 
 class TimeConverterTest extends TimeConverter {
   TimeConverterTest() : super.raw();

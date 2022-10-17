@@ -26,6 +26,6 @@ class TimeInfo {
 
     return pumpDuration;
   }
- 
+
   DateTime fromBegin(Duration delta) => testBeginTime.add(delta);
 }

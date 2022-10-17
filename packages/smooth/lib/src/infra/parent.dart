@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smooth/src/service_locator.dart';
+import 'package:smooth/src/infra/service_locator.dart';
 
 class SmoothParent extends StatefulWidget {
   final Widget child;

@@ -3,10 +3,10 @@ import 'dart:ui';
 
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
-import 'package:smooth/src/auxiliary_tree_pack.dart';
-import 'package:smooth/src/service_locator.dart';
-import 'package:smooth/src/time/simple_date_time.dart';
-import 'package:smooth/src/time/typed_time.dart';
+import 'package:smooth/src/infra/auxiliary_tree_pack.dart';
+import 'package:smooth/src/infra/service_locator.dart';
+import 'package:smooth/src/infra/time/simple_date_time.dart';
+import 'package:smooth/src/infra/time/typed_time.dart';
 
 class Actor {
   // var _maybePreemptRenderCallCount = 0;
