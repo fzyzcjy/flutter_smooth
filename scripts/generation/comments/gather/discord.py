@@ -14,6 +14,8 @@ def _discord_token():
 def _run_discord_chat_exporter(command, *args):
     run_command(
         f'docker run -it -v {_dir_out}:/out '
+        f'-e HTTP_PROXY={os.environ["HTTP_PROXY"]} '
+        f'-e HTTPS_PROXY={os.environ["HTTPS_PROXY"]} '
         f'tyrrrz/discordchatexporter:stable '
         f'{command} '
         f'--token {_discord_token()} '
