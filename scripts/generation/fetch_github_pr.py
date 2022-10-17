@@ -12,7 +12,7 @@ def fetch_repo(org: str, repo: str):
         f"--state all "
         f"--author fzyzcjy "
         f"--search 'created:2022-09-27..2022-12-31' "
-        f"--json number,title",
+        f"--json number,title,createdAt",
         shell=True, stdout=subprocess.PIPE)
     assert result.returncode == 0
     raw_data = json.loads(result.stdout)
