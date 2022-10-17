@@ -129,6 +129,8 @@ const config = {
             prism: {
                 theme: lightCodeTheme,
                 darkTheme: darkCodeTheme,
+                defaultLanguage: "dart",
+                additionalLanguages: ["dart", "yaml"],
             },
         }),
 
