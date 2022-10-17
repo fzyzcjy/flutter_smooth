@@ -20,6 +20,8 @@ jobs:
 
       - run: python -m generation --ci
         working-directory: ./scripts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check nothing changes
         run: git diff --exit-code
