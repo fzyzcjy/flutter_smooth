@@ -35,7 +35,7 @@ void main() {
               AlwaysLayoutBuilder(onPerformLayout: () {
                 binding.elapseBlocking(const Duration(microseconds: 16500));
               }),
-              LayoutPreemptPointWidget(child: Container()),
+              SmoothLayoutPreemptPointWidget(child: Container()),
               AlwaysLayoutBuilder(onPerformLayout: () {
                 binding.elapseBlocking(const Duration(microseconds: 16500));
               }),

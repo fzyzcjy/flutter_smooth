@@ -75,7 +75,8 @@ void main() {
                             reason: 'slowWorkBeforePreemptPoint')
                         : null,
                   ),
-                  const LayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
+                  const SmoothLayoutPreemptPointWidget(
+                      child: AlwaysLayoutBuilder()),
                   // https://github.com/fzyzcjy/flutter_smooth/issues/23#issuecomment-1261674207
                   AlwaysLayoutBuilder(
                     onPerformLayout: () => enableSlowWork
@@ -189,7 +190,8 @@ void main() {
                             .elapseBlocking(const Duration(microseconds: 16500))
                         : null,
                   ),
-                  const LayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
+                  const SmoothLayoutPreemptPointWidget(
+                      child: AlwaysLayoutBuilder()),
                 ],
               ],
             ),
@@ -286,8 +288,8 @@ void main() {
         ];
 
         final wrappers = <Widget Function(Widget)>[
-          (child) => BuildPreemptPointWidget(child: child),
-          (child) => LayoutPreemptPointWidget(child: child),
+          (child) => SmoothBuildPreemptPointWidget(child: child),
+          (child) => SmoothLayoutPreemptPointWidget(child: child),
           // cause special behavior about painting
           (child) => RepaintBoundary(child: child),
           // cause special behavior about build/layout

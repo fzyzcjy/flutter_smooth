@@ -57,7 +57,7 @@ class ExampleListViewSubPage extends StatelessWidget {
               if (enableAlwaysWorkload)
                 for (var i = 0; i < 5; ++i)
                   SmoothBrakePoint(
-                    child: LayoutPreemptPointWidget(
+                    child: SmoothLayoutPreemptPointWidget(
                       child: _AlwaysLayoutBuilder(
                         onPerformLayout: () {
                           // NOTE `sleep` does not support microseconds! #6109
@@ -123,7 +123,7 @@ class ExampleListViewSubPage extends StatelessWidget {
           if (enableNewItemWorkload)
             for (var i = 0; i < workloadMilliseconds; ++i)
               SmoothBrakePoint(
-                child: LayoutPreemptPointWidget(
+                child: SmoothLayoutPreemptPointWidget(
                   child: _NormalLayoutBuilder(
                     onPerformLayout: () {
                       // NOTE `sleep` does not support microseconds! #6109

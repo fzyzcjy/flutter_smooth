@@ -37,8 +37,8 @@ class ComplexWidget extends StatelessWidget {
             children: List.generate(listTileCount, (int index) {
               // NOTE hack, in real world should auto have preempt point
               // but in prototype we do it by hand
-              return BuildPreemptPointWidget(
-                child: LayoutPreemptPointWidget(
+              return SmoothBuildPreemptPointWidget(
+                child: SmoothLayoutPreemptPointWidget(
                   child: SizedBox(
                     height: 12,
                     child: (wrapListTile ?? identityWidgetWrapper)(

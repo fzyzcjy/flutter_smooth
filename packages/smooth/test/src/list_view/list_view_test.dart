@@ -434,7 +434,7 @@ class _SmoothListViewTester {
             ),
             AlwaysPaintBuilder(onPaint: onPaint),
             AlwaysLayoutBuilder(onPerformLayout: onBeforePreemptPoint),
-            const LayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
+            const SmoothLayoutPreemptPointWidget(child: AlwaysLayoutBuilder()),
             AlwaysLayoutBuilder(onPerformLayout: onAfterPreemptPoint),
           ],
         ),

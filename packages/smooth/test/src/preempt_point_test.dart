@@ -15,21 +15,21 @@ void main() {
   binding.debugServiceLocatorFactory =
       () => ServiceLocator(actor: actor, timeConverter: TimeConverterTest());
 
-  group('$BuildPreemptPointWidget', () {
+  group('$SmoothBuildPreemptPointWidget', () {
     testWidgets('when build, should call maybePreemptRender', (tester) async {
       verifyNever(actor.maybePreemptRenderBuildOrLayoutPhase());
       await tester.pumpWidget(SmoothParent(
-        child: BuildPreemptPointWidget(child: Container()),
+        child: SmoothBuildPreemptPointWidget(child: Container()),
       ));
       verify(actor.maybePreemptRenderBuildOrLayoutPhase()).called(1);
     });
   });
 
-  group('$LayoutPreemptPointWidget', () {
+  group('$SmoothLayoutPreemptPointWidget', () {
     testWidgets('when layout, should call maybePreemptRender', (tester) async {
       verifyNever(actor.maybePreemptRenderBuildOrLayoutPhase());
       await tester.pumpWidget(SmoothParent(
-        child: LayoutPreemptPointWidget(child: Container()),
+        child: SmoothLayoutPreemptPointWidget(child: Container()),
       ));
       verify(actor.maybePreemptRenderBuildOrLayoutPhase()).called(1);
     });

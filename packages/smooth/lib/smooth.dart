@@ -7,6 +7,6 @@ export 'src/infra/builder.dart' show SmoothBuilder;
 export 'src/infra/constant.dart';
 export 'src/infra/parent.dart' show SmoothParent;
 export 'src/infra/preempt_point.dart'
-    show BuildPreemptPointWidget, LayoutPreemptPointWidget;
+    show SmoothBuildPreemptPointWidget, SmoothLayoutPreemptPointWidget;
 export 'src/infra/time/simple_date_time.dart';
 export 'src/infra/time/typed_time.dart';
