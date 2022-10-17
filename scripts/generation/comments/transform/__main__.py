@@ -8,6 +8,10 @@ _transformers = {
     google_doc_comments.SOURCE: google_doc_comments.transform,
 }
 
+_author_mappers = {
+    'Ch Tom': 'fzyzcjy',
+}
+
 
 def _visualize(data_transformed):
     yield '''<!-- THIS IS AUTO GENERATED, DO NOT MODIFY BY HAND -->
@@ -40,6 +44,9 @@ def main():
         data_transformed += _transformers[data_raw['source']](data_raw)
 
     data_transformed.sort(key=lambda item: item.create_time)
+
+    for item in data_transformed:
+        item.author = _author_mappers.get(item.author, item.author)
 
     data_visualized = '\n'.join(_visualize(data_transformed))
 
