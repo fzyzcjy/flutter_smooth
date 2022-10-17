@@ -24,7 +24,7 @@ void main() {
 }
 ```
 
-## 3. Add parent widget
+## 3. Add parent
 
 Wrap your tree with `SmoothParent`:
 
@@ -34,9 +34,17 @@ SmoothParent(
 )
 ```
 
-## 4. Add TODO
+## 4. Add point
 
-TODO
+:::info
+
+This will *no longer* be needed, if the PR to enhance performLayout to Flutter is merged.
+
+:::
+
+Put `SmoothPoint` in many places your widget tree, roughly making each child subtree less than 1ms to build or layout. No need to be accurate about the 1ms - just ensure putting enough of it and it is done.
+
+(WIP) If you put too coarse `SmoothPoint`s, the system will warn you.
 
 ## Use it in tests
 
