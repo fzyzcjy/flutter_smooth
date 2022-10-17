@@ -10,6 +10,12 @@ There seems to be one jank that also happens in classical Flutter, even when con
 
 ## Results
 
+:::info
+
+Some bugs in this package are not fixed yet, so the following result is only >58FPS. Theoretically, it should be 60FPS.
+
+:::
+
 Looking at the sample captured video 0023.jpg - 0181.jpg, we see some frames having identical content as previous:
 
 * Some are false positives since user really has zero speed: 0041.jpeg, 0055.jpeg, 0056.jpeg, 0070.jpeg, 0071.jpeg, 0087.jpeg
