@@ -2,9 +2,10 @@
 
 For some common scenarios, just add six letters - the "Smooth" prefix - and that's all!
 
-:::info
+:::info package current status
 
-It still contains rough edges, since these are the highest-level things and I spent my time mainly on the infra part. Feel free to improve it when you face one!
+* The infra part is already implemented (hard, took me a month). The drop-in part and demo, which is mainly engineering work utilizing the exposed infra API, still has many improveable things, since these are the highest-level things and I spent my time mainly on the infra part. Feel free to issue and PR!
+* Need to wait for all PRs to Flutter to be merged and next Flutter release. (PR status [here](https://fzyzcjy.github.io/flutter_smooth/insight/status))
 
 :::
 

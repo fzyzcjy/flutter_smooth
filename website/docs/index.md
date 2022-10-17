@@ -29,11 +29,13 @@ import ReactPlayer from 'react-player'
 </div>
     
 
-## Purpose
+## 1-minute explanation
+
+### Purpose
 
 No matter how heavy the tree is to build/layout, it will run at (roughly) full FPS, feel smooth, has zero uncomfortable janks, with neglitable overhead. (Detailed reports [here](benchmark))
 
-## Usage
+### Usage
 
 Two possibilities:
 
@@ -41,10 +43,9 @@ Two possibilities:
 
 * **Arbitrarily flexible builder**: For complex cases, use [`SmoothBuilder(builder: ...)`](https://fzyzcjy.github.io/flutter_smooth/usage/builder) and put whatever you want to be smooth inside the `builder`.
 
-## Status
+## What's next
 
-* The infra part is already implemented (hard, took me a month). The drop-in part and demo, which is mainly engineering work utilizing the exposed infra API, still has many improveable things - feel free to issue and PR!
-* Need to wait for all PRs to Flutter to be merged and next Flutter release. (PR status [here](https://fzyzcjy.github.io/flutter_smooth/insight/status))
+The documentaiton - https://fzyzcjy.github.io/flutter_smooth/, with usage, demo, benchmark, insights, and more.
 
 ## Contributors
 
