@@ -129,15 +129,15 @@ const sidebars = {
         'design',
         {
             type: 'category',
-            label: 'Discussion',
+            label: 'Insight',
             collapsed: false,
             link: {
                 type: 'doc',
-                id: 'discussion/index',
+                id: 'insight/index',
             },
             items: [
-                'discussion/design-doc',
-                'discussion/conversation',
+                'insight/design-doc',
+                'insight/conversation',
             ],
         },
     ],
