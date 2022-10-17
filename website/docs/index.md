@@ -46,7 +46,35 @@ Two possibilities:
 * The infra part is already implemented (hard, took me a month). The drop-in part and demo, which is mainly engineering work utilizing the exposed infra API, still has many improveable things - feel free to issue and PR!
 * Need to wait for all PRs to Flutter to be merged and next Flutter release. (PR status [here](https://fzyzcjy.github.io/flutter_smooth/insight/status))
 
-## Thanks
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key) following [all-contributors](https://github.com/all-contributors/all-contributors) specification):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://github.com/fzyzcjy"><img src="https://avatars.githubusercontent.com/u/5236035?v=4?s=100" width="100px;" alt="fzyzcjy"/><br /><sub><b>fzyzcjy</b></sub></a><br /><a href="https://github.com/fzyzcjy/flutter_smooth/commits?author=fzyzcjy" title="Code">💻</a> <a href="https://github.com/fzyzcjy/flutter_smooth/commits?author=fzyzcjy" title="Documentation">📖</a> <a href="#ideas-fzyzcjy" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center"><a href="http://ln.hixie.ch/"><img src="https://avatars.githubusercontent.com/u/551196?v=4?s=100" width="100px;" alt="Ian Hickson"/><br /><sub><b>Ian Hickson</b></sub></a><br /><a href="#ideas-Hixie" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center"><a href="https://github.com/dnfield"><img src="https://avatars.githubusercontent.com/u/8620741?v=4?s=100" width="100px;" alt="Dan Field"/><br /><sub><b>Dan Field</b></sub></a><br /><a href="#ideas-dnfield" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center"><a href="https://github.com/jonahwilliams"><img src="https://avatars.githubusercontent.com/u/8975114?v=4?s=100" width="100px;" alt="Jonah Williams"/><br /><sub><b>Jonah Williams</b></sub></a><br /><a href="#ideas-jonahwilliams" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center"><a href="https://github.com/gaaclarke"><img src="https://avatars.githubusercontent.com/u/30870216?v=4?s=100" width="100px;" alt="gaaclarke"/><br /><sub><b>gaaclarke</b></sub></a><br /><a href="#ideas-gaaclarke" title="Ideas, Planning, & Feedback">🤔</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+More specifically, thanks for all these contributions:
 
 * [@Hixie](https://github.com/Hixie) (Flutter team): Consider details of my several proposals to the Flutter framework/engine such as requiring zero-overhead principle. Construct concrete cases when the initial proposal becomes fragile.
 * [@dnfield](https://github.com/dnfield) (Flutter team): Provide a canonical janky case inside Flutter framework to help prototyping. Point out slowness of sync generators which avoids detouring.
