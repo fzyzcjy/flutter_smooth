@@ -10,20 +10,39 @@ It still contains rough edges, since these are the highest-level things and I sp
 
 ## `SmoothListView` replacing `ListView`
 
-Usage:
+For example, before:
 
 ```dart
-SmoothListView.builder(
-  ...
+ListView.builder(
+  itemCount: 123,
+  itemBuilder: (context, index) => MyItem(),
 )
 ```
 
-Demo:
+After:
 
-`packages/smooth/example/lib/example_list_view/example_list_view_page.dart`
+```dart
+SmoothListView.builder(
+  itemCount: 123,
+  itemBuilder: (context, index) => MyItem(),
+)
+```
+
+Then, the ListView scrolling will be smooth, even if you have very heavy content to build and layout.
 
 ## Page transition animations
 
-For example, `SmoothMaterialPageRoute` replaces `MaterialPageRoute`.
+For example, use `SmoothMaterialPageRoute` to replace `MaterialPageRoute`, `SmoothPageRouteBuilder` in place of `PageRouteBuilder`, etc. Then, the enter-page animation will be smooth, no matter how heavy the new page is to build and layout.
 
-TODO #125
+A concrete example - before:
+
+```dart
+Navigator.push(context, MaterialPageRoute(builder: MyFancyPage()));
+```
+
+After:
+
+```dart
+Navigator.push(context, SmoothMaterialPageRoute(builder: MyFancyPage()));
+```
+
