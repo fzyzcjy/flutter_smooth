@@ -1,6 +1,6 @@
 import json
 
-from comments.common import dir_data_comments_raw, path_discussion_md, TransformedComment
+from comments.common import dir_data_comments_raw, TransformedComment, repo_base_dir
 from comments.transform import github
 
 _transformers = {
@@ -9,11 +9,7 @@ _transformers = {
 
 
 def _visualize(data_transformed):
-    yield '''---
-title: Discussion
----
-
-<!-- THIS IS AUTO GENERATED, DO NOT MODIFY BY HAND -->
+    yield '''<!-- THIS IS AUTO GENERATED, DO NOT MODIFY BY HAND -->
 
 :::info
 
@@ -46,7 +42,8 @@ def main():
 
     data_visualized = '\n'.join(_visualize(data_transformed))
 
-    path_discussion_md.write_text(data_visualized)
+    p = repo_base_dir / 'website/docs/insight/_conversation_generated.mdx'
+    p.write_text(data_visualized)
 
 
 if __name__ == '__main__':
