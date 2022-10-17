@@ -136,6 +136,7 @@ const sidebars = {
                 id: 'insight/index',
             },
             items: [
+                'insight/status',
                 'insight/design-doc',
                 'insight/conversation',
             ],
