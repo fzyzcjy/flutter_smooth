@@ -22,7 +22,7 @@ def main():
 
     save_raw(
         stem=f'google_doc_main',
-        source='google_doc',
+        source='google_doc_comments',
         metadata=dict(),
         content=json.loads((repo_base_dir / 'blob/data/google_doc_main_manual_download.json').read_text()),
     )

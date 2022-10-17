@@ -1,10 +1,11 @@
 import json
 
 from generation.comments.common import dir_data_comments_raw, TransformedComment, repo_base_dir
-from generation.comments.transform import github
+from generation.comments.transform import github, google_doc_comments
 
 _transformers = {
     github.SOURCE: github.transform,
+    google_doc_comments.SOURCE: google_doc_comments.transform,
 }
 
 
