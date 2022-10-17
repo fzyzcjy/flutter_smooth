@@ -1,7 +1,10 @@
+import json
 import os
 import re
+import shutil
 from pathlib import Path
 
+from generation.comments.common import save_raw
 from utils import run_command
 
 _dir_out = Path('/tmp/out')
@@ -18,23 +21,43 @@ def _run_discord_chat_exporter(command, *args):
         f'-e HTTPS_PROXY={os.environ["HTTPS_PROXY"]} '
         f'tyrrrz/discordchatexporter:stable '
         f'{command} '
+        f'--output /out '
         f'--token {_discord_token()} '
         f'{" ".join(args)}'
     )
 
 
-def _run_export_command(channel: str, *args):
+def _run_export_command(channel_id: str, after, before):
+    shutil.rmtree(str(_dir_out))
+
     _run_discord_chat_exporter(
         'export',
         '--format', 'Json',
-        '--channel', channel,
-        *args,
+        '--channel', channel_id,
+        *(['--after', after] if after is not None else []),
+        *(['--before', before] if before is not None else []),
+    )
+
+    json_paths = list(_dir_out.glob('*.json'))
+    assert len(json_paths) == 1
+
+    content = json_paths[0].read_text()
+
+    save_raw(
+        stem=f'discord_{channel_id}_{after or "all"}',
+        source='discord',
+        metadata=dict(
+            channel_id=channel_id,
+            after=after,
+            before=before,
+        ),
+        content=json.loads(content),
     )
 
 
-def gather_range(start_url: str, end_url_inclusive: str):
+def gather_range(start_url: str, end_url_exclusive: str):
     matcher_start = re.match(r'https://discord.com/channels/(\d+)/(\d+)/(\d+)', start_url)
-    matcher_end = re.match(r'https://discord.com/channels/(\d+)/(\d+)/(\d+)', end_url_inclusive)
+    matcher_end = re.match(r'https://discord.com/channels/(\d+)/(\d+)/(\d+)', end_url_exclusive)
 
     channel_id = matcher_start.group(2)
     assert channel_id == matcher_end.group(2)
@@ -42,35 +65,33 @@ def gather_range(start_url: str, end_url_inclusive: str):
     after = matcher_start.group(3)
     before = matcher_end.group(3)
 
-    _run_export_command(channel_id, f'--after {after} --before {before}')
+    _run_export_command(channel_id, after=after, before=before)
 
 
 def gather_all_in_channel(url: str):
     channel_id = re.match(r'https://discord.com/channels/(\d+)/(\d+)', url).group(2)
-    _run_export_command(channel_id)
+    _run_export_command(channel_id, after=None, before=None)
 
 
 def main():
     # hackers-framework
-    if 0:
-        gather_range(
-            start_url='https://discord.com/channels/608014603317936148/608021234516754444/1021783497112821861',
-            end_url_inclusive='https://discord.com/channels/608014603317936148/608021234516754444/1021807402510716970',
-        )
-        gather_range(
-            start_url='https://discord.com/channels/608014603317936148/608021234516754444/1021917668288245772',
-            end_url_inclusive='https://discord.com/channels/608014603317936148/608021234516754444/1024852804029927537',
-        )
+    gather_range(
+        start_url='https://discord.com/channels/608014603317936148/608021234516754444/1021783497112821861',
+        end_url_exclusive='https://discord.com/channels/608014603317936148/608021234516754444/1021814222688104548',
+    )
+    gather_range(
+        start_url='https://discord.com/channels/608014603317936148/608021234516754444/1021917668288245772',
+        end_url_exclusive='https://discord.com/channels/608014603317936148/608021234516754444/1025657091169468436',
+    )
     gather_range(
         start_url='https://discord.com/channels/608014603317936148/608021234516754444/1029371064066785340',
-        end_url_inclusive='https://discord.com/channels/608014603317936148/608021234516754444/1029757386598121502',
+        end_url_exclusive='https://discord.com/channels/608014603317936148/608021234516754444/1030376055774650439',
     )
 
     # the discord "thread"
-    if 0:
-        gather_all_in_channel(
-            url='https://discord.com/channels/608014603317936148/1021987751710699632',
-        )
+    gather_all_in_channel(
+        url='https://discord.com/channels/608014603317936148/1021987751710699632',
+    )
 
 
 if __name__ == '__main__':
