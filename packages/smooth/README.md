@@ -1,39 +1,42 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+<!-- start: title -->
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+# [flutter_smooth](https://github.com/fzyzcjy/flutter_smooth/tree/master)
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+<!-- end: title -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+![logo](https://raw.githubusercontent.com/fzyzcjy/flutter_smooth_blob/master/meta/logo.svg)
 
-## Features
+<center><small>Achieve 60 FPS, no matter how heavy the tree is to build/layout.</small></center>
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+## 3-second video
 
-## Getting started
+<!-- start: video -->
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+https://github.com/fzyzcjy/flutter_smooth_blob/blob/master/video/output.mp4?raw=true
+
+<!-- end: video -->
+
+## Purpose
+
+No matter how heavy the tree is to build/layout, it will run at (roughly) full FPS, feel smooth, has zero uncomfortable janks, with neglitable overhead. (Detailed reports [here](benchmark))
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Two possibilities:
 
-```dart
-const like = 'sample';
-```
+* **Drop-in replacements**: For common scenarios, add 6 characters ("Smooth") - `ListView` becomes [`SmoothListView`](https://fzyzcjy.github.io/flutter_smooth/usage/drop-in), ``MaterialPageRoute`` becomes [`SmoothMaterialPageRoute`](https://fzyzcjy.github.io/flutter_smooth/usage/drop-in).
 
-## Additional information
+* **Arbitrarily flexible builder**: For complex cases, use [`SmoothBuilder(builder: ...)`](https://fzyzcjy.github.io/flutter_smooth/usage/builder) and put whatever you want to be smooth inside the `builder`.
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+## Status
+
+* The infra part is already implemented (hard, took me a month). The drop-in part and demo, which is mainly engineering work utilizing the exposed infra API, still has many improveable things - feel free to issue and PR!
+* Need to wait for all PRs to Flutter to be merged and next Flutter release. (PR status [here](https://fzyzcjy.github.io/flutter_smooth/insight/status))
+
+## Thanks
+
+* [@Hixie](https://github.com/Hixie) (Flutter team): Consider details of my several proposals to the Flutter framework/engine such as requiring zero-overhead principle. Construct concrete cases when the initial proposal becomes fragile.
+* [@dnfield](https://github.com/dnfield) (Flutter team): Provide a canonical janky case inside Flutter framework to help prototyping. Point out slowness of sync generators which avoids detouring.
+* [@jonahwilliams](https://github.com/jonahwilliams) (Flutter team): Elaborate shortcomings of the old gesture system proposal (later I made a much more natural one).
+* [@gaaclarke](https://github.com/gaaclarke) (Flutter team): Share his pet theory that slowness is caused by memory locality, indicating another potential application of the package.
+
