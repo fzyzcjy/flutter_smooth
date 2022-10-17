@@ -55,8 +55,8 @@ def _run_export_command(channel_id: str, after, before):
     )
 
 
-def gather_range(start_url: str, end_url_exclusive: str):
-    matcher_start = re.match(r'https://discord.com/channels/(\d+)/(\d+)/(\d+)', start_url)
+def gather_range(start_url_exclusive: str, end_url_exclusive: str):
+    matcher_start = re.match(r'https://discord.com/channels/(\d+)/(\d+)/(\d+)', start_url_exclusive)
     matcher_end = re.match(r'https://discord.com/channels/(\d+)/(\d+)/(\d+)', end_url_exclusive)
 
     channel_id = matcher_start.group(2)
@@ -76,15 +76,15 @@ def gather_all_in_channel(url: str):
 def main():
     # hackers-framework
     gather_range(
-        start_url='https://discord.com/channels/608014603317936148/608021234516754444/1021783497112821861',
+        start_url_exclusive='https://discord.com/channels/608014603317936148/608021234516754444/1019348859601825852',
         end_url_exclusive='https://discord.com/channels/608014603317936148/608021234516754444/1021814222688104548',
     )
     gather_range(
-        start_url='https://discord.com/channels/608014603317936148/608021234516754444/1021917668288245772',
+        start_url_exclusive='https://discord.com/channels/608014603317936148/608021234516754444/1021884336158548078',
         end_url_exclusive='https://discord.com/channels/608014603317936148/608021234516754444/1025657091169468436',
     )
     gather_range(
-        start_url='https://discord.com/channels/608014603317936148/608021234516754444/1029371064066785340',
+        start_url_exclusive='https://discord.com/channels/608014603317936148/608021234516754444/1029190035431506020',
         end_url_exclusive='https://discord.com/channels/608014603317936148/608021234516754444/1030376055774650439',
     )
 
