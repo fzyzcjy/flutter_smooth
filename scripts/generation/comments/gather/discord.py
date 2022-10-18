@@ -28,7 +28,7 @@ def _run_discord_chat_exporter(command, *args):
 
 
 def _run_export_command(channel_id: str, after, before):
-    shutil.rmtree(str(_dir_out))
+    shutil.rmtree(str(_dir_out), ignore_errors=True)
 
     _run_discord_chat_exporter(
         'export',
