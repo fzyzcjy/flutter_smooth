@@ -4,7 +4,7 @@ from utils import repo_base_dir
 
 
 def _generate_one(item):
-    return f'* [{item["org"]}/{item["repo"]}#{item["number"]}](https://github.com/{item["org"]}/{item["repo"]}/pulls/{item["number"]}): ' \
+    return f'* [{item["org"]}/{item["repo"]}#{item["number"]}](https://github.com/{item["org"]}/{item["repo"]}/pull/{item["number"]}): ' \
            f'![badge](https://img.shields.io/github/pulls/detail/state/{item["org"]}/{item["repo"]}/{item["number"]}) ' \
            f'({item["title"]} @ {item["createdAt"]})'
 
