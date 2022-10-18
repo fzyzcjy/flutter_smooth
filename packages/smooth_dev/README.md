@@ -36,6 +36,9 @@ Two possibilities:
 
 The documentaiton - https://fzyzcjy.github.io/flutter_smooth/, with usage, demo, benchmark, insights, and more.
 
+> **Note**
+> Feel free to create an [issue](https://github.com/fzyzcjy/flutter_smooth/issues) if you have any questions/problems. I usually reply quickly within minutes if not hours, except for sleeping :)
+
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
