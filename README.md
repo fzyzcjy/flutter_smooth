@@ -22,7 +22,7 @@ https://user-images.githubusercontent.com/5236035/196152010-09a2d829-c94c-48b4-8
 
 ### Purpose
 
-No matter how heavy the tree is to build/layout, it will run at (roughly) full FPS, feel smooth, has zero uncomfortable janks, with neglitable overhead. (Detailed reports [here](https://fzyzcjy.github.io/flutter_smooth/benchmark))
+No matter how heavy the tree is to build/layout, it will run at (roughly) full FPS, feel smooth, has zero uncomfortable janks, with negligible overhead. (Detailed reports [here](https://fzyzcjy.github.io/flutter_smooth/benchmark))
 
 ### Usage
 
