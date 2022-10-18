@@ -42,7 +42,7 @@ The documentaiton - https://fzyzcjy.github.io/flutter_smooth/, with usage, demo,
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key) following [all-contributors](https://github.com/all-contributors/all-contributors) specification):
@@ -58,6 +58,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center"><a href="https://github.com/dnfield"><img src="https://avatars.githubusercontent.com/u/8620741?v=4?s=100" width="100px;" alt="Dan Field"/><br /><sub><b>Dan Field</b></sub></a><br /><a href="#ideas-dnfield" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center"><a href="https://github.com/jonahwilliams"><img src="https://avatars.githubusercontent.com/u/8975114?v=4?s=100" width="100px;" alt="Jonah Williams"/><br /><sub><b>Jonah Williams</b></sub></a><br /><a href="#ideas-jonahwilliams" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center"><a href="https://github.com/gaaclarke"><img src="https://avatars.githubusercontent.com/u/30870216?v=4?s=100" width="100px;" alt="gaaclarke"/><br /><sub><b>gaaclarke</b></sub></a><br /><a href="#ideas-gaaclarke" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center"><a href="https://juejin.cn/user/4309694831660711"><img src="https://avatars.githubusercontent.com/u/40540394?v=4?s=100" width="100px;" alt="Nayuta403"/><br /><sub><b>Nayuta403</b></sub></a><br /><a href="https://github.com/fzyzcjy/flutter_smooth/commits?author=Nayuta403" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
