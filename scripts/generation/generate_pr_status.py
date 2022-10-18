@@ -19,7 +19,7 @@ def main():
         _generate_one(item) for item in items
     )
 
-    (repo_base_dir / 'website/docs/insight/_status_generated.mdx').write_text(text)
+    (repo_base_dir / 'blob/doc_generated/_status_generated.mdx').write_text(text)
 
 
 if __name__ == '__main__':

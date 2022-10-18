@@ -63,7 +63,7 @@ def main():
 
     data_visualized = '\n'.join(_visualize(data_transformed))
 
-    p = repo_base_dir / 'website/docs/insight/_conversation_generated.mdx'
+    p = repo_base_dir / 'blob/doc_generated/_conversation_generated.mdx'
     p.write_text(data_visualized)
 
 
