@@ -96,6 +96,8 @@ class _SystemFrameTimeStampConverter {
     // * https://github.com/fzyzcjy/yplusplus/issues/6117#issuecomment-1272817402
     final dateTime = clock.now().microsecondsSinceEpoch;
     final timeStamp = Timeline.now;
+    print(
+        'hi _readDiffDateTimeToTimeStamp dateTime=$dateTime timeStamp=$timeStamp');
     return dateTime - timeStamp;
   }
 }
