@@ -101,6 +101,10 @@ class MyMaterialPageRoute<T> extends MaterialPageRoute<T> {
     super.allowSnapshotting = true,
   });
 
+  // TODO temp hack
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 10000);
+
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
