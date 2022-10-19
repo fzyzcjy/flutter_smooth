@@ -136,6 +136,7 @@ const sidebars = {
             },
             items: [
                 'design/intro',
+                'design/history',
                 {
                     type: 'category',
                     label: 'Infra layer',
