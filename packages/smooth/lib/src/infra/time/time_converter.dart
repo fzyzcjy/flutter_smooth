@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:smooth/src/infra/host_api/messages.dart';
 import 'package:smooth/src/infra/time/simple_date_time.dart';
 import 'package:smooth/src/infra/time/typed_time.dart';
 
@@ -113,8 +112,12 @@ class _PointerEventTimeStampConverter {
   }
 
   Future<void> _init() async {
-    _diffDateTimeToPointerEventTimeStamp =
-        await SmoothHostApi().pointerEventDateTimeDiffTimeStamp();
+    _diffDateTimeToPointerEventTimeStamp = 0;
+    // TODO
+    // TODO temp hack!!!
+    // TODO
+    // _diffDateTimeToPointerEventTimeStamp =
+    //     await SmoothHostApi().pointerEventDateTimeDiffTimeStamp();
   }
 
   int? get diffDateTimeToPointerEventTimeStamp =>

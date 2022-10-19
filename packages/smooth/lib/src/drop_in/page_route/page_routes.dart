@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/drop_in/list_view/controller.dart';
@@ -44,6 +45,7 @@ mixin SmoothPageRouteMixin<T> on PageRoute<T> {
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
+    print('hi ${describeIdentity(this)}.buildTransitions');
     return SmoothBuilder(
       wantSmoothTickTickers: [_secondaryAnimationControllerTicker!],
       builder: (context, child) => MediaQuery(
@@ -52,9 +54,9 @@ mixin SmoothPageRouteMixin<T> on PageRoute<T> {
           // NOTE use this secondary, not primary
           animation: _partialWriteOnlySecondaryAnimationController!,
           builder: (context, _) {
-            // print('hi SmoothBuilder.AnimatedBuilder.builder '
-            //     'value=${_partialWriteOnlySecondaryAnimationController?.value} '
-            //     '_partialWriteOnlySecondaryAnimationController=${describeIdentity(_partialWriteOnlySecondaryAnimationController)} $_partialWriteOnlySecondaryAnimationController');
+            print('hi SmoothBuilder.AnimatedBuilder.builder '
+                'value=${_partialWriteOnlySecondaryAnimationController?.value} '
+                '_partialWriteOnlySecondaryAnimationController=${describeIdentity(_partialWriteOnlySecondaryAnimationController)} $_partialWriteOnlySecondaryAnimationController');
             return super.buildTransitions(
               context,
               // TODO improve this (e.g. handle offstage)
@@ -90,8 +92,27 @@ class SmoothPageRouteBuilder<T> extends PageRouteBuilder<T>
   });
 }
 
+// TODO temporarily hack for Flutter Web on MacOS
+class MyMaterialPageRoute<T> extends MaterialPageRoute<T> {
+  MyMaterialPageRoute({
+    required super.builder,
+    super.settings,
+    super.maintainState = true,
+    super.fullscreenDialog,
+    super.allowSnapshotting = true,
+  });
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    print('${describeIdentity(this)}.buildTransitions');
+    return const ZoomPageTransitionsBuilder().buildTransitions<T>(
+        this, context, animation, secondaryAnimation, child);
+  }
+}
+
 // ref [MaterialPageRoute], only add a mixin
-class SmoothMaterialPageRoute<T> extends MaterialPageRoute<T>
+class SmoothMaterialPageRoute<T> extends MyMaterialPageRoute<T>
     with SmoothPageRouteMixin<T> {
   SmoothMaterialPageRoute({
     required super.builder,

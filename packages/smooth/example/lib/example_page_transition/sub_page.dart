@@ -1,4 +1,5 @@
 import 'package:example/utils/complex_widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
@@ -110,12 +111,15 @@ class _SecondPageState extends State<_SecondPage> {
   @override
   void initState() {
     super.initState();
+    print('${describeIdentity(this)}.initState');
     SchedulerBinding.instance.addPostFrameCallback((_) {
+      print('${describeIdentity(this)} post frame 1');
       // This hack is because [ModalRoute.offstage] needs one extra frame
       // to be updated to false. We should find other workarounds later
       // so we can remove this extra latency.
       // https://github.com/fzyzcjy/flutter_smooth/issues/127#issuecomment-1279972708
       SchedulerBinding.instance.addPostFrameCallback((_) {
+        print('${describeIdentity(this)} post frame 2');
         if (!mounted) return;
         setState(() => placeholder = false);
       });
@@ -124,6 +128,7 @@ class _SecondPageState extends State<_SecondPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('${describeIdentity(this)}.build');
     return Scaffold(
       appBar: AppBar(title: const Text('Second Page')),
       body: placeholder

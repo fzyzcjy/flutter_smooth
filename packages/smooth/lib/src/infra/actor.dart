@@ -10,8 +10,12 @@ import 'package:smooth/src/infra/time/typed_time.dart';
 
 class Actor {
   void maybePreemptRenderBuildOrLayoutPhase() {
+    print('hi maybePreemptRenderBuildOrLayoutPhase');
     final serviceLocator = ServiceLocator.instance;
-    if (serviceLocator.auxiliaryTreeRegistry.trees.isEmpty) return;
+    if (serviceLocator.auxiliaryTreeRegistry.trees.isEmpty) {
+      print('hi maybePreemptRenderBuildOrLayoutPhase skip since tree empty');
+      return;
+    }
 
     final timeManager = serviceLocator.timeManager;
     final now = clock.nowSimple();
@@ -20,14 +24,14 @@ class Actor {
 
     if (timeManager.thresholdActOnBuildOrLayoutPhaseTimeStamp! >=
         nowTimestamp) {
-      // _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
+      _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
       return;
     }
 
     // this should be called *after* time check, since this may be a bit more
     // expensive
     if (!_preludeBeforePreemptRender()) {
-      // _debugLogMaybePreemptRender(haltReason: 'PreludeDisagree');
+      _debugLogMaybePreemptRender(haltReason: 'PreludeDisagree');
       return;
     }
 
@@ -54,12 +58,12 @@ class Actor {
 
       if (timeManager.thresholdActOnPostDrawFramePhaseTimeStamp! >=
           nowTimestamp) {
-        // _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
+        _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
         return;
       }
 
       if (!_preludeBeforePreemptRender()) {
-        // _debugLogMaybePreemptRender(haltReason: 'PreludeDisagree');
+        _debugLogMaybePreemptRender(haltReason: 'PreludeDisagree');
         return;
       }
 
@@ -84,11 +88,13 @@ class Actor {
     return !serviceLocator.brakeController.brakeModeActive;
   }
 
-  // void _debugLogMaybePreemptRender({required String haltReason}) =>
-  //     Timeline.timeSync(
-  //         'MaybePreemptRenderHalt',
-  //         arguments: <String, Object?>{'haltReason': haltReason},
-  //         () {});
+  void _debugLogMaybePreemptRender({required String haltReason}) {
+    print('MaybePreemptRenderHalt $haltReason');
+    Timeline.timeSync(
+        'MaybePreemptRenderHalt',
+        arguments: <String, Object?>{'haltReason': haltReason},
+        () {});
+  }
 
   void _preemptRenderRaw({required RunPipelineReason debugReason}) {
     final serviceLocator = ServiceLocator.instance;
@@ -103,7 +109,7 @@ class Actor {
 
     // final start = clock.now();
     Timeline.timeSync('PreemptRender', arguments: arguments, () {
-      // print('$runtimeType _preemptRender start');
+      print('$runtimeType _preemptRender start');
 
       // print('_preemptRender '
       //     'lastVsyncInfo=$lastVsyncInfo '
