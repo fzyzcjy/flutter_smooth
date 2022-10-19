@@ -100,8 +100,8 @@ class _SystemFrameTimeStampConverter {
     // final timeStamp = Timeline.now;
     final timeStamp = (window.performance.now() * 1000).round();
 
-    print(
-        'hi _readDiffDateTimeToTimeStamp dateTime=$dateTime timeStamp=$timeStamp');
+    // print(
+    //     'hi _readDiffDateTimeToTimeStamp dateTime=$dateTime timeStamp=$timeStamp');
     return dateTime - timeStamp;
   }
 }
