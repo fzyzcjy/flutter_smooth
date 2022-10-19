@@ -64,8 +64,6 @@ class TimeManager {
     phase = SmoothFramePhase.initial;
 
     _currentSmoothFrameTimeStamp = currentFrameTimeStamp;
-    print(
-        '$runtimeType onBeginFrame (after) _currentSmoothFrameTimeStamp=$_currentSmoothFrameTimeStamp');
   }
 
   void afterBuildOrLayoutPhasePreemptRender(
@@ -88,8 +86,6 @@ class TimeManager {
     assert(newSmoothFrameTimeStamp > _currentSmoothFrameTimeStamp!,
         'newSmoothFrameTimeStamp=$newSmoothFrameTimeStamp should be greater than _currentSmoothFrameTimeStamp=$_currentSmoothFrameTimeStamp');
     _currentSmoothFrameTimeStamp = newSmoothFrameTimeStamp;
-    print(
-        '$runtimeType afterBuildOrLayoutPhasePreemptRender (after) _currentSmoothFrameTimeStamp=$_currentSmoothFrameTimeStamp');
   }
 
   void afterRunAuxPipelineForPlainOld({required AdjustedFrameTimeStamp now}) {
@@ -106,8 +102,6 @@ class TimeManager {
 
     _currentSmoothFrameTimeStamp =
         _currentSmoothFrameTimeStamp! + kOneFrameAFTS;
-    print(
-        '$runtimeType beforePostDrawFramePhasePreemptRender (after) _currentSmoothFrameTimeStamp=$_currentSmoothFrameTimeStamp');
   }
 
   static AdjustedFrameTimeStamp get normalNow =>

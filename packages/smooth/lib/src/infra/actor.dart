@@ -24,9 +24,6 @@ class Actor {
 
     if (timeManager.thresholdActOnBuildOrLayoutPhaseTimeStamp! >=
         nowTimestamp) {
-      print(
-          'thresholdActOnBuildOrLayoutPhaseTimeStamp=${timeManager.thresholdActOnBuildOrLayoutPhaseTimeStamp} '
-          'nowTimestamp=$nowTimestamp now=$now');
       _debugLogMaybePreemptRender(haltReason: 'TimeTooEarly');
       return;
     }
