@@ -137,13 +137,12 @@ class Actor {
       // ignore: invalid_use_of_protected_member
       final scene = binding.renderView.layer!.buildScene(builder);
 
-      print('call window.render before (now=${DateTime.now()})');
+      print('call window.render (now=${DateTime.now()})');
       WidgetsBinding.instance.window.render(
         scene,
         fallbackVsyncTargetTime:
             smoothFrameSystemTimeStamp.innerSystemFrameTimeStamp,
       );
-      print('call window.render after (now=${DateTime.now()})');
 
       scene.dispose();
 
