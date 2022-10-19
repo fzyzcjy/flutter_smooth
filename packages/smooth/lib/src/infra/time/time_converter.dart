@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer';
+import 'dart:html';
 
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
@@ -95,7 +95,11 @@ class _SystemFrameTimeStampConverter {
     // * #6120
     // * https://github.com/fzyzcjy/yplusplus/issues/6117#issuecomment-1272817402
     final dateTime = clock.now().microsecondsSinceEpoch;
-    final timeStamp = Timeline.now;
+
+    // NOTE temp hack for web! #6289
+    // final timeStamp = Timeline.now;
+    final timeStamp = (window.performance.now() * 1000).round();
+
     print(
         'hi _readDiffDateTimeToTimeStamp dateTime=$dateTime timeStamp=$timeStamp');
     return dateTime - timeStamp;
