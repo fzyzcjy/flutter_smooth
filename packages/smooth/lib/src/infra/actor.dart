@@ -101,7 +101,7 @@ class Actor {
       // TODO
     };
 
-    final start = clock.now();
+    // final start = clock.now();
     Timeline.timeSync('PreemptRender', arguments: arguments, () {
       // print('$runtimeType _preemptRender start');
 
