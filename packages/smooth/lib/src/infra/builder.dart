@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/infra/adapter_in_auxiliary_tree.dart';
@@ -28,7 +29,7 @@ class _SmoothBuilderState extends State<SmoothBuilder> {
   @override
   void initState() {
     super.initState();
-    // print('${describeIdentity(this)} initState');
+    print('${describeIdentity(this)} initState');
 
     pack = AuxiliaryTreePack(
       (pack) => Builder(
@@ -55,7 +56,7 @@ class _SmoothBuilderState extends State<SmoothBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    // print('${describeIdentity(this)} build');
+    print('${describeIdentity(this)} build');
 
     // should not run pipeline here, see the link below
     // https://github.com/fzyzcjy/yplusplus/issues/5815#issuecomment-1256952866
