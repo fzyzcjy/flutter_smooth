@@ -135,6 +135,7 @@ const sidebars = {
                 id: 'design/index',
             },
             items: [
+                'design/intro',
                 {
                     type: 'category',
                     label: 'Infra layer',
