@@ -126,7 +126,45 @@ const sidebars = {
                 },
             ],
         },
-        'design',
+        {
+            type: 'category',
+            label: 'Design',
+            collapsed: false,
+            link: {
+                type: 'doc',
+                id: 'design/index',
+            },
+            items: [
+                {
+                    type: 'category',
+                    label: 'Infra layer',
+                    collapsed: false,
+                    link: {
+                        type: 'doc',
+                        id: 'design/infra/index',
+                    },
+                    items: [
+                        'design/infra/preempt',
+                        'design/infra/brake',
+                        'design/infra/gesture',
+                        'design/infra/others',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Drop-in layer',
+                    collapsed: false,
+                    link: {
+                        type: 'doc',
+                        id: 'design/drop-in/index',
+                    },
+                    items: [
+                        'design/drop-in/list-view',
+                        'design/drop-in/page-route',
+                    ],
+                },
+            ],
+        },
         {
             type: 'category',
             label: 'Insight',
