@@ -136,7 +136,19 @@ const sidebars = {
             },
             items: [
                 'design/intro',
-                'design/history',
+                {
+                    type: 'category',
+                    label: 'Literature review',
+                    collapsed: false,
+                    link: {
+                        type: 'doc',
+                        id: 'design/review/index',
+                    },
+                    items: [
+                        'design/review/summary',
+                        'design/review/comparison',
+                    ],
+                },
                 {
                     type: 'category',
                     label: 'Infra layer',
