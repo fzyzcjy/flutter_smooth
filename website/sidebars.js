@@ -191,7 +191,20 @@ const sidebars = {
                         },
                         'design/infra/animation',
                         'design/infra/gesture',
-                        'design/infra/gc',
+                        {
+                            type: 'category',
+                            label: 'Garbage collection',
+                            collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/gc/index',
+                            },
+                            items: [
+                                'design/infra/gc/intro',
+                                'design/infra/gc/within-frame',
+                                'design/infra/gc/between-frame',
+                            ],
+                        },
                         {
                             type: 'category',
                             label: 'Misc',
@@ -205,7 +218,6 @@ const sidebars = {
                                 'design/infra/misc/rasterizer-ending',
                                 'design/infra/misc/pointer-dispatch',
                                 'design/infra/misc/report-timing',
-                                // TODO
                             ],
                         },
                     ],
