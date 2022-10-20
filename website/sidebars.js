@@ -191,6 +191,7 @@ const sidebars = {
                         },
                         'design/infra/animation',
                         'design/infra/gesture',
+                        'design/infra/gc',
                         {
                             type: 'category',
                             label: 'Misc',
@@ -201,6 +202,10 @@ const sidebars = {
                             },
                             items: [
                                 'design/infra/misc/intro',
+                                'design/infra/misc/rasterizer-ending',
+                                'design/infra/misc/pointer-dispatch',
+                                'design/infra/misc/report-timing',
+                                // TODO
                             ],
                         },
                     ],
