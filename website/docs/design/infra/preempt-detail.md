@@ -36,7 +36,11 @@ Indeed, this approach is robust to the choice of threshold, and the execution ti
 
 For completeness, three cases are discussed - a janky frame needs <16ms, ~32ms, and infinitely long. In the diagram, we deliberately assume the `preemptRender` *all* misses the vsync deadline. Surely, if they meet the deadline, the scenario can just be better instead of worse. As can be seen in the diagram, in each 1/60s, we see the rasterizer thread produce one outcome, so it runs exactly at 60fps.
 
-TODO figure
+```mdx-code-block
+import PreemptDifferentJank from '@site/static/svg/preempt_different_jank.svg'
+
+<center><PreemptDifferentJank/></center>
+```
 
 ## How to present new UI during preempt
 
