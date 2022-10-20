@@ -6,10 +6,28 @@ Why do we need another mechanism, given that the Preempt already works well? Con
 
 Another example is that, when user is scrolling a `ListView` and suddently user finger leaves the screen (`PointerUpEvent`). There are some complex logic happening to handle the pointer up event inside `ListView`, so I do not want to reproduce it in preempt render. If so, the user pointer up event will not be handled until the janky frame ends, causing both lagging and jank (because there is no pointer move event after pointer up, so ListView no longer moves, so it looks janky).
 
+In summary, when there is something that cannot be handled by preempt rendering, 
+
 For a figure demonstrating this, please refer to the next part.
 
 ## How
 
-Again, figure first:
+Again, figure first. The first row is the problem, and the second row is the solution.
+
+```mdx-code-block
+import BrakeMain from '@site/static/svg/brake_main.svg'
+
+<center><BrakeMain/></center>
+```
+
+In the first row (the problem), there is an event that cannot be handled at time 1.8. Then, even though all subsequent preempt renders happen, they are marked red and result in janks, because they cannot produce meaningful UI scene, since preempt render cannot handle that event. It is only after (roughly) time 4 when the event is handled, that the preempt render and normal render starts to produce meaningful data. Therefore, we do see several janks, even though it is 60FPS and preempt is running.
+
+Now comes the solution in the second row.
+
+TODO explain
+
+## Comparison
 
 TODO
+
+TODO also explain cost is minor (#6180)
