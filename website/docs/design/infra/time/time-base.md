@@ -1,28 +1,14 @@
-# All about time
-
-It may look surprising I have a section discussing time, but there are some pitfalls here indeed.
-
-## Pitfall: The 1-frame shift
-
-Suppose it is 8 o'clock and we receive a `handleBeginFrame(Duration? timeStamp)`. Then, what time stamp do you think we will get? The time stamp corresponding to 8 o'clock?
-
-No! Indeed it is a time stamp representing "8 o'clock + 16.67ms". This is the 1-frame shift pitfall in the title.
-
-Why? Digging into the source code (as discussed below), we see the values is gotten via `frame_timings_recorder_->GetVsyncTargetTime()`. In addition, "vsync *target* time" means the "8 o'clock + 16.67ms" instead of "8 o'clock". You can confirm this by using timeline tracing or logging.
-
-By the way, as discussed below, that `timeStamp` has time base as `SystemFrameTimeStamp`, not `DateTime`.
-
-## Several time bases
+# Several time bases
 
 They can be converted back and forth via `TimeConverter` class.
 
-### `DateTime.now()`, `SimpleDateTime.now()`
+## `DateTime.now()`, `SimpleDateTime.now()`
 
 The one everyone is familiar with.
 
 The `SimpleDateTime` has same semantics as `DateTime` but probably more lightweight.
 
-### `SystemFrameTimeStamp`, `fml::TimePoint`
+## `SystemFrameTimeStamp`, `fml::TimePoint`
 
 Who uses it
 
@@ -36,6 +22,7 @@ By the way, the dig if you are interested are as follows. Or, look at dig here: 
 
 <details>
 <summary>Dig in deteails (if you are interested)</summary>
+
 
 ```c++
 // animator.cc
@@ -56,7 +43,7 @@ void PlatformConfiguration::BeginFrame(fml::TimePoint frameTime,
 
 </details>
 
-### `AdjustedFrameTimeStamp`, `Ticker`
+## `AdjustedFrameTimeStamp`, `Ticker`
 
 Who uses it
 
@@ -65,7 +52,7 @@ Who uses it
 
 As can be seen in `SchedulerBinding` source code, this one is effectively converted from `SchedulerBinding.currentSystemFrameTimeStamp`  by `_adjustForEpoch` method.
 
-### `PointerEventTimeStamp`, `PointerEvent.timeStamp`
+## `PointerEventTimeStamp`, `PointerEvent.timeStamp`
 
 Who uses it:
 
@@ -75,6 +62,7 @@ Digging into code, we see it comes from a time stamp provided together with poin
 
 <details>
 <summary>Dig in deteails (if you are interested)</summary>
+
 
 #### Android
 

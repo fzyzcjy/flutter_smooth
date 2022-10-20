@@ -192,7 +192,19 @@ const sidebars = {
                         'design/infra/rasterizer-queue',
                         'design/infra/animation',
                         'design/infra/gesture',
-                        'design/infra/time',
+                        {
+                            type: 'category',
+                            label: 'Time',
+                            collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/time/index',
+                            },
+                            items: [
+                                'design/infra/time/pitfall-off',
+                                'design/infra/time/time-base',
+                            ],
+                        },
                         {
                             type: 'category',
                             label: 'Garbage collection',
