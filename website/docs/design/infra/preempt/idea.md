@@ -1,4 +1,4 @@
-# Preempt
+# Idea
 
 ## Starting from plain
 

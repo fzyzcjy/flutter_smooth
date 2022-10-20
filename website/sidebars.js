@@ -158,8 +158,23 @@ const sidebars = {
                         id: 'design/infra/index',
                     },
                     items: [
-                        'design/infra/preempt',
-                        'design/infra/preempt-detail',
+                        {
+                            type: 'category',
+                            label: 'Preempt',
+                            collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/preempt/index',
+                            },
+                            items: [
+                                'design/infra/preempt/idea',
+                                'design/infra/preempt/how',
+                                'design/infra/preempt/when',
+                                'design/infra/preempt/what-low',
+                                'design/infra/preempt/what-high',
+                                'design/infra/preempt/post-draw',
+                            ],
+                        },
                         'design/infra/brake',
                         'design/infra/animation',
                         'design/infra/gesture',
