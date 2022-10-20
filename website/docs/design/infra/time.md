@@ -4,7 +4,13 @@ It may look surprising I have a section discussing time, but there are some pitf
 
 ## Pitfall: The 1-frame shift
 
-TODO
+Suppose it is 8 o'clock and we receive a `handleBeginFrame(Duration? timeStamp)`. Then, what time stamp do you think we will get? The time stamp corresponding to 8 o'clock?
+
+No! Indeed it is a time stamp representing "8 o'clock + 16.67ms". This is the 1-frame shift pitfall in the title.
+
+Why? Digging into the source code (as discussed below), we see the values is gotten via `frame_timings_recorder_->GetVsyncTargetTime()`. In addition, "vsync *target* time" means the "8 o'clock + 16.67ms" instead of "8 o'clock". You can confirm this by using timeline tracing or logging.
+
+By the way, as discussed below, that `timeStamp` has time base as `SystemFrameTimeStamp`, not `DateTime`.
 
 ## Several time bases
 
@@ -26,9 +32,10 @@ Who uses it
 
 Notice the engine wants to accept `fml::TimePoint` most of the time. Therefore, for example, when we want to submit a vsync target time to engine, we should (usually) convert it to `fml::TimePoint`.
 
-By the way, the dig if you are interested:
+By the way, the dig if you are interested are as follows. Or, look at dig here: https://github.com/flutter/flutter/issues/112610#issuecomment-1264096036
 
 <details>
+<summary>Dig in deteails (if you are interested)</summary>
 
 ```c++
 // animator.cc
@@ -66,9 +73,8 @@ Who uses it:
 
 Digging into code, we see it comes from a time stamp provided together with pointer events from the Android and iOS operating system.
 
-The dig if you are interested:
-
 <details>
+<summary>Dig in deteails (if you are interested)</summary>
 
 #### Android
 
