@@ -191,7 +191,18 @@ const sidebars = {
                         },
                         'design/infra/animation',
                         'design/infra/gesture',
-                        'design/infra/others',
+                        {
+                            type: 'category',
+                            label: 'Misc',
+                            collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/misc/index',
+                            },
+                            items: [
+                                'design/infra/misc/intro',
+                            ],
+                        },
                     ],
                 },
                 {
