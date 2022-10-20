@@ -159,7 +159,9 @@ const sidebars = {
                     },
                     items: [
                         'design/infra/preempt',
+                        'design/infra/preempt-detail',
                         'design/infra/brake',
+                        'design/infra/animation',
                         'design/infra/gesture',
                         'design/infra/others',
                     ],
