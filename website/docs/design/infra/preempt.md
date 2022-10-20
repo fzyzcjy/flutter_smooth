@@ -18,7 +18,9 @@ In [literature review](../review/summary), we have seen many attempts to solve t
 
 Since they has the same high-level logic, we can draw them using one figure as follows:
 
-**Image caption**: The one heavy frame that runs at 2-4.5 in the previous figure, now becomes three shorter frames that runs inside 2-6. The frame at about 2-2.7 demonstrates when early return happens too early, and the frame at about 3-4.1 is an example that the early return happens too late, which seems hard to avoid. Many other shortcomings are not displayed in the figure, such as overhead. 
+**Image caption**: The one heavy frame that runs at 2-4.5 in the previous figure, now becomes three shorter frames that runs inside 2-6. The frame at about 2-2.7 demonstrates when early return happens too early, and the frame at about 3-4.1 is an example that the early return happens too late, which seems hard to avoid.
+
+Please note that, many other shortcomings are not displayed in the figure, such as overhead. 
 
 ```mdx-code-block
 import PreemptTimelineTheirs from '@site/static/svg/preempt_timeline_theirs.svg'

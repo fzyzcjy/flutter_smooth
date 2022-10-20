@@ -1,5 +1,14 @@
 # Introduction
 
+:::caution
+
+This chapter may be challenging to read and is only for those who want to know the internals! If you find it hard, maybe:
+
+* Learn some Flutter internals (such as the Widget, Element, RenderObject, Layer tree and so on)
+* Ask me (for example, in GitHub issue section - I usually reply quickly)
+
+:::
+
 In this chapter, I will discuss how this package is designed and implemented.
 
 ## The layers

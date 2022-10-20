@@ -28,7 +28,11 @@ If you are familiar with the prior approaches (discussed in literature review), 
 
 ## When to trigger preempt
 
-First question: when should we trigger a preempt, i.e. put a little green box? The answer is, just call it when `now - lastVsyncTime > threshold` where threshold is smaller than and near 16.67ms. In other words, trigger when we are near a deadline.
+The answer is, when inside the build or layout phase, just call it when `now - lastVsyncTime > threshold` where threshold is smaller than and near 16.67ms. In other words, trigger when we are near a deadline.
+
+We do not need to consider the paint or compositing phase, because that is usually very fast.
+
+We can consider and trigger preempt in the finalize phase indeed, but since I have not seen cases when it is super slow, I have not done that. If you need that, just trivially mimic the preempt triggerring in `PostDrawFrame`(discussed below).
 
 ### What happens if triggered too late/early
 
@@ -42,23 +46,39 @@ import PreemptDifferentJank from '@site/static/svg/preempt_different_jank.svg'
 <center><PreemptDifferentJank/></center>
 ```
 
-## How to present new UI during preempt
+## What to do during preempt
 
-TODO explain we have old layer tree
+Abstractly speaking, we should produce a new UI when doing a preempt. For example, when showing enter-page animation, the new UI will be a screen shifting pixel by pixel as time goes by.
 
-TODO "From preemptModifyLayerTree to PreemptBuilder" in design doc
+More concretely, what is the new UI? This needs some background of Flutter internal implementation. The UI that the ui thread submits to rasterizer thread is indeed a `Scene` object, and it is submitted to rasterizer via `window.render`.
 
-### Starting simple: Modify manually
+## How to create `Scene`
 
-TODO
+So how can we create the latest UI inside the preempt render? Let's firstly discuss the lowest-level approach, and below we will provide a wrapper so users can create widgets easily.
 
-### Wrap it: `PreemptBuilder`
+Recall how Flutter is implemented. During a normal frame pipeline, the build and layout phase modifies `RenderObject` (and other things), while the `Layer` tree is untouched and is still old (i.e. has content from last frame). During the paint phase, `RenderObject` will modify the `Layer` tree by utilizing its new data. Finally, the `Scene` is built from the `Layer` tree, and submitted to rasterizer via `window.render`.
 
-TODO
+Recall the preempt render is called *inside* the build or layout phase. Therefore, during a preempt render, we have dirty `RenderObject` tree and should not utilize it. However, the `Layer` tree is, foruntately, non-dirty and ready to be used, with content generated from the plain-old rendering in the last frame.
+
+Now consider what happens during a preempt render. For simplicity, suppose we are doing a page-enter animation, and the widget handling page shifting is bound to a specific `OffsetLayer`. Then, inside preempt render, we simply do something like `thatOffsetLayer.offset += 10px`. By doing so, the UI will have the new page shifted a bit, i.e. the animation progresses a bit. After that, we can submit the whole layer tree object to rasterizer (indeed convert to `Scene` and call `window.render`).
+
+Thus, we now have a mechanism for 60FPS smooth animation, no matter how heavy the tree is to build/layout.
+
+## The `PreemptBuilder` API
+
+If this package stops at the API above, nobody will use it - you will have to write a ton of code to modify the `Layer` tree by yourself. The goal in this part is to create a developer-friendly API, indeed the `PreemptBuilder`. Recall the definition of `PreemptBuilder(builder: ..., child: ...)` - put the things that you want to be smooth inside the builder, and we are done. How is that implemented?
+
+The core idea is to use an auxiliary tree in addition to the main tree. In other words, we create a separate `BuildOwner`, `PipelineOwner`, root widget, etc. Then, we are free to call its `buildScope`, `flushLayout`, `flushPaint`, etc, at *any time* at any frequency we like. Its input is a widget tree (indeed `PreemptBuilder.builder` output), and its output is a `Layer` tree (indeed to be inserted to the main tree).
+
+Then, we need to graft the auxiliary-tree’s layer tree and the main-tree’s layer tree. Shortly speaking, we do so in `paint` function by `context.addLayer` and so on. Details can be found in the code.
 
 ## The `PostDrawFrame` phase
 
+There is indeed one flaw in the figure above. Consider the following scenario:
+
+TODO figure
+
 TODO explain the scenario
 
-TODO
+
 
