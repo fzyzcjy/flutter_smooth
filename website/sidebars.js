@@ -189,6 +189,7 @@ const sidebars = {
                                 'design/infra/brake/analysis',
                             ],
                         },
+                        'design/infra/rasterizer-queue',
                         'design/infra/animation',
                         'design/infra/gesture',
                         'design/infra/time',
