@@ -1,5 +1,11 @@
 # Idea
 
+:::info
+
+This "Preempt" design indeed is not that related to the preemption that we see in, for example, Linux. It is named like this for historical reasons.
+
+:::
+
 ## Starting from plain
 
 To begin with, suppose we have some jank frames caused by slow build/layout, and there is no optimization at all. Then the timeline looks like the following.

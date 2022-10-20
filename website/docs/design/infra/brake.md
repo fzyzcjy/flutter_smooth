@@ -6,7 +6,7 @@ Why do we need another mechanism, given that the Preempt already works well? Con
 
 Another example is that, when user is scrolling a `ListView` and suddently user finger leaves the screen (`PointerUpEvent`). There are some complex logic happening to handle the pointer up event inside `ListView`, so I do not want to reproduce it in preempt render. If so, the user pointer up event will not be handled until the janky frame ends, causing both lagging and jank (because there is no pointer move event after pointer up, so ListView no longer moves, so it looks janky).
 
-In summary, when there is something that cannot be handled by preempt rendering, 
+In summary, when there is something that cannot be handled by preempt rendering, we will jank because preempt can do nothing about that. With brake, there is no such problem. Therefore, the preempt is the main workhorse, while the brake fixes some edge cases that preempt is not able to do.
 
 For a figure demonstrating this, please refer to the next part.
 
@@ -28,9 +28,9 @@ As for why 2 is "ok" instead of "jank" even though event (suppose it is pointer 
 
 Now comes the solution in the third row of the figure. 
 
-Remark: The empty space around 2.0-2.5 is there, because there are some extra things to do by Flutter between two frames. However, it does not matter as long as such extra thing do not occupy about 16ms.
-
 When the event occurs, we realize it and triggers a brake. When doing so, the build and layout of the main tree will halt as fast as possible, by putting a placeholder widget instead of doing the real (and heavy) build or layout. Therefore, the main janky frame is quickly halted, and now there is a chance for ListView to handle the event, since its RenderObject is now non-dirty and we are in a normal between-frame event handling stage. After the event is handled (and other between-frame things are done), the next frame is started immediately. As long as it is started before 2.9 in the figure (i.e. have a few milliseconds before deadline), we can trigger a preempt render, so no jank will happen.
+
+Remark: The empty space around 2.0-2.5 in the figure is because, there are some extra things to do by Flutter between two frames. However, it does not matter as long as such extra thing do not occupy about 16ms.
 
 ### Details
 
@@ -41,8 +41,12 @@ To correctly implement it, there are some other details as well:
 
 ## Comparison
 
-TODO
+At a first glance, it looks a bit familiar with the "split heavy work into multi frames and early return in each frame" prior work. To fully understand this design, we need to notice their differences, mainly in the occasion when to trigger an early return:
 
-TODO also explain cost is minor (#6180)
+In prior work, it is triggered unconditionally, after a portion of heavy work has been done (as long as we are discussing heavy-work frames). In brake, it is never triggered, unless preempt notices there are some events that it cannot handle within preempt render.
 
-TODO also explain, since preempt, it is ok to be slow for between-frame
+## Cost analysis
+
+Firstly, the amortized cost is very small. With the comparison above, we now clearly see why ths cost is minor, even though the prior work has many shortcomings. It is mainly because the frequency of triggering the mechanism. In prior work, the early return mechanism with all the cost are triggered on each and every 16.67ms (again assuming we are discussing heavy-work frames). However, in the brake, it is triggerred very sparsely. For the ListView scrolling example, only the pointer down and pointer up (the latter can be overcome indeed) needs to trigger brake. Suppose a scroll takes 2 second, then only 1/60 of the  scenarios trigger brake, so the amortized cost is very tiny if not neglitable.
+
+Secondly, consider the frame that has the worst cost, it is still no problem. If the brake is alone, we do face the risk of jank. For example, just like prior work, if we miss the deadline by even 0.01ms, then we will face one jank, and as discussed earlier, such probablity is inevitable. However, the brake is not alone, but accompanied with the preempt. Thus, it has much looser timing requirements - as long as we start a new frame *a few* milliseconds before the deadline, we are safe and no jank will happen. For a concrete example, in the third row of the figure, even if the second frame starts at (e.g.) time 2.8, there is still no jank.
