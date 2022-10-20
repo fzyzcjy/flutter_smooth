@@ -8,6 +8,7 @@ import 'package:smooth/src/infra/host_api/messages.dart';
 import 'package:smooth/src/infra/time/simple_date_time.dart';
 import 'package:smooth/src/infra/time/typed_time.dart';
 
+/// See docs time.md for detailed descriptions
 abstract class TimeConverter {
   factory TimeConverter() = _TimeConverterNormal;
 
