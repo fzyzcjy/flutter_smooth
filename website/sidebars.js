@@ -191,6 +191,7 @@ const sidebars = {
                         },
                         'design/infra/animation',
                         'design/infra/gesture',
+                        'design/infra/time',
                         {
                             type: 'category',
                             label: 'Garbage collection',
