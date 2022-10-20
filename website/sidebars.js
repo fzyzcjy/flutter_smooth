@@ -191,7 +191,19 @@ const sidebars = {
                         },
                         'design/infra/rasterizer-queue',
                         'design/infra/animation',
-                        'design/infra/gesture',
+                        {
+                            type: 'category',
+                            label: 'Gesture',
+                            collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/gesture/index',
+                            },
+                            items: [
+                                'design/infra/gesture/impl',
+                                'design/infra/gesture/delay',
+                            ],
+                        },
                         {
                             type: 'category',
                             label: 'Time',
