@@ -175,7 +175,20 @@ const sidebars = {
                                 'design/infra/preempt/post-draw',
                             ],
                         },
-                        'design/infra/brake',
+                        {
+                            type: 'category',
+                            label: 'Brake',
+                            collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/brake/index',
+                            },
+                            items: [
+                                'design/infra/brake/intro',
+                                'design/infra/brake/idea',
+                                'design/infra/brake/analysis',
+                            ],
+                        },
                         'design/infra/animation',
                         'design/infra/gesture',
                         'design/infra/others',
