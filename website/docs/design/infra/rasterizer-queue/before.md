@@ -22,6 +22,10 @@ void Animator::BeginFrame() {
       return;
     }
   }
+  
+  // We have acquired a valid continuation from the pipeline and are ready
+  // to service potential frame.
+  FML_DCHECK(producer_continuation_);
 
   delegate_.OnAnimatorBeginFrame();
 }
@@ -49,3 +53,4 @@ Briefly speaking, the code about pipeline works as follows:
 
 * During `BeginFrame`, we either reuse or create a "continuation" in pipeline (i.e. occupy a seat). If we cannot, it means pipeline is full, and we skip the current frame.
 * During `Render`, we put Layer tree into the occupied seat. But if there is not any occupied seat, we indeed do nothing.
+
