@@ -6,21 +6,25 @@ What problem will we have, given the original Flutter engine described above?
 
 It is a must to add that change (create a continuation if there is none) to `Render`. This is because, we call `Render` multiple times for one `BeginFrame`. The original code will reject all `Render`s except for the first one, thus the whole flutter_smooth will not work because we can no longer submit anything more to render.
 
-## Only pay 1 jank when N rasterization misses deadline
+## Remove (N-1) jank when N rasterization misses deadline
 
 <!-- see #6306 -->
 
-In experiments, I do see rasterization takes longer time once in a while, instead of having the exact same duration. Therefore, experiments show that, sometimes one rasterization ends a little bit later than the deadline (the vsync), while all others work well. Indeed, this is not something caused by flutter_smooth (since it is *rasterizer* slowness instead of build/layout slowness), but I have found a way trying to improve it.
+This optimization holds for both classical Flutter and flutter_smooth.
 
-The following figure demonstrates the case. Given that this code change is unrelated to flutter_smooth, the scenario assumes UI is fast and no flutter_smooth exist at all. (If using flutter_smooth, things are similar indeed.) The first row is the case without code change to `animator.cc`, and the second row is the case with this change plus the https://github.com/flutter/engine/pull/36837.
+In experiments, I do see rasterization takes longer time once in a while, instead of having the exact same duration. Therefore, experiments show that, a portion of rasterization ends a little bit later than the deadline (the vsync), while all others meet the deadline.
+
+Indeed, this is not something caused by flutter_smooth (since it is *rasterizer* slowness instead of build/layout slowness), but I have found a way trying to improve it.
+
+The following figure demonstrates the case. Given that this code change is unrelated to flutter_smooth, the scenario assumes UI is fast and no flutter_smooth exist at all. If using flutter_smooth, things are similar indeed. The first row is the case without code change to `animator.cc`, and the second row is the case with this change plus the https://github.com/flutter/engine/pull/36837 change.
+
+Notice that, in the figure for simplicity, it just makes *two* janks into one. However, in real world, there can be (e.g.) *10 janks* without this fix, and again only *one* with the fix.
 
 ```mdx-code-block
 import RasterizerQueueJank from '@site/static/svg/rasterizer_queue_jank.svg'
 
 <center><RasterizerQueueJank/></center>
 ```
-
-In the figure, it just makes 2 janks into one. However, in real world, there can be (e.g.) 10 janks without this fix, and again only one with the fix.
 
 TODO: explain
 
