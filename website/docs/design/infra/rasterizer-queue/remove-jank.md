@@ -1,6 +1,6 @@
 # Remove (3N-1) uncomfort
 
-:::info
+:::info Upstream PR
 
 **Title:** Remove (3N-1) jank and big-jump when N rasterization misses deadline
 
