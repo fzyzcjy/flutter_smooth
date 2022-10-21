@@ -6,7 +6,7 @@ server_id = 608014603317936148
 
 
 def transform(data_raw):
-    retrieve_time = data_raw['metadata']['retrieve_time']
+    # retrieve_time = data_raw['metadata']['retrieve_time']
     channel_id = data_raw['metadata']['channel_id']
 
     for message in data_raw['content']['messages']:
@@ -22,6 +22,6 @@ def transform(data_raw):
             body=body,
             link=f'https://discord.com/channels/{server_id}/{channel_id}/{message["id"]}',
             create_time=message['timestamp'],
-            retrieve_time=retrieve_time,
+            # retrieve_time=retrieve_time,
             source=SOURCE,
         )
