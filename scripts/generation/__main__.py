@@ -11,8 +11,7 @@ def main(ci: bool):
     readme.main()
     fetch_github_pr.main()
     generate_pr_status.main()
-    if not ci:
-        gather_main.main()
+    gather_main.main(ci=ci)
     transform_main.main()
 
 
