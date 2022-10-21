@@ -3,8 +3,8 @@ import json
 from utils import repo_base_dir
 
 
-def _generate_one(item):
-    return f'* [{item["org"]}/{item["repo"]}#{item["number"]}](https://github.com/{item["org"]}/{item["repo"]}/pull/{item["number"]}): ' \
+def _generate_one(item, index):
+    return f'{index + 1}. [{item["org"]}/{item["repo"]}#{item["number"]}](https://github.com/{item["org"]}/{item["repo"]}/pull/{item["number"]}): ' \
            f'![badge](https://img.shields.io/github/pulls/detail/state/{item["org"]}/{item["repo"]}/{item["number"]}) ' \
            f'({item["title"]} @ {item["createdAt"]})'
 
@@ -16,7 +16,7 @@ def main():
     items = sorted(items, key=lambda item: item['createdAt'], reverse=True)
 
     text = '\n'.join(
-        _generate_one(item) for item in items
+        _generate_one(item, index) for index, item in enumerate(items)
     )
 
     (repo_base_dir / 'blob/doc_generated/_status_generated.mdx').write_text(text)
