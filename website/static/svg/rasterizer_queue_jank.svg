@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="150mm"
+   width="175mm"
    height="100mm"
-   viewBox="0 0 150 100"
+   viewBox="0 0 175 100"
    version="1.1"
    id="svg5"
    inkscape:version="1.2.1 (9c6d41e4, 2022-07-14)"
@@ -24,46 +24,58 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="2.5877448"
-     inkscape:cx="401.89434"
-     inkscape:cy="72.650131"
+     inkscape:zoom="1.8298119"
+     inkscape:cx="306.58889"
+     inkscape:cy="86.347673"
      inkscape:window-width="1772"
      inkscape:window-height="1154"
      inkscape:window-x="2520"
      inkscape:window-y="128"
      inkscape:window-maximized="0"
-     inkscape:current-layer="g19331" />
+     inkscape:current-layer="layer1" />
   <defs
      id="defs2">
     <rect
        x="236.11293"
        y="120.95474"
        width="36.325066"
-       height="7.3423005"
+       height="7.3423004"
        id="rect16780" />
     <rect
        x="236.11293"
        y="120.95474"
        width="36.325066"
-       height="7.3423005"
+       height="7.3423004"
        id="rect16895" />
     <rect
        x="236.11293"
        y="120.95474"
        width="36.325066"
-       height="7.3423005"
+       height="7.3423004"
        id="rect18443" />
     <rect
        x="236.11293"
        y="120.95474"
        width="36.325066"
-       height="7.3423005"
+       height="7.3423004"
        id="rect18445" />
   </defs>
   <g
      inkscape:label="图层 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <path
+       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="M 132.92678,7.2171123 V 42.929127"
+       id="path25063" />
+    <path
+       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="M 132.92678,55.371282 V 91.083297"
+       id="path25081" />
+    <path
+       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="M 153.9353,55.371282 V 91.083297"
+       id="path25083" />
     <path
        style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
        d="M 27.253016,7.2171123 V 42.929127"
@@ -210,13 +222,6 @@
        style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
        d="m 70.826982,27.95026 v 7.403183"
        id="path17236" />
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.865855;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       id="rect5674-7"
-       width="8.3241749"
-       height="99.388222"
-       x="17.907713"
-       y="0.91921544" />
     <g
        id="g9686"
        transform="translate(-24.390457,7.4611646)">
@@ -275,101 +280,43 @@
            style="font-size:5.66929px;font-family:'系統字體';-inkscape-font-specification:'系統字體';white-space:pre;shape-inside:url(#rect16780);display:inline;fill:#e91e63;fill-opacity:1;stroke:#e91e63;stroke-width:1.82173;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-opacity:1" />
       </g>
     </g>
-    <path
-       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       d="M 110.5436,7.2171123 V 42.929127"
-       id="path9664" />
-    <text
-       xml:space="preserve"
-       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       x="111.51532"
-       y="9.5045662"
-       id="text9668"><tspan
-         sodipodi:role="line"
-         id="tspan9666"
-         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
-         x="111.51532"
-         y="9.5045662">5</tspan></text>
-    <path
-       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       d="M 130.12277,7.2171123 V 42.929127"
-       id="path9733" />
-    <text
-       xml:space="preserve"
-       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       x="131.09448"
-       y="9.5045662"
-       id="text9737"><tspan
-         sodipodi:role="line"
-         id="tspan9735"
-         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
-         x="131.09448"
-         y="9.5045662">6</tspan></text>
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#2196f3;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
        id="rect13349"
        width="18.615282"
        height="3.6784859"
-       x="69.481857"
+       x="90.648514"
        y="11.93653" />
     <text
        xml:space="preserve"
        style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       x="112.79254"
+       x="133.95921"
        y="35.07114"
        id="text13353"><tspan
          sodipodi:role="line"
          id="tspan13351"
          style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
-         x="112.79254"
-         y="35.07114">3</tspan></text>
+         x="133.95921"
+         y="35.07114">4</tspan></text>
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.446625;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
        id="rect13355"
-       width="19.415922"
+       width="24.621378"
        height="3.7898064"
-       x="93.344147"
+       x="109.30535"
        y="23.733673" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       d="m 87.980198,15.965411 5.418972,7.914407"
+       d="m 109.14687,15.965411 0.0689,8.203599"
        id="path13357"
        sodipodi:nodetypes="cc" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       d="m 112.70435,27.95026 v 7.403183"
+       d="m 133.87103,27.95026 v 7.403183"
        id="path13359" />
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#2196f3;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       id="rect13363"
-       width="18.615282"
-       height="3.6784859"
-       x="110.58425"
-       y="11.93653" />
-    <text
-       xml:space="preserve"
-       style="font-size:2.5px;font-family:'系統字體';-inkscape-font-specification:'系統字體';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-opacity:0.221212"
-       x="133.29634"
-       y="13.394462"
-       id="text13459"><tspan
-         sodipodi:role="line"
-         style="fill:#000000;fill-opacity:1;stroke-width:0.482"
-         x="133.29634"
-         y="13.394462"
-         id="tspan13565">suppose</tspan><tspan
-         sodipodi:role="line"
-         style="fill:#000000;fill-opacity:1;stroke-width:0.482"
-         x="133.29634"
-         y="16.519463"
-         id="tspan17111">frame chain</tspan><tspan
-         sodipodi:role="line"
-         style="fill:#000000;fill-opacity:1;stroke-width:0.482"
-         x="133.29634"
-         y="19.644463"
-         id="tspan15283">ends here</tspan></text>
     <g
        id="g16893"
-       transform="translate(16.443206,-8.9649427)">
+       transform="translate(36.55154,-8.9649427)">
       <g
          id="g16891"
          transform="translate(1.8797469,7.9527755)">
@@ -403,69 +350,23 @@
            style="font-size:5.66929px;font-family:'系統字體';-inkscape-font-specification:'系統字體';white-space:pre;shape-inside:url(#rect16895);display:inline;fill:#e91e63;fill-opacity:1;stroke:#e91e63;stroke-width:1.82173;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-opacity:1" />
       </g>
     </g>
-    <g
-       id="g17428"
-       transform="translate(36.972906,7.3589198)">
-      <ellipse
-         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-         id="ellipse17422"
-         cx="83.385681"
-         cy="32.823269"
-         rx="6.9406037"
-         ry="2.3135347" />
-      <text
-         xml:space="preserve"
-         style="font-size:3.39665px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#ff9800;stroke-width:0.409295;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-         x="82.121902"
-         y="33.617344"
-         id="text17426"
-         transform="scale(0.9879036,1.0122445)"><tspan
-           sodipodi:role="line"
-           id="tspan17424"
-           style="fill:#4caf50;fill-opacity:1;stroke:none;stroke-width:0.409296"
-           x="82.121902"
-           y="33.617344">Ok</tspan></text>
-    </g>
-    <g
-       id="g17436"
-       transform="translate(55.770375,7.3589198)">
-      <ellipse
-         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-         id="ellipse17430"
-         cx="83.385681"
-         cy="32.823269"
-         rx="6.9406037"
-         ry="2.3135347" />
-      <text
-         xml:space="preserve"
-         style="font-size:3.39665px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#ff9800;stroke-width:0.409295;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-         x="82.121902"
-         y="33.617344"
-         id="text17434"
-         transform="scale(0.9879036,1.0122445)"><tspan
-           sodipodi:role="line"
-           id="tspan17432"
-           style="fill:#4caf50;fill-opacity:1;stroke:none;stroke-width:0.409296"
-           x="82.121902"
-           y="33.617344">Ok</tspan></text>
-    </g>
     <text
        xml:space="preserve"
-       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#000000;fill-opacity:0.22424243;stroke:none;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:0.22424242"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#000000;fill-opacity:0.224242;stroke:none;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:0.224242"
        x="43.537552"
        y="35.149948"
        id="text17663"><tspan
          sodipodi:role="line"
          id="tspan17661"
-         style="fill:#000000;fill-opacity:0.22424243;stroke:none;stroke-width:0.482;stroke-opacity:0.22424242"
+         style="fill:#000000;fill-opacity:0.224242;stroke:none;stroke-width:0.482;stroke-opacity:0.224242"
          x="43.537552"
          y="35.149948">0</tspan></text>
     <g
        id="g17671"
        transform="translate(-45.455067,7.3589198)"
-       style="stroke:#4caf50;stroke-opacity:0.2060606">
+       style="stroke:#4caf50;stroke-opacity:0.206061">
       <ellipse
-         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:0.2060606"
+         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:0.206061"
          id="ellipse17665"
          cx="83.385681"
          cy="32.823269"
@@ -473,14 +374,14 @@
          ry="2.3135347" />
       <text
          xml:space="preserve"
-         style="font-size:3.39665px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:0.22424242;stroke:none;stroke-width:0.409295;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:0.2060606"
+         style="font-size:3.39665px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:0.224242;stroke:none;stroke-width:0.409295;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:0.206061"
          x="82.121902"
          y="33.617344"
          id="text17669"
          transform="scale(0.9879036,1.0122445)"><tspan
            sodipodi:role="line"
            id="tspan17667"
-           style="fill:#4caf50;fill-opacity:0.22424242;stroke:none;stroke-width:0.409296;stroke-opacity:0.2060606"
+           style="fill:#4caf50;fill-opacity:0.224242;stroke:none;stroke-width:0.409296;stroke-opacity:0.206061"
            x="82.121902"
            y="33.617344">Ok</tspan></text>
       <ellipse
@@ -511,37 +412,6 @@
        style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
        d="M 48.418253,55.476637 V 91.188651"
        id="path18229" />
-    <g
-       id="g19331"
-       transform="translate(14.816666)">
-      <text
-         xml:space="preserve"
-         style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-         x="132.16524"
-         y="35.07114"
-         id="text13367"><tspan
-           sodipodi:role="line"
-           id="tspan13365"
-           style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
-           x="132.16524"
-           y="35.07114">5</tspan></text>
-      <rect
-         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.446625;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-         id="rect13369"
-         width="17.371029"
-         height="3.7898064"
-         x="114.30432"
-         y="23.733673" />
-      <path
-         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-         d="m 114.35934,15.965411 v 7.914407"
-         id="path13371"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-         d="m 131.54785,27.95026 v 7.403183"
-         id="path13373" />
-    </g>
     <path
        style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
        d="M 69.426759,55.476637 V 91.188651"
@@ -747,7 +617,7 @@
     </g>
     <g
        id="g18315"
-       transform="translate(17.018669,55.618444)">
+       transform="translate(39.772838,55.618444)">
       <ellipse
          style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
          id="ellipse18309"
@@ -768,36 +638,6 @@
            x="82.121902"
            y="33.617344">Ok</tspan></text>
     </g>
-    <path
-       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       d="M 110.5436,55.476637 V 91.188651"
-       id="path18317" />
-    <text
-       xml:space="preserve"
-       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       x="111.51532"
-       y="57.764091"
-       id="text18321"><tspan
-         sodipodi:role="line"
-         id="tspan18319"
-         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
-         x="111.51532"
-         y="57.764091">5</tspan></text>
-    <path
-       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       d="M 130.12277,55.476637 V 91.188651"
-       id="path18323" />
-    <text
-       xml:space="preserve"
-       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       x="131.09448"
-       y="57.764091"
-       id="text18327"><tspan
-         sodipodi:role="line"
-         id="tspan18325"
-         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
-         x="131.09448"
-         y="57.764091">6</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
@@ -857,90 +697,69 @@
        id="rect18351"
        width="18.615282"
        height="3.6784859"
-       x="69.481857"
+       x="90.648514"
        y="60.196053" />
     <text
        xml:space="preserve"
        style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       x="112.79254"
+       x="133.95921"
        y="83.330666"
        id="text18355"><tspan
          sodipodi:role="line"
          id="tspan18353"
          style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
-         x="112.79254"
-         y="83.330666">3</tspan></text>
+         x="133.95921"
+         y="83.330666">4</tspan></text>
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.446625;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
        id="rect18357"
        width="19.415922"
        height="3.7898064"
-       x="93.344147"
+       x="114.5108"
        y="71.993195" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       d="m 87.980198,64.224935 5.418972,7.914407"
+       d="m 109.14687,64.224935 5.41897,7.914407"
        id="path18359"
        sodipodi:nodetypes="cc" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       d="m 112.70435,76.209784 v 7.403183"
+       d="m 133.87103,76.209784 v 7.403183"
        id="path18361" />
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#2196f3;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
        id="rect18363"
        width="18.615282"
        height="3.6784859"
-       x="90.442032"
+       x="111.89787"
        y="60.196053" />
     <text
        xml:space="preserve"
        style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       x="132.16524"
+       x="156.50688"
        y="83.330666"
        id="text18367"><tspan
          sodipodi:role="line"
          id="tspan18365"
          style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
-         x="132.16524"
-         y="83.330666">4</tspan></text>
+         x="156.50688"
+         y="83.330666">5</tspan></text>
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.446625;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
        id="rect18369"
-       width="17.371029"
-       height="3.7898064"
-       x="114.30432"
+       width="20.439987"
+       height="3.927649"
+       x="135.47099"
        y="71.993195" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       d="m 108.94037,64.224935 5.41897,7.914407"
+       d="m 130.10705,64.224935 5.41897,7.914407"
        id="path18371"
        sodipodi:nodetypes="cc" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-       d="m 131.54785,76.209784 v 7.403183"
+       d="m 155.88955,76.209784 v 7.403183"
        id="path18373" />
-    <text
-       xml:space="preserve"
-       style="font-size:2.5px;font-family:'系統字體';-inkscape-font-specification:'系統字體';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-opacity:0.221212"
-       x="133.29634"
-       y="61.653984"
-       id="text18381"><tspan
-         sodipodi:role="line"
-         style="fill:#000000;fill-opacity:1;stroke-width:0.482"
-         x="133.29634"
-         y="61.653984"
-         id="tspan18375">suppose</tspan><tspan
-         sodipodi:role="line"
-         style="fill:#000000;fill-opacity:1;stroke-width:0.482"
-         x="133.29634"
-         y="64.778984"
-         id="tspan18377">frame chain</tspan><tspan
-         sodipodi:role="line"
-         style="fill:#000000;fill-opacity:1;stroke-width:0.482"
-         x="133.29634"
-         y="67.903984"
-         id="tspan18379">ends here</tspan></text>
     <g
        id="g18389"
        transform="translate(-2.5100792,55.618444)">
@@ -966,7 +785,7 @@
     </g>
     <g
        id="g18405"
-       transform="translate(16.443206,39.294582)">
+       transform="translate(37.609874,39.294582)">
       <g
          id="g18403"
          transform="translate(1.8797469,7.9527755)">
@@ -1002,7 +821,7 @@
     </g>
     <g
        id="g18415"
-       transform="translate(39.977699,48.259524)">
+       transform="translate(63.790202,48.259524)">
       <rect
          style="fill:#80deea;fill-opacity:1;stroke:none;stroke-width:0.338758;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
          id="rect18407"
@@ -1029,7 +848,7 @@
     </g>
     <g
        id="g18423"
-       transform="translate(36.972906,55.618444)">
+       transform="translate(60.256242,55.618444)">
       <ellipse
          style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
          id="ellipse18417"
@@ -1052,7 +871,7 @@
     </g>
     <g
        id="g18431"
-       transform="translate(55.770375,55.618444)">
+       transform="translate(80.641212,55.618444)">
       <ellipse
          style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
          id="ellipse18425"
@@ -1085,31 +904,8 @@
          x="43.537552"
          y="83.40947">0</tspan></text>
     <g
-       id="g18895"
-       transform="translate(-3.1235477,7.3589198)">
-      <ellipse
-         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-         id="ellipse18889"
-         cx="83.385681"
-         cy="32.823269"
-         rx="6.9406037"
-         ry="2.3135347" />
-      <text
-         xml:space="preserve"
-         style="font-size:3.39665px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#ff9800;stroke-width:0.409295;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
-         x="82.121902"
-         y="33.617344"
-         id="text18893"
-         transform="scale(0.9879036,1.0122445)"><tspan
-           sodipodi:role="line"
-           id="tspan18891"
-           style="fill:#4caf50;fill-opacity:1;stroke:none;stroke-width:0.409296"
-           x="82.121902"
-           y="33.617344">Ok</tspan></text>
-    </g>
-    <g
        id="g18903"
-       transform="translate(18.654585,7.4611646)">
+       transform="translate(17.596251,7.4611646)">
       <ellipse
          style="fill:#ffffff;fill-opacity:1;stroke:#ff9800;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
          id="ellipse18897"
@@ -1128,6 +924,457 @@
            style="fill:#ff9800;fill-opacity:1;stroke:none;stroke-width:0.482"
            x="79.409294"
            y="34.124634">Jank</tspan></text>
+    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#2196f3;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect21929"
+       width="18.615282"
+       height="3.6784859"
+       x="48.521683"
+       y="11.611824" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.446625;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect21931"
+       width="16.757561"
+       height="3.7898064"
+       x="72.383972"
+       y="23.408966" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="m 67.020023,15.640706 5.418972,7.914407"
+       id="path21933"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="89.174004"
+       y="34.764408"
+       id="text21937"><tspan
+         sodipodi:role="line"
+         id="tspan21935"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="89.174004"
+         y="34.764408">2</tspan></text>
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="m 89.085816,27.643525 v 7.403183"
+       id="path21939" />
+    <g
+       id="g22162"
+       transform="translate(-3.123548,7.4611646)">
+      <ellipse
+         style="fill:#ffffff;fill-opacity:1;stroke:#ff9800;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         id="ellipse22156"
+         cx="83.385681"
+         cy="32.823269"
+         rx="6.9406037"
+         ry="2.3135347" />
+      <text
+         xml:space="preserve"
+         style="font-size:2.5px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#ff9800;fill-opacity:1;stroke:#ff9800;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         x="79.307053"
+         y="33.817898"
+         id="text22160"><tspan
+           sodipodi:role="line"
+           id="tspan22158"
+           style="font-size:2.5px;fill:#ff9800;fill-opacity:1;stroke:none;stroke-width:0.482"
+           x="79.307053"
+           y="33.817898">big jump</tspan></text>
+    </g>
+    <path
+       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="M 111.91826,7.2171123 V 42.929127"
+       id="path25061" />
+    <path
+       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="M 153.9353,7.2171123 V 42.929127"
+       id="path25065" />
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="112.67987"
+       y="9.5045662"
+       id="text25069"><tspan
+         sodipodi:role="line"
+         id="tspan25067"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="112.67987"
+         y="9.5045662">5</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="133.53783"
+       y="9.5045662"
+       id="text25073"><tspan
+         sodipodi:role="line"
+         id="tspan25071"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="133.53783"
+         y="9.5045662">6</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="154.907"
+       y="9.5045662"
+       id="text25077"><tspan
+         sodipodi:role="line"
+         id="tspan25075"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="154.907"
+         y="9.5045662">7</tspan></text>
+    <path
+       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="M 111.91826,55.371282 V 91.083297"
+       id="path25079" />
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="112.67987"
+       y="57.658737"
+       id="text25087"><tspan
+         sodipodi:role="line"
+         id="tspan25085"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="112.67987"
+         y="57.658737">5</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="133.53783"
+       y="57.658737"
+       id="text25091"><tspan
+         sodipodi:role="line"
+         id="tspan25089"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="133.53783"
+         y="57.658737">6</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="154.907"
+       y="57.658737"
+       id="text25095"><tspan
+         sodipodi:role="line"
+         id="tspan25093"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="154.907"
+         y="57.658737">7</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#2196f3;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect25525"
+       width="18.615282"
+       height="3.6784859"
+       x="112.02167"
+       y="11.611824" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.446625;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect25527"
+       width="16.757561"
+       height="3.7898064"
+       x="135.88396"
+       y="23.408966" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="m 130.52004,15.640706 5.41898,7.914407"
+       id="path25529"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="152.67403"
+       y="34.764408"
+       id="text25533"><tspan
+         sodipodi:role="line"
+         id="tspan25531"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="152.67403"
+         y="34.764408">5</tspan></text>
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="m 152.58585,27.643525 v 7.403183"
+       id="path25535" />
+    <g
+       id="g25983"
+       transform="translate(38.762919,7.4611646)">
+      <ellipse
+         style="fill:#ffffff;fill-opacity:1;stroke:#ff9800;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         id="ellipse25977"
+         cx="83.385681"
+         cy="32.823269"
+         rx="6.9406037"
+         ry="2.3135347" />
+      <text
+         xml:space="preserve"
+         style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#ff9800;fill-opacity:1;stroke:#ff9800;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         x="79.409294"
+         y="34.124634"
+         id="text25981"><tspan
+           sodipodi:role="line"
+           id="tspan25979"
+           style="fill:#ff9800;fill-opacity:1;stroke:none;stroke-width:0.482"
+           x="79.409294"
+           y="34.124634">Jank</tspan></text>
+    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#2196f3;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect27085"
+       width="18.615282"
+       height="3.6784859"
+       x="69.688347"
+       y="60.196053" />
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="112.99903"
+       y="83.330666"
+       id="text27089"><tspan
+         sodipodi:role="line"
+         id="tspan27087"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="112.99903"
+         y="83.330666">3</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.446625;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect27091"
+       width="19.415922"
+       height="3.7898064"
+       x="93.550629"
+       y="71.993195" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="m 88.186691,64.224935 5.418972,7.914407"
+       id="path27093"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="m 112.91085,76.209784 v 7.403183"
+       id="path27095" />
+    <g
+       id="g27105"
+       transform="translate(21.166667,48.259524)">
+      <rect
+         style="fill:#80deea;fill-opacity:1;stroke:none;stroke-width:0.338758;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         id="rect27097"
+         width="4.9994054"
+         height="3.8920512"
+         x="86.289261"
+         y="25.369589" />
+      <text
+         xml:space="preserve"
+         style="font-size:2.5px;font-family:'系統字體';-inkscape-font-specification:'系統字體';fill:#00bcd4;fill-opacity:1;stroke:none;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-opacity:0.221212"
+         x="79.239693"
+         y="19.239956"
+         id="text27103"><tspan
+           sodipodi:role="line"
+           id="tspan27099"
+           style="fill:#00bcd4;fill-opacity:1;stroke-width:0.482"
+           x="79.239693"
+           y="19.239956">deliberate</tspan><tspan
+           sodipodi:role="line"
+           style="fill:#00bcd4;fill-opacity:1;stroke-width:0.482"
+           x="79.239693"
+           y="22.364956"
+           id="tspan27101">sleep</tspan></text>
+    </g>
+    <g
+       id="g27344"
+       transform="translate(17.938872,55.618444)">
+      <ellipse
+         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         id="ellipse27338"
+         cx="83.385681"
+         cy="32.823269"
+         rx="6.9406037"
+         ry="2.3135347" />
+      <text
+         xml:space="preserve"
+         style="font-size:3.39665px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#ff9800;stroke-width:0.409295;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         x="82.121902"
+         y="33.617344"
+         id="text27342"
+         transform="scale(0.9879036,1.0122445)"><tspan
+           sodipodi:role="line"
+           id="tspan27340"
+           style="fill:#4caf50;fill-opacity:1;stroke:none;stroke-width:0.409296"
+           x="82.121902"
+           y="33.617344">Ok</tspan></text>
+    </g>
+    <g
+       id="g27814"
+       transform="translate(60.2682,7.4611646)">
+      <ellipse
+         style="fill:#ffffff;fill-opacity:1;stroke:#ff9800;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         id="ellipse27808"
+         cx="83.385681"
+         cy="32.823269"
+         rx="6.9406037"
+         ry="2.3135347" />
+      <text
+         xml:space="preserve"
+         style="font-size:2.5px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#ff9800;fill-opacity:1;stroke:#ff9800;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         x="79.307053"
+         y="33.817898"
+         id="text27812"><tspan
+           sodipodi:role="line"
+           id="tspan27810"
+           style="font-size:2.5px;fill:#ff9800;fill-opacity:1;stroke:none;stroke-width:0.482"
+           x="79.307053"
+           y="33.817898">big jump</tspan></text>
+    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#2196f3;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:0.218182"
+       id="rect28270"
+       width="19.49987"
+       height="3.6784859"
+       x="154.11224"
+       y="11.93653" />
+    <g
+       id="g28506"
+       transform="translate(80.840331,7.4611646)">
+      <ellipse
+         style="fill:#ffffff;fill-opacity:1;stroke:#ff9800;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         id="ellipse28500"
+         cx="83.385681"
+         cy="32.823269"
+         rx="6.9406037"
+         ry="2.3135347" />
+      <text
+         xml:space="preserve"
+         style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#ff9800;fill-opacity:1;stroke:#ff9800;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         x="79.409294"
+         y="34.124634"
+         id="text28504"><tspan
+           sodipodi:role="line"
+           id="tspan28502"
+           style="fill:#ff9800;fill-opacity:1;stroke:none;stroke-width:0.482"
+           x="79.409294"
+           y="34.124634">Jank</tspan></text>
+    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#2196f3;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect31386"
+       width="18.615282"
+       height="3.6784859"
+       x="133.06454"
+       y="60.196053" />
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="177.67357"
+       y="83.330666"
+       id="text31390"><tspan
+         sodipodi:role="line"
+         id="tspan31388"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="177.67357"
+         y="83.330666">5</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.446625;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect31392"
+       width="20.439987"
+       height="3.927649"
+       x="156.63768"
+       y="71.993195" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="m 151.27373,64.224935 5.41897,7.914407"
+       id="path31394"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="m 177.05623,76.209784 v 7.403183"
+       id="path31396" />
+    <g
+       id="g31406"
+       transform="translate(84.95687,48.259524)">
+      <rect
+         style="fill:#80deea;fill-opacity:1;stroke:none;stroke-width:0.338758;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         id="rect31398"
+         width="4.9994054"
+         height="3.8920512"
+         x="86.289261"
+         y="25.369589" />
+      <text
+         xml:space="preserve"
+         style="font-size:2.5px;font-family:'系統字體';-inkscape-font-specification:'系統字體';fill:#00bcd4;fill-opacity:1;stroke:none;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-opacity:0.221212"
+         x="79.239693"
+         y="19.239956"
+         id="text31404"><tspan
+           sodipodi:role="line"
+           id="tspan31400"
+           style="fill:#00bcd4;fill-opacity:1;stroke-width:0.482"
+           x="79.239693"
+           y="19.239956">deliberate</tspan><tspan
+           sodipodi:role="line"
+           style="fill:#00bcd4;fill-opacity:1;stroke-width:0.482"
+           x="79.239693"
+           y="22.364956"
+           id="tspan31402">sleep</tspan></text>
+    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.865855;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect30192"
+       width="8.3241749"
+       height="99.388222"
+       x="173.01837"
+       y="0.91921544" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.865855;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5674-7"
+       width="8.3241749"
+       height="99.388222"
+       x="17.907713"
+       y="0.91921544" />
+    <g
+       id="g33801">
+      <circle
+         style="fill:#9c27b0;fill-opacity:0.16969699;stroke:#9c27b0;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-opacity:0.89697"
+         id="path31948"
+         cx="71.923401"
+         cy="13.460488"
+         r="1.9158959" />
+      <text
+         xml:space="preserve"
+         style="font-size:2px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:center;text-anchor:middle;fill:#9c27b0;fill-opacity:0.169697;stroke:#9c27b0;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-opacity:0.89697"
+         x="79.600052"
+         y="12.724441"
+         id="text33391"><tspan
+           sodipodi:role="line"
+           id="tspan33389"
+           style="font-size:2px;fill:#9c27b0;fill-opacity:1;stroke:none;stroke-width:0.482"
+           x="79.600052"
+           y="12.724441">PipelineFull</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:2px;fill:#9c27b0;fill-opacity:1;stroke:none;stroke-width:0.482"
+           x="79.600052"
+           y="15.224441"
+           id="tspan33393">skip frame</tspan></text>
+    </g>
+    <g
+       id="g33811"
+       transform="translate(64.02917)">
+      <circle
+         style="fill:#9c27b0;fill-opacity:0.169697;stroke:#9c27b0;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-opacity:0.89697"
+         id="circle33803"
+         cx="71.923401"
+         cy="13.460488"
+         r="1.9158959" />
+      <text
+         xml:space="preserve"
+         style="font-size:2px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:center;text-anchor:middle;fill:#9c27b0;fill-opacity:0.169697;stroke:#9c27b0;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-opacity:0.89697"
+         x="79.600052"
+         y="12.724441"
+         id="text33809"><tspan
+           sodipodi:role="line"
+           id="tspan33805"
+           style="font-size:2px;fill:#9c27b0;fill-opacity:1;stroke:none;stroke-width:0.482"
+           x="79.600052"
+           y="12.724441">PipelineFull</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:2px;fill:#9c27b0;fill-opacity:1;stroke:none;stroke-width:0.482"
+           x="79.600052"
+           y="15.224441"
+           id="tspan33807">skip frame</tspan></text>
     </g>
   </g>
 </svg>

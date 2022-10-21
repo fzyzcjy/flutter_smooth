@@ -6,7 +6,7 @@ What problem will we have, given the original Flutter engine described above?
 
 It is a must to add that change (create a continuation if there is none) to `Render`. This is because, we call `Render` multiple times for one `BeginFrame`. The original code will reject all `Render`s except for the first one, thus the whole flutter_smooth will not work because we can no longer submit anything more to render.
 
-## Remove (N-1) jank when N rasterization misses deadline
+## Remove (3N-1) jank when N rasterization misses deadline
 
 <!-- see #6306 -->
 
@@ -18,15 +18,17 @@ Indeed, this is not something caused by flutter_smooth (since it is *rasterizer*
 
 The following figure demonstrates the case. Given that this code change is unrelated to flutter_smooth, the scenario assumes UI is fast and no flutter_smooth exist at all. If using flutter_smooth, things are similar indeed. The first row is the case without code change to `animator.cc`, and the second row is the case with this change plus the https://github.com/flutter/engine/pull/36837 change.
 
-Notice that, in the figure for simplicity, it just makes *two* janks into one. However, in real world, there can be (e.g.) *10 janks* without this fix, and again only *one* with the fix.
-
 ```mdx-code-block
 import RasterizerQueueJank from '@site/static/svg/rasterizer_queue_jank.svg'
 
 <center><RasterizerQueueJank/></center>
 ```
 
-TODO: explain
+Let's explain the figure. Consider the frame for time 1-3. In the first row, when the rasterization misses the deadline a little bit (seen in time 2-3), there is nothing new to be shown to the screen, so time 2-3 yields a jank. This is inevitable and also holds for the second row.
+
+However, now consider the next frames.
+
+[TODO]
 
 TODO explain "Only pay one jank when arbitrary number of rasterization misses deadline'"
 
