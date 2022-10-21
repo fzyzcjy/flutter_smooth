@@ -1,6 +1,5 @@
 import json
 from dataclasses import dataclass
-from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any
 
@@ -13,7 +12,8 @@ def save_raw(stem: str, source: str, metadata: Dict, content: Any):
     (dir_data_comments_raw / f'{stem}.json').write_text(json.dumps(dict(
         source=source,
         metadata={
-            'retrieve_time': datetime.now().isoformat(),
+            # remove retrieve time, otherwise data is not reproducible
+            # 'retrieve_time': datetime.now().isoformat(),
             **metadata,
         },
         content=content,
