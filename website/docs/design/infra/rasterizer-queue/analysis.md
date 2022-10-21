@@ -24,4 +24,6 @@ TODO: explain
 
 The drawback is that, the latency is increased by one frame. However, when scrolling or touching, this seems better than having a large annoying jump in the UI - which is directly perceptible by human eyes easily. My test mobile phone has intrinsic (i.e. OS/hardware constraints) touch event latency of about 100ms, so adding 16ms to it looks almost non-distinguishable. Of course, if someone is developing a game, having low latency may be more important.
 
+The same analysis also holds for any "latency changes from 2 to 3 to 2" scenario. For example, the "latency being 3" may last for more than one frame (contrary to the figure), with flutter_smooth.
+
 As a remark, flutter_smooth is indeed implicitly doing something similar when *in the middle of* a plain jank frame. As we know, when a preempt render is about to start (analogy to "when `Animator::BeginFrame` is called"), we never skip it if pipeline is full (analyogy to the code change to BeginFrame). This works well in experiments.
