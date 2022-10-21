@@ -201,7 +201,8 @@ const sidebars = {
                             items: [
                                 'design/infra/rasterizer-queue/before',
                                 'design/infra/rasterizer-queue/after',
-                                'design/infra/rasterizer-queue/analysis',
+                                'design/infra/rasterizer-queue/multi-render',
+                                'design/infra/rasterizer-queue/remove-jank',
                             ],
                         },
                         'design/infra/animation',

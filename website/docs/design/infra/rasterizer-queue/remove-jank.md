@@ -1,12 +1,10 @@
-# Analysis
+# Remove (3N-1) uncomfort
 
-What problem will we have, given the original Flutter engine described above?
+:::info
 
-## Allow multi-render in one plain frame
+**Title:** Remove (3N-1) jank and big-jump when N rasterization misses deadline
 
-It is a must to add that change (create a continuation if there is none) to `Render`. This is because, we call `Render` multiple times for one `BeginFrame`. The original code will reject all `Render`s except for the first one, thus the whole flutter_smooth will not work because we can no longer submit anything more to render.
-
-## Remove (3N-1) jank and big-jump when N rasterization misses deadline
+:::
 
 <!-- see #6306 -->
 
