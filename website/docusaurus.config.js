@@ -130,7 +130,7 @@ const config = {
                 theme: lightCodeTheme,
                 darkTheme: darkCodeTheme,
                 defaultLanguage: "dart",
-                additionalLanguages: ["dart", "yaml"],
+                additionalLanguages: ["dart", "cpp", "yaml"],
             },
         }),
 

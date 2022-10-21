@@ -189,7 +189,19 @@ const sidebars = {
                                 'design/infra/brake/analysis',
                             ],
                         },
-                        'design/infra/rasterizer-queue',
+                        {
+                            type: 'category',
+                            label: 'Rasterizer queue',
+                            collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/rasterizer-queue/index',
+                            },
+                            items: [
+                                'design/infra/rasterizer-queue/before',
+                                'design/infra/rasterizer-queue/after',
+                            ],
+                        },
                         'design/infra/animation',
                         {
                             type: 'category',
