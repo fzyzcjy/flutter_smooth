@@ -272,8 +272,8 @@ const sidebars = {
                         id: 'design/drop-in/index',
                     },
                     items: [
-                        'design/drop-in/list-view',
                         'design/drop-in/page-route',
+                        'design/drop-in/list-view',
                     ],
                 },
             ],
