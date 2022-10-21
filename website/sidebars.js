@@ -100,6 +100,8 @@ const sidebars = {
             collapsed: false,
             items: [
                 'design/intro',
+                'design/target',
+                'design/limit',
                 {
                     type: 'category',
                     label: 'Literature review',
