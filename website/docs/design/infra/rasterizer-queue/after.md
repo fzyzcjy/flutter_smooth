@@ -2,6 +2,8 @@
 
 I will firstly present the modified animator logic here. In the next section ("analysis"), I will then discuss why these are necessary and what problems it solves.
 
+## Code
+
 The changes are marked as `// CHANGE: ...` below.
 
 ```cpp
@@ -42,6 +44,8 @@ void Animator::Render(std::shared_ptr<flutter::LayerTree> layer_tree) {
   ... notify rasterizer ...
 }
 ```
+
+## Summary
 
 To summarize, there are two changes:
 

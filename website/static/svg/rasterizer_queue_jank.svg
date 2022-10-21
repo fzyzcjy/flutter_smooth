@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="110mm"
+   height="100mm"
+   viewBox="0 0 110 100"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e4, 2022-07-14)"
+   sodipodi:docname="rasterizer_queue_jank.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.8298119"
+     inkscape:cx="227.89228"
+     inkscape:cy="106.56833"
+     inkscape:window-width="1772"
+     inkscape:window-height="1154"
+     inkscape:window-x="2552"
+     inkscape:window-y="35"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="图层 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="M 27.253016,7.2171123 V 42.929127"
+       id="path17098" />
+    <path
+       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="M 48.418253,7.2171123 V 42.929127"
+       id="path17100" />
+    <path
+       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="M 69.426759,7.2171123 V 42.929127"
+       id="path17102" />
+    <path
+       style="fill:none;fill-opacity:0.490862;stroke:#535353;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       d="M 90.435262,7.2171123 V 42.929127"
+       id="path17104" />
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'Courier New';-inkscape-font-specification:'Courier New';text-align:center;text-anchor:middle;fill:none;fill-opacity:0.490862;stroke:#000000;stroke-width:0.280114;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="4.6285071"
+       y="13.974792"
+       id="text17108"><tspan
+         sodipodi:role="line"
+         id="tspan17106"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.280114;stroke-dasharray:none"
+         x="4.6285071"
+         y="13.974792">UI</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'Courier New';-inkscape-font-specification:'Courier New';text-align:center;text-anchor:middle;fill:none;fill-opacity:0.490862;stroke:#000000;stroke-width:0.280114;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="3.9701517"
+       y="26.887812"
+       id="text17112"><tspan
+         sodipodi:role="line"
+         id="tspan17110"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.280114;stroke-dasharray:none"
+         x="3.9701517"
+         y="26.887812">Raster</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'Courier New';-inkscape-font-specification:'Courier New';text-align:center;text-anchor:middle;fill:none;fill-opacity:0.490862;stroke:#000000;stroke-width:0.280114;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="3.9778345"
+       y="40.329136"
+       id="text17116"><tspan
+         sodipodi:role="line"
+         id="tspan17114"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.280114;stroke-dasharray:none"
+         x="3.9778345"
+         y="40.329136">Screen</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="27.810747"
+       y="9.5045662"
+       id="text17120"><tspan
+         sodipodi:role="line"
+         id="tspan17118"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="27.810747"
+         y="9.5045662">1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="49.179897"
+       y="9.5045662"
+       id="text17124"><tspan
+         sodipodi:role="line"
+         id="tspan17122"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="49.179897"
+         y="9.5045662">2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="70.037834"
+       y="9.5045662"
+       id="text17128"><tspan
+         sodipodi:role="line"
+         id="tspan17126"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="70.037834"
+         y="9.5045662">3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-family:'系統字體';-inkscape-font-specification:'系統字體';text-align:start;text-anchor:start;fill:#4caf50;fill-opacity:1;stroke:#4caf50;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       x="91.40699"
+       y="9.5045662"
+       id="text17132"><tspan
+         sodipodi:role="line"
+         id="tspan17130"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="91.40699"
+         y="9.5045662">4</tspan></text>
+    <g
+       id="g17140"
+       transform="translate(-20.388025,3.6768046)"
+       style="stroke:#437093;stroke-opacity:0.297872">
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke:#437093;stroke-width:0.446625;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:0.297872"
+         id="rect17134"
+         width="16.757563"
+         height="3.7898061"
+         x="45.784996"
+         y="20.053343" />
+      <path
+         style="fill:#ffffff;fill-opacity:1;stroke:#437093;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:0.297872"
+         d="m 45.761148,12.285078 v 7.403183"
+         id="path17136" />
+      <path
+         style="fill:#ffffff;fill-opacity:1;stroke:#437093;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:0.297872"
+         d="M 62.547797,24.269927 V 31.67311"
+         id="path17138" />
+    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#2196f3;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect17156"
+       width="19.49987"
+       height="3.6784859"
+       x="27.328747"
+       y="11.93653" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#2196f3;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect17158"
+       width="18.615282"
+       height="3.6784859"
+       x="48.521683"
+       y="11.93653" />
+    <g
+       id="g17788"
+       transform="translate(-3.1749999,-42.333335)">
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.446625;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         id="rect17230"
+         width="16.757563"
+         height="3.7898061"
+         x="49.830849"
+         y="66.067009" />
+      <path
+         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         d="m 49.806998,58.298746 v 7.403183"
+         id="path17234" />
+      <path
+         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         d="m 66.593647,70.283595 v 7.403183"
+         id="path17236" />
+    </g>
+    <g
+       id="g19227"
+       transform="translate(17.213025,-42.333335)">
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.446625;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         id="rect19221"
+         width="16.757563"
+         height="3.7898061"
+         x="49.830849"
+         y="66.067009" />
+      <path
+         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         d="m 49.806998,58.298746 v 7.403183"
+         id="path19223" />
+      <path
+         style="fill:#ffffff;fill-opacity:1;stroke:#4caf50;stroke-width:0.481738;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+         d="m 66.593647,70.283595 v 7.403183"
+         id="path19225" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:2.5px;font-family:'系統字體';-inkscape-font-specification:'系統字體';fill:#aab72e;fill-opacity:1;stroke:#cddc39;stroke-width:0.481999;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-opacity:1"
+       x="92.784409"
+       y="14.78205"
+       id="text19569"><tspan
+         sodipodi:role="line"
+         id="tspan19567"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.482"
+         x="92.784409"
+         y="14.78205">... unrelated ...</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.865855;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5674-7"
+       width="8.3241749"
+       height="99.388222"
+       x="17.907713"
+       y="0.91921544" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.18879;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.9;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5674"
+       width="12.761806"
+       height="99.149376"
+       x="107.54094"
+       y="0.98636937" />
+  </g>
+</svg>

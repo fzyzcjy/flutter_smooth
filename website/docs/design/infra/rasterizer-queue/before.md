@@ -1,5 +1,7 @@
 # Before
 
+## Code
+
 Let us firstly review the scenario before modification. Looking at [`animator.cc`](https://github.com/flutter/engine/blob/main/shell/common/animator.cc), we see the following (simplified) code:
 
 ```cpp
@@ -42,6 +44,8 @@ void Animator::Render(std::shared_ptr<flutter::LayerTree> layer_tree) {
   ... notify rasterizer ...
 }
 ```
+
+## Summary
 
 Briefly recall the Flutter internal implementation:
 
