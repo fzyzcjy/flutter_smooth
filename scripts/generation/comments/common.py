@@ -32,4 +32,4 @@ class TransformedComment:
     link: str
     source: str
     create_time: str
-    retrieve_time: str
+    # retrieve_time: str
