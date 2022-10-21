@@ -259,6 +259,7 @@ const sidebars = {
                                 'design/infra/misc/rasterizer-ending',
                                 'design/infra/misc/pointer-dispatch',
                                 'design/infra/misc/report-timing',
+                                'design/infra/misc/await-vsync',
                             ],
                         },
                     ],
