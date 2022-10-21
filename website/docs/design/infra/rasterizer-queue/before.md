@@ -26,23 +26,26 @@ void Animator::BeginFrame() {
   delegate_.OnAnimatorBeginFrame();
 }
 
-void Animator::Render() {
+void Animator::Render(std::shared_ptr<flutter::LayerTree> layer_tree) {
   // Commit the pending continuation.
-  PipelineProduceResult result = producer_continuation_.Complete();
+  PipelineProduceResult result = producer_continuation_.Complete(layer_tree);
 
   if (!result.success) {
     FML_DLOG(INFO) << "No pending continuation to commit";
     return;
   }
 
-  if (!result.is_first_item) {
-    // It has been successfully pushed to the pipeline but not as the first
-    // item. Eventually the 'Rasterizer' will consume it, so we don't need to
-    // notify the delegate.
-    return;
-  }
-
-  delegate_.OnAnimatorDraw(layer_tree_pipeline_);
+  ... notify rasterizer ...
 }
 ```
 
+Briefly recall the Flutter internal implementation:
+
+* `Animator::BeginFrame` is called in each frame, and finally calls `OnAnimatorBeginFrame` which will really call Dart side `handleBeginFrame` and `handleDrawFrame` etc.
+* `Animator::Render` is called by Dart `window.render`. It is normally called after paint/composite/etc phase, and flutter_smooth call it extra times whenever we want to submit an extra frame.
+* The `layer_tree_pipeline_` is a `LayerTreePipeline` with pipeline depth `2` (seen in constructor). The `Animator` is the producer of the pipeline, and the `Rasterizer` is the consumer. 
+
+Briefly speaking, the code about pipeline works as follows:
+
+* During `BeginFrame`, we either reuse or create a "continuation" in pipeline (i.e. occupy a seat). If we cannot, it means pipeline is full, and we skip the current frame.
+* During `Render`, we put Layer tree into the occupied seat. But if there is not any occupied seat, we indeed do nothing.

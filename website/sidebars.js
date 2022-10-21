@@ -200,6 +200,7 @@ const sidebars = {
                             },
                             items: [
                                 'design/infra/rasterizer-queue/before',
+                                'design/infra/rasterizer-queue/problem',
                                 'design/infra/rasterizer-queue/after',
                             ],
                         },
