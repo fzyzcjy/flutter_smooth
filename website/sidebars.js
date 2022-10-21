@@ -158,6 +158,7 @@ const sidebars = {
                         id: 'design/infra/index',
                     },
                     items: [
+                        'design/infra/trick',
                         {
                             type: 'category',
                             label: 'Preempt',
