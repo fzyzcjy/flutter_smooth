@@ -101,6 +101,7 @@ const sidebars = {
             items: [
                 'design/intro',
                 'design/target',
+                'design/scenario',
                 'design/limit',
                 {
                     type: 'category',

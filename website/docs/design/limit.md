@@ -9,3 +9,4 @@ The jank caused by too-slow paint phase. This seems rarely to be a problem, beca
 ## Jank by rasterizer
 
 The jank caused by rasterizer slowness. The reason is that, Flutter has an in-progress rewriting of rasterizer, called Impeller, which solves the shader compilation jank (which is [reported](https://discord.com/channels/608014603317936148/608021234516754444/1021979601142034535) by ByteDance that, *most* raster janks are caused by this) and so on. In short, Flutter is already having a great in-progress job that solves most of this problem, and this is a completely different area.
+
