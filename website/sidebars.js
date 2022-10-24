@@ -24,10 +24,6 @@ const sidebars = {
             type: 'category',
             label: 'Usage',
             collapsed: false,
-            link: {
-                type: 'doc',
-                id: 'usage/index',
-            },
             items: [
                 'usage/drop-in',
                 'usage/builder',
@@ -38,10 +34,6 @@ const sidebars = {
             type: 'category',
             label: 'Benchmark',
             collapsed: false,
-            link: {
-                type: 'doc',
-                id: 'benchmark/index',
-            },
             items: [
                 'benchmark/setup',
                 'benchmark/gather-data',
@@ -49,19 +41,11 @@ const sidebars = {
                     type: 'category',
                     label: 'Analyze',
                     collapsed: false,
-                    link: {
-                        type: 'doc',
-                        id: 'benchmark/analyze/index',
-                    },
                     items: [
                         {
                             type: 'category',
                             label: 'FPS',
                             collapsed: false,
-                            link: {
-                                type: 'doc',
-                                id: 'benchmark/analyze/fps/index',
-                            },
                             items: [
                                 'benchmark/analyze/fps/video',
                                 'benchmark/analyze/fps/tracing',
@@ -72,10 +56,6 @@ const sidebars = {
                             type: 'category',
                             label: 'Linearity',
                             collapsed: false,
-                            link: {
-                                type: 'doc',
-                                id: 'benchmark/analyze/linearity/index',
-                            },
                             items: [
                                 'benchmark/analyze/linearity/definition',
                                 'benchmark/analyze/linearity/video',
@@ -86,10 +66,6 @@ const sidebars = {
                             type: 'category',
                             label: 'Jank statistics',
                             collapsed: false,
-                            link: {
-                                type: 'doc',
-                                id: 'benchmark/analyze/jank-statistics/index',
-                            },
                             items: [
                                 'benchmark/analyze/jank-statistics/definition',
                                 'benchmark/analyze/jank-statistics/result',
@@ -99,10 +75,6 @@ const sidebars = {
                             type: 'category',
                             label: 'Overhead',
                             collapsed: false,
-                            link: {
-                                type: 'doc',
-                                id: 'benchmark/analyze/overhead/index',
-                            },
                             items: [
                                 'benchmark/analyze/overhead/definition',
                                 'benchmark/analyze/overhead/result',
@@ -115,10 +87,6 @@ const sidebars = {
                     type: 'category',
                     label: 'Pitfalls',
                     collapsed: false,
-                    link: {
-                        type: 'doc',
-                        id: 'benchmark/pitfall/index',
-                    },
                     items: [
                         'benchmark/pitfall/half-fps',
                         'benchmark/pitfall/latency-change',
@@ -126,15 +94,122 @@ const sidebars = {
                 },
             ],
         },
-        'design',
+        {
+            type: 'category',
+            label: 'Design',
+            collapsed: false,
+            items: [
+                'design/intro',
+                'design/target',
+                'design/scenario',
+                'design/limit',
+                {
+                    type: 'category',
+                    label: 'Literature review',
+                    collapsed: false,
+                    items: [
+                        'design/review/summary',
+                        'design/review/comparison',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Infra layer',
+                    collapsed: false,
+                    items: [
+                        'design/infra/tip',
+                        {
+                            type: 'category',
+                            label: 'Preempt',
+                            collapsed: false,
+                            items: [
+                                'design/infra/preempt/idea',
+                                'design/infra/preempt/how',
+                                'design/infra/preempt/when',
+                                'design/infra/preempt/what-low',
+                                'design/infra/preempt/what-high',
+                                'design/infra/preempt/post-draw',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Brake',
+                            collapsed: false,
+                            items: [
+                                'design/infra/brake/intro',
+                                'design/infra/brake/idea',
+                                'design/infra/brake/analysis',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Rasterizer queue',
+                            collapsed: false,
+                            items: [
+                                'design/infra/rasterizer-queue/before',
+                                'design/infra/rasterizer-queue/after',
+                                'design/infra/rasterizer-queue/multi-render',
+                                'design/infra/rasterizer-queue/remove-jank',
+                            ],
+                        },
+                        'design/infra/animation',
+                        {
+                            type: 'category',
+                            label: 'Gesture',
+                            collapsed: false,
+                            items: [
+                                'design/infra/gesture/impl',
+                                'design/infra/gesture/delay',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Time',
+                            collapsed: false,
+                            items: [
+                                'design/infra/time/pitfall-off',
+                                'design/infra/time/time-base',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Garbage collection',
+                            collapsed: false,
+                            items: [
+                                'design/infra/gc/intro',
+                                'design/infra/gc/within-frame',
+                                'design/infra/gc/between-frame',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Misc',
+                            collapsed: false,
+                            items: [
+                                'design/infra/misc/intro',
+                                'design/infra/misc/rasterizer-ending',
+                                'design/infra/misc/pointer-dispatch',
+                                'design/infra/misc/report-timing',
+                                'design/infra/misc/await-vsync',
+                            ],
+                        },
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Drop-in layer',
+                    collapsed: false,
+                    items: [
+                        'design/drop-in/page-route',
+                        'design/drop-in/list-view',
+                    ],
+                },
+            ],
+        },
         {
             type: 'category',
             label: 'Insight',
             collapsed: false,
-            link: {
-                type: 'doc',
-                id: 'insight/index',
-            },
             items: [
                 'insight/status',
                 'insight/design-doc',
