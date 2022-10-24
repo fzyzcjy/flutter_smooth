@@ -4,12 +4,29 @@ import subprocess
 from generation.comments.common import save_raw, repo_base_dir
 
 
+def _strip_fields(raw):
+    if isinstance(raw, list):
+        for item in raw:
+            _strip_fields(item)
+
+    if isinstance(raw, dict):
+        # https://github.com/fzyzcjy/flutter_smooth/issues/153#issuecomment-1288451480
+        if 'viewerDidAuthor' in raw:
+            del raw['viewerDidAuthor']
+
+        for k, v in raw.items():
+            _strip_fields(v)
+
+
 def gather(org: str, repo: str, issue: int):
     print('step: run gh to get data')
     result = subprocess.run(f'gh issue view {issue} --repo {org}/{repo} --json author,body,createdAt,title,comments',
                             shell=True, stdout=subprocess.PIPE)
     assert result.returncode == 0
     data = result.stdout
+
+    content = json.loads(data)
+    _strip_fields(content)
 
     print('step: save data')
     save_raw(
@@ -20,7 +37,7 @@ def gather(org: str, repo: str, issue: int):
             repo=repo,
             issue=issue,
         ),
-        content=json.loads(data),
+        content=content,
     )
 
 
