@@ -50,7 +50,7 @@ void Animator::Render(std::shared_ptr<flutter::LayerTree> layer_tree) {
 Briefly recall the Flutter internal implementation:
 
 * `Animator::BeginFrame` is called in each frame, and finally calls `OnAnimatorBeginFrame` which will really call Dart side `handleBeginFrame` and `handleDrawFrame` etc.
-* `Animator::Render` is called by Dart `window.render`. It is normally called after paint/composite/etc phase, and flutter_smooth call it extra times whenever we want to submit an extra frame.
+* `Animator::Render` is called by Dart `window.render`. It is normally called after paint/composite/etc phase, and flutter_smooth needs to call it extra times whenever we want to submit an extra frame.
 * The `layer_tree_pipeline_` is a `LayerTreePipeline` with pipeline depth `2` (seen in constructor). The `Animator` is the producer of the pipeline, and the `Rasterizer` is the consumer. 
 
 Briefly speaking, the code about pipeline works as follows:

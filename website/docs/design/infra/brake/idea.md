@@ -1,6 +1,6 @@
 # Idea
 
-Now comes the solution in the third row of the figure. 
+Now comes the solution in the third row of the figure (in the last section). 
 
 When the event occurs, we realize it and triggers a brake. When doing so, the build and layout of the main tree will halt as fast as possible, by putting a placeholder widget instead of doing the real (and heavy) build or layout. Therefore, the main janky frame is quickly halted, and now there is a chance for ListView to handle the event, since its RenderObject is now non-dirty and we are in a normal between-frame event handling stage. After the event is handled (and other between-frame things are done), the next frame is started immediately. As long as it is started before 2.9 in the figure (i.e. have a few milliseconds before deadline), we can trigger a preempt render, so no jank will happen.
 

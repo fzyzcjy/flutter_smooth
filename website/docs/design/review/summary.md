@@ -1,21 +1,19 @@
 # Summary
 
-Many people have discussed and worked on the problem that `flutter_smooth` aims to solve - the jank caused by slow build/layout.
-
-Here is a brief summary after I [digged into](https://github.com/flutter/flutter/issues/101227#issuecomment-1249961627) the history, for completeness - just like the "literature review" that everyone needs to do when writing a paper.
+Many people have discussed and worked on the main problem that `flutter_smooth` aims to solve - the jank caused by slow build/layout. Here is a brief summary after I [digged into](https://github.com/flutter/flutter/issues/101227#issuecomment-1249961627) the history, for completeness, just like the "literature review" that everyone needs to do when writing a paper. This list may be incomplete. Feel free to create an issue if you find something is missing, or something needs to be added for deeper understanding of the topic.
 
 ## @fzyzcjy
 
-Put myself first since I fail the largest amount of times :)
+Put myself first since I fail the most times :)
 
 ### Source
 
-* Mainly [this issue](https://github.com/flutter/flutter/issues/101227).
+Mainly [this issue](https://github.com/flutter/flutter/issues/101227).
 
 ### Main idea
 
 - ([link](https://github.com/flutter/flutter/issues/101227#issue-1190511582)) Directly migrate the Fiber from React (JavaScript) into Flutter - failed
-- ([link](https://github.com/flutter/flutter/issues/101227#issuecomment-1087243414)) Hack the build and layout phase in [this prototype repo](https://github.com/fzyzcjy/flutter_smooth_experiment_2022_april) - failed
+- ([link](https://github.com/flutter/flutter/issues/101227#issuecomment-1087243414) and [prototype](https://github.com/fzyzcjy/flutter_smooth_experiment_2022_april)) Hack the build and layout phase in [this prototype repo](https://github.com/fzyzcjy/flutter_smooth_experiment_2022_april) - failed
 - ([link](https://github.com/flutter/flutter/issues/101227#issuecomment-1247541808)) Let animation be in a new subtree, and run its layout/paint firstly, with other low-priority subtree pauseable - failed
 - ([link](https://github.com/flutter/flutter/issues/101227#issuecomment-1247625317) and [link](https://github.com/flutter/flutter/issues/101227#issuecomment-1247871402)) Based on the idea above, and allow children to be half-baked, and use `toPictureSync` to avoid problem of half-done children - failed
 - ([link](https://github.com/flutter/flutter/issues/101227#issuecomment-1247631508)) Use `yield` to make it suspendable, like Redux Saga - failed
@@ -23,7 +21,7 @@ Put myself first since I fail the largest amount of times :)
 - ([link](https://github.com/flutter/flutter/issues/101227#issuecomment-1249005541)) Dual isolates, using a second isolate to compute animation widgets - failed
 - ([link](https://github.com/flutter/flutter/issues/101227#issuecomment-1249961627)) Experiment to use stackful coroutine or thread mutex to implement it - failed
 - ([link](https://github.com/flutter/flutter/issues/101227#issuecomment-1250056634)) Enhance keframe by running as much as possible before deadline - failed
-- ([link](https://github.com/flutter/flutter/issues/101227#issuecomment-1252379787)) Finally, the "preemption" proposal, which later becomes this package
+- ([link](https://github.com/flutter/flutter/issues/101227#issuecomment-1252379787)) The "preemption" proposal, which later becomes one of the main ideas of this package
 
 ## @Hixie, @dnfield, ...
 
@@ -69,9 +67,9 @@ N/A (It is an official release, not a discussion or experiment)
 
 ### Main idea
 
-When near timeout, suspend the current work to let the JavaScript thread be idle.
+When the browser needs to do rendering work, JS suspends the current work to let the JavaScript thread be idle, and continue later.
 
-## @xanahopper ...
+## @xanahopper, ...
 
 ... and probably @Nayuta403, @JsouLiang, @wangying3426 since they seem to be the same team.
 
@@ -83,7 +81,3 @@ When near timeout, suspend the current work to let the JavaScript thread be idle
 
 * Use multiple isolates instead of one
 * Use structure like React Fiber such as threaded tree, and convert a tree of widgets to a chain list, so that it can be suspended at any iteration of traversal (similar to React Fiber spirit).
-
-## Remark
-
-This list may be incomplete. Feel free to create an issue if you find something is missing.

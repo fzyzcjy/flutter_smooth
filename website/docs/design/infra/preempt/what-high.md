@@ -5,3 +5,13 @@ If this package stops at the API above, nobody will use it - you will have to wr
 The core idea is to use an auxiliary tree in addition to the main tree. In other words, we create a separate `BuildOwner`, `PipelineOwner`, root widget, etc. Then, we are free to call its `buildScope`, `flushLayout`, `flushPaint`, etc, at *any time* at any frequency we like. Its input is a widget tree (indeed `PreemptBuilder.builder` output), and its output is a `Layer` tree (indeed to be inserted to the main tree).
 
 Then, we need to graft the auxiliary-tree’s layer tree and the main-tree’s layer tree. Shortly speaking, we do so in `paint` function by `context.addLayer` and so on. Details can be found in the code.
+
+So, the modified pseudo-code looks like:
+
+```dart
+void preemptRender() {
+  auxiliaryTree.buildScope(), flushLayout(), flushPaint(); // affect layer subtree of auxiliary tree, thus also the main tree
+  window.render(buildScene(flutterMainLayerTree));
+}
+```
+

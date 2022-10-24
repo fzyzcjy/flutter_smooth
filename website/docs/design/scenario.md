@@ -1,6 +1,10 @@
 # Scenarios
 
-This section describes some typical scenarios, and is copied from the design doc for completeness.
+:::info
+
+This section, which describes some typical scenarios, is copied from the design doc for completeness.
+
+:::
 
 * **A** [**test case**](https://github.com/flutter/flutter/blob/master/dev/benchmarks/macrobenchmarks/lib/src/list_text_layout.dart) **in the framework**, pointed out by @dnfield: [He said](https://github.com/flutter/flutter/issues/101227#issuecomment-1247641562), this ends up being janky because layout gets expensive for all that text (on a lower end phone it can easily take 20-30+ms just to layout all the text there, and the ListTile is a little deceptive because Material introduces expense - this is the kind of thing we want to figure out how to break up "automatically").
 * **Bytedance’s apps**: Infra team reports that they see such janks (around [here](https://discord.com/channels/608014603317936148/608021234516754444/1021980287787352125)). In addition, the infra team (Nayuta403, JsouLiang, xanahopper, wangying3426, etc) seems to have interest in [my issue](https://github.com/flutter/flutter/issues/101227), [chatted a lot](https://discord.com/channels/608014603317936148/1021987751710699632) on Discord discussing it, and proposing [build-based methods](https://github.com/flutter/flutter/issues/101227#issuecomment-1249172293) as well as [thread-based methods](https://github.com/flutter/flutter/issues/110063) to solve build/layout slowness - this surely will not happen if it were not a problem for Bytedance.

@@ -10,7 +10,13 @@
 
 <!-- see #6306 -->
 
+## Problem
+
+:::tip
+
 This optimization holds for both classical Flutter and flutter_smooth - indeed the figure below is for classical Flutter.
+
+:::
 
 In experiments, I do see rasterization takes longer time once in a while, instead of having the exact same duration. Experiments show that, a portion of rasterization ends a little bit later than the deadline (the vsync), while all others meet the deadline.
 
@@ -22,6 +28,8 @@ import RasterizerQueueJank from '@site/static/svg/rasterizer_queue_jank.svg'
 <center><RasterizerQueueJank/></center>
 ```
 
+## Analysis and solution
+
 Consider the frame starting at time 1. In the first row, when the rasterization misses the deadline a little bit (seen in time 2-3), there is nothing new to be shown to the screen, so time 2-3 yields a jank. This is inevitable and also holds for the second row - indeed the only jank in the second row.
 
 Now consider the frame starting at time 2. It yields a big jump in classical Flutter, because the scene "1" (rasterized at about time 3.1) never has a chance to be shown to the screen. The second row does not have the problem because of the deliberate sleep.
@@ -32,7 +40,11 @@ Next is the frame starting at time 4, which we again assume its rasterization mi
 
 So, if we count the numbers, there are 3N janks in the first row (where N is the number of slightly missing deadline), and only 1 jank in the second row.
 
-The drawback is that, the latency is increased by one frame, until the end of current frame chain (such as when animation finally finishes). However, when scrolling or touching, this seems better than having a large annoying jump in the UI - which is directly perceptible by human eyes easily. My test mobile phone has intrinsic (i.e. OS/hardware constraints) touch event latency of about 100ms, so adding 16ms to it looks almost non-distinguishable. Of course, if someone is developing a game, having low latency may be more important.
+## Drawback analysis
+
+The drawback is that, the latency is increased by one frame, until the end of current frame chain (such as when animation finally finishes). However, when scrolling or touching, this seems better than having a large annoying jump in the UI - which is directly perceptible by human eyes easily. My test mobile phone has intrinsic (i.e. OS/hardware constraints) touch event latency of about 100ms, so adding 16ms to it looks almost non-distinguishable. Of course, if someone is developing a game, having low latency may be more important, though a game with dropped frames also looks non optimial.
+
+## Remarks
 
 The same analysis also holds for any "latency changes from 2 to 3 to 2" scenario. For example, the "latency being 3" may last for more than one frame (contrary to the figure), with flutter_smooth.
 

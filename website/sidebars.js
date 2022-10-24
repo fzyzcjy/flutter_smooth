@@ -202,6 +202,7 @@ const sidebars = {
                                 id: 'design/infra/rasterizer-queue/index',
                             },
                             items: [
+                                'design/infra/rasterizer-queue/intro',
                                 'design/infra/rasterizer-queue/before',
                                 'design/infra/rasterizer-queue/after',
                                 'design/infra/rasterizer-queue/multi-render',

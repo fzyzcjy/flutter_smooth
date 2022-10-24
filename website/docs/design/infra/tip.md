@@ -1,6 +1,6 @@
 # Tips
 
-Here are some small tips if you want to modify or debug the infra layer.
+Here are some personal small tips if you want to modify or debug the infra layer.
 
 ## Utilize timeline tracing
 

@@ -1,18 +1,22 @@
 # Comparison
 
-<small>Because of @JonahWilliams's suggestion, I wrote this section in the design doc and copy it here.</small>
+:::info
 
+Because of @JonahWilliams's suggestion, I wrote this section in the design doc and copy it here.
 
+It mainly compares the "preemption" idea of this package with other methods, and does not discuss other parts of this package such as brake or modification to rasterizer.
+
+:::
 
 There are some other methods (abbreviated as “OM” in below) related to smoothness optimizations, which can be roughly separated into two categories:
 
 1. Modify the build phase, including the following (abbreviation: OM-B)
-   a. The `keframe` package
-   b. My (failed) [experiments](https://github.com/flutter/flutter/issues/101227#issuecomment-1250186784) (abbreviation: OM-B-M)
+   1. The `keframe` package
+   2. My (failed) [experiments](https://github.com/flutter/flutter/issues/101227#issuecomment-1250186784) (abbreviation: OM-B-M)
 2. Modify the layout phase, including the following (abbreviation: OM-L)
-   a. Googlers (@Hixie, @dnfield and other googlers) had some discussions about it
-   b. Several bytedance infra team people also had some discussions
-   c. My (failed) [experiments](https://github.com/flutter/flutter/issues/101227#issuecomment-1248894781) (abbreviation: OM-L-M)
+   1. Googlers (@Hixie, @dnfield and other googlers) had some discussions about it
+   2. Several bytedance infra team people also had some discussions
+   3. My (failed) [experiments](https://github.com/flutter/flutter/issues/101227#issuecomment-1248894781) (abbreviation: OM-L-M)
 
 Indeed, I have made many failed experiments and failed proposals before reaching this design you are reading :)
 
