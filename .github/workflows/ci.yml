@@ -21,5 +21,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check nothing changes in blob
+        run: git diff --exit-code
+        working-directory: ./blob
+
       - name: Check nothing changes
         run: git diff --exit-code
+        working-directory: .
