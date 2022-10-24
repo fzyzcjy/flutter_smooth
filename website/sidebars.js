@@ -24,6 +24,10 @@ const sidebars = {
             type: 'category',
             label: 'Usage',
             collapsed: false,
+            link: {
+                type: 'doc',
+                id: 'usage/index',
+            },
             items: [
                 'usage/drop-in',
                 'usage/builder',
@@ -34,6 +38,10 @@ const sidebars = {
             type: 'category',
             label: 'Benchmark',
             collapsed: false,
+            link: {
+                type: 'doc',
+                id: 'benchmark/index',
+            },
             items: [
                 'benchmark/setup',
                 'benchmark/gather-data',
@@ -41,11 +49,19 @@ const sidebars = {
                     type: 'category',
                     label: 'Analyze',
                     collapsed: false,
+                    link: {
+                        type: 'doc',
+                        id: 'benchmark/analyze/index',
+                    },
                     items: [
                         {
                             type: 'category',
                             label: 'FPS',
                             collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'benchmark/analyze/fps/index',
+                            },
                             items: [
                                 'benchmark/analyze/fps/video',
                                 'benchmark/analyze/fps/tracing',
@@ -56,6 +72,10 @@ const sidebars = {
                             type: 'category',
                             label: 'Linearity',
                             collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'benchmark/analyze/linearity/index',
+                            },
                             items: [
                                 'benchmark/analyze/linearity/definition',
                                 'benchmark/analyze/linearity/video',
@@ -66,6 +86,10 @@ const sidebars = {
                             type: 'category',
                             label: 'Jank statistics',
                             collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'benchmark/analyze/jank-statistics/index',
+                            },
                             items: [
                                 'benchmark/analyze/jank-statistics/definition',
                                 'benchmark/analyze/jank-statistics/result',
@@ -75,6 +99,10 @@ const sidebars = {
                             type: 'category',
                             label: 'Overhead',
                             collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'benchmark/analyze/overhead/index',
+                            },
                             items: [
                                 'benchmark/analyze/overhead/definition',
                                 'benchmark/analyze/overhead/result',
@@ -87,6 +115,10 @@ const sidebars = {
                     type: 'category',
                     label: 'Pitfalls',
                     collapsed: false,
+                    link: {
+                        type: 'doc',
+                        id: 'benchmark/pitfall/index',
+                    },
                     items: [
                         'benchmark/pitfall/half-fps',
                         'benchmark/pitfall/latency-change',
@@ -98,6 +130,10 @@ const sidebars = {
             type: 'category',
             label: 'Design',
             collapsed: false,
+            link: {
+                type: 'doc',
+                id: 'design/index',
+            },
             items: [
                 'design/intro',
                 'design/target',
@@ -107,6 +143,10 @@ const sidebars = {
                     type: 'category',
                     label: 'Literature review',
                     collapsed: false,
+                    link: {
+                        type: 'doc',
+                        id: 'design/review/index',
+                    },
                     items: [
                         'design/review/summary',
                         'design/review/comparison',
@@ -116,12 +156,20 @@ const sidebars = {
                     type: 'category',
                     label: 'Infra layer',
                     collapsed: false,
+                    link: {
+                        type: 'doc',
+                        id: 'design/infra/index',
+                    },
                     items: [
                         'design/infra/tip',
                         {
                             type: 'category',
                             label: 'Preempt',
                             collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/preempt/index',
+                            },
                             items: [
                                 'design/infra/preempt/idea',
                                 'design/infra/preempt/how',
@@ -135,6 +183,10 @@ const sidebars = {
                             type: 'category',
                             label: 'Brake',
                             collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/brake/index',
+                            },
                             items: [
                                 'design/infra/brake/intro',
                                 'design/infra/brake/idea',
@@ -145,6 +197,10 @@ const sidebars = {
                             type: 'category',
                             label: 'Rasterizer queue',
                             collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/rasterizer-queue/index',
+                            },
                             items: [
                                 'design/infra/rasterizer-queue/before',
                                 'design/infra/rasterizer-queue/after',
@@ -157,6 +213,10 @@ const sidebars = {
                             type: 'category',
                             label: 'Gesture',
                             collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/gesture/index',
+                            },
                             items: [
                                 'design/infra/gesture/impl',
                                 'design/infra/gesture/delay',
@@ -166,6 +226,10 @@ const sidebars = {
                             type: 'category',
                             label: 'Time',
                             collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/time/index',
+                            },
                             items: [
                                 'design/infra/time/pitfall-off',
                                 'design/infra/time/time-base',
@@ -175,6 +239,10 @@ const sidebars = {
                             type: 'category',
                             label: 'Garbage collection',
                             collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/gc/index',
+                            },
                             items: [
                                 'design/infra/gc/intro',
                                 'design/infra/gc/within-frame',
@@ -185,6 +253,10 @@ const sidebars = {
                             type: 'category',
                             label: 'Misc',
                             collapsed: false,
+                            link: {
+                                type: 'doc',
+                                id: 'design/infra/misc/index',
+                            },
                             items: [
                                 'design/infra/misc/intro',
                                 'design/infra/misc/rasterizer-ending',
@@ -199,6 +271,10 @@ const sidebars = {
                     type: 'category',
                     label: 'Drop-in layer',
                     collapsed: false,
+                    link: {
+                        type: 'doc',
+                        id: 'design/drop-in/index',
+                    },
                     items: [
                         'design/drop-in/page-route',
                         'design/drop-in/list-view',
@@ -210,6 +286,10 @@ const sidebars = {
             type: 'category',
             label: 'Insight',
             collapsed: false,
+            link: {
+                type: 'doc',
+                id: 'insight/index',
+            },
             items: [
                 'insight/status',
                 'insight/design-doc',
