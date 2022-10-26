@@ -132,6 +132,22 @@ const config = {
                 defaultLanguage: "dart",
                 additionalLanguages: ["dart", "cpp", "yaml"],
             },
+            algolia: {
+                // The application ID provided by Algolia
+                appId: 'XZICGRVQX7',
+                // Public API key: it is safe to commit it
+                apiKey: 'dd31f9cde4b4f3edaaf0ebdb3b3b355f',
+                indexName: 'cjycode',
+                // Optional: see doc section below
+                contextualSearch: true,
+                // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
+                // externalUrlRegex: 'external\\.com|domain\\.com',
+                // Optional: Algolia search parameters
+                // searchParameters: {},
+                // Optional: path for search page that enabled by default (`false` to disable it)
+                searchPagePath: 'search',
+                //... other Algolia params
+            },
         }),
 
     plugins: [
