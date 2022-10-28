@@ -1,6 +1,6 @@
 # Introduction
 
-## Why
+## Background
 
 Why do we need another mechanism, given that the Preempt already works well? Consider the following scenario: The user taps the screen (`PointerDownEvent`) in the middle of a long janky frame. More concretely, for example, when ListView is shifting quickly by inertia and during a long janky frame, the user drags the screen wanting to further scroll. As will be discussed in the [gesture](../gesture/impl) section, it is impossible to handle `PointerDownEvent` in the *middle* of a long janky frame. Therefore, if we only have the Preempt mechanism, we cannot respond to the user interaction until the janky frame ends, which can be long and user has uncomfortable feeling.
 
@@ -10,7 +10,7 @@ In summary, when there is something that cannot be handled by preempt rendering,
 
 For a figure demonstrating this, please refer to the next part.
 
-## Formalize the problem
+## Problem formalization
 
 **Image caption:** The first row is the problem. The second row is the control group where there is no jank and no flutter_smooth. The third row is the solution.
 

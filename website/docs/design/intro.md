@@ -6,6 +6,7 @@ This chapter may be challenging to read and is only for those who want to know t
 
 * Learn some Flutter internals (such as the Widget, Element, RenderObject, Layer tree and so on)
 * Ask me (for example, in GitHub issue section - I usually reply quickly)
+* If many people are interested, I may write another article as a simplified and shorter version of this chapter
 
 :::
 
@@ -17,3 +18,7 @@ The package mainly consists of two layers:
 
 1. Infra layer: The core logic. Only expose a few low-level flexible primitives such as `SmoothBuilder` to the outside world.
 2. Drop-in layer: Code in this layer utilizes the infra layer to build drop-in replacement solutions, such as `SmoothListView`. This section also serves as examples when you want to create your own drop-in replacement (e.g. when you want to create `SmoothMyFancyGridView`).
+
+## Chapter structure
+
+In this chapter, we will firstly see backgrounds and literature review. Then, we will discuss how the infra layer is implemented, starting from the "preempt" idea, and continuing to other ideas such as brake, rasterizer queue, GC, and so on. Lastly, we will also briefly discuss how the drop-in layer is created.
