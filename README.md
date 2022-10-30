@@ -76,4 +76,5 @@ More specifically, thanks for all these contributions:
 * [@jonahwilliams](https://github.com/jonahwilliams) (Flutter team): Elaborate shortcomings of the old gesture system proposal (later I made a much more natural one).
 * [@gaaclarke](https://github.com/gaaclarke) (Flutter team): Share his pet theory that slowness is caused by memory locality, indicating another potential application of the package.
 * [@Nayuta403](https://github.com/Nayuta403): Fix link.
+* [@pajlada](https://github.com/pajlada): Fix typo.
 
