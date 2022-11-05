@@ -45,7 +45,7 @@ Two possibilities:
 
 ## 🚀 What's next
 
-The documentaiton - https://fzyzcjy.github.io/flutter_smooth/, with usage, demo, benchmark, insights, and more.
+The documentation - https://fzyzcjy.github.io/flutter_smooth/, with usage, demo, benchmark, insights, and more.
 
 > **Note**
 > Feel free to create an [issue](https://github.com/fzyzcjy/flutter_smooth/issues) if you have any questions/problems. I usually reply quickly within minutes if not hours, except for sleeping :)
@@ -53,7 +53,7 @@ The documentaiton - https://fzyzcjy.github.io/flutter_smooth/, with usage, demo,
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key) following [all-contributors](https://github.com/all-contributors/all-contributors) specification):
@@ -70,6 +70,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center"><a href="https://github.com/jonahwilliams"><img src="https://avatars.githubusercontent.com/u/8975114?v=4?s=100" width="100px;" alt="Jonah Williams"/><br /><sub><b>Jonah Williams</b></sub></a><br /><a href="#ideas-jonahwilliams" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center"><a href="https://github.com/gaaclarke"><img src="https://avatars.githubusercontent.com/u/30870216?v=4?s=100" width="100px;" alt="gaaclarke"/><br /><sub><b>gaaclarke</b></sub></a><br /><a href="#ideas-gaaclarke" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center"><a href="https://juejin.cn/user/4309694831660711"><img src="https://avatars.githubusercontent.com/u/40540394?v=4?s=100" width="100px;" alt="Nayuta403"/><br /><sub><b>Nayuta403</b></sub></a><br /><a href="https://github.com/fzyzcjy/flutter_smooth/commits?author=Nayuta403" title="Documentation">📖</a></td>
+      <td align="center"><a href="https://pajlada.se/"><img src="https://avatars.githubusercontent.com/u/962989?v=4?s=100" width="100px;" alt="pajlada"/><br /><sub><b>pajlada</b></sub></a><br /><a href="https://github.com/fzyzcjy/flutter_smooth/commits?author=pajlada" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>
@@ -86,4 +87,5 @@ More specifically, thanks for all these contributions:
 * [@jonahwilliams](https://github.com/jonahwilliams) (Flutter team): Elaborate shortcomings of the old gesture system proposal (later I made a much more natural one).
 * [@gaaclarke](https://github.com/gaaclarke) (Flutter team): Share his pet theory that slowness is caused by memory locality, indicating another potential application of the package.
 * [@Nayuta403](https://github.com/Nayuta403): Fix link.
+* [@pajlada](https://github.com/pajlada): Fix typo.
 
