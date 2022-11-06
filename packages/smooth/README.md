@@ -14,7 +14,7 @@
 
 https://user-images.githubusercontent.com/5236035/196152010-09a2d829-c94c-48b4-80ed-0633430329ec.mp4
 
-<small><small>(left = without smooth, right = smooth; captured by external camera to maximally demonstrate end-user perception. High-resolution video [here](https://fzyzcjy.github.io/flutter_smooth).)</small></small>
+<small><small>(left = without smooth, right = smooth; captured by external camera to maximally demonstrate end-user perception. High-resolution video [here](https://fzyzcjy.github.io/flutter_smooth). Deliberate made it super janky for clear demonstration.)</small></small>
 
 <!-- end: video -->
 
