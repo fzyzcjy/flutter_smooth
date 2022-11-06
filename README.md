@@ -14,7 +14,7 @@
 
 https://user-images.githubusercontent.com/5236035/196152010-09a2d829-c94c-48b4-80ed-0633430329ec.mp4
 
-<small><small>(left = without smooth, right = smooth; captured by external camera to maximally demonstrate end-user perception. High-resolution video [here](https://fzyzcjy.github.io/flutter_smooth). Deliberate made it super janky for clear demonstration.)</small></small>
+<small><small>(left = without smooth, right = smooth; captured by external camera to maximally demonstrate end-user perception. High-resolution video [here](https://fzyzcjy.github.io/flutter_smooth). Deliberately made it super janky for clear demonstration.)</small></small>
 
 <!-- end: video -->
 
@@ -38,6 +38,10 @@ The documentation - https://fzyzcjy.github.io/flutter_smooth/, with usage, demo,
 
 > **Note**
 > Feel free to create an [issue](https://github.com/fzyzcjy/flutter_smooth/issues) if you have any questions/problems. I usually reply quickly within minutes if not hours, except for sleeping :)
+
+## 💭 Current status
+
+Now I am working on pull requests to Flutter framework and engine (i.e. not directly modifying code in this repository), such that you can use this package with standard stable Flutter. An auto-generated list of PRs can be seen [here](https://cjycode.com/flutter_smooth/insight/status), or conversations [here](https://cjycode.com/flutter_smooth/insight/conversation/).
 
 ## Contributors
 
