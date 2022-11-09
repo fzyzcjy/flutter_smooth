@@ -92,6 +92,9 @@ def main():
     gather_all_in_channel(
         url='https://discord.com/channels/608014603317936148/1021987751710699632',
     )
+    gather_all_in_channel(
+        url='https://discord.com/channels/608014603317936148/1039667632342835250',
+    )
 
 
 if __name__ == '__main__':
