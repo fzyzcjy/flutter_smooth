@@ -1,6 +1,6 @@
 # PR status
 
-:::caution
+:::info
 
 This list may be outdated. For most up-to-date information, please see:
 
@@ -11,7 +11,7 @@ The list also contains PRs to Flutter framework and engine but not related to `f
 
 :::
 
-:::info
+:::caution
 
 Many PRs are labeled **rejected** below, but it does not mean they are really rejected. Instead, it is because "closing to remove from review queues" ([source](https://github.com/flutter/engine/pull/36917#issuecomment-1294120439)). I am re-submitting refined version after working towards the code review feedbacks, as well as having further discussions in Discord with Flutter team which they suggest.
 
