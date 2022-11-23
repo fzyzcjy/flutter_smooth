@@ -125,7 +125,7 @@ class _RenderAdapterInMainTree extends RenderBox
 
   // NOTE do *not* have any relation w/ self's PaintingContext, as we will not paint there
   void _paintSubTreeToPackLayer(Rect estimatedBounds) {
-    print('hi ${describeIdentity(this)}._paintSubTreeToPackLayer');
+    // print('hi ${describeIdentity(this)}._paintSubTreeToPackLayer');
 
     // ref: [PaintingContext.pushLayer]
     if (pack.mainSubTreeLayerHandle.layer!.hasChildren) {
