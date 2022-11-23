@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 
 // NOTE This is used to reproduce [list_text_layout.dart] in Flutter's official
 // benchmark, as is requested by @dnfield in #173
-class ListTextLayoutPage extends StatefulWidget {
-  const ListTextLayoutPage({super.key});
+class ExampleListTextLayoutPage extends StatefulWidget {
+  const ExampleListTextLayoutPage({super.key});
 
   @override
-  State<ListTextLayoutPage> createState() => ListTextLayoutPageState();
+  State<ExampleListTextLayoutPage> createState() =>
+      ExampleListTextLayoutPageState();
 }
 
-class ListTextLayoutPageState extends State<ListTextLayoutPage>
+class ExampleListTextLayoutPageState extends State<ExampleListTextLayoutPage>
     with SingleTickerProviderStateMixin {
   bool _showText = false;
   late AnimationController _controller;

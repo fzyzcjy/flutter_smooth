@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:example/example_list_text_layout/page.dart';
 import 'package:example/example_list_view/page.dart';
 import 'package:example/example_page_transition/page.dart';
 import 'package:flutter/material.dart';
