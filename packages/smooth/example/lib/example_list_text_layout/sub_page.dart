@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smooth/smooth.dart';
 
 // NOTE This is used to reproduce [list_text_layout.dart] in Flutter's official
 // benchmark, as is requested by @dnfield in #173
@@ -46,26 +47,42 @@ class ExampleListTextLayoutSubPageState
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: OverflowBox(
-        alignment: Alignment.topCenter,
-        maxHeight: double.infinity,
-        child: !_showText
-            ? Container()
-            : Column(
-                children: List<Widget>.generate(9, (int index) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      child: Text('G$index'),
-                    ),
-                    title: Text(
-                      'Foo contact from $index-th local contact',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Text('+91 88888 8800$index'),
-                  );
-                }),
-              ),
+    return widget.enableSmooth
+        ? SmoothBuilder(
+            builder: (_, __) => _buildCore(),
+            child: const SizedBox(),
+          )
+        : _buildCore();
+  }
+
+  Widget _buildCore() {
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Material(
+        child: OverflowBox(
+          alignment: Alignment.topCenter,
+          maxHeight: double.infinity,
+          child: !_showText
+              ? Container()
+              : Column(
+                  children: List<Widget>.generate(9, (int index) {
+                    return ListTile(
+                      leading: CircleAvatar(
+                        child: Text('G$index'),
+                      ),
+                      title: SmoothLayoutPreemptPointWidget(
+                        child: Text(
+                          'Foo contact from $index-th local contact',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      subtitle: SmoothLayoutPreemptPointWidget(
+                        child: Text('+91 88888 8800$index'),
+                      ),
+                    );
+                  }),
+                ),
+        ),
       ),
     );
   }
