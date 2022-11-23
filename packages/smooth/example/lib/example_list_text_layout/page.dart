@@ -1,4 +1,5 @@
 import 'package:example/example_list_text_layout/sub_page.dart';
+import 'package:example/utils/page_utils.dart';
 import 'package:flutter/material.dart';
 
 class ExampleListTextLayoutPage extends StatelessWidget {
@@ -11,22 +12,14 @@ class ExampleListTextLayoutPage extends StatelessWidget {
       body: Builder(
         builder: (context) => ListView(
           children: [
-            _buildItem(const ExampleListTextLayoutSubPage(enableSmooth: false),
+            PageUtils.buildRow(
+                const ExampleListTextLayoutSubPage(enableSmooth: false),
                 'Example: Plain'),
-            _buildItem(const ExampleListTextLayoutSubPage(enableSmooth: true),
+            PageUtils.buildRow(
+                const ExampleListTextLayoutSubPage(enableSmooth: true),
                 'Example: Smooth'),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildItem(Widget page, String title) {
-    return Builder(
-      builder: (context) => ListTile(
-        title: Text(title),
-        onTap: () => Navigator.push<dynamic>(
-            context, MaterialPageRoute<dynamic>(builder: (_) => page)),
       ),
     );
   }
