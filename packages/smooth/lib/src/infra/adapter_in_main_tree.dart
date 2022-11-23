@@ -69,9 +69,6 @@ class _RenderAdapterInMainTree extends RenderBox
     // print('$runtimeType.performLayout child.layout end');
 
     size = constraints.biggest;
-
-    // TODO hack
-    SchedulerBinding.instance.addPostFrameCallback((_) => markNeedsLayout());
   }
 
   // TODO correct?
@@ -82,6 +79,9 @@ class _RenderAdapterInMainTree extends RenderBox
   void paint(PaintingContext context, Offset offset) {
     _paintAuxiliaryTreeRootLayerToCurrentContext(context, offset);
     _paintSubTreeToPackLayer(context.estimatedBounds);
+
+    // TODO hack
+    SchedulerBinding.instance.addPostFrameCallback((_) => markNeedsPaint());
   }
 
   // ref: RenderOpacity
