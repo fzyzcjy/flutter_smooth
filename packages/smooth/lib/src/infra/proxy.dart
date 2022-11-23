@@ -55,6 +55,9 @@ class ProxyPipelineOwner implements PipelineOwner {
 
   @override
   void flushSemantics() => inner.flushSemantics();
+
+  @override
+  SemanticsUpdateCallback? get onSemanticsUpdate => inner.onSemanticsUpdate;
 }
 
 class ProxyBuildOwner implements BuildOwner {
