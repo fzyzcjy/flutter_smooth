@@ -12,6 +12,11 @@ class ExampleListTextLayoutPage extends StatelessWidget {
       body: Builder(
         builder: (context) => ListView(
           children: [
+            const Text(
+              'Please look at timeline tracing to see the effects of smooth, '
+              'since this is a reproduction to Flutter list_text_layout '
+              'and thus do *not* have any visual signal showing it is smoother',
+            ),
             PageUtils.buildRow(
                 const ExampleListTextLayoutSubPage(enableSmooth: false),
                 'Example: Plain'),
