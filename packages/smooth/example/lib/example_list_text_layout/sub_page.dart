@@ -77,7 +77,6 @@ class ExampleListTextLayoutSubPageState
   }
 
   Widget _buildCore() {
-    return CircularProgressIndicator();
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Material(
