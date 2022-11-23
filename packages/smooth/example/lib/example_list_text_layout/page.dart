@@ -1,68 +1,32 @@
+import 'package:example/example_list_text_layout/sub_page.dart';
 import 'package:flutter/material.dart';
 
-// NOTE This is used to reproduce [list_text_layout.dart] in Flutter's official
-// benchmark, as is requested by @dnfield in #173
-class ExampleListTextLayoutPage extends StatefulWidget {
+class ExampleListTextLayoutPage extends StatelessWidget {
   const ExampleListTextLayoutPage({super.key});
 
   @override
-  State<ExampleListTextLayoutPage> createState() =>
-      ExampleListTextLayoutPageState();
-}
-
-class ExampleListTextLayoutPageState extends State<ExampleListTextLayoutPage>
-    with SingleTickerProviderStateMixin {
-  bool _showText = false;
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    )
-      ..addStatusListener((AnimationStatus status) {
-        if (status == AnimationStatus.completed) {
-          setState(() {
-            _showText = !_showText;
-          });
-          _controller
-            ..reset()
-            ..forward();
-        }
-      })
-      ..forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Material(
-      child: OverflowBox(
-        alignment: Alignment.topCenter,
-        maxHeight: double.infinity,
-        child: !_showText
-            ? Container()
-            : Column(
-                children: List<Widget>.generate(9, (int index) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      child: Text('G$index'),
-                    ),
-                    title: Text(
-                      'Foo contact from $index-th local contact',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Text('+91 88888 8800$index'),
-                  );
-                }),
-              ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Example: Page transition')),
+      body: Builder(
+        builder: (context) => ListView(
+          children: [
+            _buildItem(const ExampleListTextLayoutSubPage(enableSmooth: false),
+                'Example: Plain'),
+            _buildItem(const ExampleListTextLayoutSubPage(enableSmooth: true),
+                'Example: Smooth'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildItem(Widget page, String title) {
+    return Builder(
+      builder: (context) => ListTile(
+        title: Text(title),
+        onTap: () => Navigator.push<dynamic>(
+            context, MaterialPageRoute<dynamic>(builder: (_) => page)),
       ),
     );
   }
