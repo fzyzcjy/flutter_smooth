@@ -1,34 +1,23 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:smooth/smooth.dart';
 
 // NOTE This is used to reproduce [list_text_layout.dart] in Flutter's official
 // benchmark, as is requested by @dnfield in #173
-class ExampleListTextLayoutSubPage extends StatelessWidget {
+class ExampleListTextLayoutSubPage extends StatefulWidget {
   final bool enableSmooth;
 
   const ExampleListTextLayoutSubPage({super.key, required this.enableSmooth});
 
   @override
-  Widget build(BuildContext context) {
-    return enableSmooth
-        ? SmoothBuilder(
-            // usually put animations etc in [builder], but this page does not have
-            // that, so just `child`
-            builder: (context, child) => child,
-            child: const _Body(),
-          )
-        : const _Body();
-  }
+  State<ExampleListTextLayoutSubPage> createState() =>
+      ExampleListTextLayoutSubPageState();
 }
 
-class _Body extends StatefulWidget {
-  const _Body();
-
-  @override
-  State<_Body> createState() => _BodyState();
-}
-
-class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
+class ExampleListTextLayoutSubPageState
+    extends State<ExampleListTextLayoutSubPage>
+    with SingleTickerProviderStateMixin {
   bool _showText = false;
   late AnimationController _controller;
 
@@ -60,6 +49,18 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print('hi ${describeIdentity(this)}.build');
+    return widget.enableSmooth
+        ? SmoothBuilder(
+            // usually put animations etc in [builder], but this page does not have
+            // that, so just `child`
+            builder: (context, child) => child,
+            child: _buildCore(),
+          )
+        : _buildCore();
+  }
+
+  Widget _buildCore() {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Material(
