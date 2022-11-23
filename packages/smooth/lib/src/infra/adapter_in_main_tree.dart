@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/infra/auxiliary_tree_pack.dart';
 import 'package:smooth/src/infra/auxiliary_tree_root_view.dart';
 import 'package:smooth/src/infra/service_locator.dart';
@@ -67,6 +69,9 @@ class _RenderAdapterInMainTree extends RenderBox
     // print('$runtimeType.performLayout child.layout end');
 
     size = constraints.biggest;
+
+    // TODO hack
+    SchedulerBinding.instance.addPostFrameCallback((_) => markNeedsLayout());
   }
 
   // TODO correct?
@@ -120,6 +125,8 @@ class _RenderAdapterInMainTree extends RenderBox
 
   // NOTE do *not* have any relation w/ self's PaintingContext, as we will not paint there
   void _paintSubTreeToPackLayer(Rect estimatedBounds) {
+    print('hi ${describeIdentity(this)}._paintSubTreeToPackLayer');
+
     // ref: [PaintingContext.pushLayer]
     if (pack.mainSubTreeLayerHandle.layer!.hasChildren) {
       pack.mainSubTreeLayerHandle.layer!.removeAllChildren();
