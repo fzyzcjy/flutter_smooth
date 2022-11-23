@@ -36,6 +36,8 @@ class MyApp extends StatelessWidget {
           _buildItem(const ExampleListViewPage(), 'Example: ListView'),
           _buildItem(
               const ExamplePageTransitionPage(), 'Example: Page transition'),
+          _buildItem(
+              const ExampleListTextLayoutPage(), 'Example: List text layout'),
         ],
       ),
     );
