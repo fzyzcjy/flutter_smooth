@@ -2,6 +2,12 @@
 
 In this chapter, I use the following experimental setup.
 
+:::info
+
+If it does not reproduce on your device, please firstly try to use the code of Flutter framework and engine *at the time* when this benchmark chapter is written. This is because I have made some further experiments and merges after this benchmark, which may break the existing code and I have not tested it (given this is not merged to Flutter yet).
+
+:::
+
 ## Testing device
 
 All tests are done in a TRT-AL00 Android device, with Snapdragon 435.
