@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smooth/smooth.dart';
 
+// NOTE This is used to reproduce [list_text_layout.dart] in Flutter's official
+// benchmark, as is requested by @dnfield in #173
 class ExampleListTextLayoutSubPage extends StatelessWidget {
   final bool enableSmooth;
 
@@ -10,15 +12,15 @@ class ExampleListTextLayoutSubPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return enableSmooth
         ? SmoothBuilder(
-            builder: (context, child) => const _Body(),
-            child: const SizedBox.expand(),
+            // usually put animations etc in [builder], but this page does not have
+            // that, so just `child`
+            builder: (context, child) => child,
+            child: const _Body(),
           )
         : const _Body();
   }
 }
 
-// NOTE This is used to reproduce [list_text_layout.dart] in Flutter's official
-// benchmark, as is requested by @dnfield in #173
 class _Body extends StatefulWidget {
   const _Body();
 
