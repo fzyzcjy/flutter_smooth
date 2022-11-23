@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
               const ExamplePageTransitionPage(), 'Example: Page transition'),
           _buildItem(
               const ExampleListTextLayoutPage(), 'Example: List text layout'),
+          _buildItem(const TestPage(), 'test'),
         ],
       ),
     );
@@ -51,6 +52,23 @@ class MyApp extends StatelessWidget {
         onTap: () => Navigator.push<dynamic>(
             context, MaterialPageRoute<dynamic>(builder: (_) => page)),
       ),
+    );
+  }
+}
+
+class TestPage extends StatefulWidget {
+  const TestPage({super.key});
+
+  @override
+  State<TestPage> createState() => _TestPageState();
+}
+
+class _TestPageState extends State<TestPage> {
+  @override
+  Widget build(BuildContext context) {
+    return SmoothBuilder(
+      builder: (context, child) => child,
+      child: const CircularProgressIndicator(),
     );
   }
 }
