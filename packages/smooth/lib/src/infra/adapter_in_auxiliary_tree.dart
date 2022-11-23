@@ -38,9 +38,6 @@ class _RenderAdapterInAuxiliaryTree extends RenderBox {
   void performLayout() {
     print('$runtimeType.performLayout called');
     size = constraints.biggest;
-
-    // TODO hack
-    SchedulerBinding.instance.addPostFrameCallback((_) => markNeedsLayout());
   }
 
   // TODO correct?
