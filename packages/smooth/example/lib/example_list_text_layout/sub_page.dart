@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:smooth/smooth.dart';
 
-// NOTE This is used to reproduce [list_text_layout.dart] in Flutter's official
-// benchmark, as is requested by @dnfield in #173
-class ExampleListTextLayoutSubPage extends StatefulWidget {
+class ExampleListTextLayoutSubPage extends StatelessWidget {
   final bool enableSmooth;
 
   const ExampleListTextLayoutSubPage({super.key, required this.enableSmooth});
 
   @override
-  State<ExampleListTextLayoutSubPage> createState() =>
-      ExampleListTextLayoutSubPageState();
+  Widget build(BuildContext context) {
+    return enableSmooth
+        ? SmoothBuilder(
+            builder: (context, child) => const _Body(),
+            child: const SizedBox.expand(),
+          )
+        : const _Body();
+  }
 }
 
-class ExampleListTextLayoutSubPageState
-    extends State<ExampleListTextLayoutSubPage>
-    with SingleTickerProviderStateMixin {
+// NOTE This is used to reproduce [list_text_layout.dart] in Flutter's official
+// benchmark, as is requested by @dnfield in #173
+class _Body extends StatefulWidget {
+  const _Body();
+
+  @override
+  State<_Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   bool _showText = false;
   late AnimationController _controller;
 
@@ -47,15 +58,6 @@ class ExampleListTextLayoutSubPageState
 
   @override
   Widget build(BuildContext context) {
-    return widget.enableSmooth
-        ? SmoothBuilder(
-            builder: (_, __) => _buildCore(),
-            child: const SizedBox(),
-          )
-        : _buildCore();
-  }
-
-  Widget _buildCore() {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Material(
