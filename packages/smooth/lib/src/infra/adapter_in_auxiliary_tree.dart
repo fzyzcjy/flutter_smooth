@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:smooth/src/infra/auxiliary_tree_pack.dart';
 
 class AdapterInAuxiliaryTreeWidget extends SingleChildRenderObjectWidget {
@@ -35,8 +36,11 @@ class _RenderAdapterInAuxiliaryTree extends RenderBox {
 
   @override
   void performLayout() {
-    // print('$runtimeType.performLayout called');
+    print('$runtimeType.performLayout called');
     size = constraints.biggest;
+
+    // TODO hack
+    SchedulerBinding.instance.addPostFrameCallback((_) => markNeedsLayout());
   }
 
   // TODO correct?
@@ -48,7 +52,7 @@ class _RenderAdapterInAuxiliaryTree extends RenderBox {
     assert(offset == Offset.zero,
         '$runtimeType prototype has not deal with offset yet');
 
-    // print('$runtimeType paint');
+    print('$runtimeType paint');
 
     context.addLayer(pack.mainSubTreeLayerHandle.layer!);
   }
